@@ -1,0 +1,73 @@
+// Распознавание позы в браузере: @mediapipe/tasks-vision, Pose Landmarker (lite).
+// Модель и wasm лежат на нашем адресе (vendor/mediapipe). Кадры обрабатываются на устройстве и никуда не уходят.
+
+import { CONFIG } from './config.js';
+
+export const poseStatus = { state: 'idle', delegate: null, error: null, loadMs: null, fps: 0, frames: 0 };
+let landmarker = null;
+let loading = null;
+let vision = null;
+let fileset = null;
+let lastTs = 0;
+
+const abs = (p) => new URL(p, document.baseURI).href;
+
+async function create(delegate) {
+  return vision.PoseLandmarker.createFromOptions(fileset, {
+    baseOptions: { modelAssetPath: abs(CONFIG.modelPath), delegate },
+    runningMode: 'VIDEO',
+    numPoses: 1,
+    minPoseDetectionConfidence: 0.5,
+    minPosePresenceConfidence: 0.5,
+    minTrackingConfidence: 0.5,
+  });
+}
+
+async function load() {
+  poseStatus.state = 'loading';
+  const t0 = performance.now();
+  try {
+    vision = await import('../vendor/mediapipe/vision_bundle.mjs');
+    fileset = await vision.FilesetResolver.forVisionTasks(abs(CONFIG.wasmPath));
+    try { landmarker = await create('GPU'); poseStatus.delegate = 'GPU'; }
+    catch (e) { landmarker = await create('CPU'); poseStatus.delegate = 'CPU'; }
+    poseStatus.state = 'ready';
+    poseStatus.loadMs = Math.round(performance.now() - t0);
+  } catch (e) {
+    poseStatus.state = 'error';
+    poseStatus.error = String(e && e.message ? e.message : e);
+    loading = null;
+    throw e;
+  }
+}
+
+// Вызывается в начале квиза: модель грузится в фоне, пока родитель отвечает.
+export function preloadPose() {
+  if (!loading) loading = load();
+  return loading;
+}
+
+let fpsT = 0, fpsN = 0;
+// Возвращает массив из 33 точек {x,y,z,visibility} или null. Точки нигде не сохраняются.
+export function detectPose(video) {
+  if (!landmarker || !video.videoWidth) return null;
+  let ts = performance.now();
+  if (ts <= lastTs) ts = lastTs + 1;
+  lastTs = ts;
+  let res;
+  try { res = landmarker.detectForVideo(video, ts); }
+  catch (e) {
+    // Сбой GPU на отдельных телефонах: один раз пересоздаём на CPU.
+    if (poseStatus.delegate === 'GPU') {
+      poseStatus.delegate = 'CPU (после сбоя GPU)';
+      const old = landmarker; landmarker = null;
+      create('CPU').then((lm) => { landmarker = lm; try { old.close(); } catch { /* уже закрыт */ } }).catch((err) => { poseStatus.state = 'error'; poseStatus.error = String(err); });
+    } else { poseStatus.error = String(e && e.message ? e.message : e); }
+    return null;
+  }
+  poseStatus.frames++;
+  fpsN++;
+  if (ts - fpsT >= 1000) { poseStatus.fps = Math.round((fpsN * 1000) / (ts - fpsT)); fpsT = ts; fpsN = 0; }
+  const lm = res && res.landmarks && res.landmarks[0];
+  return lm && lm.length ? lm : null;
+}
