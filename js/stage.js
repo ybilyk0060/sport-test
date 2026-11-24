@@ -138,6 +138,7 @@ function intro(p, i, n) {
   return new Promise((resolve) => {
     hud.innerHTML = introSheet(p, i, n, `<button class="btn" data-act="go">${esc(T.cam.go)}</button><button class="btn ghost" data-act="skip-ex">${esc(T.cam.skipEx)}</button>`);
     const ex = CONFIG.exercises[p.key];
+    drawSkeleton(null);
     preloadClips(Object.keys(T.hints).map((h) => 'hint_' + h));
     say(ex.intro);
     const pv = $('video.panda', hud); pv.play().catch(() => {});
