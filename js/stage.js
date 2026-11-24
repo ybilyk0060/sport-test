@@ -141,6 +141,7 @@ function intro(p, i, n) {
     preloadClips(Object.keys(T.hints).map((h) => 'hint_' + h));
     say(ex.intro);
     const pv = $('video.panda', hud); pv.play().catch(() => {});
+    pv.onerror = () => { pv.style.display = 'none'; }; // нет сети до видео — остаются текст и голос
     let ended = false;
     const end = (v) => { if (ended) return; ended = true; clearTimeout(timer); resolve(v); };
     const timer = setTimeout(() => end('go'), 12000); // руки заняты телефоном — стартуем сами
@@ -291,7 +292,7 @@ function fileExercise(p, i, n) {
       hud.innerHTML = introSheet(p, i, n, `<p>${esc(F.lead(CONFIG.fallbackClipSec))}</p>${errText ? `<p class="err">${esc(errText)}</p>` : ''}
         <label class="btn">${esc(F.pick)}<input type="file" accept="video/*" capture="environment" hidden data-el="file"></label>
         <p class="small muted center">${esc(F.privacy)}</p><button class="btn ghost" data-act="skip-ex">${esc(T.cam.skipEx)}</button>`);
-      $('video.panda', hud).play().catch(() => {});
+      const pv = $('video.panda', hud); pv.play().catch(() => {}); pv.onerror = () => { pv.style.display = 'none'; };
       $('[data-el=file]', hud).onchange = (e) => { const f = e.target.files && e.target.files[0]; if (f) analyze(f); };
     };
     hud.onclick = (e) => { const a = e.target.closest('[data-act]'); if (a && a.dataset.act === 'skip-ex') { track('exercise_done', { key: p.key, skipped: true, mode: 'file' }); resolve(skipped(p)); } };

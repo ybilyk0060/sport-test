@@ -80,11 +80,11 @@ export const SPORTS = ['team', 'athletics', 'gymnastics', 'dance', 'martial', 's
 
 export const QUIZ_RULES = {
   likes: {
-    team: { team: 3, racket: 1 },
+    team: { team: 4, racket: 1 },
     solo: { swimming: 2, athletics: 2, racket: 2 },
-    music: { dance: 3, gymnastics: 1 },
-    fight: { martial: 3 },
-    climb: { climbing: 3, gymnastics: 2 },
+    music: { dance: 4, gymnastics: 1 },
+    fight: { martial: 4 },
+    climb: { climbing: 4, gymnastics: 2 },
   },
   temper: {
     active: { team: 1, martial: 1, athletics: 1 },
@@ -100,7 +100,8 @@ export const QUIZ_RULES = {
 };
 // Возраст 4–6: приоритет направлениям с разносторонней базой
 export const AGE_RULES = { '4-6': { gymnastics: 1, dance: 1, swimming: 1 } };
-// Качество → направления. Вклад = вес × (уровень − 1): «зона роста» 0, «есть запас» ×1, «сильная сторона» ×2.
+// Качество → направления. Вклад = вес × (уровень − 1) / 2: «зона роста» 0, «есть запас» — половина веса, «сильная сторона» — полный вес.
+// Желание ребёнка (likes, до 4 баллов) весит больше любого одного качества из теста (до 2 баллов).
 export const QUALITY_RULES = {
   coordination: { team: 1, gymnastics: 1, dance: 2, martial: 1, climbing: 1, racket: 1 },
   legs: { athletics: 1, martial: 1, climbing: 1 },
@@ -121,7 +122,7 @@ export function recommendSports(profile, quiz) {
     const lvl = profile.qualities[q].level;
     if (lvl >= 2) {
       const t = {};
-      for (const [s, w] of Object.entries(QUALITY_RULES[q])) t[s] = w * (lvl - 1);
+      for (const [s, w] of Object.entries(QUALITY_RULES[q])) t[s] = (w * (lvl - 1)) / 2;
       add(t, `q.${q}`);
     }
   }
