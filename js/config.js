@@ -180,8 +180,8 @@ export const CONFIG = {
     // Баланс на одной ноге: своя логика сайта (js/balance.js), без видео панды — рисунок. В тест войдёт после утверждения протокола и норм.
     balance_r: { custom: 'balance', leg: 'right', facing: 'front', goal: 'seconds', demo: 'balance', localVideo: 'assets/video/balance-2.mp4', localPoster: 'assets/video/balance-2.jpg', intro: 'balance_howto' },
     balance_l: { custom: 'balance', leg: 'left', facing: 'front', goal: 'seconds', demo: 'balance', localVideo: 'assets/video/balance-2.mp4', localPoster: 'assets/video/balance-2.jpg', intro: 'balance_left' },
-    side_jumps_1: { custom: 'sidejump', facing: 'front', goal: 'reps', demo: 'side_jumps', localVideo: 'assets/video/side_jumps-2.mp4', localPoster: 'assets/video/side_jumps-2.jpg', intro: 'side_jumps_howto' },
-    side_jumps_2: { custom: 'sidejump', facing: 'front', goal: 'reps', demo: 'side_jumps', localVideo: 'assets/video/side_jumps-2.mp4', localPoster: 'assets/video/side_jumps-2.jpg', intro: 'side_jumps_again' },
+    side_jumps_1: { custom: 'sidejump', facing: 'front', goal: 'reps', demo: 'side_jumps', localVideo: 'assets/video/side_jumps-clean.mp4', localPoster: 'assets/video/side_jumps-clean.jpg', intro: 'side_jumps_howto' },
+    side_jumps_2: { custom: 'sidejump', facing: 'front', goal: 'reps', demo: 'side_jumps', localVideo: 'assets/video/side_jumps-clean.mp4', localPoster: 'assets/video/side_jumps-clean.jpg', intro: 'side_jumps_again' },
     bend: { custom: 'bend', facing: 'front', goal: 'reps', demo: 'bend', localVideo: 'assets/video/bend-2.mp4', localPoster: 'assets/video/bend-2.jpg', intro: 'bend_howto' },
     // Подъёмы корпуса (спека crunches из Студії): заготовка норматива «за 30 с» — capSec задаётся в плане теста
     crunches: { spec: 'crunches', facing: 'side', floor: 'side', goal: 'reps', video: 'studio/crunches-v3-2ac7586d.mp4', poster: 'studio/crunches-v3-f7f280fe.jpg', intro: 'howto_crunches' },
