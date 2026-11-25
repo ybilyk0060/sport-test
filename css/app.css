@@ -345,3 +345,5 @@ details.sec > * + * { margin-top: 10px; }
 .sheet .btn.ghost { min-height: 36px; font-size: 15px; }
 @media (max-height: 700px) { .sheet .panda { height: 20dvh; } .sheet .demo svg { height: 18dvh; } .sheet > p.small { display: none; } }
 .sheet .tags { display: flex; flex-wrap: wrap; gap: 6px; } .sheet .tags .tag { margin: 0; }
+.sheet .panda { height: auto; width: auto; max-width: 100%; aspect-ratio: 16 / 9; max-height: 28dvh; align-self: center; object-fit: contain; }
+@media (max-height: 700px) { .sheet .panda { max-height: 22dvh; } }

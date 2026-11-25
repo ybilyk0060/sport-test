@@ -178,11 +178,11 @@ export const CONFIG = {
     // Віджимання: считаются и боком (спека студии pushups@4), и лицом (своя pushups_front) — берётся больший счёт
     pushups: { spec: 'pushups', altSpec: 'pushups_front', facing: 'any', floor: 'any', goal: 'reps', video: 'studio/pushups-v4-d83d1e9c.mp4', poster: 'studio/pushups-v4-e414f5bc.jpg', intro: 'howto_pushups' },
     // Баланс на одной ноге: своя логика сайта (js/balance.js), без видео панды — рисунок. В тест войдёт после утверждения протокола и норм.
-    balance_r: { custom: 'balance', leg: 'right', facing: 'front', goal: 'seconds', demo: 'balance', intro: 'balance_howto' },
-    balance_l: { custom: 'balance', leg: 'left', facing: 'front', goal: 'seconds', demo: 'balance', intro: 'balance_left' },
-    side_jumps_1: { custom: 'sidejump', facing: 'front', goal: 'reps', demo: 'side_jumps', intro: 'side_jumps_howto' },
-    side_jumps_2: { custom: 'sidejump', facing: 'front', goal: 'reps', demo: 'side_jumps', intro: 'side_jumps_again' },
-    bend: { custom: 'bend', facing: 'front', goal: 'reps', demo: 'bend', intro: 'bend_howto' },
+    balance_r: { custom: 'balance', leg: 'right', facing: 'front', goal: 'seconds', demo: 'balance', localVideo: 'assets/video/balance-2.mp4', localPoster: 'assets/video/balance-2.jpg', intro: 'balance_howto' },
+    balance_l: { custom: 'balance', leg: 'left', facing: 'front', goal: 'seconds', demo: 'balance', localVideo: 'assets/video/balance-2.mp4', localPoster: 'assets/video/balance-2.jpg', intro: 'balance_left' },
+    side_jumps_1: { custom: 'sidejump', facing: 'front', goal: 'reps', demo: 'side_jumps', localVideo: 'assets/video/side_jumps-2.mp4', localPoster: 'assets/video/side_jumps-2.jpg', intro: 'side_jumps_howto' },
+    side_jumps_2: { custom: 'sidejump', facing: 'front', goal: 'reps', demo: 'side_jumps', localVideo: 'assets/video/side_jumps-2.mp4', localPoster: 'assets/video/side_jumps-2.jpg', intro: 'side_jumps_again' },
+    bend: { custom: 'bend', facing: 'front', goal: 'reps', demo: 'bend', localVideo: 'assets/video/bend-2.mp4', localPoster: 'assets/video/bend-2.jpg', intro: 'bend_howto' },
     // Подъёмы корпуса (спека crunches из Студії): заготовка норматива «за 30 с» — capSec задаётся в плане теста
     crunches: { spec: 'crunches', facing: 'side', floor: 'side', goal: 'reps', video: 'studio/crunches-v3-2ac7586d.mp4', poster: 'studio/crunches-v3-f7f280fe.jpg', intro: 'howto_crunches' },
     // Новые из Студії (25.11, помечены для sport_test): пока в пуле программы подписчика, в тест не входят

@@ -1,17 +1,17 @@
 // Экран камеры: разрешение → проверка кадра → 4 упражнения. И запасной путь: разбор записи.
 
-import { T } from './i18n/index.js?v=3871c7e-mwwmihd7';
-import { CONFIG } from './config.js?v=3871c7e-mwwmihd7';
-import { state, setState, track, exportHandoff } from './store.js?v=3871c7e-mwwmihd7';
-import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=3871c7e-mwwmihd7';
-import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=3871c7e-mwwmihd7';
-import { preloadPose, poseStatus } from './pose.js?v=3871c7e-mwwmihd7';
-import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=3871c7e-mwwmihd7';
-import { framingCheck, frameLoop, createRun } from './session.js?v=3871c7e-mwwmihd7';
-import { createRaiseHand } from './gesture.js?v=3871c7e-mwwmihd7';
-import { recording } from './analytics.js?v=3871c7e-mwwmihd7';
-import { demoSvg } from './demos.js?v=3871c7e-mwwmihd7';
-import { EX_QUALITY } from './scoring.js?v=3871c7e-mwwmihd7';
+import { T } from './i18n/index.js?v=8e71c20-mwwn79rv';
+import { CONFIG } from './config.js?v=8e71c20-mwwn79rv';
+import { state, setState, track, exportHandoff } from './store.js?v=8e71c20-mwwn79rv';
+import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=8e71c20-mwwn79rv';
+import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=8e71c20-mwwn79rv';
+import { preloadPose, poseStatus } from './pose.js?v=8e71c20-mwwn79rv';
+import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=8e71c20-mwwn79rv';
+import { framingCheck, frameLoop, createRun } from './session.js?v=8e71c20-mwwn79rv';
+import { createRaiseHand } from './gesture.js?v=8e71c20-mwwn79rv';
+import { recording } from './analytics.js?v=8e71c20-mwwn79rv';
+import { demoSvg } from './demos.js?v=8e71c20-mwwn79rv';
+import { EX_QUALITY } from './scoring.js?v=8e71c20-mwwn79rv';
 
 const env = detectEnv();
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -161,7 +161,7 @@ function introSheet(p, i, n, btnHtml) {
   const note = ex.wall ? T.cam.wallNote : ex.floor === 'any' ? T.cam.floorAnyNote : ex.floor === 'side' ? T.cam.floorSideNote : ex.floor ? T.cam.floorFrontNote : ex.facing === 'side' ? T.cam.sideNote : T.cam.frontNote;
   const checks = (EX_QUALITY[p.key] || []).map((q) => T.result.qualities[q].name.toLowerCase()).join(', ');
   return `<div class="sheet"><div class="tags"><span class="tag">${esc(exOf(i, n))}</span>${checks ? `<span class="tag checks">${esc(T.cam.checks(checks))}</span>` : ''}</div><h2>${esc(p.timed ? T.cam.forSec(tx.name, p.capSec) : tx.task(p.target))}</h2>
-    ${ex.demo ? demoSvg(ex.demo) : ex.video ? `<video class="panda" playsinline muted loop autoplay preload="auto" poster="${CONFIG.mediaBase + ex.poster}" src="${CONFIG.mediaBase + ex.video}"></video>` : (ex.art || '')}
+    ${ex.localVideo ? `<video class="panda" playsinline muted loop autoplay preload="auto" poster="${ex.localPoster}" src="${ex.localVideo}"></video>` : ex.demo ? demoSvg(ex.demo) : ex.video ? `<video class="panda" playsinline muted loop autoplay preload="auto" poster="${CONFIG.mediaBase + ex.poster}" src="${CONFIG.mediaBase + ex.video}"></video>` : (ex.art || '')}
     <p>${esc(tx.how)}</p>${tx.pandaNote ? `<p class="small" style="opacity:.8">${esc(tx.pandaNote)}</p>` : ''}<p class="note">↻ ${esc(note)}</p>${btnHtml}</div>`;
 }
 
