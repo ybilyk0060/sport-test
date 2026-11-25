@@ -1,2 +1,9 @@
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Facebot
+Allow: /
+
+# Остальным ботам обход разрешён (проверка рекламы Meta/TikTok, Paddle). В поиск сайт не попадает: на страницах meta robots noindex.
 User-agent: *
-Disallow: /
+Allow: /
