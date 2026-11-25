@@ -49,7 +49,7 @@ export function track(name, props = {}) {
   const ev = { t: new Date().toISOString(), sid: state.sid, name, browser: env.browser, platform: env.platform, inApp: env.inApp, ...props };
   store.appendEvent(ev);
   if (window.__debugLog) window.__debugLog(ev);
-  send(name, props);
+  send(name, ev);
   return ev;
 }
 

@@ -240,6 +240,7 @@ function showBlocked(kind) {
   const app = document.getElementById('app');
   const here = new URL(location.href); here.search = ''; here.hash = '';
   here.searchParams.set('s', exportHandoff());
+  here.searchParams.set('lang', T.meta.lang); // язык не теряется при переходе в Safari/Chrome
   const link = here.toString();
   const B = T.blocked;
   let head, body = '';
@@ -253,8 +254,9 @@ function showBlocked(kind) {
     body = `<a class="btn" data-act="open-chrome" href="${esc(chromeIntentUrl(link))}">${esc(B.openChrome)}</a><p class="small muted center">${esc(B.openManual)}</p><button class="btn ghost" data-act="copy">${esc(B.copyLink)}</button>${fb}`;
     track('open_in_chrome_shown', { kind });
   } else if (env.inApp && env.platform === 'ios') {
-    head = `<h1 class="rtitle">${esc(kind === 'denied' ? B.deniedTitle : B.openSafariTitle)}</h1><p>${esc(kind === 'denied' ? B.deniedLead : B.openSafariLead)}</p>`;
-    body = `${kind === 'denied' ? steps(B.howIosInApp) + retry : ''}<a class="btn ${kind === 'denied' ? 'line' : ''}" data-act="open-safari" href="${esc(safariUrl(link))}">${esc(B.openSafari)}</a><p class="small muted center">${esc(B.openManual)}</p><button class="btn ghost" data-act="copy">${esc(B.copyLink)}</button>${fb}`;
+    head = `<h1 class="rtitle">${esc(B.openSafariTitle)}</h1><p>${esc(B.openSafariLead)}</p>`;
+    // Меньше касаний: главная кнопка — сразу в Safari с сохранёнными ответами; настройки Instagram — запасной путь ниже.
+    body = `<a class="btn" data-act="open-safari" href="${esc(safariUrl(link))}">${esc(B.openSafari)}</a><p class="small muted center">${esc(B.openManual)}</p><button class="btn ghost" data-act="copy">${esc(B.copyLink)}</button>${kind === 'denied' ? `<div class="box"><p class="small"><b>${esc(B.deniedTitle)}</b></p>${steps(B.howIosInApp)}<button class="btn line" data-act="retry">${esc(T.common.retry)}</button></div>` : ''}${fb}`;
     track('open_in_safari_shown', { kind });
   } else if (kind === 'denied') {
     head = `<h1 class="rtitle">${esc(B.deniedTitle)}</h1><p>${esc(B.deniedLead)}</p>`;
