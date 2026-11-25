@@ -228,7 +228,7 @@ export default {
     restore: 'Already subscribed? Restore access',
     restoreAsk: 'Email you subscribed with',
     restoreSent: 'If there is a subscription, we sent a link to this email.',
-    withdrawal: 'I agree that access to the report and program starts right after payment. Once the report is opened, the first payment is not refundable.',
+    withdrawal: 'I agree that access to the report and program starts right after payment (refunds within 14 days apply only while the report is unopened — see Refund Policy).',
     withdrawalNeeded: 'Please tick the box above the button to continue.',
     notNow: 'Not now',
     hardLead: 'The result is ready. It opens right after you subscribe.',
