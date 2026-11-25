@@ -1,22 +1,22 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
-import { T } from './i18n/index.js?v=892a6cf-mwwo6xi7';
-import { CONFIG } from './config.js?v=892a6cf-mwwo6xi7';
-import { money, PRICE, CUR, fmtDate, } from './locale.js?v=892a6cf-mwwo6xi7';
-import { LANG, LOCALES } from './i18n/index.js?v=892a6cf-mwwo6xi7';
-import { state, setState, resetState, track, importHandoff, store } from './store.js?v=892a6cf-mwwo6xi7';
-import { detectEnv } from './env.js?v=892a6cf-mwwo6xi7';
-import { prefetchPose } from './pose.js?v=892a6cf-mwwo6xi7';
-import { unlockAudio } from './audio.js?v=892a6cf-mwwo6xi7';
-import { startStage, startFallback, toast } from './stage.js?v=892a6cf-mwwo6xi7';
-import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=892a6cf-mwwo6xi7';
-import { payment, newOrderId, loadPaddle } from './payment.js?v=892a6cf-mwwo6xi7';
-import { ART } from './art.js?v=892a6cf-mwwo6xi7';
-import { initDebug } from './debug.js?v=892a6cf-mwwo6xi7';
-import { initConsent } from './analytics.js?v=892a6cf-mwwo6xi7';
-import * as subapi from './subapi.js?v=892a6cf-mwwo6xi7';
-import { drawShareCard } from './sharecard.js?v=892a6cf-mwwo6xi7';
-import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=892a6cf-mwwo6xi7';
+import { T } from './i18n/index.js?v=ff3d1e2-mwwor4iu';
+import { CONFIG } from './config.js?v=ff3d1e2-mwwor4iu';
+import { money, PRICE, CUR, fmtDate, } from './locale.js?v=ff3d1e2-mwwor4iu';
+import { LANG, LOCALES } from './i18n/index.js?v=ff3d1e2-mwwor4iu';
+import { state, setState, resetState, track, importHandoff, store } from './store.js?v=ff3d1e2-mwwor4iu';
+import { detectEnv } from './env.js?v=ff3d1e2-mwwor4iu';
+import { prefetchPose } from './pose.js?v=ff3d1e2-mwwor4iu';
+import { unlockAudio } from './audio.js?v=ff3d1e2-mwwor4iu';
+import { startStage, startFallback, toast } from './stage.js?v=ff3d1e2-mwwor4iu';
+import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=ff3d1e2-mwwor4iu';
+import { payment, newOrderId, loadPaddle } from './payment.js?v=ff3d1e2-mwwor4iu';
+import { ART } from './art.js?v=ff3d1e2-mwwor4iu';
+import { initDebug } from './debug.js?v=ff3d1e2-mwwor4iu';
+import { initConsent } from './analytics.js?v=ff3d1e2-mwwor4iu';
+import * as subapi from './subapi.js?v=ff3d1e2-mwwor4iu';
+import { drawShareCard } from './sharecard.js?v=ff3d1e2-mwwor4iu';
+import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=ff3d1e2-mwwor4iu';
 
 const env = detectEnv();
 const app = document.getElementById('app');
@@ -175,6 +175,12 @@ function factLines(results) {
   return results.map((r) => (r.skipped ? F.skipped(T.ex[r.key].name) : F[r.key](r.done, r.target, Math.round(r.elapsedSec))));
 }
 
+// Согласие на немедленный доступ (право отказа) — только ЕС/UK (аудит 25.11): по часовому поясу или немецкой версии
+function needWithdrawal() {
+  if (!T.paywall.withdrawal) return false;
+  if (LANG === 'de') return true;
+  try { return /^Europe\//.test(Intl.DateTimeFormat().resolvedOptions().timeZone || ''); } catch { return false; }
+}
 const pct = () => Math.round((1 - PRICE.first / PRICE.regular) * 100);
 // Таймер скидки: дедлайн ставится при первом показе пейвола и живёт отдельно от прохождения (resetState его не трогает).
 const OFFER_KEY = 'sporttest.v1.offer';
@@ -219,7 +225,7 @@ function paywallCard(note = '', profile = null) {
       <div class="pc-price">${on ? `<s>${esc(money(PRICE.regular))}</s>` : ''}<b>${esc(money(first))}</b></div></div>
       <p class="renew">${esc(P.renew(money(PRICE.regular), SUB.periodDays, fmtDate(renewAt)))}</p>
       ${id ? `<label class="email-field"><span class="small">${esc(P.emailLabel)}</span><input class="field" type="email" inputmode="email" autocomplete="email" data-el="email" value="${esc(state.email || '')}" maxlength="120" placeholder="name@example.com"></label>` : ''}
-      ${P.withdrawal ? `<label class="check small"><input type="checkbox" data-el="withdrawal"><span>${esc(P.withdrawal)}${P.withdrawalLink ? ` <a href="${P.withdrawalLink.href}" target="_blank" rel="noopener">${esc(P.withdrawalLink.text)}</a>` : ''}</span></label>` : ''}
+      ${needWithdrawal() ? `<label class="check small"><input type="checkbox" data-el="withdrawal"><span>${esc(P.withdrawal)}${P.withdrawalLink ? ` <a href="${P.withdrawalLink.href}" target="_blank" rel="noopener">${esc(P.withdrawalLink.text)}</a>` : ''}</span></label>` : ''}
       <button class="btn" data-act="pay">${esc(P.cta(money(first)))}</button>
       <p class="trust small center">🔒 ${esc(P.trust)}</p>
       <p class="small center testmode" hidden style="color:#b45309;font-weight:600">${esc(P.testMode)}</p></div>`;
@@ -269,7 +275,7 @@ function result(note = '') {
   screen(body, {
     pay: (btn) => {
       // ЕС (de): согласие на немедленный старт цифровой услуги — без него не оплачиваем
-      if (T.paywall.withdrawal) { const box = btn.closest('.price-card') && btn.closest('.price-card').querySelector('[data-el=withdrawal]'); if (!box) { setState({ paywallDismissed: false }); result(); return; } if (!box.checked) { toast(T.paywall.withdrawalNeeded); return; } }
+      if (needWithdrawal()) { const box = btn.closest('.price-card') && btn.closest('.price-card').querySelector('[data-el=withdrawal]'); if (!box) { setState({ paywallDismissed: false }); result(); return; } if (!box.checked) { toast(T.paywall.withdrawalNeeded); return; } }
       // Email на шаге оплаты: условия подписки и ссылка доступа на любом устройстве (аудит 25.11)
       const emailEl = app.querySelector('[data-el=email]');
       const email = (emailEl ? emailEl.value : state.email || '').trim();

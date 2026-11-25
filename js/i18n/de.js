@@ -1,15 +1,15 @@
 // Deutsch — Deutschland und Österreich. Gleiche Schlüssel wie uk.js / en.js.
 
 export default {
-  meta: { title: 'Der 3-Minuten-Test, der die Stärken Ihres Kindes zeigt', lang: 'de' },
+  meta: { title: 'Der 5-Minuten-Test, der die Stärken Ihres Kindes zeigt', lang: 'de' },
 
   common: { pricing: 'Preise', offer: 'AGB', refund: 'Rückerstattung', contacts: 'Impressum', next: 'Weiter', back: 'Zurück', skip: 'Überspringen', retry: 'Erneut versuchen', close: 'Schließen', privacy: 'Datenschutzerklärung' },
 
   landing: {
-    title: 'Entdecken Sie die Stärken Ihres Kindes in 3 Minuten',
+    title: 'Entdecken Sie die Stärken Ihres Kindes in 5 Minuten',
     promise: 'Ein kurzer Test vor der Handykamera zeigt die Stärken Ihres Kindes und welcher Sport am besten passt.',
     cta: 'Test starten',
-    points: ['8 kurze Fragen', '4–5 kurze Übungen: Gleichgewicht, Laufen auf der Stelle, Rumpfbeuge und mehr', 'Das Video wird auf dem Handy verarbeitet und nirgendwohin gesendet'],
+    points: ['8 kurze Fragen', '4 kurze Übungen: Gleichgewicht, Laufen auf der Stelle, Rumpfbeuge und Hampelmann', 'Das Video wird auf dem Handy verarbeitet und nirgendwohin gesendet'],
     note: 'Sie brauchen ein Handy mit Kamera und 2×2 m freien Platz.',
     disclaimer: 'Ein spielerischer Bewegungstest, keine medizinische Untersuchung und kein offizieller Test. Er sagt keinen sportlichen Erfolg voraus, sondern zeigt, wo Ihr Kind heute stark ist.',
     trust: 'Einige Übungen sind an etablierte Fitnesstests für Kinder angelehnt: EUROFIT (Europarat) und den Deutschen Motorik-Test (DMT 6–18). Für die Handykamera zu Hause angepasst, die Ergebnisse sind eine Orientierung, keine Labormessung.',
@@ -213,7 +213,7 @@ export default {
       core: { name: 'Rumpfkraft', d: 'Wie ruhig Ihr Kind den Körper im Vierfüßler- oder Liegestütz hält.' },
       flex: { name: 'Beweglichkeit & Gelenke', d: 'Vorbeugen mit geradem Rücken und weite Armkreise.' },
       balance: { name: 'Gleichgewicht', d: 'Wie lange und wie ruhig Ihr Kind auf einem Bein steht.' },
-      endurance: { name: 'Ausdauer', d: 'Ob Ihr Kind das Tempo bis zum Ende hält.' },
+      endurance: { name: 'Tempo halten', d: 'Ob Ihr Kind das Tempo bis zum Ende einer 20-Sekunden-Aufgabe hält.' },
       symmetry: { name: 'Symmetrie', d: 'Wie gleichmäßig linke und rechte Seite arbeiten.' },
     },
     facts: {
@@ -260,7 +260,7 @@ export default {
     leadNoWeak: 'Auf Basis des Tests und der Interessen Ihres Kindes haben wir ein 4-Wochen-Programm erstellt.',
     inside: 'Im Abo enthalten',
     insideItems: [
-      'Vollständiger Bericht: Gleichgewicht, Schnelligkeit und Gewandtheit, Beweglichkeit, Koordination, Ausdauer, Kraft in Armen und Rumpf — und drei Sportarten mit Begründung',
+      'Vollständiger Bericht: Gleichgewicht, Schnelligkeit und Gewandtheit, Beweglichkeit, Koordination und Rhythmus — und drei Sportarten mit Begründung',
       'Training zu Hause 3× pro Woche, 7–10 Minuten — passend zu den Interessen Ihres Kindes',
       'Die Kamera zählt Wiederholungen, eine Trainerstimme leitet an — wie im Test',
       'Die Belastung steigt jede Woche ein wenig, ausgehend von den eigenen Ergebnissen',
@@ -375,7 +375,7 @@ export default {
   },
 
   report: {
-    howMeasured: 'So haben wir gemessen: Der Einbeinstand ist an EUROFIT angelehnt, die Rumpfbeuge an den Deutschen Motorik-Test. Hampelmann zeigt Koordination und Rhythmus, Schulterberührungen zeigen Kraft in Armen und Rumpf; wir vergleichen sie mit anderen Kindern, die unseren Test gemacht haben.',
+    howMeasured: 'So haben wir gemessen: Der Einbeinstand ist an EUROFIT angelehnt, die Rumpfbeuge an den Deutschen Motorik-Test. Laufen auf der Stelle und Hampelmann zeigen Schnelligkeit, Koordination und Rhythmus; wir vergleichen sie mit anderen Kindern, die unseren Test gemacht haben.',
     bodyNote: 'Größe und Gewicht nutzen wir nur, um gelenkschonende Sportarten zu bevorzugen. Grundlage sind die internationalen BMI-Grenzwerte für Kinder (IOTF, Cole et al., BMJ 2000). Die Angaben bleiben auf Ihrem Gerät.',
     title: 'Vollständiger Bericht',
     paidOk: 'Danke! Ihr Abo ist aktiv.',
@@ -451,7 +451,7 @@ export default {
     },
   },
 
-  card: { title: 'Bewegungsprofil', sub: 'vorläufiges Ergebnis', strongest: 'Größte Stärke', foot: 'Der 3-Minuten-Stärkentest für Kinder' },
+  card: { title: 'Bewegungsprofil', sub: 'vorläufiges Ergebnis', strongest: 'Größte Stärke', foot: 'Der 5-Minuten-Stärkentest für Kinder' },
 
   payTest: {
     banner: 'TESTMODUS',

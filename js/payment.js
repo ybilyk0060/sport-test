@@ -11,7 +11,7 @@
 //   2) подтверждение оплаты брать из серверного callback провайдера, а не из адреса возврата;
 //   3) поменять CONFIG.paymentProvider.
 
-import { CONFIG } from './config.js?v=892a6cf-mwwo6xi7';
+import { CONFIG } from './config.js?v=ff3d1e2-mwwor4iu';
 
 const testProvider = {
   name: 'test',
@@ -92,6 +92,15 @@ export function loadPaddle(onEvent) {
   });
   return paddleReady;
 }
+// Страна покупателя для окна Paddle (чтобы не спрашивать отдельным шагом): из языка браузера (en-US → US) или часового пояса
+function country() {
+  try {
+    const m = /-([A-Z]{2})$/i.exec(navigator.language || ''); if (m) return m[1].toUpperCase();
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    const map = { 'Europe/Berlin': 'DE', 'Europe/Vienna': 'AT', 'Europe/London': 'GB', 'Europe/Zurich': 'CH', 'Europe/Kyiv': 'UA', 'Europe/Kiev': 'UA' };
+    return map[tz] || null;
+  } catch { return null; }
+}
 const paddleProvider = {
   name: 'paddle',
   get isTest() { return !CONFIG.paddleCheckout || CONFIG.paddleCheckout.env !== 'production'; },
@@ -105,9 +114,9 @@ const paddleProvider = {
       items: [{ priceId: pr.price, quantity: 1 }],
       // ?promo=1 — окно без автоматической скидки, чтобы ввести промокод Paddle (проверочная покупка, партнёрские коды)
       ...(discount && pr.discount && !/[?&]promo=1/.test(location.search) ? { discountId: pr.discount } : {}),
-      ...(email ? { customer: { email } } : {}),
+      ...(email ? { customer: { email, ...(country() ? { address: { countryCode: country() } } : {}) } } : {}),
       customData: { order_ref: orderId },
-      settings: { displayMode: 'overlay', theme: 'light', locale: lang || 'en', allowLogout: false, successUrl: done.toString() },
+      settings: { displayMode: 'overlay', variant: 'one-page', theme: 'light', locale: lang || 'en', allowLogout: false, successUrl: done.toString() },
     });
   },
   readReturn: wayforpayProvider.readReturn,

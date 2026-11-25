@@ -2,15 +2,15 @@
 // Owner rules: price and payment only on the result screen; nothing medical. Owner 25.11 after audit: «strengths», not «talents»; not a medical assessment.
 
 export default {
-  meta: { title: 'A 3-minute test that shows your child’s strengths', lang: 'en' },
+  meta: { title: 'A 5-minute test that shows your child’s strengths', lang: 'en' },
 
   common: { pricing: 'Pricing', offer: 'Terms', refund: 'Refunds', contacts: 'Contacts', next: 'Next', back: 'Back', skip: 'Skip', retry: 'Try again', close: 'Close', privacy: 'Privacy policy' },
 
   landing: {
-    title: 'Discover your child’s strengths in 3 minutes',
+    title: 'Discover your child’s strengths in 5 minutes',
     promise: 'A short test in front of your phone camera shows your child’s strengths and which sport suits them best.',
     cta: 'Start the test',
-    points: ['8 quick questions', '4–5 short exercises: balance, running in place, a forward bend and more', 'Video is processed on your phone and never uploaded'],
+    points: ['8 quick questions', '4 short exercises: balance, running in place, a forward bend and jumping jacks', 'Video is processed on your phone and never uploaded'],
     note: 'You’ll need a phone with a camera and a clear 2×2 m (6×6 ft) space.',
     disclaimer: 'A playful movement test, not a medical assessment and not an official test. It doesn’t predict sporting success. It shows where your child is strong today.',
     trust: 'Some exercises are adapted from established youth fitness test batteries: EUROFIT (Council of Europe) and the German Motor Test (DMT 6–18). Adapted for a phone camera at home, so results are a guide, not a lab measurement.',
@@ -214,7 +214,7 @@ export default {
       core: { name: 'Core strength', d: 'How steady your child keeps the body on all fours or in a plank.' },
       flex: { name: 'Flexibility & joints', d: 'Bends with a straight back and wide arm circles.' },
       balance: { name: 'Balance', d: 'How long and how steadily your child stands on one leg.' },
-      endurance: { name: 'Stamina', d: 'Whether your child keeps the pace to the end.' },
+      endurance: { name: 'Keeps the pace', d: 'Whether your child keeps the same pace to the end of a 20-second task.' },
       symmetry: { name: 'Symmetry', d: 'How evenly the left and right sides work.' },
     },
     facts: {
@@ -261,7 +261,7 @@ export default {
     leadNoWeak: 'Based on the test and what your child enjoys, we built a 4-week program.',
     inside: 'What’s included',
     insideItems: [
-      'Full report: balance, speed and agility, flexibility, coordination, stamina, arm and core strength — and three sports with reasons',
+      'Full report: balance, speed and agility, flexibility, coordination and rhythm — and three sports with reasons',
       'Home training 3 times a week, 7–10 minutes — built around your child’s interests',
       'The camera counts reps and a coach voice guides — just like in the test',
       'The workload grows a little every week, based on your child’s own results',
@@ -291,7 +291,7 @@ export default {
     restore: 'Already subscribed? Restore access',
     restoreAsk: 'Email you subscribed with',
     restoreSent: 'If there is a subscription, we sent a link to this email.',
-    withdrawal: 'I want access right away. A 14-day refund is available until the report is opened.',
+    withdrawal: 'I want access right away and understand that once I open the report I lose my 14-day right to withdraw.',
     withdrawalLink: { text: 'Refund Policy', href: 'refund-en.html' },
     withdrawalNeeded: 'Please tick the box above the button to continue.',
     notNow: 'Not now',
@@ -376,7 +376,7 @@ export default {
   },
 
   report: {
-    howMeasured: 'How we measured: one-leg balance is adapted from EUROFIT, the forward bend from the German Motor Test. Jumping jacks show coordination and rhythm, shoulder taps show arm and core strength; we compare them with other children who took our test.',
+    howMeasured: 'How we measured: one-leg balance is adapted from EUROFIT, the forward bend from the German Motor Test. Running in place and jumping jacks show speed, coordination and rhythm; we compare them with other children who took our test.',
     bodyNote: 'Height and weight only help us favor joint-friendly sports. We use the international child BMI cut-offs (IOTF, Cole et al., BMJ 2000). Your data stays on your device.',
     title: 'Full report',
     paidOk: 'Thank you! You’re subscribed.',
@@ -452,7 +452,7 @@ export default {
     },
   },
 
-  card: { title: 'Movement profile', sub: 'preliminary result', strongest: 'Top strength', foot: 'The 3-minute kids’ strengths test' },
+  card: { title: 'Movement profile', sub: 'preliminary result', strongest: 'Top strength', foot: 'The 5-minute kids’ strengths test' },
 
   payTest: {
     banner: 'TEST MODE',

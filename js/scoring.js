@@ -2,7 +2,7 @@
 // Чистые функции без браузера (проверяются в tests/rules.test.mjs). Тексты — по ключам из js/i18n.
 // Важно: возрастных норм нет. Все оценки — «выполнено задание / нет» и «ровно / неровно», пороги рабочие.
 
-import { CONFIG } from './config.js?v=892a6cf-mwwo6xi7';
+import { CONFIG } from './config.js?v=ff3d1e2-mwwor4iu';
 
 const clamp01 = (x) => Math.max(0, Math.min(1, x));
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);
@@ -99,8 +99,10 @@ export const V3 = { SWAY_STRONG: 0.05, RHYTHM_CV_MAX: 0.5, SLOW_OK: 1.1, SLOW_MI
 const V3_KEYS = ['balance_r', 'balance_l', 'side_jumps_1', 'side_jumps_2', 'bend'];
 export const isV3 = (results) => (results || []).some((r) => V3_KEYS.includes(r.key));
 // Число в уровень и балл 0..1, совместимый с levelOf (mid 0.45, high 0.75)
-function graded(v, [a, b]) {
+// max — потолок задания (баланс 2 × цель, наклон 4): достигнут — балл 1, чтобы упражнения с потолком не проигрывали «бесконечным»
+function graded(v, [a, b], max = null) {
   if (v == null) return null;
+  if (max != null && v >= max) return { score: 1, level: 3 };
   if (v < a) return { score: Math.round(0.44 * (v / a) * 100) / 100, level: 1 };
   if (v < b) return { score: Math.round((0.45 + 0.29 * ((v - a) / (b - a))) * 100) / 100, level: 2 };
   return { score: Math.round(Math.min(1, 0.75 + 0.25 * ((v - b) / b)) * 100) / 100, level: 3 };
@@ -117,7 +119,7 @@ export function buildProfileV3(results, ageGroup) {
     const sum = (br ? br.done : 0) + (bl ? bl.done : 0);
     const sways = [br, bl].map((r) => r && r.metrics.sway).filter((x) => x != null);
     const sway = sways.length ? sways.reduce((a, x) => a + x, 0) / sways.length : null;
-    let g = graded(sum, N.balance);
+    let g = graded(sum, N.balance, (br ? br.target : 0) + (bl ? bl.target : 0));
     if (g && g.level === 3 && parseInt(ageGroup, 10) >= 9 && !(sway != null && sway < V3.SWAY_STRONG)) g = down(g);
     q.balance = g; metr.balanceSec = sum; metr.sway = sway;
     if (br && bl && Math.max(br.done, bl.done) > 0) metr.balanceSym = Math.min(br.done, bl.done) / Math.max(br.done, bl.done);
@@ -134,7 +136,7 @@ export function buildProfileV3(results, ageGroup) {
   const sj = [by.side_jumps_1, by.side_jumps_2].filter(Boolean);
   if (sj.length) { const avg = sj.reduce((a, r) => a + r.done, 0) / sj.length; q.speed = graded(avg, N.speed); metr.sideJumps = Math.round(avg * 10) / 10; }
   // 3. Гибкость: уровень наклона 1–4
-  if (by.bend) { q.flex = graded(by.bend.done, N.flex); metr.bendLevel = by.bend.done; }
+  if (by.bend) { q.flex = graded(by.bend.done, N.flex, 4); metr.bendLevel = by.bend.done; }
   // 4. Координация и ритм: повторы jumping jack за время; неровный ритм — на уровень ниже. Выносливость — держит ли темп до конца.
   const jj = by.jumping_jack;
   if (jj) {
@@ -142,7 +144,7 @@ export function buildProfileV3(results, ageGroup) {
     if (jj.metrics.rhythmCv != null && jj.metrics.rhythmCv > V3.RHYTHM_CV_MAX) g = down(g);
     q.coordination = g;
     const sl = jj.metrics.slowdown;
-    if (sl != null) q.endurance = sl <= V3.SLOW_OK ? { score: 0.85, level: 3 } : sl <= V3.SLOW_MID ? { score: 0.6, level: 2 } : { score: 0.3, level: 1 };
+    if (sl != null) q.endurance = sl <= V3.SLOW_OK ? { score: 0.75, level: 3 } : sl <= V3.SLOW_MID ? { score: 0.55, level: 2 } : { score: 0.3, level: 1 };
     metr.jjReps = jj.done; metr.slowdown = sl;
   }
   // 5. Сила рук и корпуса: касания плеч за 20 с; неровный ритм — на уровень ниже
@@ -163,7 +165,9 @@ export function buildProfileV3(results, ageGroup) {
   const qualities = {};
   for (const k of QUALITIES) qualities[k] = q[k] || { score: null, level: 0 };
   const measured = QUALITIES.filter((k) => qualities[k].level > 0 && k !== 'symmetry');
-  const strongest = measured.length ? measured.reduce((a, b) => (qualities[b].score > qualities[a].score ? b : a)) : null;
+  // «Главная сила» — только из измеренных напрямую качеств: темп до конца (endurance) — вспомогательный показатель 20 с, не «сила»
+  const cand = measured.filter((k) => k !== 'endurance');
+  const strongest = cand.length ? cand.reduce((a, b) => (qualities[b].score > qualities[a].score ? b : a)) : null;
   const avg = mean(measured.map((k) => qualities[k].score));
   const summary = measured.length < 2 ? 'none' : avg >= CONFIG.levels.high ? 'high' : avg >= CONFIG.levels.mid ? 'mid' : 'low';
   return { qualities, strongest, summary, indicators: metr, preliminary: true, version: 3 };

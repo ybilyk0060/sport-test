@@ -90,6 +90,11 @@ check('v3: бег на месте 35 подъёмов колен в 9–11 — �
 p3 = buildReport([...v3().filter((r) => !r.key.startsWith('side_jumps')), hkRes(22, 20)], { age: '6-8' }).profile;
 check('v3: 42 подъёма в 6–8 — сильная сторона', p3.qualities.speed.level === 3, p3.qualities.speed);
 
+p3 = buildReport(v3({ br: 12, bl: 10, sj: 22, bend: 3, jj: 15, slow: 1.02, taps: 12 }), { age: '9-11' }).profile;
+check('v3: обычный ребёнок — главная сила не «выносливость»', p3.strongest && p3.strongest !== 'endurance', { s: p3.strongest, q: p3.qualities });
+p3 = buildReport(v3({ br: 15, bl: 15, bend: 4, jj: 30, sj: 40 }), { age: '6-8' }).profile;
+check('v3: баланс и наклон на максимуме могут быть главной силой', ['balance', 'flex'].includes(p3.strongest) || p3.qualities.balance.score === 1, { s: p3.strongest });
+
 // Программа подписчика: 4 недели × 3 тренировки, акцент по интересу, рост нагрузки
 const { buildProgram, nextWorkout } = await import('../js/program.js');
 const pg = buildProgram(r.profile, quiz, full);
