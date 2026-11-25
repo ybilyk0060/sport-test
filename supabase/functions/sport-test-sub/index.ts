@@ -61,8 +61,10 @@ async function mail(to: string, subject: string, text: string) {
     method: "POST", headers: { "api-key": BREVO, "content-type": "application/json", accept: "application/json" },
     body: JSON.stringify({ sender: { email: FROM, name: "Kids strengths test" }, to: [{ email: to }], subject, textContent: text }),
   });
+  if (!r.ok) { lastMailError = `${r.status} ${(await r.text()).slice(0, 200)}`; console.error("brevo", lastMailError); }
   return r.ok;
 }
+let lastMailError = "";
 
 const money = (n: number, cur: string) => (cur === "UAH" ? `${n} грн` : cur === "EUR" ? `${n} €` : `$${n}`);
 function termsMail(lang: string, s: Record<string, unknown>, link: string) {
@@ -103,8 +105,9 @@ Deno.serve(async (req) => {
       }
       const token = await issueToken(sub.id);
       const site = safeSite(String(b.returnTo || ""));
-      if (site && !existing) { const m = termsMail(String(b.lang || "en"), sub, `${site}?sub=${token}`); await mail(email, m.subject, m.text); }
-      return json({ token, sub: view(sub) });
+      let mailed: boolean | null = null;
+      if (site && !existing) { const m = termsMail(String(b.lang || "en"), sub, `${site}?sub=${token}`); mailed = await mail(email, m.subject, m.text); }
+      return json({ token, sub: view(sub), mailed, mailError: mailed === false ? (BREVO ? lastMailError : "no BREVO_API_KEY") : undefined, from: FROM });
     }
 
     if (b.action === "remind") {
