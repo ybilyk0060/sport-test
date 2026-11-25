@@ -107,7 +107,9 @@ export const VOICE_FILES = {
   "shoulder_taps_coach_1": "en/shoulder_taps_coach_1.wav",
   "shoulder_taps_coach_2": "en/shoulder_taps_coach_2.wav",
   "shoulder_taps_coach_3": "en/shoulder_taps_coach_3.wav",
-  "shoulder_taps_coach_4": "en/shoulder_taps_coach_4.wav"
+  "shoulder_taps_coach_4": "en/shoulder_taps_coach_4.wav",
+  "good_morning_full_howto": "en/custom/good_morning_full_howto.m4a",
+  "shoulder_taps_front_howto": "en/custom/shoulder_taps_front_howto.m4a"
  },
  "de": {
   "ui_raise_hand": "de/ui_raise_hand.m4a",
@@ -216,7 +218,9 @@ export const VOICE_FILES = {
   "shoulder_taps_coach_1": "de/shoulder_taps_coach_1.wav",
   "shoulder_taps_coach_2": "de/shoulder_taps_coach_2.wav",
   "shoulder_taps_coach_3": "de/shoulder_taps_coach_3.wav",
-  "shoulder_taps_coach_4": "de/shoulder_taps_coach_4.wav"
+  "shoulder_taps_coach_4": "de/shoulder_taps_coach_4.wav",
+  "good_morning_full_howto": "de/custom/good_morning_full_howto.m4a",
+  "shoulder_taps_front_howto": "de/custom/shoulder_taps_front_howto.m4a"
  },
  "uk": {
   "ui_raise_hand": "uk/ui_raise_hand.m4a",
@@ -325,6 +329,8 @@ export const VOICE_FILES = {
   "shoulder_taps_coach_1": "uk/shoulder_taps_coach_1.wav",
   "shoulder_taps_coach_2": "uk/shoulder_taps_coach_2.wav",
   "shoulder_taps_coach_3": "uk/shoulder_taps_coach_3.wav",
-  "shoulder_taps_coach_4": "uk/shoulder_taps_coach_4.wav"
+  "shoulder_taps_coach_4": "uk/shoulder_taps_coach_4.wav",
+  "good_morning_full_howto": "uk/custom/good_morning_full_howto.m4a",
+  "shoulder_taps_front_howto": "uk/custom/shoulder_taps_front_howto.m4a"
  }
 };
