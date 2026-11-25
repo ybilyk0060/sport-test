@@ -1,16 +1,17 @@
 // Deutsch — Deutschland und Österreich. Gleiche Schlüssel wie uk.js / en.js.
 
 export default {
-  meta: { title: 'Der 3-Minuten-Test, der die Talente Ihres Kindes zeigt', lang: 'de' },
+  meta: { title: 'Der 3-Minuten-Test, der die Stärken Ihres Kindes zeigt', lang: 'de' },
 
   common: { next: 'Weiter', back: 'Zurück', skip: 'Überspringen', retry: 'Erneut versuchen', close: 'Schließen', privacy: 'Datenschutzerklärung' },
 
   landing: {
-    title: 'Entdecken Sie die Talente Ihres Kindes in 3 Minuten',
+    title: 'Entdecken Sie die Stärken Ihres Kindes in 3 Minuten',
     promise: 'Ein kurzer Test vor der Handykamera zeigt die Stärken Ihres Kindes und welcher Sport am besten passt.',
     cta: 'Test starten',
     points: ['6 kurze Fragen', '4–5 einfache Übungen vor der Handykamera', 'Das Video wird auf dem Handy verarbeitet und nirgendwohin gesendet'],
     note: 'Sie brauchen ein Handy mit Kamera und 2×2 m freien Platz.',
+    disclaimer: 'Das ist ein spielerischer Bewegungstest, keine medizinische Untersuchung oder Diagnose. Bei Fragen zur Gesundheit Ihres Kindes wenden Sie sich an einen Arzt.',
   },
 
   quiz: {
@@ -160,7 +161,7 @@ export default {
       low: 'Das Profil entwickelt sich: Jetzt ist die beste Zeit für tägliche Bewegung.',
       none: 'Zu wenig Daten: Die meisten Übungen wurden übersprungen. Bitte den Test wiederholen.',
     },
-    strongest: 'Größtes Talent',
+    strongest: 'Größte Stärke',
     profile: 'Profil nach Fähigkeiten',
     levels: { 3: 'Stärke', 2: 'Gut, mit Luft nach oben', 1: 'Entwicklungsbereich', 0: 'Nicht gemessen' },
     qualities: {
@@ -364,7 +365,7 @@ export default {
     },
   },
 
-  card: { title: 'Bewegungsprofil', sub: 'vorläufiges Ergebnis', strongest: 'Größtes Talent', foot: 'Der 3-Minuten-Talenttest für Kinder' },
+  card: { title: 'Bewegungsprofil', sub: 'vorläufiges Ergebnis', strongest: 'Größte Stärke', foot: 'Der 3-Minuten-Stärkentest für Kinder' },
 
   payTest: {
     banner: 'TESTMODUS',

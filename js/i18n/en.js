@@ -1,17 +1,18 @@
 // English — the main language (US, Canada, UK, Australia). Same keys as uk.js.
-// Owner rules: price and payment only on the result screen; nothing medical. Hook «the test reveals your child's talents» — owner, 25.11.
+// Owner rules: price and payment only on the result screen; nothing medical. Owner 25.11 after audit: «strengths», not «talents»; not a medical assessment.
 
 export default {
-  meta: { title: 'A 3-minute test that reveals your child’s talents', lang: 'en' },
+  meta: { title: 'A 3-minute test that shows your child’s strengths', lang: 'en' },
 
   common: { next: 'Next', back: 'Back', skip: 'Skip', retry: 'Try again', close: 'Close', privacy: 'Privacy policy' },
 
   landing: {
-    title: 'Discover your child’s talents in 3 minutes',
+    title: 'Discover your child’s strengths in 3 minutes',
     promise: 'A short test in front of your phone camera shows your child’s strengths and which sport suits them best.',
     cta: 'Start the test',
     points: ['6 quick questions', '4–5 simple moves in front of the phone camera', 'Video is processed on your phone and never uploaded'],
     note: 'You’ll need a phone with a camera and a clear 2×2 m (6×6 ft) space.',
+    disclaimer: 'This is a playful movement test, not a medical assessment or diagnosis. For questions about your child’s health, see a doctor.',
   },
 
   quiz: {
@@ -161,7 +162,7 @@ export default {
       low: 'Profile still forming: now is the best time to add daily movement.',
       none: 'Not enough data: most moves were skipped. Try the test again.',
     },
-    strongest: 'Top talent',
+    strongest: 'Top strength',
     profile: 'Profile by quality',
     levels: { 3: 'Strength', 2: 'Good, room to grow', 1: 'Growth area', 0: 'Not measured' },
     qualities: {
@@ -365,7 +366,7 @@ export default {
     },
   },
 
-  card: { title: 'Movement profile', sub: 'preliminary result', strongest: 'Top talent', foot: 'The 3-minute kids’ talent test' },
+  card: { title: 'Movement profile', sub: 'preliminary result', strongest: 'Top strength', foot: 'The 3-minute kids’ strengths test' },
 
   payTest: {
     banner: 'TEST MODE',

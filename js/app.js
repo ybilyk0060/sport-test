@@ -46,7 +46,7 @@ function landing() {
   setState({ step: 'landing' });
   screen(`<div class="hero"><div class="hero-art">${ART.hero}</div><h1>${esc(T.landing.title)}</h1><p class="promise">${esc(T.landing.promise)}</p></div>
     <ul class="points">${T.landing.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul><div class="grow"></div>
-    <button class="btn" data-act="start">${esc(T.landing.cta)}</button><p class="small muted center">${esc(T.landing.note)}</p>
+    <button class="btn" data-act="start">${esc(T.landing.cta)}</button><p class="small muted center">${esc(T.landing.note)}</p><p class="small muted center">${esc(T.landing.disclaimer)}</p>
     ${Object.keys(LOCALES).length > 1 ? `<div class="langs">${Object.entries({ en: 'English', de: 'Deutsch', uk: 'Українська' }).map(([k, v]) => `<a href="?lang=${k}" class="${k === LANG ? 'on' : ''}">${v}</a>`).join('')}</div>` : ''}
     <a class="link center" href="${privacyUrl}">${esc(T.common.privacy)}</a>`, {
     start: () => { unlockAudio(); track('quiz_start', { lang: LANG }); preloadPose().catch(() => {}); quiz(0); },
@@ -185,7 +185,7 @@ function result(note = '') {
     const s = profile.strongest;
     body = `<span class="badge">${esc(R.badge)}</span><h1 class="rtitle">${esc(R.title)}</h1><p class="summary">${esc(R.summary[profile.summary])}</p>
       ${s ? `<div class="strong"><small>${esc(R.strongest)}</small><b>${esc(R.qualities[s].name)}</b><span>${esc(R.qualities[s].d)}</span><span><b style="font-size:16px">${esc(R.levels[profile.qualities[s].level])}</b></span></div>` : ''}
-      <p class="small muted">${esc(R.prelimNote)}</p>
+      <p class="small muted">${esc(R.prelimNote)} ${esc(T.landing.disclaimer)}</p>
       <h2 class="sec-title">${esc(R.profile)}</h2>
       <div class="locked"><div class="locked-list">${qualitiesOf(state.results).filter((q) => q !== s).map(qRowLocked).join('')}</div></div>
       ${dismissed ? `<div class="sticky-pay"><button class="btn" data-act="pay">${esc(T.paywall.cta(money(firstPrice())))}</button></div><p class="renew">${esc(T.paywall.renew(money(PRICE.regular), SUB.periodDays, fmtDate(Date.now() + SUB.periodDays * DAY)))}</p><p class="terms">${esc(T.paywall.terms)}</p>` : paywallCard(note, profile)}
@@ -285,7 +285,7 @@ function fullReport(justPaid = false) {
       ${sports.map((x, i) => `<div class="sport-row"><span class="n">${i + 1}</span><div><b>${esc(P.sports[x.sport].name)}</b><span class="small muted">${esc(P.sports[x.sport].ex)}</span><span class="small">${x.reasons.map((r) => esc(P.reasons[r] || r)).join(' · ')}</span></div></div>`).join('')}
       <p class="small muted">${esc(P.sportsNote)}</p>${tip ? `<p class="tip">${esc(P[tip])}</p>` : ''}</details>
     ${pb.plan}
-    <details class="sec"><summary>${esc(P.resultsTitle)}</summary><ul class="facts">${factLines(state.results).map((f) => `<li>${esc(f)}</li>`).join('')}</ul><p class="small muted">${esc(R.prelimNote)}</p></details>
+    <details class="sec"><summary>${esc(P.resultsTitle)}</summary><ul class="facts">${factLines(state.results).map((f) => `<li>${esc(f)}</li>`).join('')}</ul><p class="small muted">${esc(R.prelimNote)} ${esc(T.landing.disclaimer)}</p></details>
 
     <details class="sec"><summary>${esc(P.cardTitle)}</summary><canvas class="sharecard" width="1080" height="1350"></canvas>
       <button class="btn" data-act="share">${esc(P.share)}</button><button class="btn line" data-act="download">${esc(P.download)}</button></details>
