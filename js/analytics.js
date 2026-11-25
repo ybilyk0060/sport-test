@@ -2,8 +2,8 @@
 // Без согласия события остаются только на устройстве (store.track). Видео, точки тела и ответы о ребёнке наружу не уходят:
 // в события идут только имя шага, номер вопроса, ключ упражнения, сумма и валюта.
 
-import { CONFIG } from './config.js?v=6a747da-mww9phxq';
-import { T } from './i18n/index.js?v=6a747da-mww9phxq';
+import { CONFIG } from './config.js?v=796978e-mww9ua54';
+import { T } from './i18n/index.js?v=796978e-mww9ua54';
 
 const KEY = 'sporttest.consent';
 let consent = null;
@@ -14,7 +14,7 @@ let ready = false;
 const FUNNEL = new Set(['open', 'camera_blocked_shown', 'open_in_chrome_click', 'open_in_safari_click', 'fallback_start', 'quiz_start', 'quiz_answer', 'prep_shown', 'camera_granted', 'camera_denied', 'test_start', 'exercise_done', 'test_done',
   'result_shown', 'paywall_shown', 'offer_timer_end', 'pay_click', 'paid', 'pay_cancelled', 'report_shown', 'workout_start', 'workout_done', 'sub_cancelled', 'gift_code', 'app_link']);
 // Только безопасные поля
-const SAFE = ['order', 'n', 'key', 'skipped', 'amount', 'currency', 'discount', 'mode', 'summary', 'plan', 'test', 'app', 'id', 'lang', 'kind', 'via', 'ok', 'browser', 'platform', 'inApp'];
+const SAFE = ['order', 'q', 'step', 'reason', 'confirm', 'via', 'n', 'key', 'skipped', 'amount', 'currency', 'discount', 'mode', 'summary', 'plan', 'test', 'app', 'id', 'lang', 'kind', 'via', 'ok', 'browser', 'platform', 'inApp'];
 const clean = (p) => Object.fromEntries(Object.entries(p || {}).filter(([k, v]) => SAFE.includes(k) && v !== undefined && v !== null));
 
 function loadPixel(id) {
@@ -28,7 +28,13 @@ function loadPosthog(key, host) {
   /* eslint-disable */
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
   /* eslint-enable */
-  window.posthog.init(key, { api_host: host, autocapture: false, capture_pageview: true, disable_session_recording: true, persistence: 'localStorage', ip: false });
+  // Тепловые карты и записи сессий (Юрий 25.11) — только после согласия. Поля ввода маскируются; экран камеры в запись не попадает:
+  // запись ставится на паузу на время камеры (recording.pause/resume из stage.js), а сам экран помечен ph-no-capture.
+  window.posthog.init(key, {
+    api_host: host, autocapture: true, capture_pageview: true, capture_pageleave: true, enable_heatmaps: true,
+    disable_session_recording: false, persistence: 'localStorage', ip: false, mask_all_text: false,
+    session_recording: { maskAllInputs: true, blockClass: 'ph-no-capture', blockSelector: 'video, canvas, .stage' },
+  });
   window.posthog.register({ app: 'sport-test', lang: T.meta.lang });
 }
 
@@ -39,12 +45,18 @@ function start() {
   if (CONFIG.analytics.posthogKey) loadPosthog(CONFIG.analytics.posthogKey, CONFIG.analytics.posthogHost);
 }
 
-// Вызывается из store.track для каждого события
+// Пауза записи сессии, пока открыта камера (видео и изображение ребёнка никуда не уходят)
+export const recording = {
+  pause() { try { window.posthog && window.posthog.stopSessionRecording && window.posthog.stopSessionRecording(); } catch { /* нет */ } },
+  resume() { try { ready && window.posthog && window.posthog.startSessionRecording && window.posthog.startSessionRecording(); } catch { /* нет */ } },
+};
+
+// Вызывается из store.track для каждого события. В PostHog — все события (воронка по каждому шагу), в Meta — только шаги воронки.
 export function send(name, props = {}) {
-  if (!ready || !FUNNEL.has(name)) return;
+  if (!ready) return;
   const p = clean(props);
   try {
-    if (window.fbq) {
+    if (window.fbq && FUNNEL.has(name)) {
       if (name === 'quiz_start') window.fbq('track', 'ViewContent', { content_name: 'quiz' });
       if (name === 'test_done') window.fbq('track', 'CompleteRegistration', { content_name: 'test_done' });
       // Схема событий для рекламы (тред Meta 25.11): ViewContent — старт, CompleteRegistration — камера пройдена,

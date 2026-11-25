@@ -39,6 +39,7 @@
 
   <h2>Cookies, Meta Pixel und Statistik</h2>
   <p>Nur wenn Sie im Cookie-Banner auf „Akzeptieren“ tippen, aktivieren wir das Meta Pixel (Meta Platforms Ireland Ltd.) zur Messung von Werbung und ggf. einen Statistikdienst. Übermittelt werden nur Schrittnamen (z. B. „Zahlung geöffnet“), Betrag und Währung. Antworten über Ihr Kind, Übungsergebnisse, Videos und Körperpunkte werden nie übermittelt. Bei „Nur notwendige“ wird nichts von Dritten geladen. Ihre Wahl ändern Sie über „Meine Daten löschen“ unten.</p>
+  <p>Mit derselben Einwilligung zeichnet unser Statistikdienst (PostHog, Server in der EU) Klicks, Scrollen und Sitzungsaufzeichnungen der Website auf, damit wir sehen, wo der Test schwer zu bedienen ist. Textfelder werden maskiert, Antwortschaltflächen des Fragebogens ausgenommen, und der Kamerabildschirm wird nie aufgezeichnet: Die Aufzeichnung pausiert, solange die Kamera an ist.</p>
 
   <h2>Daten löschen</h2>
   <p>Tippen Sie auf die Schaltfläche unten, um alle Testdaten auf diesem Handy zu löschen, einschließlich Ihrer Cookie-Wahl. Das Löschen der Websitedaten in den Browsereinstellungen bewirkt dasselbe.</p>
@@ -52,9 +53,9 @@
   <p>Verantwortlicher: <span data-s="name"></span>. Fragen zum Datenschutz: <span data-s="email"></span>.</p>
 </main>
 <script type="module">
-import { store } from './js/store.js?v=6a747da-mww9phxq';
+import { store } from './js/store.js?v=796978e-mww9ua54';
 document.getElementById('wipe').onclick = () => { store.clearAll(); try { localStorage.removeItem('sporttest.consent'); localStorage.removeItem('sporttest.v1.offer'); } catch {} document.getElementById('done').hidden = false; };
 </script>
-<script type="module" src="js/legal.js?v=6a747da-mww9phxq"></script>
+<script type="module" src="js/legal.js?v=796978e-mww9ua54"></script>
 </body>
 </html>

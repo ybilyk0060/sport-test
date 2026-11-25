@@ -1,22 +1,22 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
-import { T } from './i18n/index.js?v=6a747da-mww9phxq';
-import { CONFIG } from './config.js?v=6a747da-mww9phxq';
-import { money, PRICE, CUR, fmtDate, } from './locale.js?v=6a747da-mww9phxq';
-import { LANG, LOCALES } from './i18n/index.js?v=6a747da-mww9phxq';
-import { state, setState, resetState, track, importHandoff, store } from './store.js?v=6a747da-mww9phxq';
-import { detectEnv } from './env.js?v=6a747da-mww9phxq';
-import { preloadPose } from './pose.js?v=6a747da-mww9phxq';
-import { unlockAudio } from './audio.js?v=6a747da-mww9phxq';
-import { startStage, startFallback, toast } from './stage.js?v=6a747da-mww9phxq';
-import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=6a747da-mww9phxq';
-import { payment, newOrderId } from './payment.js?v=6a747da-mww9phxq';
-import { ART } from './art.js?v=6a747da-mww9phxq';
-import { initDebug } from './debug.js?v=6a747da-mww9phxq';
-import { initConsent } from './analytics.js?v=6a747da-mww9phxq';
-import * as subapi from './subapi.js?v=6a747da-mww9phxq';
-import { drawShareCard } from './sharecard.js?v=6a747da-mww9phxq';
-import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=6a747da-mww9phxq';
+import { T } from './i18n/index.js?v=796978e-mww9ua54';
+import { CONFIG } from './config.js?v=796978e-mww9ua54';
+import { money, PRICE, CUR, fmtDate, } from './locale.js?v=796978e-mww9ua54';
+import { LANG, LOCALES } from './i18n/index.js?v=796978e-mww9ua54';
+import { state, setState, resetState, track, importHandoff, store } from './store.js?v=796978e-mww9ua54';
+import { detectEnv } from './env.js?v=796978e-mww9ua54';
+import { preloadPose } from './pose.js?v=796978e-mww9ua54';
+import { unlockAudio } from './audio.js?v=796978e-mww9ua54';
+import { startStage, startFallback, toast } from './stage.js?v=796978e-mww9ua54';
+import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=796978e-mww9ua54';
+import { payment, newOrderId } from './payment.js?v=796978e-mww9ua54';
+import { ART } from './art.js?v=796978e-mww9ua54';
+import { initDebug } from './debug.js?v=796978e-mww9ua54';
+import { initConsent } from './analytics.js?v=796978e-mww9ua54';
+import * as subapi from './subapi.js?v=796978e-mww9ua54';
+import { drawShareCard } from './sharecard.js?v=796978e-mww9ua54';
+import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=796978e-mww9ua54';
 
 const env = detectEnv();
 const app = document.getElementById('app');
@@ -69,13 +69,15 @@ function quiz(i) {
   if (i >= QUIZ.length) return prep();
   setState({ step: 'quiz', quizIndex: i });
   const id = QUIZ[i], q = T.quiz.q[id];
+  track('quiz_view', { q: id, n: i + 1 });
   if (id === 'body') return bodyStep(i, q);
+  // ph-no-capture: тексты ответов не попадают в автозахват/тепловые карты (шаг и номер вопроса идут событиями quiz_view/quiz_answer)
   const opts = Object.entries(q.options);
   const two = id === 'age';
   // пол: только лёгкий сдвиг среди подходящих видов (см. SEX_RULES в scoring.js), можно не указывать
   screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button><div class="progress"><i style="width:${Math.round(((i + 1) / QUIZ.length) * 100)}%"></i></div></div>
     <p class="small muted">${esc(T.quiz.progress(i + 1, QUIZ.length))}</p><h1 class="qtitle">${esc(q.title)}</h1>
-    <div class="opts ${two ? 'two' : ''}">${opts.map(([v, label]) => `<button class="opt ${state.quiz[id] === v ? 'sel' : ''}" data-act="pick" data-v="${esc(v)}">${esc(label)}</button>`).join('')}</div>`, {
+    <div class="opts ph-no-capture ${two ? 'two' : ''}">${opts.map(([v, label]) => `<button class="opt ${state.quiz[id] === v ? 'sel' : ''}" data-act="pick" data-v="${esc(v)}">${esc(label)}</button>`).join('')}</div>`, {
     back: () => (i === 0 ? landing() : quiz(i - 1)),
     pick: (a) => {
       setState({ quiz: { ...state.quiz, [id]: a.dataset.v } });
@@ -98,7 +100,7 @@ function bodyStep(i, q) {
     <p class="small muted">${esc(T.quiz.progress(i + 1, QUIZ.length))}</p><h1 class="qtitle">${esc(q.title)}</h1>
     <p class="small muted">${esc(q.hint)}</p>
     <div class="units"><button class="unit ${imperial ? '' : 'sel'}" data-act="unit" data-v="metric">${esc(q.metric)}</button><button class="unit ${imperial ? 'sel' : ''}" data-act="unit" data-v="imperial">${esc(q.imperial)}</button></div>
-    <div class="body-grid">
+    <div class="body-grid ph-no-capture">
       <label><span class="small">${esc(q.height)}</span>${imperial ? `<span class="pair">${inp('ft', 'ft', ftIn.ft)}${inp('in', 'in', ftIn.in)}</span>` : inp('cm', 'cm', b.cm ? Math.round(b.cm) : '')}</label>
       <label><span class="small">${esc(q.weight)}</span>${inp(imperial ? 'lb' : 'kg', imperial ? 'lb' : 'kg', b.kg ? (imperial ? Math.round(b.kg * 2.2046) : Math.round(b.kg * 10) / 10) : '')}</label>
     </div>
@@ -112,13 +114,13 @@ function bodyStep(i, q) {
       const build = bodyBuild({ cm: v.cm, kg: v.kg, sex: state.quiz.sex, age: state.quiz.age });
       if (!build) { app.querySelector('[data-el=bad]').hidden = false; return; }
       setState({ body: v, quiz: { ...state.quiz, build } });
-      track('quiz_answer', { q: 'body', n: i + 1, a: 'filled' });
+      track('quiz_answer', { q: 'body', n: i + 1, step: 'filled' });
       quiz(i + 1);
     },
     skip: () => {
       const { build, ...rest } = state.quiz; // eslint-disable-line no-unused-vars
       setState({ body: null, quiz: rest });
-      track('quiz_answer', { q: 'body', n: i + 1, a: 'skip' });
+      track('quiz_answer', { q: 'body', n: i + 1, step: 'skip' });
       quiz(i + 1);
     },
   });
@@ -416,6 +418,7 @@ function manageSub(confirm = false) {
   const S = T.sub, sub = state.sub;
   if (!sub) return result();
   setState({ step: 'manage' });
+  track('manage_shown', { confirm: !!confirm });
   const row = (k, v) => `<div class="rowline"><span class="muted">${esc(k)}</span><b>${esc(v)}</b></div>`;
   screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button></div><h1 class="rtitle">${esc(S.manageTitle)}</h1>
     <div class="box">${row(S.status, sub.status === 'active' ? S.statusActive : S.statusCancelled)}${row(S.started, fmtDate(sub.startedAt))}${row(S.paidUntil, fmtDate(sub.paidUntil))}${sub.status === 'active' ? row(S.price, S.perPeriod(money(PRICE.regular), SUB.periodDays)) : ''}</div>
@@ -426,7 +429,7 @@ function manageSub(confirm = false) {
     <button class="btn ghost" data-act="back">${esc(S.back)}</button>`, {
     back: () => fullReport(),
     cancel: () => manageSub(true),
-    'cancel-no': () => manageSub(),
+    'cancel-no': () => { track('cancel_kept'); manageSub(); },
     'cancel-yes': async () => {
       if (state.subToken) { try { const r = await subapi.cancel(state.subToken); setState({ sub: { ...state.sub, ...subapi.fromServer(r.sub) } }); } catch { toast(T.paywall.payError); return; } }
       else setState({ sub: { ...state.sub, status: 'cancelled', cancelledAt: Date.now() } });

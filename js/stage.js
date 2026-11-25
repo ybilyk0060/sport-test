@@ -1,15 +1,16 @@
 // Экран камеры: разрешение → проверка кадра → 4 упражнения. И запасной путь: разбор записи.
 
-import { T } from './i18n/index.js?v=6a747da-mww9phxq';
-import { CONFIG } from './config.js?v=6a747da-mww9phxq';
-import { state, setState, track, exportHandoff } from './store.js?v=6a747da-mww9phxq';
-import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=6a747da-mww9phxq';
-import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=6a747da-mww9phxq';
-import { preloadPose, poseStatus } from './pose.js?v=6a747da-mww9phxq';
-import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=6a747da-mww9phxq';
-import { framingCheck, frameLoop, createRun } from './session.js?v=6a747da-mww9phxq';
-import { createRaiseHand } from './gesture.js?v=6a747da-mww9phxq';
-import { EX_QUALITY } from './scoring.js?v=6a747da-mww9phxq';
+import { T } from './i18n/index.js?v=796978e-mww9ua54';
+import { CONFIG } from './config.js?v=796978e-mww9ua54';
+import { state, setState, track, exportHandoff } from './store.js?v=796978e-mww9ua54';
+import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=796978e-mww9ua54';
+import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=796978e-mww9ua54';
+import { preloadPose, poseStatus } from './pose.js?v=796978e-mww9ua54';
+import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=796978e-mww9ua54';
+import { framingCheck, frameLoop, createRun } from './session.js?v=796978e-mww9ua54';
+import { createRaiseHand } from './gesture.js?v=796978e-mww9ua54';
+import { recording } from './analytics.js?v=796978e-mww9ua54';
+import { EX_QUALITY } from './scoring.js?v=796978e-mww9ua54';
 
 const env = detectEnv();
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -23,7 +24,8 @@ const exName = (k) => T.ex[k].name;
 
 function mount() {
   const app = document.getElementById('app');
-  app.innerHTML = `<div class="stage" data-rotate="${esc(T.cam.rotate)}"><video class="cam" playsinline muted autoplay></video><canvas class="skel"></canvas><div class="hud"></div><button class="stage-close" data-close aria-label="${esc(T.common.close)}">✕</button></div>`;
+  recording.pause();
+  app.innerHTML = `<div class="stage ph-no-capture" data-rotate="${esc(T.cam.rotate)}"><video class="cam" playsinline muted autoplay></video><canvas class="skel"></canvas><div class="hud"></div><button class="stage-close" data-close aria-label="${esc(T.common.close)}">✕</button></div>`;
   root = $('.stage', app); video = $('video.cam', root); canvas = $('canvas.skel', root); hud = $('.hud', root);
   // Крестик: выйти из камеры в любой момент (камера выключается, возвращаемся к подготовке)
   $('[data-close]', root).onclick = () => { track('camera_closed'); unmount(); onExit && onExit(); };
@@ -31,6 +33,7 @@ function mount() {
 }
 function unmount() {
   alive = false;
+  recording.resume();
   if (stopLoop) { stopLoop(); stopLoop = null; }
   stopVoice(); stopCamera(); keepAwake(false);
   if (video) { try { video.pause(); } catch { /* уже остановлено */ } if (video.src) { URL.revokeObjectURL(video.src); video.removeAttribute('src'); } video.srcObject = null; }
