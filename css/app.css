@@ -209,3 +209,6 @@ button.pill { min-height: 40px; }
 .code-box { display: grid; gap: 4px; background: #f4efe6; border-radius: 12px; padding: 10px 12px; }
 .code-box b { font-size: 20px; letter-spacing: .06em; font-variant-numeric: tabular-nums; }
 .code-box .link { justify-self: start; font-weight: 700; text-decoration: underline; }
+.price-card .timer { justify-self: start; font-weight: 800; font-size: 15px; color: #fff; background: var(--warn); border-radius: 999px; padding: 4px 12px; font-variant-numeric: tabular-nums; }
+.price-card .timer.over { background: #e3ddd2; color: var(--muted); }
+.price-card.no-disc { box-shadow: inset 0 0 0 2px var(--line); }

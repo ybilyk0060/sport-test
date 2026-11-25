@@ -28,6 +28,7 @@ document.title = T.meta.title;
 document.documentElement.lang = T.meta.lang;
 
 function screen(html, handlers = {}) {
+  clearInterval(offerTimer);
   app.innerHTML = `<section class="screen">${html}</section>`;
   window.scrollTo(0, 0);
   app.onclick = (e) => {
@@ -109,16 +110,40 @@ function factLines(results) {
 }
 
 const pct = () => Math.round((1 - SUB.firstUah / SUB.regularUah) * 100);
+// Таймер скидки: дедлайн ставится при первом показе пейвола и живёт отдельно от прохождения (resetState его не трогает).
+const OFFER_KEY = 'sporttest.v1.offer';
+function offerDeadline(start = false) {
+  let d = null;
+  try { d = JSON.parse(localStorage.getItem(OFFER_KEY) || 'null'); } catch { /* нет доступа */ }
+  if (!d && start) { d = { deadline: Date.now() + SUB.offerMinutes * 60000 }; try { localStorage.setItem(OFFER_KEY, JSON.stringify(d)); } catch { /* нет доступа */ } track('offer_timer_start', { minutes: SUB.offerMinutes }); }
+  return d ? d.deadline : null;
+}
+const discountOn = () => { const d = offerDeadline(); return !!d && Date.now() < d; };
+const firstPrice = () => (discountOn() ? SUB.firstUah : SUB.regularUah);
+const mmss = (ms) => { const s = Math.max(0, Math.ceil(ms / 1000)); return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; };
+let offerTimer = 0;
+function runOfferTimer() {
+  clearInterval(offerTimer);
+  const d = offerDeadline();
+  if (!d || Date.now() >= d) return;
+  offerTimer = setInterval(() => {
+    const left = d - Date.now();
+    document.querySelectorAll('[data-el=offer-timer]').forEach((el) => { el.textContent = T.paywall.timer(mmss(left)); });
+    if (left <= 0) { clearInterval(offerTimer); track('offer_timer_end'); if (state.step === 'result') result(); }
+  }, 1000);
+}
 function paywallCard(note = '', profile = null) {
   const P = T.paywall, R = T.result;
   const renewAt = Date.now() + SUB.periodDays * DAY;
   const weak = profile ? QUALITIES.filter((q) => profile.qualities[q].level > 0).sort((a, b) => profile.qualities[a].score - profile.qualities[b].score)[0] : null;
   const focus = T.program.focus[state.quiz.likes] || T.program.focus.none;
-  const priceBox = (id) => `<div class="price-card"${id ? ` id="${id}"` : ''}><span class="disc">${esc(P.discount(pct()))}</span>
-      <div class="pc-row"><div><b>${esc(P.firstLabel(SUB.periodDays))}</b><small>${esc(P.perDay(Math.round(SUB.firstUah / SUB.periodDays)))}</small></div>
-      <div class="pc-price"><s>${esc(uah(SUB.regularUah))}</s><b>${esc(uah(SUB.firstUah))}</b></div></div>
+  offerDeadline(true);
+  const on = discountOn(), first = firstPrice(), d = offerDeadline();
+  const priceBox = (id) => `<div class="price-card${on ? '' : ' no-disc'}"${id ? ` id="${id}"` : ''}>${on ? `<span class="disc">${esc(P.discount(pct()))}</span><div class="timer" data-el="offer-timer">${esc(P.timer(mmss(d - Date.now())))}</div>` : `<div class="timer over">${esc(P.timerOver)}</div>`}
+      <div class="pc-row"><div><b>${esc(P.firstLabel(SUB.periodDays))}</b><small>${esc(P.perDay(Math.round(first / SUB.periodDays)))}</small></div>
+      <div class="pc-price">${on ? `<s>${esc(uah(SUB.regularUah))}</s>` : ''}<b>${esc(uah(first))}</b></div></div>
       <p class="renew">${esc(P.renew(uah(SUB.regularUah), SUB.periodDays, fmtDate(renewAt)))}</p>
-      <button class="btn" data-act="pay">${esc(P.cta(priceLabel()))}</button>
+      <button class="btn" data-act="pay">${esc(P.cta(uah(first)))}</button>
       <p class="small center testmode" hidden style="color:#b45309;font-weight:600">${esc(P.testMode)}</p></div>`;
   return `<div class="paywall" id="paywall"><h2>${esc(P.title)}</h2>${note ? `<p class="err">${esc(note)}</p>` : ''}
     <p>${esc(weak ? P.lead(R.qualities[weak].name.toLowerCase()) : P.leadNoWeak)}</p>
@@ -126,9 +151,9 @@ function paywallCard(note = '', profile = null) {
     ${priceBox('price-top')}
     <h3>${esc(P.inside)}</h3><ul class="checks-list">${P.insideItems.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
     <p class="small muted">${esc(P.how)}</p>
-    <h3>${esc(P.faqTitle)}</h3>${P.faq.map(([q, a]) => `<details class="faq"><summary>${esc(q)}</summary><p>${esc(a(uah(SUB.firstUah), uah(SUB.regularUah), SUB.periodDays))}</p></details>`).join('')}
+    <h3>${esc(P.faqTitle)}</h3>${P.faq.map(([q, a]) => `<details class="faq"><summary>${esc(q)}</summary><p>${esc(a(uah(first), uah(SUB.regularUah), SUB.periodDays))}</p></details>`).join('')}
     ${priceBox('')}
-    <p class="fine">${esc(P.fine(uah(SUB.firstUah), uah(SUB.regularUah), SUB.periodDays))}</p>
+    <p class="fine">${esc(P.fine(uah(first), uah(SUB.regularUah), SUB.periodDays))}</p>
     <button class="btn ghost" data-act="not-now">${esc(P.notNow)}</button></div>`;
 }
 
@@ -160,25 +185,27 @@ function result(note = '') {
       <p class="small muted">${esc(R.prelimNote)}</p>
       <h2 class="sec-title">${esc(R.profile)}</h2>
       <div class="locked"><div class="locked-list">${QUALITIES.filter((q) => q !== s).map(qRowLocked).join('')}</div></div>
-      ${dismissed ? `<div class="sticky-pay"><button class="btn" data-act="pay">${esc(T.paywall.cta(priceLabel()))}</button></div><p class="renew">${esc(T.paywall.renew(uah(SUB.regularUah), SUB.periodDays, fmtDate(Date.now() + SUB.periodDays * DAY)))}</p><p class="terms">${esc(T.paywall.terms)}</p>` : paywallCard(note, profile)}
+      ${dismissed ? `<div class="sticky-pay"><button class="btn" data-act="pay">${esc(T.paywall.cta(uah(firstPrice())))}</button></div><p class="renew">${esc(T.paywall.renew(uah(SUB.regularUah), SUB.periodDays, fmtDate(Date.now() + SUB.periodDays * DAY)))}</p><p class="terms">${esc(T.paywall.terms)}</p>` : paywallCard(note, profile)}
       <button class="link center" data-act="again">${esc(R.again)}</button>`;
   }
   screen(body, {
     pay: () => {
       const orderId = newOrderId(state.sid);
       setState({ orderId });
-      track('pay_click', { provider: payment.name, amount: SUB.firstUah, plan: 'sub', mode: paywallMode });
+      const amount = firstPrice();
+      track('pay_click', { provider: payment.name, amount, discount: amount < SUB.regularUah, plan: 'sub', mode: paywallMode });
       const ret = new URL(location.href); ret.search = ''; ret.hash = '';
       if (params.get('debug')) ret.searchParams.set('debug', '1');
       if (params.get('paywall')) ret.searchParams.set('paywall', params.get('paywall'));
-      Promise.resolve(payment.startCheckout({ orderId, amountUah: SUB.firstUah, description: T.payTest.sub(uah(SUB.firstUah), uah(SUB.regularUah), SUB.periodDays), returnUrl: ret.toString() }))
+      Promise.resolve(payment.startCheckout({ orderId, amountUah: amount, description: T.payTest.sub(uah(amount), uah(SUB.regularUah), SUB.periodDays), returnUrl: ret.toString() }))
         .catch(() => { track('pay_error', { provider: payment.name }); toast(T.paywall.payError); });
     },
     'not-now': () => { setState({ paywallDismissed: true }); track('paywall_dismissed', { mode: paywallMode }); result(); },
     again: () => { resetState(); track('restart'); landing(); },
   });
   if (payment.mode) payment.mode().then((m) => { if (m === 'test') app.querySelectorAll('.testmode').forEach((e) => { e.hidden = false; }); });
-  if (!state.resultTracked) { track('result_shown', { summary: profile.summary, strongest: profile.strongest, mode: paywallMode }); track('paywall_shown', { mode: paywallMode, amount: SUB.firstUah, regular: SUB.regularUah }); setState({ resultTracked: true }); }
+  runOfferTimer();
+  if (!state.resultTracked) { track('result_shown', { summary: profile.summary, strongest: profile.strongest, mode: paywallMode }); track('paywall_shown', { mode: paywallMode, amount: firstPrice(), regular: SUB.regularUah }); setState({ resultTracked: true }); }
 }
 
 // ---------- Подписка (тестовая заглушка: состояние на устройстве) ----------
@@ -186,7 +213,7 @@ function subActive() { return !!(state.sub && Date.now() < state.sub.paidUntil);
 function startSub(orderId) {
   const now = Date.now();
   setState({ paid: true, paidAt: now, orderId, sub: { status: 'active', startedAt: now, paidUntil: now + SUB.periodDays * DAY, orderId, test: !!payment.isTest }, workouts: state.workouts || [] });
-  track('paid', { provider: payment.name, amount: SUB.firstUah, plan: 'sub', test: !!payment.isTest });
+  track('paid', { provider: payment.name, amount: firstPrice(), plan: 'sub', test: !!payment.isTest });
 }
 
 function subLine() {

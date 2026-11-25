@@ -184,6 +184,8 @@ export default {
     ],
     focusTitle: 'Програма під інтерес дитини',
     discount: (pct) => `−${pct}%`,
+    timer: (mmss) => `Знижка діє ще ${mmss}`,
+    timerOver: 'Час знижки минув',
     firstLabel: (days) => `Перші ${days} днів`,
     perDay: (uah) => `≈ ${uah} грн на день`,
     oldPrice: (p) => `${p}`,
