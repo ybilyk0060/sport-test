@@ -178,6 +178,7 @@ Deno.serve(async (req) => {
     if (b.action === "cancel" || b.action === "resume") {
       const patch = b.action === "cancel" ? { status: "cancelled", cancelled_at: new Date().toISOString() } : { status: "active", cancelled_at: null };
       // Подписка Paddle: отмена с конца оплаченного периода / снятие запланированной отмены — у Paddle, иначе списания продолжатся
+      if (!sub.provider_sub && sub.order_ref) { const { data: o } = await db.from("sport_test_orders").select("provider_sub").eq("order_ref", sub.order_ref).maybeSingle(); if (o?.provider_sub) sub.provider_sub = o.provider_sub; }
       if (sub.provider_sub) {
         try {
           if (b.action === "cancel") await paddle(`/subscriptions/${sub.provider_sub}/cancel`, "POST", { effective_from: "next_billing_period" });
