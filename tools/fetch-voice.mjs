@@ -19,6 +19,8 @@ const WANT = {
     ...['arm_circles', 'quadruped_arm_circles', 'wall_french_press'].flatMap((k) => [1, 2, 3, 4].map((n) => `${k}_coach_${n}`)),
     'good_morning_not_reached', 'good_morning_face_wrong', 'shoulder_taps_not_reached',
     ...['jumping_jack', 'good_morning', 'shoulder_taps'].flatMap((k) => [1, 2, 3, 4].map((n) => `${k}_coach_${n}`)),
+    // Новые из Студії 25.11 (помечены для sport_test)
+    ...['cross_crawl', 'glute_bridge', 'side_bend', 'side_leg_raise', 'superman_lifts', 'tuck_jump'].flatMap((k) => [`${k}_howto`, `${k}_not_reached`, `${k}_face_wrong`, ...[1, 2, 3, 4].map((n) => `${k}_coach_${n}`)]),
   ],
 };
 const man = await fetch(BASE + 'audio/studio/manifest.json').then((r) => r.json());

@@ -2,14 +2,15 @@
 // Чистые функции без браузера (проверяются в tests/rules.test.mjs). Тексты — по ключам из js/i18n.
 // Важно: возрастных норм нет. Все оценки — «выполнено задание / нет» и «ровно / неровно», пороги рабочие.
 
-import { CONFIG } from './config.js?v=a1df8bb-mwwd9zb4';
+import { CONFIG } from './config.js?v=9fb3c18-mwwdk7wm';
 
 const clamp01 = (x) => Math.max(0, Math.min(1, x));
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);
 
 export const QUALITIES = ['coordination', 'legs', 'speed', 'arms', 'core', 'flex', 'symmetry'];
 // Какие качества проверяет каждое упражнение (для подписи «Перевіряємо: …» и чтобы не показывать то, что в наборе возраста не мерили)
-export const EX_QUALITY = { jumping_jack: ['coordination', 'symmetry'], squats: ['legs'], high_knees: ['speed', 'symmetry'], arm_circles: ['flex'], quadruped_arm_circles: ['core'], wall_french_press: ['arms'], pushups: ['arms', 'core'], good_morning: ['flex'], shoulder_taps: ['core', 'symmetry'] };
+export const EX_QUALITY = { jumping_jack: ['coordination', 'symmetry'], squats: ['legs'], high_knees: ['speed', 'symmetry'], arm_circles: ['flex'], quadruped_arm_circles: ['core'], wall_french_press: ['arms'], pushups: ['arms', 'core'], good_morning: ['flex'], shoulder_taps: ['core', 'symmetry'],
+  cross_crawl: ['coordination'], glute_bridge: ['core'], side_bend: ['flex'], side_leg_raise: ['legs'], superman_lifts: ['core'], tuck_jump: ['legs'] };
 export function qualitiesOf(results) { const set = new Set((results || []).flatMap((r) => EX_QUALITY[r.key] || [])); return QUALITIES.filter((q) => set.has(q)); }
 
 // --- Показатели (каждый 0..1 или null, если не измерен) ---
@@ -49,6 +50,10 @@ export function indicators(results) {
   if (ok(qa)) { ind.qa_done = clamp01(qa.done / qa.target); ind.qa_clean = clean(qa); }
   if (ok(wp)) { ind.wp_done = clamp01(wp.done / wp.target); ind.wp_clean = clean(wp); }
   if (ok(pu)) { ind.pu_done = clamp01(pu.done / pu.target); ind.pu_clean = clean(pu); }
+  // Новые из Студії: доля выполненного задания и чистых повторов
+  for (const [k, pre] of [['cross_crawl', 'cc'], ['glute_bridge', 'gb'], ['side_bend', 'sb'], ['side_leg_raise', 'sl'], ['superman_lifts', 'sm'], ['tuck_jump', 'tj']]) {
+    const r = by[k]; if (ok(r)) { ind[pre + '_done'] = clamp01(r.done / r.target); ind[pre + '_clean'] = clean(r); }
+  }
   if (ok(st)) {
     ind.st_done = clamp01(st.done / st.target);
     ind.st_rhythm = st.metrics.rhythmCv == null ? null : clamp01(1 - st.metrics.rhythmCv / WORK.RHYTHM_CV_MAX);
@@ -59,12 +64,12 @@ export function indicators(results) {
 
 // Какие показатели входят в какое качество
 export const QUALITY_MAP = {
-  coordination: ['jj_done', 'jj_rhythm'],
-  legs: ['sq_done', 'sq_clean'],
+  coordination: ['jj_done', 'jj_rhythm', 'cc_done', 'cc_clean'],
+  legs: ['sq_done', 'sq_clean', 'sl_done', 'sl_clean', 'tj_done', 'tj_clean'],
   speed: ['hk_done', 'hk_pace'],
   arms: ['wp_done', 'wp_clean', 'pu_done', 'pu_clean'],
-  core: ['qa_done', 'qa_clean', 'pu_done', 'st_done', 'st_rhythm'],
-  flex: ['ac_done', 'ac_clean', 'gm_done', 'gm_clean'],
+  core: ['qa_done', 'qa_clean', 'pu_done', 'st_done', 'st_rhythm', 'gb_done', 'gb_clean', 'sm_done', 'sm_clean'],
+  flex: ['ac_done', 'ac_clean', 'gm_done', 'gm_clean', 'sb_done', 'sb_clean'],
   symmetry: ['jj_arm_sym', 'hk_side', 'st_side'],
 };
 

@@ -137,6 +137,13 @@ export const CONFIG = {
     wall_french_press: { spec: 'wall_french_press', facing: 'side', wall: true, goal: 'reps', video: 'eotd/wall_french_press-v1-31517c7c.mp4', poster: 'eotd/wall_french_press-v1-31517c7c.jpg', intro: 'wall_french_press_howto', coach: 'wall_french_press_coach_' },
     // Віджимання: считаются и боком (спека студии pushups@4), и лицом (своя pushups_front) — берётся больший счёт
     pushups: { spec: 'pushups', altSpec: 'pushups_front', facing: 'any', floor: 'any', goal: 'reps', video: 'studio/pushups-v4-d83d1e9c.mp4', poster: 'studio/pushups-v4-e414f5bc.jpg', intro: 'howto_pushups' },
+    // Новые из Студії (25.11, помечены для sport_test): пока в пуле программы подписчика, в тест не входят
+    cross_crawl: { spec: 'cross_crawl', facing: 'front', goal: 'reps', video: 'eotd/cross_crawl-v1-fd54560f.mp4', poster: 'eotd/cross_crawl-v1-fd54560f.jpg', intro: 'cross_crawl_howto', coach: 'cross_crawl_coach_' },
+    glute_bridge: { spec: 'glute_bridge', facing: 'side', floor: 'side', goal: 'reps', video: 'eotd/glute_bridge-v1-e141df68.mp4', poster: 'eotd/glute_bridge-v1-e141df68.jpg', intro: 'glute_bridge_howto', coach: 'glute_bridge_coach_' },
+    side_bend: { spec: 'side_bend', facing: 'front', goal: 'reps', video: 'eotd/side_bend-v1-1b715774.mp4', poster: 'eotd/side_bend-v1-1b715774.jpg', intro: 'side_bend_howto', coach: 'side_bend_coach_' },
+    side_leg_raise: { spec: 'side_leg_raise', facing: 'front', goal: 'reps', video: 'eotd/side_leg_raise-v1-430f7a58.mp4', poster: 'eotd/side_leg_raise-v1-430f7a58.jpg', intro: 'side_leg_raise_howto', coach: 'side_leg_raise_coach_' },
+    superman_lifts: { spec: 'superman_lifts', facing: 'side', floor: 'side', goal: 'reps', video: 'eotd/superman_lifts-v1-b262f6cf.mp4', poster: 'eotd/superman_lifts-v1-b262f6cf.jpg', intro: 'superman_lifts_howto', coach: 'superman_lifts_coach_' },
+    tuck_jump: { spec: 'tuck_jump', facing: 'front', goal: 'reps', video: 'eotd/tuck_jump-v1-f8b42018.mp4', poster: 'eotd/tuck_jump-v1-f8b42018.jpg', intro: 'tuck_jump_howto', coach: 'tuck_jump_coach_' },
     shoulder_taps: { spec: 'shoulder_taps_front', facing: 'front', floor: true, goal: 'reps', video: 'eotd/shoulder_taps-v1-e37b6726.mp4', poster: 'eotd/shoulder_taps-v1-e37b6726.jpg', intro: 'shoulder_taps_front_howto', introFallback: 'name_shoulder_taps', coach: 'shoulder_taps_coach_' },
   },
 

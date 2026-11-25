@@ -2,6 +2,7 @@
 // squats@3, high_knees@2, jumping_jack@4, plank@1 (сверены 25.11.2026), good_morning@1 (добавлена 25.11.2026, в Студії помечена PROPOSED).
 // arm_circles@4, quadruped_arm_circles@1, wall_french_press@1, pushups@4 — из каталога (25.11, второй заход).
 // pushups_front — своя спека (віджимання лицом к камере). shoulder_taps_front — своя спека сайта (в Студії есть только shoulder_taps боком): см. notes внутри.
+// cross_crawl, glute_bridge, side_bend, side_leg_raise, superman_lifts, tuck_jump @1 — из каталога (25.11, третий заход: помечены в Студії для sport_test). toe_touch и windmill ещё в статусе testing — не берём.
 // Не править руками без повторной проверки tests/engine.test.mjs.
 export const SPEC_MD5 = {
  "squats": "094396b23e4dbc84449d4a135b11a998",
@@ -14,7 +15,13 @@ export const SPEC_MD5 = {
  "quadruped_arm_circles": "d658aa51bab70cff1e701b7ed632d15a",
  "wall_french_press": "978c0f618b515d8ac5ef16d295010599",
  "pushups": "0a893012aa87304fad261b848161cca4",
- "pushups_front": "4af76bad6463655efc45b9517384bd44"
+ "pushups_front": "4af76bad6463655efc45b9517384bd44",
+ "cross_crawl": "a492581a4073f54f7c5c8461b8f2b434",
+ "glute_bridge": "b4b878bba29307dce6fa2bf87083063b",
+ "side_bend": "cdbfb123da514be375525ccf29cc1ff6",
+ "side_leg_raise": "cfd2ced02b1d596a4971f72ca893144b",
+ "superman_lifts": "f9551a13c673fc6ff19d31e84753484f",
+ "tuck_jump": "9ed75c526ef2abf2b9cdf8588994bf88"
 };
 export const SPECS = {
  "squats": {
@@ -1677,5 +1684,612 @@ export const SPECS = {
    }
   },
   "notes": "sport-test 25.11 (владелец): віджимання лицом к камере. Оба локтя: старт > 150° (молодші > 140°), низ < 115° (< 125°). Считается параллельно со спекой студии pushups@4 (боком), берётся больший счёт. Пороги рабочие, на детях не проверены."
+ },
+ "cross_crawl": {
+  "key": "cross_crawl",
+  "goal": "reps",
+  "media": {
+   "poster": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/cross_crawl-v1-fd54560f.jpg",
+   "pandaVideo": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/cross_crawl-v1-fd54560f.mp4"
+  },
+  "notes": "Turnkey from the owner's video 2026-11-25 (scripts/pipeline). PROPOSED — needs owner approval: thresholds from the owner's reference video (young top line +25 %), difficulty 1, ages 4–18, trainer bounds in the run report. Two-sided exercise: one rep = a full left + right cycle.",
+  "facing": "front",
+  "motion": {
+   "top": {
+    "all": [
+     {
+      "m": "left_hip",
+      "max": {
+       "young": 104.22,
+       "standard": 90.46
+      }
+     }
+    ]
+   },
+   "type": "reps",
+   "drive": {
+    "m": "left_hip"
+   },
+   "start": {
+    "all": [
+     {
+      "m": "left_hip",
+      "min": 117.98
+     }
+    ]
+   },
+   "abandon": {
+    "hint": "cross_crawl_not_reached",
+    "onlyIfReached": {
+     "m": "left_hip",
+     "max": 111.1
+    }
+   },
+   "finishGraceMs": 300
+  },
+  "phrases": {
+   "cross_crawl_coach_1": {
+    "text": {
+     "de": "Tolle Drehung",
+     "en": "Awesome twist",
+     "uk": "Чудовий розворот"
+    }
+   },
+   "cross_crawl_coach_2": {
+    "text": {
+     "de": "Du machst das super",
+     "en": "You are doing great",
+     "uk": "Ти рухаєшся чудово"
+    }
+   },
+   "cross_crawl_coach_3": {
+    "text": {
+     "de": "Toller Rhythmus",
+     "en": "Great rhythm",
+     "uk": "Яскравий рух"
+    }
+   },
+   "cross_crawl_coach_4": {
+    "text": {
+     "de": "Weiter so stark",
+     "en": "Keep moving like that",
+     "uk": "Так тримати далі"
+    }
+   },
+   "cross_crawl_face_wrong": {
+    "text": {
+     "de": "Dreh dich zur Kamera",
+     "en": "Turn to face the screen",
+     "uk": "Повернися обличчям до екрана"
+    }
+   },
+   "cross_crawl_not_reached": {
+    "text": {
+     "de": "Hebe das Knie noch höher",
+     "en": "Lift your knee higher",
+     "uk": "Підтягни коліно ще вище"
+    }
+   }
+  },
+  "version": 1,
+  "facingHint": "cross_crawl_face_wrong",
+  "specVersion": 1,
+  "measurements": [
+   {
+    "id": "left_hip",
+    "kind": "angle",
+    "points": [
+     "left_shoulder",
+     "left_hip",
+     "left_knee"
+    ]
+   }
+  ]
+ },
+ "glute_bridge": {
+  "key": "glute_bridge",
+  "goal": "reps",
+  "media": {
+   "poster": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/glute_bridge-v1-e141df68.jpg",
+   "pandaVideo": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/glute_bridge-v1-e141df68.mp4"
+  },
+  "notes": "Turnkey from the owner's video 2026-11-25 (scripts/pipeline). PROPOSED — needs owner approval: thresholds from the owner's reference video (young top line +25 %), difficulty 1, ages 4–18, trainer bounds in the run report.",
+  "facing": "side",
+  "motion": {
+   "top": {
+    "all": [
+     {
+      "m": "left_torso_tilt",
+      "min": {
+       "young": 17.4,
+       "standard": 20.23
+      }
+     }
+    ]
+   },
+   "type": "reps",
+   "drive": {
+    "m": "left_torso_tilt"
+   },
+   "start": {
+    "all": [
+     {
+      "m": "left_torso_tilt",
+      "max": 14.56
+     }
+    ]
+   },
+   "abandon": {
+    "hint": "glute_bridge_not_reached",
+    "onlyIfReached": {
+     "m": "left_torso_tilt",
+     "min": 15.98
+    }
+   },
+   "finishGraceMs": 300
+  },
+  "phrases": {
+   "glute_bridge_coach_1": {
+    "text": {
+     "de": "Tolle Brücke!",
+     "en": "Awesome bridge!",
+     "uk": "Чудовий місток!"
+    }
+   },
+   "glute_bridge_coach_2": {
+    "text": {
+     "de": "Du bist super stark!",
+     "en": "You are so strong!",
+     "uk": "Ти справжній силач!"
+    }
+   },
+   "glute_bridge_coach_3": {
+    "text": {
+     "de": "Hoch bis zum Himmel!",
+     "en": "High into the sky!",
+     "uk": "Високо до сонечка!"
+    }
+   },
+   "glute_bridge_coach_4": {
+    "text": {
+     "de": "Weiter so, klasse gemacht!",
+     "en": "Keep up the great work!",
+     "uk": "Так тримати, молодець!"
+    }
+   },
+   "glute_bridge_face_wrong": {
+    "text": {
+     "de": "Dreh dich seitlich zum Handy!",
+     "en": "Turn sideways to the phone!",
+     "uk": "Повернися боком до телефону!"
+    }
+   },
+   "glute_bridge_not_reached": {
+    "text": {
+     "de": "Drücke dich noch etwas höher!",
+     "en": "Push a little bit higher!",
+     "uk": "Піднімися ще трішки вище!"
+    }
+   }
+  },
+  "version": 1,
+  "facingHint": "glute_bridge_face_wrong",
+  "specVersion": 1,
+  "measurements": [
+   {
+    "id": "left_torso_tilt",
+    "kind": "tilt",
+    "points": [
+     "near_shoulder",
+     "near_hip"
+    ]
+   }
+  ]
+ },
+ "side_bend": {
+  "key": "side_bend",
+  "goal": "reps",
+  "media": {
+   "poster": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/side_bend-v1-1b715774.jpg",
+   "pandaVideo": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/side_bend-v1-1b715774.mp4"
+  },
+  "notes": "Turnkey from the owner's video 2026-11-25 (scripts/pipeline). PROPOSED — needs owner approval: thresholds from the owner's reference video (young top line +25 %), difficulty 1, ages 4–18, trainer bounds in the run report.",
+  "facing": "front",
+  "motion": {
+   "top": {
+    "all": [
+     {
+      "m": "right_hip",
+      "max": {
+       "young": 101.78,
+       "standard": 81.37
+      }
+     }
+    ]
+   },
+   "type": "reps",
+   "drive": {
+    "m": "right_hip"
+   },
+   "start": {
+    "all": [
+     {
+      "m": "right_hip",
+      "min": 122.19
+     }
+    ]
+   },
+   "abandon": {
+    "hint": "side_bend_not_reached",
+    "onlyIfReached": {
+     "m": "right_hip",
+     "max": 111.99
+    }
+   },
+   "finishGraceMs": 300
+  },
+  "phrases": {
+   "side_bend_coach_1": {
+    "text": {
+     "de": "Tolle Beugung!",
+     "en": "Great side bend!",
+     "uk": "Чудовий нахил!"
+    }
+   },
+   "side_bend_coach_2": {
+    "text": {
+     "de": "Strecke dich zum Himmel!",
+     "en": "Reach up to the sky!",
+     "uk": "Тягнися вище до сонечка!"
+    }
+   },
+   "side_bend_coach_3": {
+    "text": {
+     "de": "Super beweglich!",
+     "en": "Super flexibility!",
+     "uk": "Неймовірна гнучкість!"
+    }
+   },
+   "side_bend_coach_4": {
+    "text": {
+     "de": "Super gemacht, weiter so!",
+     "en": "Awesome job, keep going!",
+     "uk": "Молодець, так тримати!"
+    }
+   },
+   "side_bend_face_wrong": {
+    "text": {
+     "de": "Dreh dich zur Kamera!",
+     "en": "Turn to face the camera!",
+     "uk": "Повернися обличчям до екрана!"
+    }
+   },
+   "side_bend_not_reached": {
+    "text": {
+     "de": "Beuge dich noch ein Stück!",
+     "en": "Bend further and stretch up!",
+     "uk": "Нахилися глибше та випрямляйся!"
+    }
+   }
+  },
+  "version": 1,
+  "facingHint": "side_bend_face_wrong",
+  "specVersion": 1,
+  "measurements": [
+   {
+    "id": "right_hip",
+    "kind": "angle",
+    "points": [
+     "right_shoulder",
+     "right_hip",
+     "right_knee"
+    ]
+   }
+  ]
+ },
+ "side_leg_raise": {
+  "key": "side_leg_raise",
+  "goal": "reps",
+  "media": {
+   "poster": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/side_leg_raise-v1-430f7a58.jpg",
+   "pandaVideo": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/side_leg_raise-v1-430f7a58.mp4"
+  },
+  "notes": "Turnkey from the owner's video 2026-11-25 (scripts/pipeline). PROPOSED — needs owner approval: thresholds from the owner's reference video (young top line +25 %), difficulty 1, ages 4–18, trainer bounds in the run report.",
+  "facing": "front",
+  "motion": {
+   "top": {
+    "all": [
+     {
+      "m": "feet",
+      "min": {
+       "young": 0.69,
+       "standard": 0.81
+      }
+     }
+    ]
+   },
+   "type": "reps",
+   "drive": {
+    "m": "feet",
+    "velocity": 0.02,
+    "trendFrames": 2
+   },
+   "start": {
+    "all": [
+     {
+      "m": "feet",
+      "max": 0.56
+     }
+    ]
+   },
+   "abandon": {
+    "hint": "side_leg_raise_not_reached",
+    "onlyIfReached": {
+     "m": "feet",
+     "min": 0.62
+    }
+   },
+   "finishGraceMs": 300
+  },
+  "phrases": {
+   "side_leg_raise_coach_1": {
+    "text": {
+     "de": "Toll das Bein gehoben!",
+     "en": "Great leg raise!",
+     "uk": "Чудовий підйом ноги!"
+    }
+   },
+   "side_leg_raise_coach_2": {
+    "text": {
+     "de": "Du machst das super!",
+     "en": "You move so gracefully!",
+     "uk": "Ти рухаєшся так граційно!"
+    }
+   },
+   "side_leg_raise_coach_3": {
+    "text": {
+     "de": "Strahle wie ein Stern!",
+     "en": "Keep shining like a star!",
+     "uk": "Сяй як справжня зірочка!"
+    }
+   },
+   "side_leg_raise_coach_4": {
+    "text": {
+     "de": "Klasse Gleichgewicht!",
+     "en": "Awesome balance!",
+     "uk": "Чудова рівновага!"
+    }
+   },
+   "side_leg_raise_face_wrong": {
+    "text": {
+     "de": "Schau wieder zum Bildschirm!",
+     "en": "Turn to face the screen!",
+     "uk": "Повернися обличчям до екрана!"
+    }
+   },
+   "side_leg_raise_not_reached": {
+    "text": {
+     "de": "Hebe dein Bein noch höher!",
+     "en": "Lift your leg higher!",
+     "uk": "Підніми ніжку трішки вище!"
+    }
+   }
+  },
+  "version": 1,
+  "facingHint": "side_leg_raise_face_wrong",
+  "specVersion": 1,
+  "measurements": [
+   {
+    "id": "feet",
+    "kind": "distance",
+    "points": [
+     "left_ankle",
+     "right_ankle"
+    ]
+   }
+  ]
+ },
+ "superman_lifts": {
+  "key": "superman_lifts",
+  "goal": "reps",
+  "media": {
+   "poster": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/superman_lifts-v1-b262f6cf.jpg",
+   "pandaVideo": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/superman_lifts-v1-b262f6cf.mp4"
+  },
+  "notes": "Turnkey from the owner's video 2026-11-25 (scripts/pipeline). PROPOSED — needs owner approval: thresholds from the owner's reference video (young top line +25 %), difficulty 2, ages 6–18, trainer bounds in the run report.",
+  "facing": "side",
+  "motion": {
+   "top": {
+    "all": [
+     {
+      "m": "feet",
+      "min": {
+       "young": 0.32,
+       "standard": 0.39
+      }
+     }
+    ]
+   },
+   "type": "reps",
+   "drive": {
+    "m": "feet",
+    "velocity": 0.02,
+    "trendFrames": 2
+   },
+   "start": {
+    "all": [
+     {
+      "m": "feet",
+      "max": 0.25
+     }
+    ]
+   },
+   "abandon": {
+    "hint": "superman_lifts_not_reached",
+    "onlyIfReached": {
+     "m": "feet",
+     "min": 0.29
+    }
+   },
+   "finishGraceMs": 300
+  },
+  "phrases": {
+   "superman_lifts_coach_1": {
+    "text": {
+     "de": "Toller Flug!",
+     "en": "Awesome flying!",
+     "uk": "Чудовий політ!"
+    }
+   },
+   "superman_lifts_coach_2": {
+    "text": {
+     "de": "Du bist ein echter Superheld!",
+     "en": "You are a real superhero!",
+     "uk": "Ти справжній супергерой!"
+    }
+   },
+   "superman_lifts_coach_3": {
+    "text": {
+     "de": "Fliege immer weiter!",
+     "en": "Keep soaring higher!",
+     "uk": "Так тримати, лети вище!"
+    }
+   },
+   "superman_lifts_coach_4": {
+    "text": {
+     "de": "Starke Arme und Beine!",
+     "en": "Strong arms and legs!",
+     "uk": "Сильні руки та ноги!"
+    }
+   },
+   "superman_lifts_face_wrong": {
+    "text": {
+     "de": "Drehe dich seitlich zur Kamera!",
+     "en": "Turn sideways to the camera!",
+     "uk": "Повернися до екрана боком!"
+    }
+   },
+   "superman_lifts_not_reached": {
+    "text": {
+     "de": "Fliege noch ein Stück höher!",
+     "en": "Fly a little higher!",
+     "uk": "Потягнися вище вгору!"
+    }
+   }
+  },
+  "version": 1,
+  "facingHint": "superman_lifts_face_wrong",
+  "specVersion": 1,
+  "measurements": [
+   {
+    "id": "feet",
+    "kind": "distance",
+    "points": [
+     "near_ankle",
+     "far_ankle"
+    ]
+   }
+  ]
+ },
+ "tuck_jump": {
+  "key": "tuck_jump",
+  "goal": "reps",
+  "media": {
+   "poster": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/tuck_jump-v1-f8b42018.jpg",
+   "pandaVideo": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/tuck_jump-v1-f8b42018.mp4"
+  },
+  "notes": "Turnkey from the owner's video 2026-11-25 (scripts/pipeline). PROPOSED — needs owner approval: thresholds from the owner's reference video (young top line +25 %), difficulty 3, ages 7–18, trainer bounds in the run report.",
+  "facing": "front",
+  "motion": {
+   "top": {
+    "all": [
+     {
+      "m": "right_hip",
+      "max": {
+       "young": 83.17,
+       "standard": 52.31
+      }
+     }
+    ]
+   },
+   "type": "reps",
+   "drive": {
+    "m": "right_hip"
+   },
+   "start": {
+    "all": [
+     {
+      "m": "right_hip",
+      "min": 114.03
+     }
+    ]
+   },
+   "abandon": {
+    "hint": "tuck_jump_not_reached",
+    "onlyIfReached": {
+     "m": "right_hip",
+     "max": 98.6
+    }
+   },
+   "finishGraceMs": 300
+  },
+  "phrases": {
+   "tuck_jump_coach_1": {
+    "text": {
+     "de": "Super Sprung in die Luft!",
+     "en": "Super jump into the air!",
+     "uk": "Суперський стрибок у повітря!"
+    }
+   },
+   "tuck_jump_coach_2": {
+    "text": {
+     "de": "Du fliegst so hoch!",
+     "en": "You fly so high today!",
+     "uk": "Ти літаєш дуже високо!"
+    }
+   },
+   "tuck_jump_coach_3": {
+    "text": {
+     "de": "Tolle hohe Sprünge!",
+     "en": "Awesome tuck jumps!",
+     "uk": "Дивовижні високі стрибки!"
+    }
+   },
+   "tuck_jump_coach_4": {
+    "text": {
+     "de": "Weich gelandet, Klasse!",
+     "en": "Soft landing, great job!",
+     "uk": "М'яке приземлення, супер!"
+    }
+   },
+   "tuck_jump_face_wrong": {
+    "text": {
+     "de": "Schau wieder zur Kamera!",
+     "en": "Turn your face to camera!",
+     "uk": "Повернися обличчям до екрана!"
+    }
+   },
+   "tuck_jump_not_reached": {
+    "text": {
+     "de": "Spring noch ein bisschen höher!",
+     "en": "Jump a little bit higher!",
+     "uk": "Підстрибни ще трохи вище!"
+    }
+   }
+  },
+  "version": 1,
+  "facingHint": "tuck_jump_face_wrong",
+  "specVersion": 1,
+  "measurements": [
+   {
+    "id": "right_hip",
+    "kind": "angle",
+    "points": [
+     "right_shoulder",
+     "right_hip",
+     "right_knee"
+    ]
+   }
+  ]
  }
 };

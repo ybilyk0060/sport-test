@@ -66,7 +66,8 @@ check('gentle: причина про суставы, без слов о весе
 const { buildProgram, nextWorkout } = await import('../js/program.js');
 const pg = buildProgram(r.profile, quiz, full);
 check('программа: 12 тренировок по 4 упражнения', pg.workouts.length === 12 && pg.workouts.every((x) => x.items.length === 4), pg.workouts.map((x) => x.items.length));
-check('в программе только упражнения возраста', pg.workouts.every((x) => x.items.every((i) => ['jumping_jack', 'arm_circles', 'squats', 'high_knees', 'good_morning', 'quadruped_arm_circles'].includes(i.key))));
+check('в программе только упражнения возраста (+ новые из Студії по возрасту)', pg.workouts.every((x) => x.items.every((i) => ['jumping_jack', 'arm_circles', 'squats', 'high_knees', 'good_morning', 'quadruped_arm_circles', 'cross_crawl', 'side_leg_raise', 'side_bend', 'glute_bridge', 'superman_lifts'].includes(i.key))));
+check('новое упражнение из Студії раз в неделю, tuck_jump не раньше 7 лет', pg.workouts.filter((x) => x.day === 3).every((x) => x.items.some((i) => ['cross_crawl', 'side_leg_raise', 'side_bend', 'glute_bridge', 'superman_lifts'].includes(i.key))) && pg.workouts.every((x) => x.items.every((i) => i.key !== 'tuck_jump')));
 check('футбол → бег в каждой тренировке', pg.focus === 'team' && pg.workouts.every((x) => x.items.some((i) => i.key === 'high_knees')));
 const sq = (wk) => pg.workouts.find((x) => x.week === wk && x.day === 1).items.find((i) => i.key === 'squats').target;
 check('нагрузка растёт по неделям', sq(4) > sq(1), [sq(1), sq(4)]);
