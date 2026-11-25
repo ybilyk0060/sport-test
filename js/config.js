@@ -14,7 +14,7 @@ export const CONFIG = {
   },
 
   // Paddle как Merchant of Record: true — показать абзацы Paddle в Terms/AGB/Privacy (EN/DE). Решение владельца.
-  paddle: false,
+  paddle: true,
 
   // --- Языки ---
   // Владелец 25.11 (второй раз): основной рынок — англоязычные страны и DE/AT. Первый в списке — по умолчанию.
