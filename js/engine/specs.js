@@ -511,8 +511,8 @@ export const SPECS = {
      {
       "m": "knee_h",
       "min": {
-       "young": -0.5,
-       "standard": -0.4
+       "young": -0.62,
+       "standard": -0.5
       }
      }
     ]
@@ -522,8 +522,8 @@ export const SPECS = {
      {
       "m": "knee_h",
       "max": {
-       "standard": -0.65,
-       "young": -0.6
+       "young": -0.74,
+       "standard": -0.68
       }
      }
     ]
@@ -533,8 +533,8 @@ export const SPECS = {
      {
       "m": "other_h",
       "max": {
-       "standard": -0.6,
-       "young": -0.55
+       "young": -0.64,
+       "standard": -0.6
       }
      }
     ]
@@ -553,7 +553,6 @@ export const SPECS = {
    "hints": {
     "start": "start_high_knees",
     "low": "lift_knees_higher",
-    "sameSide": "switch_legs",
     "bothUp": "start_high_knees",
     "stopped": "keep_moving"
    }
@@ -604,7 +603,7 @@ export const SPECS = {
     "voice": "exercise.hint.keep_moving"
    }
   },
-  "notes": "Ported 1:1 from highKneesAlgorithm.ts (05.11). v2 (18.11, owner rule: a child's rep counts from ~70 % of the adult amplitude): young lift line −0.50 (was −0.45) so a 6-year-old's knee at 0.43 below the hip still counts after the PoseSmoother lag (RB-4); low marching (knee 0.5 below the hip, plant 0.9) is still rejected. Standard band unchanged."
+  "notes": "Ported 1:1 from highKneesAlgorithm.ts (05.11). v2 (18.11, owner rule: a child's rep counts from ~70 % of the adult amplitude): young lift line −0.50 (was −0.45) so a 6-year-old's knee at 0.43 below the hip still counts after the PoseSmoother lag (RB-4); low marching (knee 0.5 below the hip, plant 0.9) is still rejected. Standard band unchanged. | sport-test 25.11 (владелец): мягче для детей — подъём засчитывается с колена на 0.62 длины туловища ниже бедра (young), 0.5 (standard); подсказку «міняй ногу» (sameSide) убрали."
  },
  "jumping_jack": {
   "key": "jumping_jack",

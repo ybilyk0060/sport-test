@@ -51,4 +51,20 @@ export async function say(name, { interrupt = true } = {}) {
   current = src; src.start(0);
 }
 
-export function stopVoice() { if (current) { try { current.stop(); } catch { /* уже остановлен */ } current = null; } }
+// Несколько клипов подряд (как вступление камеры в Kidsney: «Постав телефон до стіни!» → «Три кроки назад!»)
+let queueId = 0;
+export async function sayQueue(names, gapMs = 250) {
+  const id = ++queueId;
+  for (const name of names) {
+    if (id !== queueId || !ctx || !exists(name)) continue;
+    const buf = await loadClip(name);
+    if (!buf || id !== queueId) continue;
+    if (current) { try { current.stop(); } catch { /* уже остановлен */ } }
+    const src = ctx.createBufferSource(); src.buffer = buf; src.connect(ctx.destination);
+    current = src;
+    await new Promise((res) => { src.onended = () => { if (current === src) current = null; res(); }; src.start(0); });
+    await new Promise((res) => setTimeout(res, gapMs));
+  }
+}
+
+export function stopVoice() { queueId++; if (current) { try { current.stop(); } catch { /* уже остановлен */ } current = null; } }

@@ -5,13 +5,13 @@ import fs from 'fs'; import crypto from 'crypto';
 const BASE = 'https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/';
 const LOCS = ['en', 'de', 'uk'];
 const WANT = {
-  coach: ['ui_raise_hand', 'howto_jumping_jack', 'howto_squats', 'howto_high_knees'],
+  coach: ['ui_raise_hand', 'howto_jumping_jack', 'howto_squats', 'howto_high_knees', 'pf_phone', 'ui_steps_back', 'ui_phone_tip', 'cue_great', 'intro_next', 'intro_last'],
   voice: [
     ...Array.from({ length: 30 }, (_, i) => `count_${i + 1}`),
     'session_get_ready', 'session_start', 'session_finished', 'session_time_up', 'session_last_one', 'session_halfway', 'session_camera_lost',
     'hint_sit_lower', 'hint_turn_sideways', 'hint_keep_feet_planted', 'hint_stand_straight_arms_down', 'hint_keep_moving', 'hint_switch_legs',
     'hint_start_high_knees', 'hint_lift_knees_higher', 'hint_show_full_body', 'hint_jumping_jack_face_wrong', 'hint_jumping_jack_not_reached',
-    'hint_get_into_plank', 'hint_keep_body_straight', 'frame_step_back',
+    'hint_get_into_plank', 'hint_keep_body_straight', 'frame_step_back', 'frame_step_closer', 'frame_upper_only',
   ],
   exercise: [
     'jumping_jack_howto', 'squats_howto', 'high_knees_howto', 'good_morning_howto', 'name_shoulder_taps',

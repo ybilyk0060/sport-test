@@ -6,7 +6,7 @@ import { state, setState, track, exportHandoff } from './store.js';
 import { detectEnv, chromeIntentUrl, safariUrl } from './env.js';
 import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js';
 import { preloadPose, poseStatus } from './pose.js';
-import { unlockAudio, preloadClips, say, stopVoice, exists } from './audio.js';
+import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js';
 import { framingCheck, frameLoop, createRun } from './session.js';
 import { createRaiseHand } from './gesture.js';
 
@@ -22,8 +22,10 @@ const exName = (k) => T.ex[k].name;
 
 function mount() {
   const app = document.getElementById('app');
-  app.innerHTML = `<div class="stage" data-rotate="${esc(T.cam.rotate)}"><video class="cam" playsinline muted autoplay></video><canvas class="skel"></canvas><div class="hud"></div></div>`;
+  app.innerHTML = `<div class="stage" data-rotate="${esc(T.cam.rotate)}"><video class="cam" playsinline muted autoplay></video><canvas class="skel"></canvas><div class="hud"></div><button class="stage-close" data-close aria-label="${esc(T.common.close)}">✕</button></div>`;
   root = $('.stage', app); video = $('video.cam', root); canvas = $('canvas.skel', root); hud = $('.hud', root);
+  // Крестик: выйти из камеры в любой момент (камера выключается, возвращаемся к подготовке)
+  $('[data-close]', root).onclick = () => { track('camera_closed'); unmount(); onExit && onExit(); };
   alive = true;
 }
 function unmount() {
@@ -88,6 +90,8 @@ export async function startStage({ done, exit, list = null, mode = 'live' }) {
   }
   if (!alive) return;
   track('camera_granted', { facing: camStatus.facing, label: camStatus.label, w: camStatus.width, h: camStatus.height, ms: Math.round(performance.now() - t0) });
+  // Голосом, как в Kidsney: «Постав телефон до стіни!» → «Три кроки назад!»
+  sayQueue(['pf_phone', 'ui_steps_back']);
   root.classList.toggle('mirror', facing === 'user');
   keepAwake(true);
   if (poseStatus.state !== 'ready') hud.innerHTML = `<div class="big-center small-overlay"><div><div class="spinner"></div><p class="t" style="margin-top:16px">${esc(T.prep.modelLoading)}</p></div></div>`;
@@ -120,7 +124,7 @@ function framing() {
   return new Promise((resolve) => {
     hud.innerHTML = `${topBar(T.cam.frameTitle)}<div class="grow"></div><div class="frame-msg" data-el="msg"></div><div class="checks"><span class="chk" data-el="head">${esc(T.cam.frameHead)}</span><span class="chk" data-el="feet">${esc(T.cam.frameFeet)}</span></div><div class="hud-bottom"><button class="pill" data-act="start-anyway" hidden>${esc(T.cam.startAnyway)}</button></div>`;
     const msg = $('[data-el=msg]', hud), head = $('[data-el=head]', hud), feet = $('[data-el=feet]', hud);
-    let okSince = null, doneFlag = false;
+    let okSince = null, doneFlag = false, lastHint = 0;
     const t0 = performance.now();
     const end = (how) => { if (doneFlag) return; doneFlag = true; if (stopLoop) { stopLoop(); stopLoop = null; } track('framing_ok', { how, ms: Math.round(performance.now() - t0), fps: poseStatus.fps }); resolve(); };
     hud.onclick = (e) => { const a = e.target.closest('[data-act]'); if (!a) return; if (a.dataset.act === 'start-anyway') end('manual'); if (a.dataset.act === 'switch-cam') switchCamera(); };
@@ -130,7 +134,9 @@ function framing() {
       head.classList.toggle('ok', c.head); feet.classList.toggle('ok', c.feet);
       msg.textContent = c.ok ? T.cam.frameOk : !c.body ? T.cam.frameNoBody : !c.head ? T.cam.frameNoHead : T.cam.frameNoFeet;
       const now = performance.now();
-      if (c.ok) { okSince = okSince ?? now; if (now - okSince > 1000) end('auto'); } else okSince = null;
+      if (c.ok) { okSince = okSince ?? now; if (now - okSince > 1000) { say('cue_great'); end('auto'); } } else okSince = null;
+      // Голосовые подсказки кадра (не чаще раза в 5 с, после вступления)
+      if (!c.ok && now - t0 > 4500 && now - lastHint > 5000) { lastHint = now; say(!c.body ? 'ui_steps_back' : !c.head && !c.feet ? 'frame_step_back' : !c.feet ? 'frame_upper_only' : 'frame_step_back', { interrupt: false }); }
       if (now - t0 > 8000) $('[data-act=start-anyway]', hud).hidden = false;
     });
   });
@@ -153,7 +159,8 @@ function intro(p, i, n) {
     hud.innerHTML = introSheet(p, i, n, `${handHtml}<button class="btn" data-act="go">${esc(T.cam.go)}</button><button class="btn ghost" data-act="skip-ex">${esc(T.cam.skipEx)}</button>`);
     const ex = CONFIG.exercises[p.key];
     preloadClips([...Object.keys(T.hints).map((h) => 'hint_' + h), ...Object.keys(T.hints), ...(ex.coach ? [1, 2].map((n) => ex.coach + n) : []), 'ui_raise_hand']);
-    say(exists(ex.intro) ? ex.intro : ex.introFallback); // полная инструкция; пока её нет — короткий клип студии
+    // «Далі!» / «Останнє!», для вправи на підлозі — «Телефон на підлогу!», затем полная инструкция (пока её нет — короткий клип студии)
+    sayQueue([...(i > 0 ? [i === n - 1 ? 'intro_last' : 'intro_next'] : []), ...(ex.floor ? ['ui_phone_tip'] : []), exists(ex.intro) ? ex.intro : ex.introFallback]);
     const pv = $('video.panda', hud); pv.play().catch(() => {});
     pv.onerror = () => { pv.style.display = 'none'; }; // нет сети до видео — остаются текст и голос
     const ring = $('[data-el=ring]', hud);
