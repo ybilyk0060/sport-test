@@ -11,7 +11,7 @@
 //   2) подтверждение оплаты брать из серверного callback провайдера, а не из адреса возврата;
 //   3) поменять CONFIG.paymentProvider.
 
-import { CONFIG } from './config.js?v=b24bfb6-mwwkjlj8';
+import { CONFIG } from './config.js?v=988ab3f-mwwkm34c';
 
 const testProvider = {
   name: 'test',
@@ -103,7 +103,8 @@ const paddleProvider = {
     const P = await loadPaddle((e) => { if (e && e.name === 'checkout.completed') setTimeout(() => { location.href = done.toString(); }, 300); });
     P.Checkout.open({
       items: [{ priceId: pr.price, quantity: 1 }],
-      ...(discount && pr.discount ? { discountId: pr.discount } : {}),
+      // ?promo=1 — окно без автоматической скидки, чтобы ввести промокод Paddle (проверочная покупка, партнёрские коды)
+      ...(discount && pr.discount && !/[?&]promo=1/.test(location.search) ? { discountId: pr.discount } : {}),
       ...(email ? { customer: { email } } : {}),
       customData: { order_ref: orderId },
       settings: { displayMode: 'overlay', theme: 'light', locale: lang || 'en', allowLogout: false, successUrl: done.toString() },

@@ -1,17 +1,17 @@
 // Экран камеры: разрешение → проверка кадра → 4 упражнения. И запасной путь: разбор записи.
 
-import { T } from './i18n/index.js?v=b24bfb6-mwwkjlj8';
-import { CONFIG } from './config.js?v=b24bfb6-mwwkjlj8';
-import { state, setState, track, exportHandoff } from './store.js?v=b24bfb6-mwwkjlj8';
-import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=b24bfb6-mwwkjlj8';
-import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=b24bfb6-mwwkjlj8';
-import { preloadPose, poseStatus } from './pose.js?v=b24bfb6-mwwkjlj8';
-import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=b24bfb6-mwwkjlj8';
-import { framingCheck, frameLoop, createRun } from './session.js?v=b24bfb6-mwwkjlj8';
-import { createRaiseHand } from './gesture.js?v=b24bfb6-mwwkjlj8';
-import { recording } from './analytics.js?v=b24bfb6-mwwkjlj8';
-import { demoSvg } from './demos.js?v=b24bfb6-mwwkjlj8';
-import { EX_QUALITY } from './scoring.js?v=b24bfb6-mwwkjlj8';
+import { T } from './i18n/index.js?v=988ab3f-mwwkm34c';
+import { CONFIG } from './config.js?v=988ab3f-mwwkm34c';
+import { state, setState, track, exportHandoff } from './store.js?v=988ab3f-mwwkm34c';
+import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=988ab3f-mwwkm34c';
+import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=988ab3f-mwwkm34c';
+import { preloadPose, poseStatus } from './pose.js?v=988ab3f-mwwkm34c';
+import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=988ab3f-mwwkm34c';
+import { framingCheck, frameLoop, createRun } from './session.js?v=988ab3f-mwwkm34c';
+import { createRaiseHand } from './gesture.js?v=988ab3f-mwwkm34c';
+import { recording } from './analytics.js?v=988ab3f-mwwkm34c';
+import { demoSvg } from './demos.js?v=988ab3f-mwwkm34c';
+import { EX_QUALITY } from './scoring.js?v=988ab3f-mwwkm34c';
 
 const env = detectEnv();
 const $ = (sel, root = document) => root.querySelector(sel);
