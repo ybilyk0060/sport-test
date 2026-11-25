@@ -54,7 +54,7 @@ export const CONFIG = {
   // --- Аналитика воронки (включается только после согласия на cookie) ---
   // metaPixelId — ID пикселя из Meta Events Manager (владелец даст). posthogKey — ключ проекта PostHog (если решим подключать).
   // PostHog: проект владельца (публичный ключ клиента, его можно держать в коде). События сайта помечены app = 'sport-test'.
-  analytics: { metaPixelId: null, posthogKey: 'phc_AfhhsP7znm7dZiNtsycEcsq8R6qhMcqjdUaLb9vY72yn', posthogHost: 'https://eu.i.posthog.com' },
+  analytics: { metaPixelId: '1607393024387662', posthogKey: 'phc_AfhhsP7znm7dZiNtsycEcsq8R6qhMcqjdUaLb9vY72yn', posthogHost: 'https://eu.i.posthog.com' },
 
   // --- Подписка на сервере (Supabase sport-test-sub), задеплоено 25.11 в отдельный проект по решению владельца. ---
   subServer: true,

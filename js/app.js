@@ -1,22 +1,22 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
-import { T } from './i18n/index.js?v=796978e-mww9ua54';
-import { CONFIG } from './config.js?v=796978e-mww9ua54';
-import { money, PRICE, CUR, fmtDate, } from './locale.js?v=796978e-mww9ua54';
-import { LANG, LOCALES } from './i18n/index.js?v=796978e-mww9ua54';
-import { state, setState, resetState, track, importHandoff, store } from './store.js?v=796978e-mww9ua54';
-import { detectEnv } from './env.js?v=796978e-mww9ua54';
-import { preloadPose } from './pose.js?v=796978e-mww9ua54';
-import { unlockAudio } from './audio.js?v=796978e-mww9ua54';
-import { startStage, startFallback, toast } from './stage.js?v=796978e-mww9ua54';
-import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=796978e-mww9ua54';
-import { payment, newOrderId } from './payment.js?v=796978e-mww9ua54';
-import { ART } from './art.js?v=796978e-mww9ua54';
-import { initDebug } from './debug.js?v=796978e-mww9ua54';
-import { initConsent } from './analytics.js?v=796978e-mww9ua54';
-import * as subapi from './subapi.js?v=796978e-mww9ua54';
-import { drawShareCard } from './sharecard.js?v=796978e-mww9ua54';
-import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=796978e-mww9ua54';
+import { T } from './i18n/index.js?v=78560a1-mww9uyj5';
+import { CONFIG } from './config.js?v=78560a1-mww9uyj5';
+import { money, PRICE, CUR, fmtDate, } from './locale.js?v=78560a1-mww9uyj5';
+import { LANG, LOCALES } from './i18n/index.js?v=78560a1-mww9uyj5';
+import { state, setState, resetState, track, importHandoff, store } from './store.js?v=78560a1-mww9uyj5';
+import { detectEnv } from './env.js?v=78560a1-mww9uyj5';
+import { preloadPose } from './pose.js?v=78560a1-mww9uyj5';
+import { unlockAudio } from './audio.js?v=78560a1-mww9uyj5';
+import { startStage, startFallback, toast } from './stage.js?v=78560a1-mww9uyj5';
+import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=78560a1-mww9uyj5';
+import { payment, newOrderId } from './payment.js?v=78560a1-mww9uyj5';
+import { ART } from './art.js?v=78560a1-mww9uyj5';
+import { initDebug } from './debug.js?v=78560a1-mww9uyj5';
+import { initConsent } from './analytics.js?v=78560a1-mww9uyj5';
+import * as subapi from './subapi.js?v=78560a1-mww9uyj5';
+import { drawShareCard } from './sharecard.js?v=78560a1-mww9uyj5';
+import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=78560a1-mww9uyj5';
 
 const env = detectEnv();
 const app = document.getElementById('app');

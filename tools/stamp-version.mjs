@@ -13,7 +13,7 @@ const stamp = process.argv[2] || (() => {
 })();
 
 const walk = (d) => readdirSync(d).flatMap((f) => { const p = join(d, f); return statSync(p).isDirectory() ? walk(p) : [p]; });
-const tag = (spec) => spec.replace(/\?v=[^'"]*$/, '') + `?v=${stamp}`;
+const tag = (spec) => spec.replace(/\?v=[^'"]*$/, '') + `?v=${stamp}`; // js и css
 let changed = 0;
 const save = (p, before, after) => { if (after !== before) { writeFileSync(p, after); changed++; } };
 
@@ -27,7 +27,8 @@ for (const p of walk(join(root, 'js')).filter((f) => f.endsWith('.js'))) {
 for (const f of readdirSync(root).filter((f) => f.endsWith('.html'))) {
   const p = join(root, f), s = readFileSync(p, 'utf8');
   const t = s.replace(/(<script type="module" src=")(js\/[^"]+?\.js(?:\?v=[^"]*)?)(")/g, (m, a, spec, b) => a + tag(spec) + b)
-    .replace(/((?:from|import\()\s*')(\.\/js\/[^']+?\.js(?:\?v=[^']*)?)(')/g, (m, a, spec, b) => a + tag(spec) + b);
+    .replace(/((?:from|import\()\s*')(\.\/js\/[^']+?\.js(?:\?v=[^']*)?)(')/g, (m, a, spec, b) => a + tag(spec) + b)
+    .replace(/(<link rel="stylesheet" href=")((?:css\/[^"]+?|legal)\.css(?:\?v=[^"]*)?)(")/g, (m, a, spec, b) => a + tag(spec) + b);
   save(p, s, t);
 }
 console.log(`stamp ${stamp}: ${changed} files`);
