@@ -11,14 +11,17 @@ export const CONFIG = {
   // Цена продления и способ отмены показываются рядом с кнопкой оплаты (не только мелким шрифтом).
   subscription: {
     periodDays: 30,      // длина периода
-    firstUah: 629,       // первый период (со скидкой), ≈ $15
-    regularUah: 1599,    // каждый следующий период, ≈ $38.5
+    // Цены по валюте (валюта — по языку, js/locale.js). first — первый период со скидкой, regular — каждый следующий.
+    // UAH: решение владельца 25.11. USD/EUR — ПРЕДЛОЖЕНИЕ (как Reself $15.19 → $38.95), ждёт ОК владельца.
+    prices: {
+      UAH: { first: 629, regular: 1599 },
+      USD: { first: 14.99, regular: 38.99 },
+      EUR: { first: 14.99, regular: 36.99 },
+    },
     // Честный таймер скидки: один отсчёт на посетителя (хранится на устройстве, обновление страницы и повторный тест его не перезапускают).
-    // Когда время вышло, скидки больше нет: первый период стоит regularUah.
+    // Когда время вышло, скидки больше нет: первый период стоит regular.
     offerMinutes: 15,
   },
-  // Оставлено для совместимости со старым разовым платежом (не используется на экране).
-  price: { usd: 15, uah: 629 },
 
   // --- Оплата ---
   // 'test' — тестовая страница оплаты (pay-test.html), настоящих платежей нет.
@@ -26,6 +29,10 @@ export const CONFIG = {
   paymentProvider: 'test', // 'wayforpay' включать ТОЛЬКО с ключами своего мерчанта: демо test_merch_n1 списывает реальные деньги
   // Функция оплаты (Supabase). Сумма к оплате берётся на сервере (SPORT_TEST_PRICE_UAH), держите price.uah равной ей.
   payFn: 'https://iiafijcmajkitvtktntk.supabase.co/functions/v1/sport-test-pay',
+
+  // --- Аналитика воронки (включается только после согласия на cookie) ---
+  // metaPixelId — ID пикселя из Meta Events Manager (владелец даст). posthogKey — ключ проекта PostHog (если решим подключать).
+  analytics: { metaPixelId: null, posthogKey: null, posthogHost: 'https://eu.i.posthog.com' },
 
   // --- Хранение данных ---
   // 'device' — на устройстве (localStorage). Сервер не подключён: см. вопросы владельцу.
@@ -109,7 +116,4 @@ export const CONFIG = {
   calcMs: 4000,
 };
 
-export const uah = (n) => `${n} грн`;
-export function priceLabel() {
-  return uah(CONFIG.subscription.firstUah);
-}
+

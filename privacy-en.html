@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Privacy policy — the 3-minute kids’ talent test</title>
+<link rel="stylesheet" href="css/app.css">
+<style>.doc h2{font-size:19px;margin-top:10px}.doc ul{margin:0;padding-left:20px;display:grid;gap:6px}.doc p,.doc li{font-size:15px}</style>
+</head>
+<body>
+<main class="screen doc">
+  <a class="link" href="index.html?lang=en">← Back to the test</a>
+  <h1 class="rtitle">Privacy policy</h1>
+  <p class="muted small">The 3-minute kids’ talent test. Test version. Last updated 25.11.2026.</p>
+
+  <h2>What we do NOT collect</h2>
+  <ul>
+    <li><b>Your child’s video.</b> The camera works only on your phone: video is not recorded, stored or uploaded.</li>
+    <li><b>Body points and images.</b> Movements are recognized in the browser on your phone. No frames or body coordinates leave the phone.</li>
+    <li><b>Backup recordings.</b> If you record a video with the regular camera, it is analyzed on your phone and never uploaded.</li>
+    <li><b>Your child’s name, photos or health data.</b> We don’t ask for them.</li>
+    <li><b>Card details.</b> No card is entered on this site. Payment happens on the payment provider’s page.</li>
+  </ul>
+
+  <h2>What we keep</h2>
+  <ul>
+    <li>Answers to 6 questions (age range, interests).</li>
+    <li>Test totals: reps, seconds, quality levels.</li>
+    <li>Journey events: which steps were opened, browser and phone type (iOS or Android).</li>
+    <li>Subscription state (start date, paid until, cancelled or not) and completed program workouts.</li>
+  </ul>
+  <p>Answers and results are stored <b>only on your phone</b>, in the browser’s storage.</p>
+
+  <h2>Cookies, Meta Pixel and analytics</h2>
+  <p>Only if you tap “Accept” in the cookie banner do we turn on the Meta Pixel (Meta Platforms Ireland Ltd.) to measure ads and, possibly, an analytics service. Only step names (for example “payment opened”), amount and currency are sent. Answers about your child, exercise results, video and body points are never sent. If you choose “Only necessary”, nothing third-party is loaded. To change your choice, use “Delete my data” below.</p>
+
+  <h2>How to delete data</h2>
+  <p>Tap the button below to erase all test data on this phone, including your cookie choice. Clearing site data in your browser settings does the same.</p>
+  <button class="btn line" id="wipe">Delete my data</button>
+  <p class="small muted" id="done" hidden>Data deleted.</p>
+
+  <h2>Children</h2>
+  <p>An adult takes the test together with the child. The child does not enter any data about themselves.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about data: <span id="contact">seller contact will be added before ads launch</span>.</p>
+</main>
+<script type="module">
+import { store } from './js/store.js';
+document.getElementById('wipe').onclick = () => { store.clearAll(); try { localStorage.removeItem('sporttest.consent'); localStorage.removeItem('sporttest.v1.offer'); } catch {} document.getElementById('done').hidden = false; };
+</script>
+</body>
+</html>

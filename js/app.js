@@ -1,7 +1,9 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
 import { T } from './i18n/index.js';
-import { CONFIG, priceLabel, uah } from './config.js';
+import { CONFIG } from './config.js';
+import { money, PRICE, CUR, fmtDate, } from './locale.js';
+import { LANG } from './i18n/index.js';
 import { state, setState, resetState, track, importHandoff, store } from './store.js';
 import { detectEnv } from './env.js';
 import { preloadPose } from './pose.js';
@@ -11,6 +13,7 @@ import { buildReport, QUALITIES } from './scoring.js';
 import { payment, newOrderId } from './payment.js';
 import { ART } from './art.js';
 import { initDebug } from './debug.js';
+import { initConsent } from './analytics.js';
 import { drawShareCard } from './sharecard.js';
 import { buildProgram, nextWorkout, WEEKS, PER_WEEK } from './program.js';
 
@@ -21,8 +24,8 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&l
 const paywallMode = ['teaser', 'hard'].includes(params.get('paywall')) ? params.get('paywall') : CONFIG.paywallMode;
 const QUIZ = ['age', 'now', 'likes', 'temper', 'goal', 'screen'];
 const SUB = CONFIG.subscription;
+const privacyUrl = LANG === 'uk' ? 'privacy.html' : `privacy-${LANG}.html`;
 const DAY = 86400000;
-const fmtDate = (t) => new Date(t).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' });
 
 document.title = T.meta.title;
 document.documentElement.lang = T.meta.lang;
@@ -44,8 +47,9 @@ function landing() {
   screen(`<div class="hero"><div class="hero-art">${ART.hero}</div><h1>${esc(T.landing.title)}</h1><p class="promise">${esc(T.landing.promise)}</p></div>
     <ul class="points">${T.landing.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul><div class="grow"></div>
     <button class="btn" data-act="start">${esc(T.landing.cta)}</button><p class="small muted center">${esc(T.landing.note)}</p>
-    <a class="link center" href="privacy.html">${esc(T.common.privacy)}</a>`, {
-    start: () => { unlockAudio(); track('quiz_start'); preloadPose().catch(() => {}); quiz(0); },
+    <div class="langs">${Object.entries({ en: 'English', de: 'Deutsch', uk: 'Українська' }).map(([k, v]) => `<a href="?lang=${k}" class="${k === LANG ? 'on' : ''}">${v}</a>`).join('')}</div>
+    <a class="link center" href="${privacyUrl}">${esc(T.common.privacy)}</a>`, {
+    start: () => { unlockAudio(); track('quiz_start', { lang: LANG }); preloadPose().catch(() => {}); quiz(0); },
   });
 }
 
@@ -109,7 +113,7 @@ function factLines(results) {
   return results.map((r) => (r.skipped ? F.skipped(T.ex[r.key].name) : F[r.key](r.done, r.target, Math.round(r.elapsedSec))));
 }
 
-const pct = () => Math.round((1 - SUB.firstUah / SUB.regularUah) * 100);
+const pct = () => Math.round((1 - PRICE.first / PRICE.regular) * 100);
 // Таймер скидки: дедлайн ставится при первом показе пейвола и живёт отдельно от прохождения (resetState его не трогает).
 const OFFER_KEY = 'sporttest.v1.offer';
 function offerDeadline(start = false) {
@@ -119,7 +123,7 @@ function offerDeadline(start = false) {
   return d ? d.deadline : null;
 }
 const discountOn = () => { const d = offerDeadline(); return !!d && Date.now() < d; };
-const firstPrice = () => (discountOn() ? SUB.firstUah : SUB.regularUah);
+const firstPrice = () => (discountOn() ? PRICE.first : PRICE.regular);
 const mmss = (ms) => { const s = Math.max(0, Math.ceil(ms / 1000)); return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; };
 let offerTimer = 0;
 function runOfferTimer() {
@@ -140,20 +144,20 @@ function paywallCard(note = '', profile = null) {
   offerDeadline(true);
   const on = discountOn(), first = firstPrice(), d = offerDeadline();
   const priceBox = (id) => `<div class="price-card${on ? '' : ' no-disc'}"${id ? ` id="${id}"` : ''}>${on ? `<span class="disc">${esc(P.discount(pct()))}</span><div class="timer" data-el="offer-timer">${esc(P.timer(mmss(d - Date.now())))}</div>` : `<div class="timer over">${esc(P.timerOver)}</div>`}
-      <div class="pc-row"><div><b>${esc(P.firstLabel(SUB.periodDays))}</b><small>${esc(P.perDay(Math.round(first / SUB.periodDays)))}</small></div>
-      <div class="pc-price">${on ? `<s>${esc(uah(SUB.regularUah))}</s>` : ''}<b>${esc(uah(first))}</b></div></div>
-      <p class="renew">${esc(P.renew(uah(SUB.regularUah), SUB.periodDays, fmtDate(renewAt)))}</p>
-      <button class="btn" data-act="pay">${esc(P.cta(uah(first)))}</button>
+      <div class="pc-row"><div><b>${esc(P.firstLabel(SUB.periodDays))}</b><small>${esc(P.perDay(money(Math.round((first / SUB.periodDays) * 100) / 100)))}</small></div>
+      <div class="pc-price">${on ? `<s>${esc(money(PRICE.regular))}</s>` : ''}<b>${esc(money(first))}</b></div></div>
+      <p class="renew">${esc(P.renew(money(PRICE.regular), SUB.periodDays, fmtDate(renewAt)))}</p>
+      <button class="btn" data-act="pay">${esc(P.cta(money(first)))}</button>
       <p class="small center testmode" hidden style="color:#b45309;font-weight:600">${esc(P.testMode)}</p></div>`;
   return `<div class="paywall" id="paywall"><h2>${esc(P.title)}</h2>${note ? `<p class="err">${esc(note)}</p>` : ''}
-    <p>${esc(weak ? P.lead(R.qualities[weak].name.toLowerCase()) : P.leadNoWeak)}</p>
+    <p>${esc(weak ? P.lead(R.qualities[weak].name) : P.leadNoWeak)}</p>
     <div class="focus-box"><small>${esc(P.focusTitle)}</small><b>${esc(focus)}</b></div>
     ${priceBox('price-top')}
     <h3>${esc(P.inside)}</h3><ul class="checks-list">${P.insideItems.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
     <p class="small muted">${esc(P.how)}</p>
-    <h3>${esc(P.faqTitle)}</h3>${P.faq.map(([q, a]) => `<details class="faq"><summary>${esc(q)}</summary><p>${esc(a(uah(first), uah(SUB.regularUah), SUB.periodDays))}</p></details>`).join('')}
+    <h3>${esc(P.faqTitle)}</h3>${P.faq.map(([q, a]) => `<details class="faq"><summary>${esc(q)}</summary><p>${esc(a(money(first), money(PRICE.regular), SUB.periodDays))}</p></details>`).join('')}
     ${priceBox('')}
-    <p class="fine">${esc(P.fine(uah(first), uah(SUB.regularUah), SUB.periodDays))}</p>
+    <p class="fine">${esc(P.fine(money(first), money(PRICE.regular), SUB.periodDays))}</p>
     <button class="btn ghost" data-act="not-now">${esc(P.notNow)}</button></div>`;
 }
 
@@ -185,7 +189,7 @@ function result(note = '') {
       <p class="small muted">${esc(R.prelimNote)}</p>
       <h2 class="sec-title">${esc(R.profile)}</h2>
       <div class="locked"><div class="locked-list">${QUALITIES.filter((q) => q !== s).map(qRowLocked).join('')}</div></div>
-      ${dismissed ? `<div class="sticky-pay"><button class="btn" data-act="pay">${esc(T.paywall.cta(uah(firstPrice())))}</button></div><p class="renew">${esc(T.paywall.renew(uah(SUB.regularUah), SUB.periodDays, fmtDate(Date.now() + SUB.periodDays * DAY)))}</p><p class="terms">${esc(T.paywall.terms)}</p>` : paywallCard(note, profile)}
+      ${dismissed ? `<div class="sticky-pay"><button class="btn" data-act="pay">${esc(T.paywall.cta(money(firstPrice())))}</button></div><p class="renew">${esc(T.paywall.renew(money(PRICE.regular), SUB.periodDays, fmtDate(Date.now() + SUB.periodDays * DAY)))}</p><p class="terms">${esc(T.paywall.terms)}</p>` : paywallCard(note, profile)}
       <button class="link center" data-act="again">${esc(R.again)}</button>`;
   }
   screen(body, {
@@ -193,11 +197,11 @@ function result(note = '') {
       const orderId = newOrderId(state.sid);
       setState({ orderId });
       const amount = firstPrice();
-      track('pay_click', { provider: payment.name, amount, discount: amount < SUB.regularUah, plan: 'sub', mode: paywallMode });
+      track('pay_click', { provider: payment.name, amount, discount: amount < PRICE.regular, plan: 'sub', currency: CUR, mode: paywallMode });
       const ret = new URL(location.href); ret.search = ''; ret.hash = '';
       if (params.get('debug')) ret.searchParams.set('debug', '1');
       if (params.get('paywall')) ret.searchParams.set('paywall', params.get('paywall'));
-      Promise.resolve(payment.startCheckout({ orderId, amountUah: amount, description: T.payTest.sub(uah(amount), uah(SUB.regularUah), SUB.periodDays), returnUrl: ret.toString() }))
+      Promise.resolve(payment.startCheckout({ orderId, amount, currency: CUR, lang: LANG, description: T.payTest.sub(money(amount), money(PRICE.regular), SUB.periodDays), returnUrl: ret.toString() }))
         .catch(() => { track('pay_error', { provider: payment.name }); toast(T.paywall.payError); });
     },
     'not-now': () => { setState({ paywallDismissed: true }); track('paywall_dismissed', { mode: paywallMode }); result(); },
@@ -205,7 +209,7 @@ function result(note = '') {
   });
   if (payment.mode) payment.mode().then((m) => { if (m === 'test') app.querySelectorAll('.testmode').forEach((e) => { e.hidden = false; }); });
   runOfferTimer();
-  if (!state.resultTracked) { track('result_shown', { summary: profile.summary, strongest: profile.strongest, mode: paywallMode }); track('paywall_shown', { mode: paywallMode, amount: firstPrice(), regular: SUB.regularUah }); setState({ resultTracked: true }); }
+  if (!state.resultTracked) { track('result_shown', { summary: profile.summary, strongest: profile.strongest, mode: paywallMode }); track('paywall_shown', { mode: paywallMode, amount: firstPrice(), currency: CUR, regular: PRICE.regular }); setState({ resultTracked: true }); }
 }
 
 // ---------- Подписка (тестовая заглушка: состояние на устройстве) ----------
@@ -213,12 +217,12 @@ function subActive() { return !!(state.sub && Date.now() < state.sub.paidUntil);
 function startSub(orderId) {
   const now = Date.now();
   setState({ paid: true, paidAt: now, orderId, sub: { status: 'active', startedAt: now, paidUntil: now + SUB.periodDays * DAY, orderId, test: !!payment.isTest }, workouts: state.workouts || [] });
-  track('paid', { provider: payment.name, amount: firstPrice(), plan: 'sub', test: !!payment.isTest });
+  track('paid', { provider: payment.name, amount: firstPrice(), currency: CUR, plan: 'sub', test: !!payment.isTest });
 }
 
 function subLine() {
   const S = T.sub, sub = state.sub;
-  return sub.status === 'active' ? S.nextCharge(fmtDate(sub.paidUntil), uah(SUB.regularUah)) : S.cancelledUntil(fmtDate(sub.paidUntil));
+  return sub.status === 'active' ? S.nextCharge(fmtDate(sub.paidUntil), money(PRICE.regular)) : S.cancelledUntil(fmtDate(sub.paidUntil));
 }
 
 // Наши приложения: по возрасту ребёнка первым идёт подходящее. Подписчику — код на месяц.
@@ -281,7 +285,7 @@ function fullReport(justPaid = false) {
     <h2 class="sec-title">${esc(P.cardTitle)}</h2><canvas class="sharecard" width="1080" height="1350"></canvas>
     <button class="btn" data-act="share">${esc(P.share)}</button><button class="btn line" data-act="download">${esc(P.download)}</button>
     <button class="link center" data-act="manage">${esc(T.sub.manage)}</button>
-    <button class="link center" data-act="again">${esc(R.again)}</button><a class="link center" href="privacy.html">${esc(T.common.privacy)}</a>`, {
+    <button class="link center" data-act="again">${esc(R.again)}</button><a class="link center" href="${privacyUrl}">${esc(T.common.privacy)}</a>`, {
     share: async () => {
       track('card_share');
       const blob = await new Promise((r) => cv.toBlob(r, 'image/png'));
@@ -334,7 +338,7 @@ function manageSub(confirm = false) {
   setState({ step: 'manage' });
   const row = (k, v) => `<div class="rowline"><span class="muted">${esc(k)}</span><b>${esc(v)}</b></div>`;
   screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button></div><h1 class="rtitle">${esc(S.manageTitle)}</h1>
-    <div class="box">${row(S.status, sub.status === 'active' ? S.statusActive : S.statusCancelled)}${row(S.started, fmtDate(sub.startedAt))}${row(S.paidUntil, fmtDate(sub.paidUntil))}${sub.status === 'active' ? row(S.price, S.perPeriod(uah(SUB.regularUah), SUB.periodDays)) : ''}</div>
+    <div class="box">${row(S.status, sub.status === 'active' ? S.statusActive : S.statusCancelled)}${row(S.started, fmtDate(sub.startedAt))}${row(S.paidUntil, fmtDate(sub.paidUntil))}${sub.status === 'active' ? row(S.price, S.perPeriod(money(PRICE.regular), SUB.periodDays)) : ''}</div>
     <p class="small">${esc(subLine())}</p>${sub.test ? `<p class="small" style="color:#b45309;font-weight:600">${esc(S.testNote)}</p>` : ''}
     <div class="grow"></div>
     ${sub.status === 'active' ? (confirm ? `<p><b>${esc(S.cancelAsk)}</b></p><button class="btn" data-act="cancel-yes">${esc(S.cancelYes)}</button><button class="btn ghost" data-act="cancel-no">${esc(S.cancelNo)}</button>`
@@ -351,6 +355,7 @@ function manageSub(confirm = false) {
 // ---------- Запуск ----------
 function boot() {
   initDebug({ paywallMode, restart: () => { resetState(); landing(); }, toast });
+  initConsent();
   // Модель позы начинает грузиться сразу, а не на экране камеры: к моменту камеры она уже готова.
   setTimeout(() => { preloadPose().catch(() => {}); }, 1200);
   // Перенос ответов из встроенного браузера («Відкрити в Chrome»): квиз заново не проходим.

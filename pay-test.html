@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="uk">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -17,7 +17,8 @@
 <script type="module">
 // Тестовая страница оплаты. Настоящих платежей нет. Полей для карты здесь нет и быть не должно:
 // у настоящего провайдера карта вводится на ЕГО странице.
-import T from './js/i18n/uk.js';
+import { T } from './js/i18n/index.js';
+import { money } from './js/locale.js';
 import { track } from './js/store.js';
 const P = T.payTest;
 const q = new URLSearchParams(location.search);
@@ -30,7 +31,7 @@ document.getElementById('banner').textContent = P.banner;
 document.title = P.title;
 document.getElementById('app').innerHTML = `<section class="screen"><h1 class="rtitle">${esc(P.title)}</h1><p>${esc(P.lead)}</p>
   <div class="box"><div class="rowline"><span>${esc(P.order)}</span><span class="small muted">${esc(q.get('order') || '—')}</span></div>
-  <div class="rowline"><span>${esc(q.get('desc') || '')}</span></div><div class="rowline"><span>${esc(P.amount)}</span><b>${esc(q.get('amount') || '—')} грн</b></div></div>
+  <div class="rowline"><span>${esc(q.get('desc') || '')}</span></div><div class="rowline"><span>${esc(P.amount)}</span><b>${esc(money(Number(q.get('amount') || 0)))}</b></div></div>
   <p class="small muted">${esc(P.subNote)}</p>
   <div class="grow"></div><button class="btn" id="ok">${esc(P.pay)}</button><button class="btn ghost" id="no">${esc(P.cancel)}</button></section>`;
 track('pay_page_shown', { test: true });

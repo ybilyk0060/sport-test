@@ -3,6 +3,9 @@
 // Звук разблокируется первым нажатием пользователя (требование iOS).
 
 import { VOICE_FILES } from './voice-map.js';
+import { LANG } from './i18n/index.js';
+
+const CLIPS = VOICE_FILES[LANG] || VOICE_FILES.en;
 
 const base = 'assets/audio/';
 let ctx = null;
@@ -21,7 +24,7 @@ export function unlockAudio() {
 
 async function loadClip(name) {
   if (!ctx || buffers.has(name)) return buffers.get(name);
-  const p = fetch(base + VOICE_FILES[name]).then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error('404'))))
+  const p = fetch(base + CLIPS[name]).then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error('404'))))
     .then((ab) => new Promise((res, rej) => ctx.decodeAudioData(ab, res, rej)))
     .then((buf) => { audioStatus.loaded++; return buf; })
     .catch(() => null);
@@ -30,7 +33,7 @@ async function loadClip(name) {
 }
 
 // Только клипы из набора студии; чего нет — молчим (текст остаётся на экране). Системный TTS не используем: другой голос.
-export const exists = (name) => Object.prototype.hasOwnProperty.call(VOICE_FILES, name);
+export const exists = (name) => Object.prototype.hasOwnProperty.call(CLIPS, name);
 
 export function preloadClips(names) { for (const n of names) if (exists(n)) loadClip(n); }
 

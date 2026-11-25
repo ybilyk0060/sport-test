@@ -46,10 +46,11 @@ check('всё пропущено → none', none.summary === 'none' && none.stro
 check('пороги уровней', levelOf(0.75) === 3 && levelOf(0.5) === 2 && levelOf(0.2) === 1 && levelOf(null) === 0);
 
 // Запрещённые слова и цена: в строках интерфейса и html
-const banned = /безкоштовн|безоплатн|free|gratis|бесплатн|талант/i;
-const files = ['js/i18n/uk.js', 'index.html', 'privacy.html', 'pay-test.html'].filter((f) => fs.existsSync(f));
+// «талант» разрешён владельцем 25.11 (крючок теста). «free/gratis» — только в контексте промокодов не используем на странице.
+const banned = /безкоштовн|безоплатн|бесплатн/i;
+const files = ['js/i18n/uk.js', 'index.html', 'privacy.html', 'pay-test.html', 'privacy-en.html', 'privacy-de.html'].filter((f) => fs.existsSync(f));
 for (const f of files) {
-  const txt = fs.readFileSync(f, 'utf8').split('\n').filter((l) => !l.trim().startsWith('//')).join('\n').replace(/визначити талант/g, '');
+  const txt = fs.readFileSync(f, 'utf8').split('\n').filter((l) => !l.trim().startsWith('//')).join('\n');
   const m = txt.match(banned);
   check(`нет запрещённых слов: ${f}`, !m, m ? m[0] : undefined);
 }
@@ -59,4 +60,8 @@ const priceWords = /грн|оплат|платіж|\$|(^|[^а-яіїєґ])цін
 const flat = (o, p = '') => Object.entries(o).flatMap(([k, v]) => typeof v === 'function' ? [[p + k, String(v(1, 2, 3))]] : typeof v === 'object' && v ? flat(v, p + k + '.') : [[p + k, String(v)]]);
 const early = flat(uk).filter(([k]) => !/^(paywall|payTest|sub|report\.paidOk)/.test(k)).filter(([, v]) => priceWords.test(v));
 check('до экрана результата нет слов о цене и оплате', early.length === 0, early);
+// Все языки: одинаковые ключи (en — эталон), функции те же
+const en = (await import('../js/i18n/en.js')).default, de = (await import('../js/i18n/de.js')).default;
+const keys = (o) => flat(o).map(([k]) => k).sort();
+for (const [n, L] of [['de', de], ['uk', uk]]) { const a = keys(en), b = keys(L); const miss = a.filter((k) => !b.includes(k)), extra = b.filter((k) => !a.includes(k)); check(`ключи ${n} = en`, !miss.length && !extra.length, { miss, extra }); }
 console.log(fail ? `\n${fail} FAILED` : '\nALL OK'); process.exit(fail ? 1 : 0);

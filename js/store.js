@@ -4,6 +4,7 @@
 
 import { CONFIG } from './config.js';
 import { detectEnv } from './env.js';
+import { send } from './analytics.js';
 
 const NS = 'sporttest.v1.';
 const mem = {};
@@ -48,6 +49,7 @@ export function track(name, props = {}) {
   const ev = { t: new Date().toISOString(), sid: state.sid, name, browser: env.browser, platform: env.platform, inApp: env.inApp, ...props };
   store.appendEvent(ev);
   if (window.__debugLog) window.__debugLog(ev);
+  send(name, props);
   return ev;
 }
 

@@ -16,10 +16,12 @@ import { CONFIG } from './config.js';
 const testProvider = {
   name: 'test',
   isTest: true,
-  startCheckout({ orderId, amountUah, description, returnUrl }) {
+  startCheckout({ orderId, amount, currency = 'UAH', lang, description, returnUrl }) {
     const u = new URL('pay-test.html', location.href);
     u.searchParams.set('order', orderId);
-    u.searchParams.set('amount', String(amountUah));
+    u.searchParams.set('amount', String(amount));
+    u.searchParams.set('cur', currency);
+    if (lang) u.searchParams.set('lang', lang);
     u.searchParams.set('desc', description);
     u.searchParams.set('return', returnUrl);
     location.href = u.toString();
