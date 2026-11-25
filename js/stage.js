@@ -78,7 +78,7 @@ export async function startStage({ done, exit, list = null, mode = 'live' }) {
   // Камера и модель позы стартуют одновременно: пока телефон спрашивает разрешение, модель уже грузится.
   const t0 = performance.now();
   const model = preloadPose().then(() => null, (e) => e || new Error('model'));
-  preloadClips(['session_get_ready', 'session_start', 'session_finished', 'count_1', 'count_2', 'count_3', ...plan().map((p) => CONFIG.exercises[p.key].intro)]);
+  preloadClips(['session_get_ready', 'session_start', 'session_finished', 'count_1', 'count_2', 'count_3', ...plan().flatMap((p) => [CONFIG.exercises[p.key].intro, CONFIG.exercises[p.key].introFallback].filter(Boolean))]);
   try {
     await openCamera(video, facing);
   } catch (e) {
@@ -153,7 +153,7 @@ function intro(p, i, n) {
     hud.innerHTML = introSheet(p, i, n, `${handHtml}<button class="btn" data-act="go">${esc(T.cam.go)}</button><button class="btn ghost" data-act="skip-ex">${esc(T.cam.skipEx)}</button>`);
     const ex = CONFIG.exercises[p.key];
     preloadClips([...Object.keys(T.hints).map((h) => 'hint_' + h), ...Object.keys(T.hints), ...(ex.coach ? [1, 2].map((n) => ex.coach + n) : []), 'ui_raise_hand']);
-    say(ex.intro);
+    say(exists(ex.intro) ? ex.intro : ex.introFallback); // полная инструкция; пока её нет — короткий клип студии
     const pv = $('video.panda', hud); pv.play().catch(() => {});
     pv.onerror = () => { pv.style.display = 'none'; }; // нет сети до видео — остаются текст и голос
     const ring = $('[data-el=ring]', hud);

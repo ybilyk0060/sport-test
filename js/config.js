@@ -103,11 +103,11 @@ export const CONFIG = {
   // maxEngineAge — потолок калибровки: у «нахилів» студии пороги взрослого эталона (для 8+ нужен наклон ниже горизонтали),
   //   поэтому до решения владельца считаем всем по детским порогам (наклон до горизонтали).
   exercises: {
-    jumping_jack: { spec: 'jumping_jack', facing: 'front', goal: 'reps', video: 'eotd/jumping_jack-v2-d26a07ed.mp4', poster: 'eotd/jumping_jack-v2-d26a07ed.jpg', intro: 'jumping_jack_howto', coach: 'jumping_jack_coach_' },
-    squats: { spec: 'squats', facing: 'side', goal: 'reps', video: 'studio/squats-v3-15c52172.mp4', poster: 'studio/squats-v3-6adec835.jpg', intro: 'squats_howto' },
-    high_knees: { spec: 'high_knees', facing: 'side', goal: 'seconds', video: 'studio/high_knees-v1-79235890.mp4', poster: 'studio/high_knees-v1-05fc6289.jpg', intro: 'high_knees_howto' },
-    good_morning: { spec: 'good_morning', facing: 'side', goal: 'reps', video: 'eotd/good_morning-v1-91b13db9.mp4', poster: 'eotd/good_morning-v1-91b13db9.jpg', intro: 'good_morning_howto', coach: 'good_morning_coach_', maxEngineAge: 7 },
-    shoulder_taps: { spec: 'shoulder_taps_front', facing: 'front', floor: true, goal: 'reps', video: 'eotd/shoulder_taps-v1-e37b6726.mp4', poster: 'eotd/shoulder_taps-v1-e37b6726.jpg', intro: 'name_shoulder_taps', coach: 'shoulder_taps_coach_' },
+    jumping_jack: { spec: 'jumping_jack', facing: 'front', goal: 'reps', video: 'eotd/jumping_jack-v2-d26a07ed.mp4', poster: 'eotd/jumping_jack-v2-d26a07ed.jpg', intro: 'howto_jumping_jack', coach: 'jumping_jack_coach_' },
+    squats: { spec: 'squats', facing: 'side', goal: 'reps', video: 'studio/squats-v3-15c52172.mp4', poster: 'studio/squats-v3-6adec835.jpg', intro: 'howto_squats' },
+    high_knees: { spec: 'high_knees', facing: 'side', goal: 'seconds', video: 'studio/high_knees-v1-79235890.mp4', poster: 'studio/high_knees-v1-05fc6289.jpg', intro: 'howto_high_knees' },
+    good_morning: { spec: 'good_morning', facing: 'side', goal: 'reps', video: 'eotd/good_morning-v1-91b13db9.mp4', poster: 'eotd/good_morning-v1-91b13db9.jpg', intro: 'good_morning_full_howto', introFallback: 'good_morning_howto', coach: 'good_morning_coach_', maxEngineAge: 7 },
+    shoulder_taps: { spec: 'shoulder_taps_front', facing: 'front', floor: true, goal: 'reps', video: 'eotd/shoulder_taps-v1-e37b6726.mp4', poster: 'eotd/shoulder_taps-v1-e37b6726.jpg', intro: 'shoulder_taps_front_howto', introFallback: 'name_shoulder_taps', coach: 'shoulder_taps_coach_' },
   },
 
   // --- Уровни профиля ---

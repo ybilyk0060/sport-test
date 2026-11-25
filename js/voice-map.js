@@ -2,6 +2,9 @@
 export const VOICE_FILES = {
  "en": {
   "ui_raise_hand": "en/ui_raise_hand.m4a",
+  "howto_jumping_jack": "en/howto_jumping_jack.m4a",
+  "howto_squats": "en/howto_squats.m4a",
+  "howto_high_knees": "en/howto_high_knees.m4a",
   "count_1": "en/count_1.wav",
   "count_2": "en/count_2.wav",
   "count_3": "en/count_3.wav",
@@ -76,6 +79,9 @@ export const VOICE_FILES = {
  },
  "de": {
   "ui_raise_hand": "de/ui_raise_hand.m4a",
+  "howto_jumping_jack": "de/howto_jumping_jack.m4a",
+  "howto_squats": "de/howto_squats.m4a",
+  "howto_high_knees": "de/howto_high_knees.m4a",
   "count_1": "de/count_1.wav",
   "count_2": "de/count_2.wav",
   "count_3": "de/count_3.wav",
@@ -150,6 +156,9 @@ export const VOICE_FILES = {
  },
  "uk": {
   "ui_raise_hand": "uk/ui_raise_hand.m4a",
+  "howto_jumping_jack": "uk/howto_jumping_jack.m4a",
+  "howto_squats": "uk/howto_squats.m4a",
+  "howto_high_knees": "uk/howto_high_knees.m4a",
   "count_1": "uk/count_1.wav",
   "count_2": "uk/count_2.wav",
   "count_3": "uk/count_3.wav",

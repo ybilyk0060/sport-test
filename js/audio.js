@@ -17,6 +17,8 @@ export function unlockAudio() {
   try {
     if (!ctx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) { audioStatus.state = 'unsupported'; return; } ctx = new AC(); }
     if (ctx.state === 'suspended') ctx.resume();
+    // iOS 17+: голос звучит и при беззвучном режиме телефона (иначе Web Audio молчит при выключенном звонке)
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch { /* старый iOS */ }
     const b = ctx.createBuffer(1, 1, 22050); const s = ctx.createBufferSource(); s.buffer = b; s.connect(ctx.destination); s.start(0);
     audioStatus.state = 'unlocked';
   } catch { audioStatus.state = 'error'; }

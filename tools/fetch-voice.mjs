@@ -5,7 +5,7 @@ import fs from 'fs'; import crypto from 'crypto';
 const BASE = 'https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/';
 const LOCS = ['en', 'de', 'uk'];
 const WANT = {
-  coach: ['ui_raise_hand'],
+  coach: ['ui_raise_hand', 'howto_jumping_jack', 'howto_squats', 'howto_high_knees'],
   voice: [
     ...Array.from({ length: 30 }, (_, i) => `count_${i + 1}`),
     'session_get_ready', 'session_start', 'session_finished', 'session_time_up', 'session_last_one', 'session_halfway', 'session_camera_lost',
@@ -41,6 +41,12 @@ for (const LOC of LOCS) {
       map[LOC][key] = file;
     }
   }
+}
+// Свои фразы сайта тем же голосом (tools/gen-custom-voice.mjs): assets/audio/<lang>/custom/<key>.wav
+for (const LOC of LOCS) {
+  const dir = `assets/audio/${LOC}/custom`;
+  if (!fs.existsSync(dir)) continue;
+  for (const f of fs.readdirSync(dir)) if (/\.(wav|m4a)$/.test(f)) map[LOC][f.replace(/\.(wav|m4a)$/, '')] = `${LOC}/custom/${f}`;
 }
 fs.writeFileSync('js/voice-map.js', `// Сгенерировано tools/fetch-voice.mjs из манифеста Студії вправ (${man.generatedAt}). Голос Achird, языки en/de/uk. Не править руками.\nexport const VOICE_FILES = ${JSON.stringify(map, null, 1)};\n`);
 console.log('клипов', Object.fromEntries(Object.entries(map).map(([l, m]) => [l, Object.keys(m).length])));
