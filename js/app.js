@@ -1,22 +1,22 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
-import { T } from './i18n/index.js?v=807cb07-mwwfnjs1';
-import { CONFIG } from './config.js?v=807cb07-mwwfnjs1';
-import { money, PRICE, CUR, fmtDate, } from './locale.js?v=807cb07-mwwfnjs1';
-import { LANG, LOCALES } from './i18n/index.js?v=807cb07-mwwfnjs1';
-import { state, setState, resetState, track, importHandoff, store } from './store.js?v=807cb07-mwwfnjs1';
-import { detectEnv } from './env.js?v=807cb07-mwwfnjs1';
-import { prefetchPose } from './pose.js?v=807cb07-mwwfnjs1';
-import { unlockAudio } from './audio.js?v=807cb07-mwwfnjs1';
-import { startStage, startFallback, toast } from './stage.js?v=807cb07-mwwfnjs1';
-import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=807cb07-mwwfnjs1';
-import { payment, newOrderId } from './payment.js?v=807cb07-mwwfnjs1';
-import { ART } from './art.js?v=807cb07-mwwfnjs1';
-import { initDebug } from './debug.js?v=807cb07-mwwfnjs1';
-import { initConsent } from './analytics.js?v=807cb07-mwwfnjs1';
-import * as subapi from './subapi.js?v=807cb07-mwwfnjs1';
-import { drawShareCard } from './sharecard.js?v=807cb07-mwwfnjs1';
-import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=807cb07-mwwfnjs1';
+import { T } from './i18n/index.js?v=cb2d602-mwwgpdmx';
+import { CONFIG } from './config.js?v=cb2d602-mwwgpdmx';
+import { money, PRICE, CUR, fmtDate, } from './locale.js?v=cb2d602-mwwgpdmx';
+import { LANG, LOCALES } from './i18n/index.js?v=cb2d602-mwwgpdmx';
+import { state, setState, resetState, track, importHandoff, store } from './store.js?v=cb2d602-mwwgpdmx';
+import { detectEnv } from './env.js?v=cb2d602-mwwgpdmx';
+import { prefetchPose } from './pose.js?v=cb2d602-mwwgpdmx';
+import { unlockAudio } from './audio.js?v=cb2d602-mwwgpdmx';
+import { startStage, startFallback, toast } from './stage.js?v=cb2d602-mwwgpdmx';
+import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=cb2d602-mwwgpdmx';
+import { payment, newOrderId, loadPaddle } from './payment.js?v=cb2d602-mwwgpdmx';
+import { ART } from './art.js?v=cb2d602-mwwgpdmx';
+import { initDebug } from './debug.js?v=cb2d602-mwwgpdmx';
+import { initConsent } from './analytics.js?v=cb2d602-mwwgpdmx';
+import * as subapi from './subapi.js?v=cb2d602-mwwgpdmx';
+import { drawShareCard } from './sharecard.js?v=cb2d602-mwwgpdmx';
+import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=cb2d602-mwwgpdmx';
 
 const env = detectEnv();
 const app = document.getElementById('app');
@@ -483,6 +483,8 @@ function boot() {
     track('open', { via: 'handoff', ok });
     if (ok) return prep();
   }
+  // Ссылка оплаты из Paddle (?_ptxn=…): Paddle.js сам откроет окно оплаты
+  if (params.get('_ptxn') && CONFIG.paddleCheckout) loadPaddle().catch(() => {});
   // Возврат со страницы оплаты
   const ret = payment.readReturn(location.href);
   if (ret.status === 'check') {

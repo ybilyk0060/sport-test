@@ -11,7 +11,7 @@
 //   2) подтверждение оплаты брать из серверного callback провайдера, а не из адреса возврата;
 //   3) поменять CONFIG.paymentProvider.
 
-import { CONFIG } from './config.js?v=807cb07-mwwfnjs1';
+import { CONFIG } from './config.js?v=cb2d602-mwwgpdmx';
 
 const testProvider = {
   name: 'test',
@@ -75,7 +75,7 @@ const wayforpayProvider = {
 // Доступ открывается только после вебхука Paddle на сервер (sport-test-paddle → sport_test_orders.status='paid'),
 // а не по событию в браузере. CONFIG.paddleCheckout: { env: 'sandbox' | 'production', token, prices: { USD: { price, discount }, EUR: {...} } }.
 let paddleReady = null;
-function loadPaddle(onEvent) {
+export function loadPaddle(onEvent) {
   if (paddleReady) return paddleReady;
   const C = CONFIG.paddleCheckout;
   paddleReady = new Promise((resolve, reject) => {

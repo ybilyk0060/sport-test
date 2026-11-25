@@ -253,7 +253,7 @@ export default {
     basedOn: (x) => `Grundlage: ${x}`,
     basedInterests: 'die Interessen Ihres Kindes',
     unlock: 'Top 3 Sportarten freischalten',
-    trust: 'Jederzeit kündbar · Sichere Zahlung · Wir sehen Ihre Kartendaten nie',
+    trust: 'Jederzeit kündbar · Sichere Zahlung über Paddle · Wir sehen Ihre Kartendaten nie',
     toTop: (price) => `Vollständiges Ergebnis für ${price}`,
     title: 'Das Programm für Ihr Kind ist fertig',
     lead: () => 'Aus dem Test und den Vorlieben Ihres Kindes haben wir passende Sportarten gefunden und ein 4-Wochen-Programm für zu Hause erstellt.',

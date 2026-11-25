@@ -254,7 +254,7 @@ export default {
     basedOn: (x) => `Based on: ${x}`,
     basedInterests: 'your child’s interests',
     unlock: 'Unlock your child’s top 3 sports',
-    trust: 'Cancel anytime · Secure checkout · We never see your card details',
+    trust: 'Cancel anytime · Secure payment via Paddle · We never see your card details',
     toTop: (price) => `Get the full result for ${price}`,
     title: 'Your child’s program is ready',
     lead: () => 'Based on the test and what your child enjoys, we matched sports where your child can shine and built a 4-week home program.',

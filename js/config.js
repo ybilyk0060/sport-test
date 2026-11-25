@@ -49,8 +49,12 @@ export const CONFIG = {
   // Подключение провайдера: добавить модуль в js/payment.js и поменять это значение.
   // Paddle Sandbox (тест, без реальных денег): токен клиента и id цен/скидок приходят из Paddle → Developer tools.
   // Боевой режим (env 'production') — только по отдельному слову Юрия.
-  paddleCheckout: null, // { env: 'sandbox', token: 'test_…', prices: { USD: { price: 'pri_…', discount: 'dsc_…' }, EUR: { price: 'pri_…', discount: 'dsc_…' } } }
-  paymentProvider: 'test', // 'wayforpay' включать ТОЛЬКО с ключами своего мерчанта: демо test_merch_n1 списывает реальные деньги
+  // Paddle LIVE (Юрий 25.11: сразу боевой). Токен клиента публичный. Скидка — только на первый платёж.
+  paddleCheckout: { env: 'production', token: 'live_96312ccb8ca442ddc89b24e30e0', prices: {
+    USD: { price: 'pri_01m89zb9qgxwsrc8ebmstwn8ab', discount: 'dsc_01m89zg4rz4dytqem255h82dwa' },
+    EUR: { price: 'pri_01m89zcd0hrazzzyhcvvx8fkmf', discount: 'dsc_01m89zhfx3dfkpw276h236466h' },
+  } },
+  paymentProvider: 'paddle', // 'wayforpay' включать ТОЛЬКО с ключами своего мерчанта: демо test_merch_n1 списывает реальные деньги
   // Функция оплаты (Supabase). Сумма к оплате берётся на сервере (SPORT_TEST_PRICE_UAH), держите price.uah равной ей.
   payFn: 'https://iiafijcmajkitvtktntk.supabase.co/functions/v1/sport-test-pay',
 
