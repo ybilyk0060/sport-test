@@ -19,6 +19,7 @@ export default {
     q: {
       age: { title: 'Wie alt ist Ihr Kind?', options: { '3-5': '3–5 Jahre', '6-8': '6–8 Jahre', '9-11': '9–11 Jahre', '12-15': '12–15 Jahre' } },
       sex: { title: 'Ihr Kind ist…', options: { girl: 'Ein Mädchen', boy: 'Ein Junge', skip: 'Keine Angabe' } },
+      body: { title: 'Größe und Gewicht', hint: 'So wählen wir Sportarten, in denen sich Ihr Kind von Anfang an wohlfühlt. Die Angaben bleiben auf Ihrem Handy.', height: 'Größe', weight: 'Gewicht', next: 'Weiter', skip: 'Überspringen', bad: 'Bitte prüfen Sie die Zahlen', metric: 'cm · kg', imperial: 'ft · lb' },
       now: { title: 'Was macht Ihr Kind zurzeit?', options: { none: 'Noch nichts', section: 'Geht in einen Sportverein', yard: 'Spielt draußen, Bewegungsspiele' } },
       likes: { title: 'Was macht Ihrem Kind am meisten Spaß?', options: { team: 'Mannschaft und Ball', solo: 'Lieber für sich allein', music: 'Musik und Tanz', fight: 'Ringen und Kraft', climb: 'Klettern und Springen' } },
       temper: { title: 'Wie ist Ihr Kind vom Temperament?', options: { active: 'Sehr aktiv', calm: 'Ruhig', mixed: 'Mal so, mal so' } },
@@ -321,6 +322,7 @@ export default {
     session: (n) => `Einheit ${n}`,
     unitReps: 'Wdh.',
     unitSec: 's',
+    cardioTip: 'An den meisten Tagen 20–30 Minuten lockere Ausdauer: zügig gehen, Rad fahren oder schwimmen. Zusammen mit dem Programm wächst die Ausdauer am schnellsten.',
     screenTip: 'Bewegungspause: Nach jeder Stunde am Handy oder Tablet 2 Minuten beliebige Bewegung.',
     startTip: 'Ihr Kind macht noch keinen Sport — starten Sie mit zwei Einheiten pro Woche und nehmen Sie eine dritte dazu, wenn es zur Gewohnheit wird.',
     sectionTip: 'Ihr Kind ist schon im Verein — zeigen Sie dieses Profil dem Trainer und besprechen Sie, was dazukommen kann.',
@@ -340,6 +342,7 @@ export default {
       racket: { name: 'Rückschlagspiele', ex: 'Tennis, Badminton, Tischtennis' },
     },
     reasons: {
+      'body.joints': 'gelenkschonend — ein leichter, angenehmer Einstieg',
       'likes.team': 'Ihr Kind mag Mannschaft und Ball',
       'likes.solo': 'Ihr Kind ist lieber für sich allein aktiv',
       'likes.music': 'Ihr Kind liebt Musik und Tanz',

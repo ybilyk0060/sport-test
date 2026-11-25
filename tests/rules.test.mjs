@@ -1,7 +1,7 @@
 // Проверка правил профиля и рекомендаций + запрет слов на странице. Запуск: node tests/rules.test.mjs
 import fs from 'fs';
 globalThis.location = { search: '' };
-const { buildReport, buildProfile, levelOf, qualitiesOf } = await import('../js/scoring.js');
+const { buildReport, buildProfile, levelOf, qualitiesOf, bodyBuild } = await import('../js/scoring.js');
 let fail = 0; const check = (n, ok, got) => { console.log(`${ok ? 'OK  ' : 'FAIL'} ${n}${got !== undefined ? ': ' + JSON.stringify(got) : ''}`); if (!ok) fail++; };
 
 const full = [
@@ -49,7 +49,18 @@ check('при прочих равных пол меняет только пор�
 const n0 = buildReport(eq, { ...neutral, sex: 'skip' }), nb = buildReport(eq, { ...neutral, sex: 'boy' });
 check('пол в причины не попадает', [...g0.sports, ...b0.sports, ...nb.sports].every((x) => x.reasons.every((k) => !k.startsWith('sex'))));
 check('«не вказувати» = без пола', JSON.stringify(n0.sports) === JSON.stringify(buildReport(eq, neutral).sports));
-check('причины: сначала результаты теста', gS.sports.every((x) => !x.reasons.some((k, i) => k.startsWith('q.') && x.reasons.slice(0, i).some((p) => !p.startsWith('q.')))), gS.sports);
+check('причины: сначала результаты теста', gS.sports.every((x) => !x.reasons.some((k, i) => k.startsWith('q.') && x.reasons.slice(0, i).some((p) => !p.startsWith('q.') && !p.startsWith('body.')))), gS.sports);
+
+// Телосложение: пороги IOTF по верху возрастного диапазона
+check('8 лет девочка 128 см 26 кг (ИМТ 15,9) — std', bodyBuild({ cm: 128, kg: 26, sex: 'girl', age: '6-8' }) === 'std');
+check('8 лет девочка 128 см 31 кг (ИМТ 18,9) — soft', bodyBuild({ cm: 128, kg: 31, sex: 'girl', age: '6-8' }) === 'soft');
+check('8 лет девочка 128 см 38 кг (ИМТ 23,2) — gentle', bodyBuild({ cm: 128, kg: 38, sex: 'girl', age: '6-8' }) === 'gentle');
+check('неправдоподобные числа — null', bodyBuild({ cm: 12, kg: 30 }) === null && bodyBuild({ cm: 130, kg: 300 }) === null && bodyBuild({}) === null);
+check('пол не указан — больший порог', bodyBuild({ cm: 150, kg: 54, age: '12-15' }) === 'soft' && bodyBuild({ cm: 150, kg: 53, age: '12-15' }) === 'std' && bodyBuild({ cm: 150, kg: 53, age: '12-15', sex: 'boy' }) === 'soft');
+const climbQ = { age: '6-8', now: 'none', likes: 'climb', temper: 'mixed', goal: 'health', screen: 'low', sex: 'girl' };
+const climbStd = buildReport(full, { ...climbQ, build: 'std' }), climbG = buildReport(full, { ...climbQ, build: 'gentle' });
+check('gentle: гимнастика уходит из тройки, плавание входит', rank(climbStd, 'gymnastics') >= 0 && rank(climbG, 'gymnastics') < 0 && rank(climbG, 'swimming') >= 0, [climbStd.sports, climbG.sports]);
+check('gentle: причина про суставы, без слов о весе; совет про кардио', climbG.sports.some((x) => x.reasons.includes('body.joints')) && climbG.plan.tips[0] === 'cardioTip');
 
 // Программа подписчика: 4 недели × 3 тренировки, акцент по интересу, рост нагрузки
 const { buildProgram, nextWorkout } = await import('../js/program.js');

@@ -2,7 +2,7 @@
 // Чистые функции без браузера (проверяются в tests/rules.test.mjs). Тексты — по ключам из js/i18n.
 // Важно: возрастных норм нет. Все оценки — «выполнено задание / нет» и «ровно / неровно», пороги рабочие.
 
-import { CONFIG } from './config.js?v=3e3444f-mww9acps';
+import { CONFIG } from './config.js?v=e7fb276-mww9drbi';
 
 const clamp01 = (x) => Math.max(0, Math.min(1, x));
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);
@@ -116,6 +116,31 @@ export const QUIZ_RULES = {
 // (до 2) и меньше желания ребёнка (до 4). Ничего не отсекает: девочке с сильными руками и корпусом единоборства выйдут выше танцев.
 // В причины отчёта не попадает — объясняем только результатами и ответами родителя.
 export const SEX_RULES = { girl: { dance: 0.5, gymnastics: 0.5 }, boy: { team: 0.5, martial: 0.5 } };
+// --- Телосложение (рост и вес, по желанию Юрия 25.11 «в первую очередь») ---
+// ИМТ сравниваем с детскими порогами IOTF (Cole et al., BMJ 2000): ИМТ ребёнка, соответствующий взрослым 25 и 30, по возрасту и полу.
+// Индекс = возраст в годах 2..15. Точный возраст не спрашиваем — берём верх диапазона (пороги с возрастом растут → меньше ложных «перегрузок»).
+// Пол не указан → берём больший из порогов мальчиков и девочек. Сами рост и вес не уходят ни на сервер, ни в аналитику; в анкету пишется только build.
+export const IOTF = {
+  boy: { ow: [18.41, 17.89, 17.55, 17.42, 17.55, 17.92, 18.44, 19.10, 19.84, 20.55, 21.22, 21.91, 22.62, 23.29], ob: [20.09, 19.57, 19.29, 19.30, 19.78, 20.63, 21.60, 22.77, 24.00, 25.10, 26.02, 26.84, 27.63, 28.30] },
+  girl: { ow: [18.02, 17.56, 17.28, 17.15, 17.34, 17.75, 18.35, 19.07, 19.86, 20.74, 21.68, 22.58, 23.34, 23.94], ob: [19.81, 19.36, 19.15, 19.17, 19.65, 20.51, 21.57, 22.81, 24.11, 25.42, 26.67, 27.76, 28.57, 29.11] },
+};
+// 'std' — обычная нагрузка; 'soft' — выше порога «25»; 'gentle' — выше порога «30». null — данных нет или они неправдоподобны.
+export function bodyBuild({ cm, kg, sex, age } = {}) {
+  cm = Number(cm); kg = Number(kg);
+  if (!(cm >= 80 && cm <= 200 && kg >= 10 && kg <= 150)) return null;
+  const bmi = kg / (cm / 100) ** 2;
+  if (bmi < 10 || bmi > 50) return null;
+  const top = parseInt(String(age || '').split('-')[1], 10) || 8;
+  const i = Math.max(0, Math.min(13, top - 2));
+  const cut = (k) => (IOTF[sex] ? IOTF[sex][k][i] : Math.max(IOTF.boy[k][i], IOTF.girl[k][i]));
+  return bmi >= cut('ob') ? 'gentle' : bmi >= cut('ow') ? 'soft' : 'std';
+}
+// Телосложение — сильный фактор (до 3 баллов, как сильная сторона в тесте): щадящие суставы виды вверх, прыжковые и «висы» вниз.
+// В причинах показываем только положительную формулировку (без ярлыков про вес).
+export const BODY_RULES = {
+  soft: { swimming: 1.5, martial: 1, team: 0.5, gymnastics: -1.5, climbing: -1 },
+  gentle: { swimming: 3, martial: 1.5, team: 0.5, racket: 0.5, gymnastics: -3, climbing: -2, athletics: -1 },
+};
 // Возраст 3–5: приоритет направлениям с разносторонней базой
 export const AGE_RULES = { '3-5': { gymnastics: 1, dance: 1, swimming: 1 } };
 // Качество → направления. Вклад = вес × (уровень − 1) / 2: «зона роста» 0, «есть запас» — половина веса, «сильная сторона» — полный вес.
@@ -130,6 +155,8 @@ export const QUALITY_RULES = {
   symmetry: { gymnastics: 1, dance: 1, swimming: 1 },
 };
 
+// Порядок причин в отчёте: телосложение, затем результаты теста, затем ответы родителя
+const rprio = (k) => (k.startsWith('body.') ? 2 : k.startsWith('q.') ? 1 : 0);
 export function recommendSports(profile, quiz) {
   const score = Object.fromEntries(SPORTS.map((s) => [s, 0]));
   const reasons = Object.fromEntries(SPORTS.map((s) => [s, []]));
@@ -138,6 +165,7 @@ export function recommendSports(profile, quiz) {
   };
   for (const q of ['likes', 'temper', 'goal']) if (quiz[q]) add(QUIZ_RULES[q][quiz[q]], `${q}.${quiz[q]}`);
   for (const [s, w] of Object.entries(SEX_RULES[quiz.sex] || {})) score[s] += w; // без причины в отчёте
+  for (const [s, w] of Object.entries(BODY_RULES[quiz.build] || {})) { score[s] += w; if (s === 'swimming') reasons[s].push({ key: 'body.joints', w }); }
   if (AGE_RULES[quiz.age]) add(AGE_RULES[quiz.age], 'age.young');
   for (const q of QUALITIES) {
     const lvl = profile.qualities[q].level;
@@ -148,7 +176,7 @@ export function recommendSports(profile, quiz) {
     }
   }
   return SPORTS
-    .map((s, i) => ({ sport: s, score: score[s], order: i, reasons: reasons[s].sort((a, b) => (b.key.startsWith('q.') - a.key.startsWith('q.')) || b.w - a.w).slice(0, 3).map((r) => r.key) }))
+    .map((s, i) => ({ sport: s, score: score[s], order: i, reasons: reasons[s].sort((a, b) => rprio(b.key) - rprio(a.key) || b.w - a.w).slice(0, 3).map((r) => r.key) }))
     .sort((a, b) => b.score - a.score || a.order - b.order)
     .slice(0, 3)
     .map(({ sport, score: sc, reasons: rs }) => ({ sport, score: sc, reasons: rs }));
@@ -205,6 +233,7 @@ export function buildPlan(profile, quiz, results) {
     }),
   }));
   const tips = [];
+  if (quiz.build === 'soft' || quiz.build === 'gentle') tips.push('cardioTip');
   if (quiz.screen === 'high') tips.push('screenTip');
   if (quiz.now === 'none') tips.push('startTip');
   if (quiz.now === 'section') tips.push('sectionTip');

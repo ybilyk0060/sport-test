@@ -1,29 +1,29 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
-import { T } from './i18n/index.js?v=3e3444f-mww9acps';
-import { CONFIG } from './config.js?v=3e3444f-mww9acps';
-import { money, PRICE, CUR, fmtDate, } from './locale.js?v=3e3444f-mww9acps';
-import { LANG, LOCALES } from './i18n/index.js?v=3e3444f-mww9acps';
-import { state, setState, resetState, track, importHandoff, store } from './store.js?v=3e3444f-mww9acps';
-import { detectEnv } from './env.js?v=3e3444f-mww9acps';
-import { preloadPose } from './pose.js?v=3e3444f-mww9acps';
-import { unlockAudio } from './audio.js?v=3e3444f-mww9acps';
-import { startStage, startFallback, toast } from './stage.js?v=3e3444f-mww9acps';
-import { buildReport, QUALITIES, qualitiesOf } from './scoring.js?v=3e3444f-mww9acps';
-import { payment, newOrderId } from './payment.js?v=3e3444f-mww9acps';
-import { ART } from './art.js?v=3e3444f-mww9acps';
-import { initDebug } from './debug.js?v=3e3444f-mww9acps';
-import { initConsent } from './analytics.js?v=3e3444f-mww9acps';
-import * as subapi from './subapi.js?v=3e3444f-mww9acps';
-import { drawShareCard } from './sharecard.js?v=3e3444f-mww9acps';
-import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=3e3444f-mww9acps';
+import { T } from './i18n/index.js?v=e7fb276-mww9drbi';
+import { CONFIG } from './config.js?v=e7fb276-mww9drbi';
+import { money, PRICE, CUR, fmtDate, } from './locale.js?v=e7fb276-mww9drbi';
+import { LANG, LOCALES } from './i18n/index.js?v=e7fb276-mww9drbi';
+import { state, setState, resetState, track, importHandoff, store } from './store.js?v=e7fb276-mww9drbi';
+import { detectEnv } from './env.js?v=e7fb276-mww9drbi';
+import { preloadPose } from './pose.js?v=e7fb276-mww9drbi';
+import { unlockAudio } from './audio.js?v=e7fb276-mww9drbi';
+import { startStage, startFallback, toast } from './stage.js?v=e7fb276-mww9drbi';
+import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=e7fb276-mww9drbi';
+import { payment, newOrderId } from './payment.js?v=e7fb276-mww9drbi';
+import { ART } from './art.js?v=e7fb276-mww9drbi';
+import { initDebug } from './debug.js?v=e7fb276-mww9drbi';
+import { initConsent } from './analytics.js?v=e7fb276-mww9drbi';
+import * as subapi from './subapi.js?v=e7fb276-mww9drbi';
+import { drawShareCard } from './sharecard.js?v=e7fb276-mww9drbi';
+import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=e7fb276-mww9drbi';
 
 const env = detectEnv();
 const app = document.getElementById('app');
 const params = new URLSearchParams(location.search);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const paywallMode = ['teaser', 'hard'].includes(params.get('paywall')) ? params.get('paywall') : CONFIG.paywallMode;
-const QUIZ = ['age', 'sex', 'now', 'likes', 'temper', 'goal', 'screen'];
+const QUIZ = ['age', 'sex', 'body', 'now', 'likes', 'temper', 'goal', 'screen'];
 const SUB = CONFIG.subscription;
 const privacyUrl = LANG === 'uk' ? 'privacy.html' : `privacy-${LANG}.html`;
 // Юридические ссылки: рядом с кнопкой оплаты и внизу страниц
@@ -69,6 +69,7 @@ function quiz(i) {
   if (i >= QUIZ.length) return prep();
   setState({ step: 'quiz', quizIndex: i });
   const id = QUIZ[i], q = T.quiz.q[id];
+  if (id === 'body') return bodyStep(i, q);
   const opts = Object.entries(q.options);
   const two = id === 'age';
   // пол: только лёгкий сдвиг среди подходящих видов (см. SEX_RULES в scoring.js), можно не указывать
@@ -83,6 +84,53 @@ function quiz(i) {
       setTimeout(() => quiz(i + 1), 140);
     },
   });
+}
+
+// Рост и вес: два поля, см/кг или ft/lb. Числа остаются только в этом браузере (state.body);
+// в анкету (сервер, перенос в другой браузер) попадает лишь итог build: std / soft / gentle. В аналитику — только «заполнено / пропущено».
+function bodyStep(i, q) {
+  const b = state.body || {};
+  const imperial = b.unit ? b.unit === 'imperial' : /-(US|LR|MM)$/i.test(navigator.language || '') && LANG === 'en';
+  const num = (v) => (v == null || v === '' ? '' : String(v));
+  const inp = (el, ph, val, w = '') => `<input class="field${w}" data-el="${el}" type="text" inputmode="decimal" autocomplete="off" placeholder="${ph}" value="${esc(num(val))}" maxlength="5">`;
+  const ftIn = b.cm ? { ft: Math.floor(b.cm / 30.48), in: Math.round((b.cm / 2.54) % 12) } : {};
+  screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button><div class="progress"><i style="width:${Math.round(((i + 1) / QUIZ.length) * 100)}%"></i></div></div>
+    <p class="small muted">${esc(T.quiz.progress(i + 1, QUIZ.length))}</p><h1 class="qtitle">${esc(q.title)}</h1>
+    <p class="small muted">${esc(q.hint)}</p>
+    <div class="units"><button class="unit ${imperial ? '' : 'sel'}" data-act="unit" data-v="metric">${esc(q.metric)}</button><button class="unit ${imperial ? 'sel' : ''}" data-act="unit" data-v="imperial">${esc(q.imperial)}</button></div>
+    <div class="body-grid">
+      <label><span class="small">${esc(q.height)}</span>${imperial ? `<span class="pair">${inp('ft', 'ft', ftIn.ft)}${inp('in', 'in', ftIn.in)}</span>` : inp('cm', 'cm', b.cm ? Math.round(b.cm) : '')}</label>
+      <label><span class="small">${esc(q.weight)}</span>${inp(imperial ? 'lb' : 'kg', imperial ? 'lb' : 'kg', b.kg ? (imperial ? Math.round(b.kg * 2.2046) : Math.round(b.kg * 10) / 10) : '')}</label>
+    </div>
+    <p class="small bad" data-el="bad" hidden>${esc(q.bad)}</p>
+    <button class="btn" data-act="next">${esc(q.next)}</button>
+    <button class="btn ghost" data-act="skip">${esc(q.skip)}</button>`, {
+    back: () => quiz(i - 1),
+    unit: (a) => { setState({ body: { ...readBody(), unit: a.dataset.v } }); bodyStep(i, q); },
+    next: () => {
+      const v = readBody();
+      const build = bodyBuild({ cm: v.cm, kg: v.kg, sex: state.quiz.sex, age: state.quiz.age });
+      if (!build) { app.querySelector('[data-el=bad]').hidden = false; return; }
+      setState({ body: v, quiz: { ...state.quiz, build } });
+      track('quiz_answer', { q: 'body', n: i + 1, a: 'filled' });
+      quiz(i + 1);
+    },
+    skip: () => {
+      const { build, ...rest } = state.quiz; // eslint-disable-line no-unused-vars
+      setState({ body: null, quiz: rest });
+      track('quiz_answer', { q: 'body', n: i + 1, a: 'skip' });
+      quiz(i + 1);
+    },
+  });
+  function readBody() {
+    const f = (k) => { const el = app.querySelector(`[data-el=${k}]`); const n = el ? parseFloat(String(el.value).replace(',', '.')) : NaN; return Number.isFinite(n) ? n : null; };
+    const unit = app.querySelector('.unit.sel')?.dataset.v || 'metric';
+    if (unit === 'imperial') {
+      const ft = f('ft'), inch = f('in') || 0, lb = f('lb');
+      return { unit, cm: ft != null ? Math.round((ft * 12 + inch) * 2.54 * 10) / 10 : null, kg: lb != null ? Math.round((lb / 2.2046) * 10) / 10 : null };
+    }
+    return { unit, cm: f('cm'), kg: f('kg') };
+  }
 }
 
 // ---------- 4. Подготовка к камере ----------

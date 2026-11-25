@@ -27,7 +27,8 @@
 
   <h2>Що ми зберігаємо</h2>
   <ul>
-    <li>Відповіді на 7 запитань (вік дитини діапазоном, стать — якщо ви її вказали, уподобання).</li>
+    <li>Відповіді на 8 запитань (вік дитини діапазоном, стать — якщо ви її вказали, уподобання).</li>
+    <li>Зріст і вага — лише якщо ви їх ввели. Вони лишаються у вашому браузері й не надсилаються ні нам, ні в аналітику; разом із відповідями зберігається лише підсумок, наскільки щадним має бути навантаження (один із трьох рівнів).</li>
     <li>Підсумкові числа тесту: кількість повторів, секунди, рівні за якостями.</li>
 
     <li>Події проходження: які кроки відкрито, тип браузера та телефона (iOS чи Android).</li>
@@ -52,9 +53,9 @@
   <p>Володілець даних: <span data-s="name"></span>. Питання щодо даних: <span data-s="email"></span>.</p>
 </main>
 <script type="module">
-import { store } from './js/store.js?v=3e3444f-mww9acps';
+import { store } from './js/store.js?v=e7fb276-mww9drbi';
 document.getElementById('wipe').onclick = () => { store.clearAll(); try { localStorage.removeItem('sporttest.consent'); localStorage.removeItem('sporttest.v1.offer'); } catch {} document.getElementById('done').hidden = false; };
 </script>
-<script type="module" src="js/legal.js?v=3e3444f-mww9acps"></script>
+<script type="module" src="js/legal.js?v=e7fb276-mww9drbi"></script>
 </body>
 </html>

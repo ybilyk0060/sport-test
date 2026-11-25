@@ -20,6 +20,7 @@ export default {
     q: {
       age: { title: 'How old is your child?', options: { '3-5': '3–5 years', '6-8': '6–8 years', '9-11': '9–11 years', '12-15': '12–15 years' } },
       sex: { title: 'Your child is…', options: { girl: 'A girl', boy: 'A boy', skip: 'Prefer not to say' } },
+      body: { title: 'Height and weight', hint: 'Helps us pick sports where your child feels comfortable from the start. Stays on your phone.', height: 'Height', weight: 'Weight', next: 'Next', skip: 'Skip', bad: 'Please check the numbers', metric: 'cm · kg', imperial: 'ft · lb' },
       now: { title: 'What does your child do now?', options: { none: 'Nothing yet', section: 'Goes to a sports club', yard: 'Plays outside, active games' } },
       likes: { title: 'What does your child enjoy most?', options: { team: 'Team games and balls', solo: 'Doing things on their own', music: 'Music and dancing', fight: 'Wrestling and strength', climb: 'Climbing and jumping' } },
       temper: { title: 'What is your child’s temperament?', options: { active: 'Very active', calm: 'Calm', mixed: 'It depends' } },
@@ -322,6 +323,7 @@ export default {
     session: (n) => `Session ${n}`,
     unitReps: 'reps',
     unitSec: 's',
+    cardioTip: 'Add 20–30 minutes of easy cardio most days: brisk walks, cycling or swimming. Together with the program, this builds stamina fastest.',
     screenTip: 'Movement break: after every hour on a phone or tablet — 2 minutes of any movement.',
     startTip: 'Your child doesn’t do any sport yet — start with two sessions a week and add a third once it becomes a habit.',
     sectionTip: 'Your child already goes to a club — show this profile to the coach and discuss what to add.',
@@ -341,6 +343,7 @@ export default {
       racket: { name: 'Racket sports', ex: 'tennis, badminton, table tennis' },
     },
     reasons: {
+      'body.joints': 'gentle on the joints — an easy, comfortable start',
       'likes.team': 'your child enjoys team games and balls',
       'likes.solo': 'your child prefers doing things on their own',
       'likes.music': 'your child loves music and dancing',

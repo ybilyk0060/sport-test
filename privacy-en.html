@@ -28,7 +28,8 @@
 
   <h2>What we keep</h2>
   <ul>
-    <li>Answers to 7 questions (age range, sex if you choose to give it, interests).</li>
+    <li>Answers to 8 questions (age range, sex if you choose to give it, interests).</li>
+    <li>Height and weight, only if you enter them. They stay in your browser and are never sent to us or to analytics; only a summary of how gentle the recommended load should be (one of three levels) is saved with your answers.</li>
     <li>Test totals: reps, seconds, quality levels.</li>
     <li>Journey events: which steps were opened, browser and phone type (iOS or Android).</li>
     <li>Subscription state (start date, paid until, cancelled or not) and completed program workouts.</li>
@@ -51,9 +52,9 @@
   <p>Data controller: <span data-s="name"></span>. Questions about data: <span data-s="email"></span>.</p>
 </main>
 <script type="module">
-import { store } from './js/store.js?v=3e3444f-mww9acps';
+import { store } from './js/store.js?v=e7fb276-mww9drbi';
 document.getElementById('wipe').onclick = () => { store.clearAll(); try { localStorage.removeItem('sporttest.consent'); localStorage.removeItem('sporttest.v1.offer'); } catch {} document.getElementById('done').hidden = false; };
 </script>
-<script type="module" src="js/legal.js?v=3e3444f-mww9acps"></script>
+<script type="module" src="js/legal.js?v=e7fb276-mww9drbi"></script>
 </body>
 </html>
