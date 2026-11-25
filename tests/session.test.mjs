@@ -2,7 +2,7 @@
 globalThis.location = { search: '' };
 const { createRun } = await import('../js/session.js');
 const mock = await import('./studio-mock-poses.mjs');
-const { jacks, goodMornings, shoulderTaps } = await import('./synthetic.mjs');
+const { jacks, goodMornings, shoulderTaps, pushFronts } = await import('./synthetic.mjs');
 const rep = (fn, n) => Array.from({ length: n }, fn).flat();
 let fail = 0; const check = (n, ok, got) => { console.log(`${ok ? 'OK  ' : 'FAIL'} ${n}: ${JSON.stringify(got)}`); if (!ok) fail++; };
 
@@ -25,5 +25,8 @@ function play(key, frames, { target, capSec, ageGroup = '6-8' }) {
 { const r = play('good_morning', goodMornings(8, 40), { target: 6, capSec: 25 }); check('нахили: неглибокі — 0', r.done === 0, { done: r.done, m: r.metrics }); }
 { const r = play('shoulder_taps', shoulderTaps(12), { target: 10, capSec: 30 }); check('торкання плечей: 10 из 10, обе руки', r.done === 10 && r.completed && r.metrics.liftsLeft >= 4 && r.metrics.liftsRight >= 4, { done: r.done, reason: r.reason, m: r.metrics }); }
 { const r = play('shoulder_taps', shoulderTaps(12, { reach: 0.4 }), { target: 10, capSec: 30 }); check('торкання плечей: рука не дотягнулась — 0', r.done === 0, { done: r.done, m: r.metrics }); }
+{ const r = play('pushups', pushFronts(9), { target: 8, capSec: 30, ageGroup: '12-15' }); check('віджимання лицом: 8 из 8 (вторая спека)', r.done === 8 && r.completed && r.metrics.view === 'front', { done: r.done, reason: r.reason, m: r.metrics }); }
+{ const r = play('pushups', pushFronts(9, 0.3), { target: 8, capSec: 30, ageGroup: '12-15' }); check('віджимання лицом: неглибокі — 0', r.done === 0, { done: r.done }); }
+{ const r = play('arm_circles', jacks(9, { legs: false }), { target: 8, capSec: 25 }); check('млинок: руки вгору-вниз 8 из 8', r.done === 8 && r.completed, { done: r.done, reason: r.reason }); }
 { const frames = jacks(3); const r = play('jumping_jack', frames.map((f, i) => (i % 40 > 30 ? null : f)), { target: 10, capSec: 25 }); check('пропавшие кадры не роняют прогон', r.done >= 0 && r.reason, { done: r.done }); }
 console.log(fail ? `\n${fail} FAILED` : '\nALL OK'); process.exit(fail ? 1 : 0);

@@ -14,8 +14,9 @@ export function drawShareCard(cv, profile, T) {
   }
   const colors = { 3: '#1f9d6b', 2: '#e0a100', 1: '#d9682f', 0: '#b9b5c6' };
   let y = 450;
-  const step = Math.min(150, (H - 150 - y) / QUALITIES.length);
-  for (const q of QUALITIES) {
+  const step = Math.min(150, (H - 150 - y) / Math.max(1, QUALITIES.filter((q) => profile.qualities[q].level > 0).length));
+  const shown = QUALITIES.filter((q) => profile.qualities[q].level > 0);
+  for (const q of shown.length ? shown : QUALITIES) {
     const lvl = profile.qualities[q].level;
     g.fillStyle = '#1d1b2f'; g.font = font(700, 46); g.fillText(T.result.qualities[q].name, 72, y);
     g.fillStyle = colors[lvl]; g.font = font(700, 32); g.textAlign = 'right'; g.fillText(T.result.levels[lvl], W - 72, y); g.textAlign = 'left';

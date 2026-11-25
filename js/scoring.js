@@ -7,7 +7,10 @@ import { CONFIG } from './config.js';
 const clamp01 = (x) => Math.max(0, Math.min(1, x));
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);
 
-export const QUALITIES = ['coordination', 'legs', 'speed', 'core', 'flex', 'symmetry'];
+export const QUALITIES = ['coordination', 'legs', 'speed', 'arms', 'core', 'flex', 'symmetry'];
+// Какие качества проверяет каждое упражнение (для подписи «Перевіряємо: …» и чтобы не показывать то, что в наборе возраста не мерили)
+export const EX_QUALITY = { jumping_jack: ['coordination', 'symmetry'], squats: ['legs'], high_knees: ['speed', 'symmetry'], arm_circles: ['flex'], quadruped_arm_circles: ['core'], wall_french_press: ['arms'], pushups: ['arms', 'core'], good_morning: ['flex'], shoulder_taps: ['core', 'symmetry'] };
+export function qualitiesOf(results) { const set = new Set((results || []).flatMap((r) => EX_QUALITY[r.key] || [])); return QUALITIES.filter((q) => set.has(q)); }
 
 // --- Показатели (каждый 0..1 или null, если не измерен) ---
 // Рабочие пороги (не нормы):
@@ -19,6 +22,7 @@ export function indicators(results) {
   const by = Object.fromEntries((results || []).map((r) => [r.key, r]));
   const ok = (r) => r && !r.skipped;
   const jj = by.jumping_jack, sq = by.squats, hk = by.high_knees, gm = by.good_morning, st = by.shoulder_taps;
+  const ac = by.arm_circles, qa = by.quadruped_arm_circles, wp = by.wall_french_press, pu = by.pushups;
   const clean = (r) => { const tries = r.done + (r.metrics.shallow || 0); return tries > 0 ? r.done / tries : 0; };
   const sides = (r) => { const l = r.metrics.liftsLeft || 0, rr = r.metrics.liftsRight || 0; return l + rr >= 4 ? Math.min(l, rr) / Math.max(l, rr) : null; };
   const ind = {};
@@ -41,6 +45,10 @@ export function indicators(results) {
     ind.gm_done = clamp01(gm.done / gm.target);
     ind.gm_clean = clean(gm); // доля наклонов без подсказки «нижче»
   }
+  if (ok(ac)) { ind.ac_done = clamp01(ac.done / ac.target); ind.ac_clean = clean(ac); }
+  if (ok(qa)) { ind.qa_done = clamp01(qa.done / qa.target); ind.qa_clean = clean(qa); }
+  if (ok(wp)) { ind.wp_done = clamp01(wp.done / wp.target); ind.wp_clean = clean(wp); }
+  if (ok(pu)) { ind.pu_done = clamp01(pu.done / pu.target); ind.pu_clean = clean(pu); }
   if (ok(st)) {
     ind.st_done = clamp01(st.done / st.target);
     ind.st_rhythm = st.metrics.rhythmCv == null ? null : clamp01(1 - st.metrics.rhythmCv / WORK.RHYTHM_CV_MAX);
@@ -54,8 +62,9 @@ export const QUALITY_MAP = {
   coordination: ['jj_done', 'jj_rhythm'],
   legs: ['sq_done', 'sq_clean'],
   speed: ['hk_done', 'hk_pace'],
-  core: ['st_done', 'st_rhythm'],
-  flex: ['gm_done', 'gm_clean'],
+  arms: ['wp_done', 'wp_clean', 'pu_done', 'pu_clean'],
+  core: ['qa_done', 'qa_clean', 'pu_done', 'st_done', 'st_rhythm'],
+  flex: ['ac_done', 'ac_clean', 'gm_done', 'gm_clean'],
   symmetry: ['jj_arm_sym', 'hk_side', 'st_side'],
 };
 
@@ -113,6 +122,7 @@ export const QUALITY_RULES = {
   speed: { team: 1, athletics: 2, racket: 1 },
   core: { gymnastics: 2, martial: 1, swimming: 1, climbing: 1 },
   flex: { gymnastics: 2, dance: 1, martial: 1, swimming: 1 },
+  arms: { climbing: 2, swimming: 1, martial: 1, racket: 1, gymnastics: 1 },
   symmetry: { gymnastics: 1, dance: 1, swimming: 1 },
 };
 
@@ -149,6 +159,7 @@ export const PLAN_EX = {
   speed: ['high_knees', 'jumping_jack'],
   core: ['shoulder_taps', 'squats'],
   flex: ['good_morning', 'squats'],
+  arms: ['squats', 'jumping_jack'],
   symmetry: ['shoulder_taps', 'jumping_jack'],
 };
 export const PLAN_DOSE = {

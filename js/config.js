@@ -66,34 +66,34 @@ export const CONFIG = {
   // 5 основных вправ студии: зірочка (обличчям) → присідання, біг на місці, нахили (боком) → торкання плечей (обличчям, на підлозі).
   // target — задание (повторы или секунды), capSec — предел времени. Это параметры ЗАДАНИЯ, а не возрастные нормы.
   // engineAge — возраст для калибровки движка студии (≤7 «young», 8–10 «mid», 11+ «standard»).
+  // Порядок: лицом к камере → боком → у стены / на полу (ребёнок поворачивается один раз).
   ageGroups: {
     '3-5': { engineAge: 4, plan: [
       { key: 'jumping_jack', target: 5, capSec: 20 },
+      { key: 'arm_circles', target: 5, capSec: 20 },
       { key: 'squats', target: 4, capSec: 25 },
       { key: 'high_knees', target: 6, capSec: 20 },
-      { key: 'good_morning', target: 4, capSec: 25 },
-      { key: 'shoulder_taps', target: 4, capSec: 25 },
     ] },
     '6-8': { engineAge: 7, plan: [
       { key: 'jumping_jack', target: 8, capSec: 25 },
+      { key: 'arm_circles', target: 6, capSec: 25 },
       { key: 'squats', target: 6, capSec: 25 },
       { key: 'high_knees', target: 8, capSec: 25 },
-      { key: 'good_morning', target: 5, capSec: 25 },
-      { key: 'shoulder_taps', target: 8, capSec: 30 },
+      { key: 'quadruped_arm_circles', target: 5, capSec: 25 },
     ] },
     '9-11': { engineAge: 10, plan: [
       { key: 'jumping_jack', target: 10, capSec: 25 },
+      { key: 'arm_circles', target: 8, capSec: 25 },
       { key: 'squats', target: 8, capSec: 30 },
       { key: 'high_knees', target: 10, capSec: 25 },
-      { key: 'good_morning', target: 6, capSec: 25 },
-      { key: 'shoulder_taps', target: 10, capSec: 30 },
+      { key: 'wall_french_press', target: 8, capSec: 30 },
     ] },
     '12-15': { engineAge: 13, plan: [
       { key: 'jumping_jack', target: 15, capSec: 30 },
+      { key: 'arm_circles', target: 10, capSec: 25 },
       { key: 'squats', target: 12, capSec: 30 },
       { key: 'high_knees', target: 15, capSec: 30 },
-      { key: 'good_morning', target: 10, capSec: 30 },
-      { key: 'shoulder_taps', target: 16, capSec: 30 },
+      { key: 'pushups', target: 8, capSec: 30 },
     ] },
   },
   defaultAge: '6-8',
@@ -107,6 +107,11 @@ export const CONFIG = {
     squats: { spec: 'squats', facing: 'side', goal: 'reps', video: 'studio/squats-v3-15c52172.mp4', poster: 'studio/squats-v3-6adec835.jpg', intro: 'howto_squats' },
     high_knees: { spec: 'high_knees', facing: 'side', goal: 'seconds', maxEngineAge: 7, video: 'studio/high_knees-v1-79235890.mp4', poster: 'studio/high_knees-v1-05fc6289.jpg', intro: 'howto_high_knees' },
     good_morning: { spec: 'good_morning', facing: 'side', goal: 'reps', video: 'eotd/good_morning-v1-91b13db9.mp4', poster: 'eotd/good_morning-v1-91b13db9.jpg', intro: 'good_morning_full_howto', introFallback: 'good_morning_howto', coach: 'good_morning_coach_', maxEngineAge: 7 },
+    arm_circles: { spec: 'arm_circles', facing: 'front', goal: 'reps', video: 'eotd/arm_circles-v2-197d83dd.mp4', poster: 'eotd/arm_circles-v2-197d83dd.jpg', intro: 'howto_arm_circles', coach: 'arm_circles_coach_' },
+    quadruped_arm_circles: { spec: 'quadruped_arm_circles', facing: 'side', floor: 'side', goal: 'reps', video: 'eotd/quadruped_arm_circles-v1-46cfeb76.mp4', poster: 'eotd/quadruped_arm_circles-v1-46cfeb76.jpg', intro: 'quadruped_arm_circles_howto', coach: 'quadruped_arm_circles_coach_' },
+    wall_french_press: { spec: 'wall_french_press', facing: 'side', wall: true, goal: 'reps', video: 'eotd/wall_french_press-v1-31517c7c.mp4', poster: 'eotd/wall_french_press-v1-31517c7c.jpg', intro: 'wall_french_press_howto', coach: 'wall_french_press_coach_' },
+    // Віджимання: считаются и боком (спека студии pushups@4), и лицом (своя pushups_front) — берётся больший счёт
+    pushups: { spec: 'pushups', altSpec: 'pushups_front', facing: 'any', floor: 'any', goal: 'reps', video: 'studio/pushups-v4-d83d1e9c.mp4', poster: 'studio/pushups-v4-e414f5bc.jpg', intro: 'howto_pushups' },
     shoulder_taps: { spec: 'shoulder_taps_front', facing: 'front', floor: true, goal: 'reps', video: 'eotd/shoulder_taps-v1-e37b6726.mp4', poster: 'eotd/shoulder_taps-v1-e37b6726.jpg', intro: 'shoulder_taps_front_howto', introFallback: 'name_shoulder_taps', coach: 'shoulder_taps_coach_' },
   },
 

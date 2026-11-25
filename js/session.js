@@ -56,6 +56,16 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
   an.setCalibration(calibrationForAge(ex.maxEngineAge ? Math.min(age, ex.maxEngineAge) : age));
   if (aspect) an.setFrameAspect(aspect);
   const smoother = new PoseSmoother();
+  // Второй способ счёта (віджимання лицом к камере): свой анализатор, берётся больший счёт
+  let an2 = null;
+  if (ex.altSpec && SPECS[ex.altSpec]) {
+    const spec2 = SPECS[ex.altSpec];
+    an2 = new ExerciseAnalyzer(new SpecEngine(spec2), isSeconds ? 0 : target, spec2.gates?.minVisibility ?? 0.5, 0);
+    an2.setCalibration(calibrationForAge(ex.maxEngineAge ? Math.min(age, ex.maxEngineAge) : age));
+    if (aspect) an2.setFrameAspect(aspect);
+  }
+  const facingHints = new Set([spec.facingHint, ex.altSpec && SPECS[ex.altSpec] ? SPECS[ex.altSpec].facingHint : null, 'turn_sideways', 'jumping_jack_face_wrong'].filter(Boolean));
+  const reps = () => Math.max(an.repsCompleted, an2 ? an2.repsCompleted : 0);
 
   const m = { hints: {}, lostFrames: 0, frames: 0 };
   const perRep = { armDiffs: [], feet: [], depths: [] };
@@ -64,7 +74,7 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
   const hipLine = [];
   let startedAt = null, firstActionAt = null, finished = false, lastCount = 0, lastSec = 0, result = null;
 
-  an.onHint = (id) => { m.hints[id] = (m.hints[id] || 0) + 1; on.hint && on.hint(id); };
+  an.onHint = (id) => { if (an2 && facingHints.has(id)) return; m.hints[id] = (m.hints[id] || 0) + 1; on.hint && on.hint(id); };
   engine.onEvent = (e) => {
     if (e.type === 'lift' && e.counted) { lifts[e.side] = (lifts[e.side] || 0) + 1; if (firstActionAt == null) firstActionAt = clock(); }
   };
@@ -75,9 +85,8 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
     const now = clock();
     const elapsedFrom = isSeconds && key === 'high_knees' && firstActionAt != null ? firstActionAt : startedAt;
     const elapsedSec = startedAt == null ? 0 : Math.max(0, (now - (elapsedFrom ?? now)) / 1000);
-    const reps = an.repsCompleted;
-    const done = isSeconds ? Math.min(target, Math.round(an.heldSeconds() * 10) / 10) : reps;
-    const ts = an.repTimestamps;
+    const done = isSeconds ? Math.min(target, Math.round(an.heldSeconds() * 10) / 10) : reps();
+    const ts = an2 && an2.repsCompleted > an.repsCompleted ? an2.repTimestamps : an.repTimestamps;
     const iv = []; for (let i = 1; i < ts.length; i++) iv.push(ts[i] - ts[i - 1]);
     const metrics = {};
     if (!isSeconds) {
@@ -93,6 +102,10 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
       metrics.shallow = m.hints.sit_lower || 0;
     }
     if (key === 'good_morning') metrics.shallow = m.hints.good_morning_not_reached || 0;
+    if (key === 'arm_circles') metrics.shallow = m.hints.arm_circles_not_reached || 0;
+    if (key === 'quadruped_arm_circles') metrics.shallow = m.hints.quadruped_arm_circles_not_reached || 0;
+    if (key === 'wall_french_press') metrics.shallow = m.hints.wall_french_press_not_reached || 0;
+    if (key === 'pushups') { metrics.shallow = (m.hints.go_lower || 0); metrics.view = an2 && an2.repsCompleted > an.repsCompleted ? 'front' : 'side'; }
     if (key === 'shoulder_taps') {
       metrics.liftsLeft = lifts.left || 0; metrics.liftsRight = lifts.right || 0;
       metrics.shallow = m.hints.shoulder_taps_not_reached || 0;
@@ -130,6 +143,7 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
       if (lm) {
         const sm = smoother.smooth(lm.map((p) => ({ x: p.x, y: p.y, z: p.z || 0, visibility: p.visibility ?? 0 })), now);
         metricsNow = an.processFrame(sm, now);
+        if (an2) { const m2 = an2.processFrame(sm, now); if (m2.repsCompleted > metricsNow.repsCompleted) metricsNow = { ...metricsNow, repsCompleted: m2.repsCompleted, isComplete: m2.isComplete || metricsNow.isComplete }; }
       } else {
         m.lostFrames++;
         if (an.isHold()) an.processFrame([], now);

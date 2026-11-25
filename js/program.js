@@ -11,34 +11,43 @@ import { QUALITIES } from './scoring.js';
 export const WEEKS = 4;
 export const PER_WEEK = 3;
 
-// Интерес ребёнка → упражнения-основа (по порядку важности)
+// Интерес ребёнка → упражнения-основа (по порядку важности). 'ARMS' — упражнение на руки/корпус из набора возраста.
 export const FOCUS = {
   team: ['high_knees', 'jumping_jack', 'squats'],
-  solo: ['high_knees', 'squats', 'good_morning'],
-  music: ['jumping_jack', 'good_morning', 'high_knees'],
-  fight: ['squats', 'shoulder_taps', 'jumping_jack'],
-  climb: ['shoulder_taps', 'squats', 'good_morning'],
+  solo: ['high_knees', 'squats', 'arm_circles'],
+  music: ['jumping_jack', 'arm_circles', 'high_knees'],
+  fight: ['squats', 'ARMS', 'jumping_jack'],
+  climb: ['ARMS', 'squats', 'arm_circles'],
   none: ['jumping_jack', 'squats', 'high_knees'],
 };
 // Качество → упражнение, которое его развивает
-const FOR_QUALITY = { coordination: 'jumping_jack', legs: 'squats', speed: 'high_knees', core: 'shoulder_taps', flex: 'good_morning', symmetry: 'shoulder_taps' };
+const FOR_QUALITY = { coordination: 'jumping_jack', legs: 'squats', speed: 'high_knees', flex: 'arm_circles', core: 'ARMS', arms: 'ARMS', symmetry: 'jumping_jack' };
 // Шаг роста за неделю и минимум недели 1
 const DOSE = {
   jumping_jack: { min: 5, step: 2 },
   squats: { min: 4, step: 2 },
   high_knees: { min: 8, step: 4 },
+  arm_circles: { min: 5, step: 2 },
+  quadruped_arm_circles: { min: 4, step: 2 },
+  wall_french_press: { min: 6, step: 2 },
+  pushups: { min: 4, step: 2 },
   good_morning: { min: 4, step: 2 },
   shoulder_taps: { min: 6, step: 2 },
 };
+const ORDER = ['jumping_jack', 'arm_circles', 'squats', 'high_knees', 'good_morning', 'quadruped_arm_circles', 'wall_french_press', 'pushups', 'shoulder_taps'];
 
 export function focusKey(quiz) { return FOCUS[quiz && quiz.likes] ? quiz.likes : 'none'; }
 
 export function buildProgram(profile, quiz, results) {
-  const base = FOCUS[focusKey(quiz)];
+  const group = CONFIG.ageGroups[(quiz && quiz.age) || CONFIG.defaultAge] || CONFIG.ageGroups[CONFIG.defaultAge];
+  const avail = group.plan.map((p) => p.key);
+  const armsKey = avail.find((k) => ['pushups', 'wall_french_press', 'quadruped_arm_circles'].includes(k)) || 'squats';
+  const pick = (k) => (k === 'ARMS' ? armsKey : k);
+  const base = [...new Set(FOCUS[focusKey(quiz)].map(pick))].filter((k) => avail.includes(k));
   const measured = QUALITIES.filter((q) => profile && profile.qualities[q] && profile.qualities[q].level > 0);
   const weakest = measured.length ? measured.reduce((a, b) => (profile.qualities[b].score < profile.qualities[a].score ? b : a)) : null;
-  const extra = weakest && FOR_QUALITY[weakest] && !base.includes(FOR_QUALITY[weakest]) ? FOR_QUALITY[weakest] : Object.keys(DOSE).find((k) => !base.includes(k));
-  const group = CONFIG.ageGroups[(quiz && quiz.age) || CONFIG.defaultAge] || CONFIG.ageGroups[CONFIG.defaultAge];
+  const weakKey = weakest && FOR_QUALITY[weakest] ? pick(FOR_QUALITY[weakest]) : null;
+  const extra = weakKey && avail.includes(weakKey) && !base.includes(weakKey) ? weakKey : avail.find((k) => !base.includes(k));
   const testTarget = Object.fromEntries(group.plan.map((p) => [p.key, p]));
   const did = Object.fromEntries((results || []).filter((r) => !r.skipped).map((r) => [r.key, Math.floor(r.done)]));
 
@@ -52,11 +61,9 @@ export function buildProgram(profile, quiz, results) {
   const workouts = [];
   for (let w = 1; w <= WEEKS; w++) {
     for (let d = 1; d <= PER_WEEK; d++) {
-      // Каждое тренировка: 3 упражнения основы + 1 на слабое качество; порядок как в тесте (лицом → боком → на полу)
-      const keys = [...base, extra];
-      const ORDER = ['jumping_jack', 'squats', 'high_knees', 'good_morning', 'shoulder_taps'];
-      // Во 2-й тренировке недели одно из основы меняем, чтобы не было одинаково
-      if (d === 2) keys[2] = ORDER.find((k) => !keys.includes(k)) || keys[2];
+      // Тренировка: основа по интересу + 1 упражнение на слабое качество; во 2-й тренировке недели одно меняем
+      const keys = [...base, extra].filter(Boolean);
+      if (d === 2 && keys.length > 2) keys[2] = avail.find((k) => !keys.includes(k)) || keys[2];
       const items = [...new Set(keys)].sort((a, b) => ORDER.indexOf(a) - ORDER.indexOf(b)).map((k) => dose(k, w));
       workouts.push({ id: `w${w}d${d}`, week: w, day: d, items });
     }

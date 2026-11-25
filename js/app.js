@@ -9,7 +9,7 @@ import { detectEnv } from './env.js';
 import { preloadPose } from './pose.js';
 import { unlockAudio } from './audio.js';
 import { startStage, startFallback, toast } from './stage.js';
-import { buildReport, QUALITIES } from './scoring.js';
+import { buildReport, QUALITIES, qualitiesOf } from './scoring.js';
 import { payment, newOrderId } from './payment.js';
 import { ART } from './art.js';
 import { initDebug } from './debug.js';
@@ -187,7 +187,7 @@ function result(note = '') {
       ${s ? `<div class="strong"><small>${esc(R.strongest)}</small><b>${esc(R.qualities[s].name)}</b><span>${esc(R.qualities[s].d)}</span><span><b style="font-size:16px">${esc(R.levels[profile.qualities[s].level])}</b></span></div>` : ''}
       <p class="small muted">${esc(R.prelimNote)}</p>
       <h2 class="sec-title">${esc(R.profile)}</h2>
-      <div class="locked"><div class="locked-list">${QUALITIES.filter((q) => q !== s).map(qRowLocked).join('')}</div></div>
+      <div class="locked"><div class="locked-list">${qualitiesOf(state.results).filter((q) => q !== s).map(qRowLocked).join('')}</div></div>
       ${dismissed ? `<div class="sticky-pay"><button class="btn" data-act="pay">${esc(T.paywall.cta(money(firstPrice())))}</button></div><p class="renew">${esc(T.paywall.renew(money(PRICE.regular), SUB.periodDays, fmtDate(Date.now() + SUB.periodDays * DAY)))}</p><p class="terms">${esc(T.paywall.terms)}</p>` : paywallCard(note, profile)}
       <button class="link center" data-act="again">${esc(R.again)}</button>`;
   }
@@ -273,7 +273,7 @@ function fullReport(justPaid = false) {
   const R = T.result, P = T.report;
   const pb = programBlock(program);
   const s = profile.strongest;
-  const bars = QUALITIES.map((q) => { const d = profile.qualities[q]; return `<div class="mini"><span>${esc(R.qualities[q].name)}</span><span class="dots l${d.level}"><i></i><i></i><i></i></span><em class="lvl l${d.level}">${esc(R.levels[d.level])}</em></div>`; }).join('');
+  const bars = qualitiesOf(state.results).map((q) => { const d = profile.qualities[q]; return `<div class="mini"><span>${esc(R.qualities[q].name)}</span><span class="dots l${d.level}"><i></i><i></i><i></i></span><em class="lvl l${d.level}">${esc(R.levels[d.level])}</em></div>`; }).join('');
   const tip = homePlan.tips[0];
   screen(`${justPaid ? `<p class="tip">${esc(P.paidOk)}</p>` : ''}
     <div class="rep-head">${s ? `<small>${esc(R.strongest)}</small><h1>${esc(R.qualities[s].name)}</h1>` : `<h1>${esc(R.title)}</h1>`}<p>${esc(R.summary[profile.summary])}</p>${bars}</div>

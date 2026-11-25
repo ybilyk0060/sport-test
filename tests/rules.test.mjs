@@ -1,19 +1,19 @@
 // Проверка правил профиля и рекомендаций + запрет слов на странице. Запуск: node tests/rules.test.mjs
 import fs from 'fs';
 globalThis.location = { search: '' };
-const { buildReport, buildProfile, levelOf } = await import('../js/scoring.js');
+const { buildReport, buildProfile, levelOf, qualitiesOf } = await import('../js/scoring.js');
 let fail = 0; const check = (n, ok, got) => { console.log(`${ok ? 'OK  ' : 'FAIL'} ${n}${got !== undefined ? ': ' + JSON.stringify(got) : ''}`); if (!ok) fail++; };
 
 const full = [
   { key: 'jumping_jack', target: 10, done: 10, elapsedSec: 14, metrics: { rhythmCv: 0.1, armDiff: 0.03 } },
   { key: 'squats', target: 8, done: 8, elapsedSec: 20, metrics: { shallow: 0 } },
   { key: 'high_knees', target: 10, done: 10, elapsedSec: 11, metrics: { liftsLeft: 14, liftsRight: 14 } },
-  { key: 'good_morning', target: 6, done: 6, elapsedSec: 15, metrics: { shallow: 0 } },
-  { key: 'shoulder_taps', target: 10, done: 10, elapsedSec: 14, metrics: { rhythmCv: 0.1, liftsLeft: 5, liftsRight: 5, shallow: 0 } },
+  { key: 'arm_circles', target: 8, done: 8, elapsedSec: 15, metrics: { shallow: 0 } },
+  { key: 'wall_french_press', target: 8, done: 8, elapsedSec: 14, metrics: { shallow: 0 } },
 ];
 const quiz = { age: '6-8', now: 'none', likes: 'team', temper: 'active', goal: 'confidence', screen: 'high' };
 const r = buildReport(full, quiz);
-check('все качества — уровень 3', Object.values(r.profile.qualities).every((q) => q.level === 3), r.profile.qualities);
+check('измеренные качества — уровень 3', qualitiesOf(full).every((q) => r.profile.qualities[q].level === 3) && qualitiesOf(full).length === 6, { q: qualitiesOf(full), p: r.profile.qualities });
 check('итог high', r.profile.summary === 'high');
 check('3 направления, первое — командные', r.sports.length === 3 && r.sports[0].sport === 'team', r.sports);
 check('план: 2 недели × 3 занятия × 3 упражнения', r.plan.weeks.length === 2 && r.plan.weeks.every((w) => w.sessions.length === 3 && w.sessions.every((s) => s.items.length === 3 && new Set(s.items.map((i) => i.key)).size === 3)));
@@ -24,23 +24,23 @@ const weak = [
   { key: 'jumping_jack', target: 10, done: 2, elapsedSec: 25, metrics: { rhythmCv: null, armDiff: 0.25 } },
   { key: 'squats', target: 8, done: 1, elapsedSec: 30, metrics: { shallow: 5 } },
   { key: 'high_knees', target: 10, done: 2, elapsedSec: 25, metrics: { liftsLeft: 3, liftsRight: 1 } },
-  { key: 'good_morning', target: 5, done: 1, elapsedSec: 25, metrics: { shallow: 4 } },
-  { key: 'shoulder_taps', target: 6, done: 0, elapsedSec: 0, skipped: true, metrics: {} },
+  { key: 'arm_circles', target: 5, done: 1, elapsedSec: 20, metrics: { shallow: 4 } },
 ];
 const w = buildReport(weak, { age: '3-5', likes: 'music', temper: 'calm', goal: 'health', screen: 'low', now: 'yard' });
-check('слабый результат: уровни 1, корпус не измерен', w.profile.qualities.legs.level === 1 && w.profile.qualities.flex.level === 1 && w.profile.qualities.core.level === 0, w.profile.qualities);
+check('слабый результат: уровни 1, руки не измерены', w.profile.qualities.legs.level === 1 && w.profile.qualities.flex.level === 1 && w.profile.qualities.arms.level === 0, w.profile.qualities);
 check('итог low', w.profile.summary === 'low');
 check('музыка → танцы первыми', w.sports[0].sport === 'dance', w.sports);
 // Программа подписчика: 4 недели × 3 тренировки, акцент по интересу, рост нагрузки
 const { buildProgram, nextWorkout } = await import('../js/program.js');
 const pg = buildProgram(r.profile, quiz, full);
 check('программа: 12 тренировок по 4 упражнения', pg.workouts.length === 12 && pg.workouts.every((x) => x.items.length === 4), pg.workouts.map((x) => x.items.length));
+check('в программе только упражнения возраста', pg.workouts.every((x) => x.items.every((i) => ['jumping_jack', 'arm_circles', 'squats', 'high_knees', 'quadruped_arm_circles'].includes(i.key))));
 check('футбол → бег в каждой тренировке', pg.focus === 'team' && pg.workouts.every((x) => x.items.some((i) => i.key === 'high_knees')));
 const sq = (wk) => pg.workouts.find((x) => x.week === wk && x.day === 1).items.find((i) => i.key === 'squats').target;
 check('нагрузка растёт по неделям', sq(4) > sq(1), [sq(1), sq(4)]);
 check('следующая тренировка после выполненной', nextWorkout(pg, [{ id: 'w1d1' }]).id === 'w1d2' && nextWorkout(pg, pg.workouts) === null);
-const pf = buildProgram(w.profile, { age: '3-5', likes: 'fight' }, weak);
-check('борьба → сила ног и корпуса', pf.workouts[0].items.some((i) => i.key === 'squats') && pf.workouts[0].items.some((i) => i.key === 'shoulder_taps'), pf.workouts[0].items);
+const pf = buildProgram(w.profile, { age: '12-15', likes: 'fight' }, weak);
+check('борьба → присідання і віджимання', pf.workouts[0].items.some((i) => i.key === 'squats') && pf.workouts[0].items.some((i) => i.key === 'pushups'), pf.workouts[0].items);
 const none = buildProfile(full.map((x) => ({ ...x, skipped: true })));
 check('всё пропущено → none', none.summary === 'none' && none.strongest === null);
 check('пороги уровней', levelOf(0.75) === 3 && levelOf(0.5) === 2 && levelOf(0.2) === 1 && levelOf(null) === 0);

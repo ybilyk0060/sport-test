@@ -9,6 +9,7 @@ import { preloadPose, poseStatus } from './pose.js';
 import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js';
 import { framingCheck, frameLoop, createRun } from './session.js';
 import { createRaiseHand } from './gesture.js';
+import { EX_QUALITY } from './scoring.js';
 
 const env = detectEnv();
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -144,8 +145,9 @@ function framing() {
 
 function introSheet(p, i, n, btnHtml) {
   const ex = CONFIG.exercises[p.key], tx = T.ex[p.key];
-  const note = ex.floor ? T.cam.floorFrontNote : ex.facing === 'side' ? T.cam.sideNote : T.cam.frontNote;
-  return `<div class="sheet"><span class="tag">${esc(T.cam.exOf(i + 1, n))}</span><h2>${esc(tx.task(p.target))}</h2>
+  const note = ex.wall ? T.cam.wallNote : ex.floor === 'any' ? T.cam.floorAnyNote : ex.floor === 'side' ? T.cam.floorSideNote : ex.floor ? T.cam.floorFrontNote : ex.facing === 'side' ? T.cam.sideNote : T.cam.frontNote;
+  const checks = (EX_QUALITY[p.key] || []).map((q) => T.result.qualities[q].name.toLowerCase()).join(', ');
+  return `<div class="sheet"><span class="tag">${esc(T.cam.exOf(i + 1, n))}</span>${checks ? `<span class="tag checks">${esc(T.cam.checks(checks))}</span>` : ''}<h2>${esc(tx.task(p.target))}</h2>
     <video class="panda" playsinline muted loop autoplay preload="auto" poster="${CONFIG.mediaBase + ex.poster}" src="${CONFIG.mediaBase + ex.video}"></video>
     <p>${esc(tx.how)}</p>${tx.pandaNote ? `<p class="small" style="opacity:.8">${esc(tx.pandaNote)}</p>` : ''}<p class="note">↻ ${esc(note)}</p>${btnHtml}</div>`;
 }

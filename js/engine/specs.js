@@ -1,14 +1,20 @@
 // Спеки счёта упражнений. Из публичного каталога Студії вправ (exercise-catalog, status=published):
 // squats@3, high_knees@2, jumping_jack@4, plank@1 (сверены 25.11.2026), good_morning@1 (добавлена 25.11.2026, в Студії помечена PROPOSED).
-// shoulder_taps_front — своя спека сайта (в Студії есть только shoulder_taps боком): см. notes внутри.
+// arm_circles@4, quadruped_arm_circles@1, wall_french_press@1, pushups@4 — из каталога (25.11, второй заход).
+// pushups_front — своя спека (віджимання лицом к камере). shoulder_taps_front — своя спека сайта (в Студії есть только shoulder_taps боком): см. notes внутри.
 // Не править руками без повторной проверки tests/engine.test.mjs.
 export const SPEC_MD5 = {
  "squats": "094396b23e4dbc84449d4a135b11a998",
  "plank": "b254da6d588d8b8c55f684ac04b01e7d",
- "high_knees": "3a43b203f11d4f774927b504d6167665",
+ "high_knees": "ec346a793d63a5fe7e05ec2ed5783a58",
  "jumping_jack": "7ca6467f269ba5df1d176dd2eeeff3ec",
  "good_morning": "7fae1c13856ed12bab93c97fe490713c",
- "shoulder_taps_front": "0e284fd8eee20b7dc24267c9dec19982"
+ "shoulder_taps_front": "0e284fd8eee20b7dc24267c9dec19982",
+ "arm_circles": "aac95b56e3de6f84159f5046c8b6bae6",
+ "quadruped_arm_circles": "d658aa51bab70cff1e701b7ed632d15a",
+ "wall_french_press": "978c0f618b515d8ac5ef16d295010599",
+ "pushups": "0a893012aa87304fad261b848161cca4",
+ "pushups_front": "4af76bad6463655efc45b9517384bd44"
 };
 export const SPECS = {
  "squats": {
@@ -960,5 +966,716 @@ export const SPECS = {
    }
   },
   "notes": "Сайт sport-test, 25.11.2026: варіант shoulder_taps обличчям до камери (власник). Кут ліктя активної руки: торкання < 105° (молодші < 115°), повернення > 145° (140°); друга рука пряма > 140° (135°). Один дотик = один повтор. Пороги робочі, на відео дітей не перевірені."
+ },
+ "arm_circles": {
+  "key": "arm_circles",
+  "goal": "reps",
+  "media": {
+   "poster": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/arm_circles-v2-197d83dd.jpg",
+   "pandaVideo": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/arm_circles-v2-197d83dd.mp4"
+  },
+  "notes": "Exercise of the day 2026-11-07 (scripts/pipeline). v3 (15.11): young ranges for the right wrist and start. v4 (18.11, owner rule: a child's rep counts from ~70 % of the adult amplitude): both wrists only need to reach the shoulder line (−0.05 torso), start ≤ −0.3, same lines for standard and young (age 8 is the standard band); one arm / still / arms down stay at zero. Bench: kidAmplitude.test.ts.",
+  "facing": "front",
+  "motion": {
+   "top": {
+    "all": [
+     {
+      "m": "wrist_h",
+      "min": -0.05
+     },
+     {
+      "m": "wrist_h_r",
+      "min": -0.05
+     }
+    ]
+   },
+   "type": "reps",
+   "drive": {
+    "m": "wrist_h",
+    "velocity": 0.02,
+    "trendFrames": 2
+   },
+   "start": {
+    "all": [
+     {
+      "m": "wrist_h",
+      "max": -0.3
+     }
+    ]
+   },
+   "abandon": {
+    "hint": "arm_circles_not_reached",
+    "onlyIfReached": {
+     "m": "wrist_h",
+     "min": -0.2
+    }
+   },
+   "finishGraceMs": 300
+  },
+  "phrases": {
+   "arm_circles_coach_1": {
+    "text": {
+     "de": "Du drehst dich super!",
+     "en": "You are spinning so great!",
+     "uk": "Ти крутишся дуже гарно!"
+    }
+   },
+   "arm_circles_coach_2": {
+    "text": {
+     "de": "Wundervolle große Kreise!",
+     "en": "Amazing big circles!",
+     "uk": "Чудові великі кола!"
+    }
+   },
+   "arm_circles_coach_3": {
+    "text": {
+     "de": "Fliege hoch wie eine Rakete!",
+     "en": "Fly high like a rocket!",
+     "uk": "Лети високо наче ракета!"
+    }
+   },
+   "arm_circles_coach_4": {
+    "text": {
+     "de": "Mach weiter so super!",
+     "en": "Keep up the awesome work!",
+     "uk": "Продовжуй у тому ж дусі!"
+    }
+   },
+   "arm_circles_face_wrong": {
+    "text": {
+     "de": "Drehe dich zu mir!",
+     "en": "Turn around to face me!",
+     "uk": "Повернися обличчям до мене!"
+    }
+   },
+   "arm_circles_not_reached": {
+    "text": {
+     "de": "Greife noch etwas höher!",
+     "en": "Reach a little higher!",
+     "uk": "Тягнися трохи вище догори!"
+    }
+   }
+  },
+  "version": 4,
+  "facingHint": "arm_circles_face_wrong",
+  "specVersion": 1,
+  "measurements": [
+   {
+    "id": "wrist_h",
+    "ref": "shoulder_mid",
+    "kind": "height",
+    "point": "left_wrist"
+   },
+   {
+    "id": "wrist_h_r",
+    "ref": "shoulder_mid",
+    "kind": "height",
+    "point": "right_wrist"
+   }
+  ]
+ },
+ "quadruped_arm_circles": {
+  "key": "quadruped_arm_circles",
+  "goal": "reps",
+  "media": {
+   "poster": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/quadruped_arm_circles-v1-46cfeb76.jpg",
+   "pandaVideo": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/quadruped_arm_circles-v1-46cfeb76.mp4"
+  },
+  "notes": "Turnkey from the owner's video 2026-11-23 (scripts/pipeline). PROPOSED — needs owner approval: thresholds from the owner's reference video (young top line +25 %), difficulty 1, ages 4–18, trainer bounds in the run report.",
+  "facing": "side",
+  "motion": {
+   "top": {
+    "all": [
+     {
+      "m": "left_wrist_h",
+      "min": {
+       "young": -0.2,
+       "standard": 0.39
+      }
+     }
+    ]
+   },
+   "type": "reps",
+   "drive": {
+    "m": "left_wrist_h",
+    "velocity": 0.02,
+    "trendFrames": 2
+   },
+   "start": {
+    "all": [
+     {
+      "m": "left_wrist_h",
+      "max": -0.79
+     }
+    ]
+   },
+   "abandon": {
+    "hint": "quadruped_arm_circles_not_reached",
+    "onlyIfReached": {
+     "m": "left_wrist_h",
+     "min": -0.49
+    }
+   },
+   "finishGraceMs": 300
+  },
+  "phrases": {
+   "quadruped_arm_circles_coach_1": {
+    "text": {
+     "de": "Tolle Drehung!",
+     "en": "Awesome rotation!",
+     "uk": "Чудове обертання!"
+    }
+   },
+   "quadruped_arm_circles_coach_2": {
+    "text": {
+     "de": "Weiter so!",
+     "en": "Keep up the great work!",
+     "uk": "Так тримати!"
+    }
+   },
+   "quadruped_arm_circles_coach_3": {
+    "text": {
+     "de": "Was für ein schöner Kreis!",
+     "en": "What a beautiful circle!",
+     "uk": "Яке гарне коло!"
+    }
+   },
+   "quadruped_arm_circles_coach_4": {
+    "text": {
+     "de": "Das machst du super!",
+     "en": "You are doing amazing!",
+     "uk": "У тебе чудово виходить!"
+    }
+   },
+   "quadruped_arm_circles_face_wrong": {
+    "text": {
+     "de": "Drehe dich seitlich zur Kamera!",
+     "en": "Turn sideways to the camera!",
+     "uk": "Повернися боком до камери!"
+    }
+   },
+   "quadruped_arm_circles_not_reached": {
+    "text": {
+     "de": "Mach den Kreis ganz fertig!",
+     "en": "Make a full big circle!",
+     "uk": "Зроби повне велике коло!"
+    }
+   }
+  },
+  "version": 1,
+  "facingHint": "quadruped_arm_circles_face_wrong",
+  "specVersion": 1,
+  "measurements": [
+   {
+    "id": "left_wrist_h",
+    "ref": "shoulder_mid",
+    "kind": "height",
+    "point": "near_wrist"
+   }
+  ]
+ },
+ "wall_french_press": {
+  "key": "wall_french_press",
+  "goal": "reps",
+  "media": {
+   "poster": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/wall_french_press-v1-31517c7c.jpg",
+   "pandaVideo": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/wall_french_press-v1-31517c7c.mp4"
+  },
+  "notes": "Turnkey from the owner's video 2026-11-23 (scripts/pipeline). PROPOSED — needs owner approval: thresholds from the owner's reference video (young top line +25 %), difficulty 1, ages 4–18, trainer bounds in the run report.",
+  "facing": "side",
+  "motion": {
+   "top": {
+    "all": [
+     {
+      "m": "left_elbow",
+      "min": {
+       "young": 152.16,
+       "standard": 160.15
+      }
+     },
+     {
+      "m": "left_wrist_h",
+      "max": 0.06
+     },
+     {
+      "m": "hip_h",
+      "max": -0.47
+     }
+    ]
+   },
+   "type": "reps",
+   "drive": {
+    "m": "left_elbow"
+   },
+   "start": {
+    "all": [
+     {
+      "m": "left_elbow",
+      "max": 144.16
+     }
+    ]
+   },
+   "abandon": {
+    "hint": "wall_french_press_not_reached",
+    "onlyIfReached": {
+     "m": "left_elbow",
+     "min": 148.16
+    }
+   },
+   "finishGraceMs": 300
+  },
+  "phrases": {
+   "wall_french_press_coach_1": {
+    "text": {
+     "de": "Starke Kraft!",
+     "en": "Super power push!",
+     "uk": "Сильний поштовх!"
+    }
+   },
+   "wall_french_press_coach_2": {
+    "text": {
+     "de": "Das machst du super!",
+     "en": "You are doing amazing!",
+     "uk": "Ти справжній герой!"
+    }
+   },
+   "wall_french_press_coach_3": {
+    "text": {
+     "de": "Toller Druck!",
+     "en": "Great push away!",
+     "uk": "Чудовий поштовх!"
+    }
+   },
+   "wall_french_press_coach_4": {
+    "text": {
+     "de": "Super weiter so!",
+     "en": "Keep going strong!",
+     "uk": "Так тримати!"
+    }
+   },
+   "wall_french_press_face_wrong": {
+    "text": {
+     "de": "Drehe dich seitlich zum Bild!",
+     "en": "Turn sideways to the screen!",
+     "uk": "Повернися боком до екрана!"
+    }
+   },
+   "wall_french_press_not_reached": {
+    "text": {
+     "de": "Drücke dich ganz zurück!",
+     "en": "Push all the way back!",
+     "uk": "Штовхайся до самого кінця!"
+    }
+   }
+  },
+  "version": 1,
+  "facingHint": "wall_french_press_face_wrong",
+  "specVersion": 1,
+  "measurements": [
+   {
+    "id": "left_elbow",
+    "kind": "angle",
+    "points": [
+     "near_shoulder",
+     "near_elbow",
+     "near_wrist"
+    ]
+   },
+   {
+    "id": "left_wrist_h",
+    "ref": "shoulder_mid",
+    "kind": "height",
+    "point": "near_wrist"
+   },
+   {
+    "id": "hip_h",
+    "ref": "shoulder_mid",
+    "kind": "height",
+    "point": "hip_mid"
+   }
+  ]
+ },
+ "pushups": {
+  "key": "pushups",
+  "goal": "reps",
+  "gates": {
+   "sideBy": "wrist",
+   "notSeenHint": "show_full_body",
+   "minVisibility": 0.5,
+   "maxInvalidFrames": 45
+  },
+  "notes": "Ported from pushUpAlgorithm.ts (05.11). v2: depth 74/81 from real video 4804817 (adult bottoms 71.8–73.3°; Studio line 80° rejected: arm flail in plank reaches 75–76°); sideBy wrist. v3 (10.11): young — knees / body line / hips are hints (upright and depth stay reject: anti-cheat). v4 (15.11): young depth 100° (honest 90–100° counted; flail risk unchanged vs 81°).",
+  "rules": [
+   {
+    "m": "torso_tilt",
+    "id": "upright",
+    "max": 40,
+    "hint": "body_too_upright",
+    "check": "between",
+    "scope": "keyframes",
+    "consequence": "reject"
+   },
+   {
+    "m": "knee_near",
+    "id": "knee_near",
+    "min": {
+     "young": 133,
+     "standard": 140
+    },
+    "hint": "no_knees_on_floor",
+    "check": "between",
+    "scope": "keyframes",
+    "optional": true,
+    "consequence": "reject",
+    "consequenceByAge": {
+     "young": "hint"
+    }
+   },
+   {
+    "m": "knee_far",
+    "id": "knee_far",
+    "min": {
+     "young": 133,
+     "standard": 140
+    },
+    "hint": "no_knees_on_floor",
+    "check": "between",
+    "scope": "keyframes",
+    "optional": true,
+    "consequence": "reject",
+    "consequenceByAge": {
+     "young": "hint"
+    }
+   },
+   {
+    "m": "knee_lift_near",
+    "id": "knee_lift_near",
+    "min": 0.12,
+    "hint": "no_knees_on_floor",
+    "check": "between",
+    "scope": "ends",
+    "optional": true,
+    "consequence": "reject",
+    "consequenceByAge": {
+     "young": "hint"
+    }
+   },
+   {
+    "m": "knee_lift_far",
+    "id": "knee_lift_far",
+    "min": 0.12,
+    "hint": "no_knees_on_floor",
+    "check": "between",
+    "scope": "ends",
+    "optional": true,
+    "consequence": "reject",
+    "consequenceByAge": {
+     "young": "hint"
+    }
+   },
+   {
+    "m": "hip_line",
+    "id": "body_straight",
+    "min": {
+     "young": 138,
+     "standard": 145
+    },
+    "hint": "keep_body_straight",
+    "check": "between",
+    "scope": "keyframes",
+    "consequence": "reject",
+    "consequenceByAge": {
+     "young": "hint"
+    }
+   },
+   {
+    "m": "hip_line",
+    "id": "hips_steady",
+    "max": 18,
+    "hint": "keep_hips_steady",
+    "check": "drift",
+    "scope": "keyframes",
+    "consequence": "reject",
+    "consequenceByAge": {
+     "young": "hint"
+    }
+   },
+   {
+    "m": "elbow",
+    "id": "depth",
+    "max": {
+     "young": 100,
+     "standard": 74
+    },
+    "hint": "go_lower",
+    "check": "min",
+    "scope": "rep",
+    "consequence": "reject"
+   }
+  ],
+  "facing": "side",
+  "motion": {
+   "top": {
+    "all": [
+     {
+      "m": "elbow",
+      "max": {
+       "young": 107,
+       "standard": 100
+      }
+     }
+    ]
+   },
+   "type": "reps",
+   "drive": {
+    "m": "elbow",
+    "velocity": 0.09,
+    "trendFrames": 3
+   },
+   "start": {
+    "all": [
+     {
+      "m": "elbow",
+      "min": {
+       "young": 133,
+       "standard": 140
+      }
+     },
+     {
+      "m": "hip_line",
+      "min": {
+       "young": 138,
+       "standard": 145
+      }
+     },
+     {
+      "m": "torso_tilt",
+      "max": 40
+     }
+    ]
+   },
+   "abandon": {
+    "hint": "go_lower"
+   },
+   "blockedStartHint": "get_into_plank",
+   "startConfirmMaxAgeMs": 1500
+  },
+  "phrases": {
+   "go_lower": {
+    "text": {
+     "de": "Geh ganz nach unten — beuge die Ellbogen mehr",
+     "en": "Go all the way down — bend your elbows more",
+     "uk": "Опускайся нижче — більше згинай лікті"
+    },
+    "voice": "exercise.hint.go_lower"
+   },
+   "turn_sideways": {
+    "text": {
+     "de": "Dreh dich seitlich zur Kamera",
+     "en": "Turn sideways to the camera",
+     "uk": "Повернись боком до камери"
+    },
+    "voice": "exercise.hint.turn_sideways"
+   },
+   "get_into_plank": {
+    "text": {
+     "de": "Geh in die Liegestützposition, Arme gestreckt",
+     "en": "Get into the push-up position with straight arms",
+     "uk": "Стань в упор лежачи, руки прямі"
+    },
+    "voice": "exercise.hint.get_into_plank"
+   },
+   "show_full_body": {
+    "text": {
+     "de": "Geh weiter weg, damit dein ganzer Körper im Bild ist",
+     "en": "Move back so your whole body is in the picture",
+     "uk": "Відійди далі, щоб було видно все тіло"
+    },
+    "voice": "exercise.hint.show_full_body"
+   },
+   "body_too_upright": {
+    "text": {
+     "de": "Leg dich hin und drück dich vom Boden hoch",
+     "en": "Lie down and push up from the floor",
+     "uk": "Ляж і віджимайся від підлоги"
+    },
+    "voice": "exercise.hint.body_too_upright"
+   },
+   "keep_hips_steady": {
+    "text": {
+     "de": "Hebe oder senke die Hüfte nicht beim Runtergehen",
+     "en": "Don't lift or drop your hips while you go down",
+     "uk": "Не піднімай і не опускай таз, коли віджимаєшся"
+    },
+    "voice": "exercise.hint.keep_hips_steady"
+   },
+   "no_knees_on_floor": {
+    "text": {
+     "de": "Halte beide Beine gerade — Knie nicht auf dem Boden",
+     "en": "Keep both legs straight — knees off the floor",
+     "uk": "Тримай обидві ноги прямими — коліна не на підлозі"
+    },
+    "voice": "exercise.hint.no_knees_on_floor"
+   },
+   "keep_body_straight": {
+    "text": {
+     "de": "Halte den Körper gerade wie ein Brett",
+     "en": "Keep your body straight, like a plank",
+     "uk": "Тримай тіло рівно, як планка"
+    },
+    "voice": "exercise.hint.keep_body_straight"
+   }
+  },
+  "version": 4,
+  "facingHint": "turn_sideways",
+  "specVersion": 1,
+  "measurements": [
+   {
+    "id": "elbow",
+    "kind": "angle",
+    "points": [
+     "near_shoulder",
+     "near_elbow",
+     "near_wrist"
+    ]
+   },
+   {
+    "id": "hip_line",
+    "kind": "angle",
+    "points": [
+     "near_shoulder",
+     "near_hip",
+     "near_knee"
+    ]
+   },
+   {
+    "id": "torso_tilt",
+    "kind": "tilt",
+    "points": [
+     "near_shoulder",
+     "near_hip"
+    ]
+   },
+   {
+    "id": "knee_near",
+    "kind": "angle",
+    "points": [
+     "near_hip",
+     "near_knee",
+     "near_ankle"
+    ]
+   },
+   {
+    "id": "knee_far",
+    "kind": "angle",
+    "points": [
+     "far_hip",
+     "far_knee",
+     "far_ankle"
+    ]
+   },
+   {
+    "id": "knee_lift_near",
+    "ref": "near_wrist",
+    "kind": "height",
+    "point": "near_knee"
+   },
+   {
+    "id": "knee_lift_far",
+    "ref": "near_wrist",
+    "kind": "height",
+    "point": "far_knee"
+   }
+  ]
+ },
+ "pushups_front": {
+  "specVersion": 1,
+  "key": "pushups_front",
+  "version": 1,
+  "goal": "reps",
+  "facing": "front",
+  "facingHint": "jumping_jack_face_wrong",
+  "measurements": [
+   {
+    "id": "l_elbow",
+    "kind": "angle",
+    "points": [
+     "left_shoulder",
+     "left_elbow",
+     "left_wrist"
+    ]
+   },
+   {
+    "id": "r_elbow",
+    "kind": "angle",
+    "points": [
+     "right_shoulder",
+     "right_elbow",
+     "right_wrist"
+    ]
+   }
+  ],
+  "motion": {
+   "type": "reps",
+   "drive": {
+    "m": "l_elbow"
+   },
+   "start": {
+    "all": [
+     {
+      "m": "l_elbow",
+      "min": {
+       "young": 140,
+       "standard": 150
+      }
+     },
+     {
+      "m": "r_elbow",
+      "min": {
+       "young": 140,
+       "standard": 150
+      }
+     }
+    ]
+   },
+   "top": {
+    "all": [
+     {
+      "m": "l_elbow",
+      "max": {
+       "young": 125,
+       "standard": 115
+      }
+     },
+     {
+      "m": "r_elbow",
+      "max": {
+       "young": 125,
+       "standard": 115
+      }
+     }
+    ]
+   },
+   "abandon": {
+    "hint": "go_lower",
+    "onlyIfReached": {
+     "m": "l_elbow",
+     "max": 135
+    }
+   },
+   "finishGraceMs": 300
+  },
+  "gates": {
+   "minVisibility": 0.5,
+   "maxInvalidFrames": 45
+  },
+  "phrases": {
+   "go_lower": {
+    "text": {
+     "uk": "Опускайся нижче"
+    }
+   }
+  },
+  "notes": "sport-test 25.11 (владелец): віджимання лицом к камере. Оба локтя: старт > 150° (молодші > 140°), низ < 115° (< 125°). Считается параллельно со спекой студии pushups@4 (боком), берётся больший счёт. Пороги рабочие, на детях не проверены."
  }
 };
