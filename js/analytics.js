@@ -2,8 +2,8 @@
 // Без согласия события остаются только на устройстве (store.track). Видео, точки тела и ответы о ребёнке наружу не уходят:
 // в события идут только имя шага, номер вопроса, ключ упражнения, сумма и валюта.
 
-import { CONFIG } from './config.js?v=e7fb276-mww9drbi';
-import { T } from './i18n/index.js?v=e7fb276-mww9drbi';
+import { CONFIG } from './config.js?v=6a747da-mww9phxq';
+import { T } from './i18n/index.js?v=6a747da-mww9phxq';
 
 const KEY = 'sporttest.consent';
 let consent = null;
@@ -14,7 +14,7 @@ let ready = false;
 const FUNNEL = new Set(['open', 'camera_blocked_shown', 'open_in_chrome_click', 'open_in_safari_click', 'fallback_start', 'quiz_start', 'quiz_answer', 'prep_shown', 'camera_granted', 'camera_denied', 'test_start', 'exercise_done', 'test_done',
   'result_shown', 'paywall_shown', 'offer_timer_end', 'pay_click', 'paid', 'pay_cancelled', 'report_shown', 'workout_start', 'workout_done', 'sub_cancelled', 'gift_code', 'app_link']);
 // Только безопасные поля
-const SAFE = ['n', 'key', 'skipped', 'amount', 'currency', 'discount', 'mode', 'summary', 'plan', 'test', 'app', 'id', 'lang', 'kind', 'via', 'ok', 'browser', 'platform', 'inApp'];
+const SAFE = ['order', 'n', 'key', 'skipped', 'amount', 'currency', 'discount', 'mode', 'summary', 'plan', 'test', 'app', 'id', 'lang', 'kind', 'via', 'ok', 'browser', 'platform', 'inApp'];
 const clean = (p) => Object.fromEntries(Object.entries(p || {}).filter(([k, v]) => SAFE.includes(k) && v !== undefined && v !== null));
 
 function loadPixel(id) {
@@ -47,10 +47,15 @@ export function send(name, props = {}) {
     if (window.fbq) {
       if (name === 'quiz_start') window.fbq('track', 'ViewContent', { content_name: 'quiz' });
       if (name === 'test_done') window.fbq('track', 'CompleteRegistration', { content_name: 'test_done' });
-      if (name === 'paywall_shown') window.fbq('track', 'AddToCart', { value: p.amount, currency: p.currency });
-      if (name === 'pay_click') window.fbq('track', 'InitiateCheckout', { value: p.amount, currency: p.currency });
+      // Схема событий для рекламы (тред Meta 25.11): ViewContent — старт, CompleteRegistration — камера пройдена,
+      // InitiateCheckout — пейвол, AddPaymentInfo — нажал «Оплатить», Purchase (+Subscribe) — оплата.
+      if (name === 'paywall_shown') window.fbq('track', 'InitiateCheckout', { value: p.amount, currency: p.currency });
+      if (name === 'pay_click') window.fbq('track', 'AddPaymentInfo', { value: p.amount, currency: p.currency });
       // Покупка уходит в Meta только настоящая: тестовая оплата рекламу не обучает
-      if (name === 'paid' && !p.test) window.fbq('track', 'Subscribe', { value: p.amount, currency: p.currency, predicted_ltv: p.amount });
+      if (name === 'paid' && !p.test) {
+        window.fbq('track', 'Purchase', { value: p.amount, currency: p.currency }, p.order ? { eventID: `purchase-${p.order}` } : undefined); // eventID — для склейки с Conversions API
+        window.fbq('track', 'Subscribe', { value: p.amount, currency: p.currency, predicted_ltv: p.amount });
+      }
       window.fbq('trackCustom', `st_${name}`, p);
     }
     if (window.posthog) window.posthog.capture(name, p);

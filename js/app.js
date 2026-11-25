@@ -1,22 +1,22 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
-import { T } from './i18n/index.js?v=e7fb276-mww9drbi';
-import { CONFIG } from './config.js?v=e7fb276-mww9drbi';
-import { money, PRICE, CUR, fmtDate, } from './locale.js?v=e7fb276-mww9drbi';
-import { LANG, LOCALES } from './i18n/index.js?v=e7fb276-mww9drbi';
-import { state, setState, resetState, track, importHandoff, store } from './store.js?v=e7fb276-mww9drbi';
-import { detectEnv } from './env.js?v=e7fb276-mww9drbi';
-import { preloadPose } from './pose.js?v=e7fb276-mww9drbi';
-import { unlockAudio } from './audio.js?v=e7fb276-mww9drbi';
-import { startStage, startFallback, toast } from './stage.js?v=e7fb276-mww9drbi';
-import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=e7fb276-mww9drbi';
-import { payment, newOrderId } from './payment.js?v=e7fb276-mww9drbi';
-import { ART } from './art.js?v=e7fb276-mww9drbi';
-import { initDebug } from './debug.js?v=e7fb276-mww9drbi';
-import { initConsent } from './analytics.js?v=e7fb276-mww9drbi';
-import * as subapi from './subapi.js?v=e7fb276-mww9drbi';
-import { drawShareCard } from './sharecard.js?v=e7fb276-mww9drbi';
-import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=e7fb276-mww9drbi';
+import { T } from './i18n/index.js?v=6a747da-mww9phxq';
+import { CONFIG } from './config.js?v=6a747da-mww9phxq';
+import { money, PRICE, CUR, fmtDate, } from './locale.js?v=6a747da-mww9phxq';
+import { LANG, LOCALES } from './i18n/index.js?v=6a747da-mww9phxq';
+import { state, setState, resetState, track, importHandoff, store } from './store.js?v=6a747da-mww9phxq';
+import { detectEnv } from './env.js?v=6a747da-mww9phxq';
+import { preloadPose } from './pose.js?v=6a747da-mww9phxq';
+import { unlockAudio } from './audio.js?v=6a747da-mww9phxq';
+import { startStage, startFallback, toast } from './stage.js?v=6a747da-mww9phxq';
+import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=6a747da-mww9phxq';
+import { payment, newOrderId } from './payment.js?v=6a747da-mww9phxq';
+import { ART } from './art.js?v=6a747da-mww9phxq';
+import { initDebug } from './debug.js?v=6a747da-mww9phxq';
+import { initConsent } from './analytics.js?v=6a747da-mww9phxq';
+import * as subapi from './subapi.js?v=6a747da-mww9phxq';
+import { drawShareCard } from './sharecard.js?v=6a747da-mww9phxq';
+import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=6a747da-mww9phxq';
 
 const env = detectEnv();
 const app = document.getElementById('app');
@@ -286,7 +286,7 @@ function subActive() { return !!(state.sub && Date.now() < state.sub.paidUntil);
 function startSub(orderId) {
   const now = Date.now();
   setState({ paid: true, paidAt: now, orderId, sub: { status: 'active', startedAt: now, paidUntil: now + SUB.periodDays * DAY, orderId, test: !!payment.isTest }, workouts: state.workouts || [] });
-  track('paid', { provider: payment.name, amount: firstPrice(), currency: CUR, plan: 'sub', test: !!payment.isTest });
+  track('paid', { provider: payment.name, amount: firstPrice(), currency: CUR, plan: 'sub', test: !!payment.isTest, order: orderId });
   if (subapi.subOn() && state.email) {
     subapi.activate({ orderRef: orderId, email: state.email, currency: CUR, first: firstPrice(), regular: PRICE.regular, quiz: state.quiz, results: state.results, test: !!payment.isTest, lang: LANG })
       .then((r) => { setState({ subToken: r.token, sub: { ...subapi.fromServer(r.sub), orderId } }); track('sub_server', { ok: true }); })
