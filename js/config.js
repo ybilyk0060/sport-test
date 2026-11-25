@@ -89,14 +89,31 @@ export const CONFIG = {
   // target — задание (повторы или секунды), capSec — предел времени. Это параметры ЗАДАНИЯ, а не возрастные нормы.
   // engineAge — возраст для калибровки движка студии (≤7 «young», 8–10 «mid», 11+ «standard»).
   // Порядок: лицом к камере → боком → у стены / на полу (ребёнок поворачивается один раз).
+  // Тест до оплаты — только оценка (спецификация v3, Юрий 25.11): телефон стоит на месте, всё лицом к камере.
+  // timed: true — считаем повторы за capSec секунд (target не ограничивает). norms — пороги «A / B» в js/scoring.js (NORMS).
+  // program — упражнения программы после оплаты (прежний состав теста).
   ageGroups: {
     '3-5': { engineAge: 4, plan: [
+      { key: 'balance_r', target: 10, capSec: 25 },
+      { key: 'balance_l', target: 10, capSec: 25 },
+      { key: 'side_jumps_1', target: 999, capSec: 10, timed: true },
+      { key: 'bend', target: 4, capSec: 30 },
+      { key: 'jumping_jack', target: 999, capSec: 15, timed: true },
+    ], program: [
       { key: 'jumping_jack', target: 5, capSec: 20 },
       { key: 'arm_circles', target: 5, capSec: 20 },
       { key: 'squats', target: 4, capSec: 25 },
       { key: 'high_knees', target: 6, capSec: 20 },
     ] },
     '6-8': { engineAge: 7, plan: [
+      { key: 'balance_r', target: 15, capSec: 30 },
+      { key: 'balance_l', target: 15, capSec: 30 },
+      { key: 'side_jumps_1', target: 999, capSec: 15, timed: true },
+      { key: 'side_jumps_2', target: 999, capSec: 15, timed: true },
+      { key: 'bend', target: 4, capSec: 30 },
+      { key: 'jumping_jack', target: 999, capSec: 20, timed: true },
+      { key: 'shoulder_taps', target: 999, capSec: 20, timed: true },
+    ], program: [
       { key: 'jumping_jack', target: 8, capSec: 25 },
       { key: 'arm_circles', target: 6, capSec: 25 },
       { key: 'squats', target: 6, capSec: 25 },
@@ -105,6 +122,14 @@ export const CONFIG = {
       { key: 'quadruped_arm_circles', target: 5, capSec: 25 },
     ] },
     '9-11': { engineAge: 10, plan: [
+      { key: 'balance_r', target: 15, capSec: 30 },
+      { key: 'balance_l', target: 15, capSec: 30 },
+      { key: 'side_jumps_1', target: 999, capSec: 15, timed: true },
+      { key: 'side_jumps_2', target: 999, capSec: 15, timed: true },
+      { key: 'bend', target: 4, capSec: 30 },
+      { key: 'jumping_jack', target: 999, capSec: 20, timed: true },
+      { key: 'shoulder_taps', target: 999, capSec: 20, timed: true },
+    ], program: [
       { key: 'jumping_jack', target: 10, capSec: 25 },
       { key: 'arm_circles', target: 8, capSec: 25 },
       { key: 'squats', target: 8, capSec: 30 },
@@ -113,6 +138,14 @@ export const CONFIG = {
       { key: 'wall_french_press', target: 8, capSec: 30 },
     ] },
     '12-15': { engineAge: 13, plan: [
+      { key: 'balance_r', target: 15, capSec: 30 },
+      { key: 'balance_l', target: 15, capSec: 30 },
+      { key: 'side_jumps_1', target: 999, capSec: 15, timed: true },
+      { key: 'side_jumps_2', target: 999, capSec: 15, timed: true },
+      { key: 'bend', target: 4, capSec: 30 },
+      { key: 'jumping_jack', target: 999, capSec: 20, timed: true },
+      { key: 'shoulder_taps', target: 999, capSec: 20, timed: true },
+    ], program: [
       { key: 'jumping_jack', target: 15, capSec: 30 },
       { key: 'arm_circles', target: 10, capSec: 25 },
       { key: 'squats', target: 12, capSec: 30 },
@@ -138,7 +171,11 @@ export const CONFIG = {
     // Віджимання: считаются и боком (спека студии pushups@4), и лицом (своя pushups_front) — берётся больший счёт
     pushups: { spec: 'pushups', altSpec: 'pushups_front', facing: 'any', floor: 'any', goal: 'reps', video: 'studio/pushups-v4-d83d1e9c.mp4', poster: 'studio/pushups-v4-e414f5bc.jpg', intro: 'howto_pushups' },
     // Баланс на одной ноге: своя логика сайта (js/balance.js), без видео панды — рисунок. В тест войдёт после утверждения протокола и норм.
-    balance: { custom: 'balance', facing: 'front', goal: 'seconds', art: '<div class="bal-art" aria-hidden="true">🦩</div>' },
+    balance_r: { custom: 'balance', leg: 'right', facing: 'front', goal: 'seconds', demo: 'balance', intro: 'balance_howto' },
+    balance_l: { custom: 'balance', leg: 'left', facing: 'front', goal: 'seconds', demo: 'balance', intro: 'balance_left' },
+    side_jumps_1: { custom: 'sidejump', facing: 'front', goal: 'reps', demo: 'side_jumps', intro: 'side_jumps_howto' },
+    side_jumps_2: { custom: 'sidejump', facing: 'front', goal: 'reps', demo: 'side_jumps', intro: 'side_jumps_again' },
+    bend: { custom: 'bend', facing: 'front', goal: 'reps', demo: 'bend', intro: 'bend_howto' },
     // Подъёмы корпуса (спека crunches из Студії): заготовка норматива «за 30 с» — capSec задаётся в плане теста
     crunches: { spec: 'crunches', facing: 'side', floor: 'side', goal: 'reps', video: 'studio/crunches-v3-2ac7586d.mp4', poster: 'studio/crunches-v3-f7f280fe.jpg', intro: 'howto_crunches' },
     // Новые из Студії (25.11, помечены для sport_test): пока в пуле программы подписчика, в тест не входят
@@ -148,7 +185,7 @@ export const CONFIG = {
     side_leg_raise: { spec: 'side_leg_raise', facing: 'front', goal: 'reps', video: 'eotd/side_leg_raise-v1-430f7a58.mp4', poster: 'eotd/side_leg_raise-v1-430f7a58.jpg', intro: 'side_leg_raise_howto', coach: 'side_leg_raise_coach_' },
     superman_lifts: { spec: 'superman_lifts', facing: 'side', floor: 'side', goal: 'reps', video: 'eotd/superman_lifts-v1-b262f6cf.mp4', poster: 'eotd/superman_lifts-v1-b262f6cf.jpg', intro: 'superman_lifts_howto', coach: 'superman_lifts_coach_' },
     tuck_jump: { spec: 'tuck_jump', facing: 'front', goal: 'reps', video: 'eotd/tuck_jump-v1-f8b42018.mp4', poster: 'eotd/tuck_jump-v1-f8b42018.jpg', intro: 'tuck_jump_howto', coach: 'tuck_jump_coach_' },
-    shoulder_taps: { spec: 'shoulder_taps_front', facing: 'front', floor: true, goal: 'reps', video: 'eotd/shoulder_taps-v1-e37b6726.mp4', poster: 'eotd/shoulder_taps-v1-e37b6726.jpg', intro: 'shoulder_taps_front_howto', introFallback: 'name_shoulder_taps', coach: 'shoulder_taps_coach_' },
+    shoulder_taps: { spec: 'shoulder_taps_front', facing: 'front', floor: true, goal: 'reps', video: 'eotd/shoulder_taps-v1-e37b6726.mp4', poster: 'eotd/shoulder_taps-v1-e37b6726.jpg', intro: 'shoulder_taps_head_howto', introFallback: 'shoulder_taps_front_howto', coach: 'shoulder_taps_coach_' },
   },
 
   // --- Уровни профиля ---

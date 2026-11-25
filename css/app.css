@@ -313,3 +313,18 @@ details.sec > * + * { margin-top: 10px; }
 .land-note { font-size: 13px; margin-top: -6px; }
 @media (max-height: 720px) { .hero-art { width: min(24vw, 96px); } .hero .promise { font-size: 16px; } .screen { gap: 12px; } }
 .bal-art { font-size: 96px; text-align: center; line-height: 1.2; }
+
+/* Анимированные примеры оценочных упражнений (js/demos.js) */
+.demo { background: #fff3e6; border-radius: 18px; padding: 8px; display: grid; place-items: center; }
+.demo svg { width: min(56vw, 220px); height: auto; aspect-ratio: 1 / 1; }
+.demo svg * { stroke: #1f2a3d; fill: none; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+.demo svg .head, .demo svg .dot { fill: #1f2a3d; stroke: none; }
+.demo svg .dot { fill: var(--accent); }
+.demo svg .floor { stroke: #b9a68f; stroke-width: 3; stroke-dasharray: 2 8; }
+.demo svg .tape { stroke: var(--accent); stroke-width: 6; }
+.demo svg .mark { stroke: var(--accent); stroke-width: 4; }
+.demo .f { opacity: 0; animation-iteration-count: infinite; animation-timing-function: steps(1, end); }
+.demo.n3 .f { animation-name: demo3; animation-duration: 2.1s; }
+.demo.n4 .f { animation-name: demo4; animation-duration: 2.8s; }
+@keyframes demo3 { 0% { opacity: 1; } 33.3% { opacity: 0; } 100% { opacity: 0; } }
+@keyframes demo4 { 0% { opacity: 1; } 25% { opacity: 0; } 100% { opacity: 0; } }

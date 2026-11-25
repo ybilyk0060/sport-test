@@ -2,16 +2,19 @@
 // Чистые функции без браузера (проверяются в tests/rules.test.mjs). Тексты — по ключам из js/i18n.
 // Важно: возрастных норм нет. Все оценки — «выполнено задание / нет» и «ровно / неровно», пороги рабочие.
 
-import { CONFIG } from './config.js?v=d7c783e-mwwdw4tk';
+import { CONFIG } from './config.js?v=b0ff82c-mwweta3s';
 
 const clamp01 = (x) => Math.max(0, Math.min(1, x));
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);
 
-export const QUALITIES = ['coordination', 'balance', 'legs', 'speed', 'arms', 'core', 'flex', 'symmetry'];
+export const QUALITIES = ['balance', 'speed', 'flex', 'coordination', 'endurance', 'arms', 'legs', 'core', 'symmetry'];
 // Какие качества проверяет каждое упражнение (для подписи «Перевіряємо: …» и чтобы не показывать то, что в наборе возраста не мерили)
 export const EX_QUALITY = { jumping_jack: ['coordination', 'symmetry'], squats: ['legs'], high_knees: ['speed', 'symmetry'], arm_circles: ['flex'], quadruped_arm_circles: ['core'], wall_french_press: ['arms'], pushups: ['arms', 'core'], good_morning: ['flex'], shoulder_taps: ['core', 'symmetry'],
-  cross_crawl: ['coordination'], glute_bridge: ['core'], side_bend: ['flex'], side_leg_raise: ['legs'], superman_lifts: ['core'], tuck_jump: ['legs'], balance: ['balance'], crunches: ['core'] };
-export function qualitiesOf(results) { const set = new Set((results || []).flatMap((r) => EX_QUALITY[r.key] || [])); return QUALITIES.filter((q) => set.has(q)); }
+  cross_crawl: ['coordination'], glute_bridge: ['core'], side_bend: ['flex'], side_leg_raise: ['legs'], superman_lifts: ['core'], tuck_jump: ['legs'], balance: ['balance'], crunches: ['core'],
+  // Оценочный тест v3
+  balance_r: ['balance', 'symmetry'], balance_l: ['balance', 'symmetry'], side_jumps_1: ['speed'], side_jumps_2: ['speed'], bend: ['flex'] };
+export function qualitiesOf(results) {
+  if (isV3(results)) { const set = new Set(['balance', 'speed', 'flex', 'coordination', 'endurance', 'arms', 'symmetry']); const have = new Set((results || []).filter((r) => !r.skipped).map((r) => r.key)); if (!have.has('shoulder_taps')) set.delete('arms'); if (!have.has('jumping_jack')) { set.delete('coordination'); set.delete('endurance'); } return QUALITIES.filter((q) => set.has(q)); } const set = new Set((results || []).flatMap((r) => EX_QUALITY[r.key] || [])); return QUALITIES.filter((q) => set.has(q)); }
 
 // --- Показатели (каждый 0..1 или null, если не измерен) ---
 // Рабочие пороги (не нормы):
@@ -74,6 +77,7 @@ export const QUALITY_MAP = {
   core: ['qa_done', 'qa_clean', 'pu_done', 'st_done', 'st_rhythm', 'gb_done', 'gb_clean', 'sm_done', 'sm_clean', 'cr_done', 'cr_clean'],
   flex: ['ac_done', 'ac_clean', 'gm_done', 'gm_clean', 'sb_done', 'sb_clean'],
   balance: ['bal_hold', 'bal_sway'],
+  endurance: [],
   symmetry: ['jj_arm_sym', 'hk_side', 'st_side'],
 };
 
@@ -82,7 +86,82 @@ export function levelOf(score) {
   return score >= CONFIG.levels.high ? 3 : score >= CONFIG.levels.mid ? 2 : 1;
 }
 
-export function buildProfile(results) {
+// ---------- Оценочный тест v3 (спецификация 25.11): пороги «A / B» по возрасту ----------
+// Ниже A — «зона роста», A…B — «есть запас», от B — «сильная сторона». Рабочие оценки, не нормы; пока одинаково для мальчиков и девочек.
+// После ~300 тестов на группу «возраст × пол» заменить на P25 / P75 собственных данных.
+export const NORMS = {
+  '3-5': { balance: [6, 15], speed: [6, 12], flex: [2, 4], coordination: [5, 12], arms: null },
+  '6-8': { balance: [15, 26], speed: [18, 28], flex: [3, 4], coordination: [12, 20], arms: [8, 16] },
+  '9-11': { balance: [20, 30], speed: [25, 35], flex: [3, 4], coordination: [15, 24], arms: [12, 22] },
+  '12-15': { balance: [24, 30], speed: [30, 40], flex: [3, 4], coordination: [18, 28], arms: [16, 28] },
+};
+export const V3 = { SWAY_STRONG: 0.05, RHYTHM_CV_MAX: 0.5, SLOW_OK: 1.1, SLOW_MID: 1.3 }; // SWAY_STRONG — раскачка таза, ниже которой 9+ получают «сильную сторону» в балансе (временно, до медианы по данным)
+const V3_KEYS = ['balance_r', 'balance_l', 'side_jumps_1', 'side_jumps_2', 'bend'];
+export const isV3 = (results) => (results || []).some((r) => V3_KEYS.includes(r.key));
+// Число в уровень и балл 0..1, совместимый с levelOf (mid 0.45, high 0.75)
+function graded(v, [a, b]) {
+  if (v == null) return null;
+  if (v < a) return { score: Math.round(0.44 * (v / a) * 100) / 100, level: 1 };
+  if (v < b) return { score: Math.round((0.45 + 0.29 * ((v - a) / (b - a))) * 100) / 100, level: 2 };
+  return { score: Math.round(Math.min(1, 0.75 + 0.25 * ((v - b) / b)) * 100) / 100, level: 3 };
+}
+const down = (g) => (g && g.level > 1 ? { score: Math.min(g.score, g.level === 3 ? 0.74 : 0.44), level: g.level - 1 } : g);
+export function buildProfileV3(results, ageGroup) {
+  const N = NORMS[ageGroup] || NORMS[CONFIG.defaultAge];
+  const by = Object.fromEntries((results || []).filter((r) => r && !r.skipped).map((r) => [r.key, r]));
+  const q = {};
+  const metr = {};
+  // 1. Баланс: сумма секунд на двух ногах; для 9+ «сильная сторона» только при малой раскачке
+  const br = by.balance_r, bl = by.balance_l;
+  if (br || bl) {
+    const sum = (br ? br.done : 0) + (bl ? bl.done : 0);
+    const sways = [br, bl].map((r) => r && r.metrics.sway).filter((x) => x != null);
+    const sway = sways.length ? sways.reduce((a, x) => a + x, 0) / sways.length : null;
+    let g = graded(sum, N.balance);
+    if (g && g.level === 3 && parseInt(ageGroup, 10) >= 9 && !(sway != null && sway < V3.SWAY_STRONG)) g = down(g);
+    q.balance = g; metr.balanceSec = sum; metr.sway = sway;
+    if (br && bl && Math.max(br.done, bl.done) > 0) metr.balanceSym = Math.min(br.done, bl.done) / Math.max(br.done, bl.done);
+  }
+  // 2. Быстрота и ловкость ног: среднее число прыжков через линию за попытку
+  const sj = [by.side_jumps_1, by.side_jumps_2].filter(Boolean);
+  if (sj.length) { const avg = sj.reduce((a, r) => a + r.done, 0) / sj.length; q.speed = graded(avg, N.speed); metr.sideJumps = Math.round(avg * 10) / 10; }
+  // 3. Гибкость: уровень наклона 1–4
+  if (by.bend) { q.flex = graded(by.bend.done, N.flex); metr.bendLevel = by.bend.done; }
+  // 4. Координация и ритм: повторы jumping jack за время; неровный ритм — на уровень ниже. Выносливость — держит ли темп до конца.
+  const jj = by.jumping_jack;
+  if (jj) {
+    let g = graded(jj.done, N.coordination);
+    if (jj.metrics.rhythmCv != null && jj.metrics.rhythmCv > V3.RHYTHM_CV_MAX) g = down(g);
+    q.coordination = g;
+    const sl = jj.metrics.slowdown;
+    if (sl != null) q.endurance = sl <= V3.SLOW_OK ? { score: 0.85, level: 3 } : sl <= V3.SLOW_MID ? { score: 0.6, level: 2 } : { score: 0.3, level: 1 };
+    metr.jjReps = jj.done; metr.slowdown = sl;
+  }
+  // 5. Сила рук и корпуса: касания плеч за 20 с; неровный ритм — на уровень ниже
+  const st = by.shoulder_taps;
+  if (st && N.arms) {
+    let g = graded(st.done, N.arms);
+    if (st.metrics.rhythmCv != null && st.metrics.rhythmCv > V3.RHYTHM_CV_MAX) g = down(g);
+    q.arms = g; metr.taps = st.done;
+  }
+  // Симметрия: баланс Л/П, руки в jumping jack, касания Л/П
+  const symParts = [];
+  if (metr.balanceSym != null) symParts.push(metr.balanceSym);
+  if (jj && jj.metrics.armDiff != null) symParts.push(clamp01(1 - jj.metrics.armDiff / WORK.ARM_DIFF_MAX));
+  if (st && (st.metrics.liftsLeft || 0) + (st.metrics.liftsRight || 0) >= 4) symParts.push(Math.min(st.metrics.liftsLeft, st.metrics.liftsRight) / Math.max(st.metrics.liftsLeft, st.metrics.liftsRight));
+  if (symParts.length) { const sc = mean(symParts); q.symmetry = { score: Math.round(sc * 100) / 100, level: levelOf(sc) }; }
+
+  const qualities = {};
+  for (const k of QUALITIES) qualities[k] = q[k] || { score: null, level: 0 };
+  const measured = QUALITIES.filter((k) => qualities[k].level > 0 && k !== 'symmetry');
+  const strongest = measured.length ? measured.reduce((a, b) => (qualities[b].score > qualities[a].score ? b : a)) : null;
+  const avg = mean(measured.map((k) => qualities[k].score));
+  const summary = measured.length < 2 ? 'none' : avg >= CONFIG.levels.high ? 'high' : avg >= CONFIG.levels.mid ? 'mid' : 'low';
+  return { qualities, strongest, summary, indicators: metr, preliminary: true, version: 3 };
+}
+
+export function buildProfile(results, ageGroup) {
+  if (isV3(results)) return buildProfileV3(results, ageGroup);
   const ind = indicators(results);
   const qualities = {};
   for (const q of QUALITIES) {
@@ -155,14 +234,17 @@ export const AGE_RULES = { '3-5': { gymnastics: 1, dance: 1, swimming: 1 } };
 // Качество → направления. Вклад = вес × (уровень − 1) / 2: «зона роста» 0, «есть запас» — половина веса, «сильная сторона» — полный вес.
 // Желание ребёнка (likes, до 4 баллов) весит больше любого одного качества из теста (до 2 баллов).
 export const QUALITY_RULES = {
-  coordination: { team: 1, gymnastics: 1, dance: 2, martial: 1, climbing: 1, racket: 1 },
-  legs: { athletics: 1, martial: 2, climbing: 1 },
-  speed: { team: 1, athletics: 2, racket: 1 },
-  core: { gymnastics: 2, martial: 1, swimming: 1, climbing: 1 },
-  flex: { gymnastics: 2, dance: 1, martial: 1, swimming: 1 },
-  arms: { climbing: 2, swimming: 1, martial: 2, racket: 1, gymnastics: 1 },
-  balance: { gymnastics: 2, dance: 1, martial: 1, climbing: 1 },
+  // Оценочный тест v3 (вес 2 / 1 по спецификации 25.11)
+  balance: { gymnastics: 2, dance: 2, martial: 1, climbing: 1 },
+  speed: { racket: 2, team: 2, athletics: 1, martial: 1 },
+  flex: { gymnastics: 2, dance: 2, martial: 1, swimming: 1 },
+  coordination: { dance: 2, team: 1, racket: 1, gymnastics: 1 },
+  endurance: { athletics: 2, swimming: 1, team: 1 },
+  arms: { climbing: 2, martial: 2, swimming: 1, gymnastics: 1 },
   symmetry: { gymnastics: 1, dance: 1, swimming: 1 },
+  // Прежние качества (старые результаты и программа)
+  legs: { athletics: 1, martial: 2, climbing: 1 },
+  core: { gymnastics: 2, martial: 1, swimming: 1, climbing: 1 },
 };
 
 // Порядок причин в отчёте: телосложение, затем результаты теста, затем ответы родителя
@@ -204,6 +286,7 @@ export const PLAN_EX = {
   flex: ['good_morning', 'squats'],
   arms: ['squats', 'jumping_jack'],
   balance: ['squats', 'jumping_jack'],
+  endurance: ['high_knees', 'jumping_jack'],
   symmetry: ['shoulder_taps', 'jumping_jack'],
 };
 export const PLAN_DOSE = {
@@ -252,6 +335,6 @@ export function buildPlan(profile, quiz, results) {
 }
 
 export function buildReport(results, quiz) {
-  const profile = buildProfile(results);
+  const profile = buildProfile(results, quiz && quiz.age);
   return { profile, sports: recommendSports(profile, quiz), plan: buildPlan(profile, quiz, results) };
 }

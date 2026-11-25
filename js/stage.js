@@ -1,16 +1,17 @@
 // Экран камеры: разрешение → проверка кадра → 4 упражнения. И запасной путь: разбор записи.
 
-import { T } from './i18n/index.js?v=d7c783e-mwwdw4tk';
-import { CONFIG } from './config.js?v=d7c783e-mwwdw4tk';
-import { state, setState, track, exportHandoff } from './store.js?v=d7c783e-mwwdw4tk';
-import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=d7c783e-mwwdw4tk';
-import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=d7c783e-mwwdw4tk';
-import { preloadPose, poseStatus } from './pose.js?v=d7c783e-mwwdw4tk';
-import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=d7c783e-mwwdw4tk';
-import { framingCheck, frameLoop, createRun } from './session.js?v=d7c783e-mwwdw4tk';
-import { createRaiseHand } from './gesture.js?v=d7c783e-mwwdw4tk';
-import { recording } from './analytics.js?v=d7c783e-mwwdw4tk';
-import { EX_QUALITY } from './scoring.js?v=d7c783e-mwwdw4tk';
+import { T } from './i18n/index.js?v=b0ff82c-mwweta3s';
+import { CONFIG } from './config.js?v=b0ff82c-mwweta3s';
+import { state, setState, track, exportHandoff } from './store.js?v=b0ff82c-mwweta3s';
+import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=b0ff82c-mwweta3s';
+import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=b0ff82c-mwweta3s';
+import { preloadPose, poseStatus } from './pose.js?v=b0ff82c-mwweta3s';
+import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=b0ff82c-mwweta3s';
+import { framingCheck, frameLoop, createRun } from './session.js?v=b0ff82c-mwweta3s';
+import { createRaiseHand } from './gesture.js?v=b0ff82c-mwweta3s';
+import { recording } from './analytics.js?v=b0ff82c-mwweta3s';
+import { demoSvg } from './demos.js?v=b0ff82c-mwweta3s';
+import { EX_QUALITY } from './scoring.js?v=b0ff82c-mwweta3s';
 
 const env = detectEnv();
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -21,6 +22,9 @@ let root, video, canvas, hud, stopLoop = null, facing = 'user', alive = false, o
 
 const plan = () => customList || (CONFIG.ageGroups[state.quiz.age] || CONFIG.ageGroups[CONFIG.defaultAge]).plan;
 const exName = (k) => T.ex[k].name;
+// «Упражнение 1 из 5»: обе ноги баланса и обе попытки прыжков — одно упражнение
+const base = (k) => k.replace(/_(r|l|1|2)$/, '');
+function exOf(i) { const ks = plan().map((p) => base(p.key)); const uniq = [...new Set(ks)]; return T.cam.exOf(uniq.indexOf(ks[i]) + 1, uniq.length); }
 
 function mount() {
   const app = document.getElementById('app');
@@ -156,8 +160,8 @@ function introSheet(p, i, n, btnHtml) {
   const ex = CONFIG.exercises[p.key], tx = T.ex[p.key];
   const note = ex.wall ? T.cam.wallNote : ex.floor === 'any' ? T.cam.floorAnyNote : ex.floor === 'side' ? T.cam.floorSideNote : ex.floor ? T.cam.floorFrontNote : ex.facing === 'side' ? T.cam.sideNote : T.cam.frontNote;
   const checks = (EX_QUALITY[p.key] || []).map((q) => T.result.qualities[q].name.toLowerCase()).join(', ');
-  return `<div class="sheet"><span class="tag">${esc(T.cam.exOf(i + 1, n))}</span>${checks ? `<span class="tag checks">${esc(T.cam.checks(checks))}</span>` : ''}<h2>${esc(tx.task(p.target))}</h2>
-    ${ex.video ? `<video class="panda" playsinline muted loop autoplay preload="auto" poster="${CONFIG.mediaBase + ex.poster}" src="${CONFIG.mediaBase + ex.video}"></video>` : (ex.art || '')}
+  return `<div class="sheet"><span class="tag">${esc(exOf(i, n))}</span>${checks ? `<span class="tag checks">${esc(T.cam.checks(checks))}</span>` : ''}<h2>${esc(p.timed ? T.cam.forSec(tx.name, p.capSec) : tx.task(p.target))}</h2>
+    ${ex.demo ? demoSvg(ex.demo) : ex.video ? `<video class="panda" playsinline muted loop autoplay preload="auto" poster="${CONFIG.mediaBase + ex.poster}" src="${CONFIG.mediaBase + ex.video}"></video>` : (ex.art || '')}
     <p>${esc(tx.how)}</p>${tx.pandaNote ? `<p class="small" style="opacity:.8">${esc(tx.pandaNote)}</p>` : ''}<p class="note">↻ ${esc(note)}</p>${btnHtml}</div>`;
 }
 
@@ -214,15 +218,22 @@ async function countdown() {
 // Крупная шкала, видна издалека: кольцо = сколько осталось, с каждым засчитанным повтором (секундой) уменьшается.
 const RING_R = 88, RING_C = 2 * Math.PI * RING_R;
 function runHud(p, i, n, isSeconds) {
-  hud.innerHTML = `${topBar(`${T.cam.exOf(i + 1, n)} · ${exName(p.key)}`, { skip: true, switchBtn: false })}
+  // На время (timed): кольцо — оставшееся время, число — повторы. Наклон: число — достигнутый уровень из 4.
+  const timed = !!p.timed, bend = CONFIG.exercises[p.key].custom === 'bend';
+  const of = timed ? T.cam.inSec(p.capSec) : bend ? T.cam.levelOf(4) : isSeconds ? T.cam.secs(p.target) : T.cam.reps(p.target);
+  const left0 = timed ? T.cam.left(p.capSec, true) : bend ? T.cam.bendHold : T.cam.left(p.target, isSeconds);
+  hud.innerHTML = `${topBar(`${exOf(i, n)} · ${exName(p.key)}`, { skip: true, switchBtn: false })}
     <div class="gauge"><svg viewBox="0 0 200 200" aria-hidden="true"><circle class="g-bg" cx="100" cy="100" r="${RING_R}"/><circle class="g-fg" data-el="ring" cx="100" cy="100" r="${RING_R}" stroke-dasharray="${RING_C}" stroke-dashoffset="0"/></svg>
-      <div class="g-in"><div class="num" data-el="num">0</div><div class="of">${esc(isSeconds ? T.cam.secs(p.target) : T.cam.reps(p.target))}</div></div></div>
-    <div class="left" data-el="left">${esc(T.cam.left(p.target, isSeconds))}</div>
+      <div class="g-in"><div class="num" data-el="num">0</div><div class="of">${esc(of)}</div></div></div>
+    <div class="left" data-el="left">${esc(left0)}</div>
     <div class="hint" data-el="hint"></div><div class="timebar"><i data-el="bar"></i></div>`;
   const ring = $('[data-el=ring]', hud), left = $('[data-el=left]', hud);
   return {
     num: $('[data-el=num]', hud), hint: $('[data-el=hint]', hud), bar: $('[data-el=bar]', hud),
+    timeLeft(sec) { if (!timed) return; ring.style.strokeDashoffset = String(RING_C * (1 - sec / p.capSec)); left.textContent = sec > 0 ? T.cam.left(Math.ceil(sec), true) : T.cam.done; },
     set(c) {
+      if (timed) return;
+      if (bend) { ring.style.strokeDashoffset = String(RING_C * (1 - c / 4)); return; }
       const rest = Math.max(0, p.target - c);
       ring.style.strokeDashoffset = String(RING_C * (1 - rest / p.target));
       left.textContent = rest > 0 ? T.cam.left(rest, isSeconds) : T.cam.done;
@@ -241,13 +252,13 @@ async function liveExercise(p, i, n) {
   return new Promise((resolve) => {
     let ui, hintTimer = 0, lostSince = null;
     const run = createRun({
-      key: p.key, target: p.target, capSec: p.capSec, ageGroup: state.quiz.age || CONFIG.defaultAge,
+      key: p.key, target: p.target, capSec: p.capSec, ageGroup: state.quiz.age || CONFIG.defaultAge, timed: !!p.timed,
       aspect: video.videoWidth && video.videoHeight ? video.videoWidth / video.videoHeight : null,
       clock: () => performance.now(),
       on: {
-        count: (c) => { ui.num.textContent = c; ui.set(c); ui.num.classList.remove('pop'); void ui.num.offsetWidth; ui.num.classList.add('pop'); if (c <= 30) say('count_' + c); const ex = CONFIG.exercises[p.key]; if (ex.coach && !run.isSeconds && c % 5 === 0 && c < p.target) setTimeout(() => say(ex.coach + (1 + ((c / 5 - 1) % 4)), { interrupt: false }), 650); },
+        count: (c) => { ui.num.textContent = c; ui.set(c); ui.num.classList.remove('pop'); void ui.num.offsetWidth; ui.num.classList.add('pop'); const ex = CONFIG.exercises[p.key]; if (c <= 30 && ex.custom !== 'sidejump' && ex.custom !== 'bend') say('count_' + c); if (ex.coach && !run.isSeconds && c % 5 === 0 && c < p.target) setTimeout(() => say(ex.coach + (1 + ((c / 5 - 1) % 4)), { interrupt: false }), 650); },
         hint: (id) => { const text = T.hints[id]; if (!text) return; ui.hint.textContent = text; clearTimeout(hintTimer); hintTimer = setTimeout(() => { ui.hint.textContent = ''; }, 2500); say(exists('hint_' + id) ? 'hint_' + id : id, { interrupt: false }); },
-        tick: ({ left }) => { ui.bar.style.width = `${Math.max(0, (left / p.capSec) * 100)}%`; },
+        tick: ({ left }) => { ui.bar.style.width = `${Math.max(0, (left / p.capSec) * 100)}%`; ui.timeLeft(left); },
         finish: async (r) => {
           if (stopLoop) { stopLoop(); stopLoop = null; }
           clearTimeout(hintTimer);
@@ -375,7 +386,7 @@ function fileExercise(p, i, n) {
       track('exercise_start', { key: p.key, target: p.target, mode: 'file', mb: Math.round(file.size / 1e5) / 10 });
       const url = URL.createObjectURL(file); // локальная ссылка на файл в памяти телефона; никуда не отправляется
       video.srcObject = null; video.src = url; video.muted = true; video.loop = false;
-      hud.innerHTML = `${topBar(`${T.cam.exOf(i + 1, n)} · ${exName(p.key)}`, { switchBtn: false })}<div class="count"><div class="num" data-el="num">0</div><div class="of">${esc(F.analyzing)}</div></div><div class="timebar"><i data-el="bar" style="width:0"></i></div>`;
+      hud.innerHTML = `${topBar(`${exOf(i, n)} · ${exName(p.key)}`, { switchBtn: false })}<div class="count"><div class="num" data-el="num">0</div><div class="of">${esc(F.analyzing)}</div></div><div class="timebar"><i data-el="bar" style="width:0"></i></div>`;
       const num = $('[data-el=num]', hud), bar = $('[data-el=bar]', hud);
       const cleanup = () => { if (stopLoop) { stopLoop(); stopLoop = null; } video.onended = null; video.onerror = null; try { video.pause(); } catch { /* уже остановлено */ } video.removeAttribute('src'); video.load(); URL.revokeObjectURL(url); drawSkeleton(null); };
       const fail = () => { cleanup(); track('fallback_failed', { key: p.key }); render(F.failed); };

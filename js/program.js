@@ -5,8 +5,8 @@
 // Плюс одно упражнение на самое слабое качество из теста. Дозировка — от собственного результата ребёнка
 // в тесте и растёт каждую неделю на небольшой шаг. Упражнения — только 5 вправ теста (их считает камера).
 
-import { CONFIG } from './config.js?v=d7c783e-mwwdw4tk';
-import { QUALITIES } from './scoring.js?v=d7c783e-mwwdw4tk';
+import { CONFIG } from './config.js?v=b0ff82c-mwweta3s';
+import { QUALITIES } from './scoring.js?v=b0ff82c-mwweta3s';
 
 export const WEEKS = 4;
 export const PER_WEEK = 3;
@@ -21,7 +21,7 @@ export const FOCUS = {
   none: ['jumping_jack', 'squats', 'high_knees'],
 };
 // Качество → упражнение, которое его развивает
-const FOR_QUALITY = { coordination: 'jumping_jack', legs: 'squats', speed: 'high_knees', flex: 'arm_circles', core: 'ARMS', arms: 'ARMS', symmetry: 'jumping_jack', balance: 'squats' };
+const FOR_QUALITY = { coordination: 'jumping_jack', legs: 'squats', speed: 'high_knees', flex: 'arm_circles', core: 'ARMS', arms: 'ARMS', symmetry: 'jumping_jack', balance: 'squats', endurance: 'high_knees' };
 // Шаг роста за неделю и минимум недели 1
 const DOSE = {
   jumping_jack: { min: 5, step: 2 },
@@ -46,7 +46,7 @@ export function focusKey(quiz) { return FOCUS[quiz && quiz.likes] ? quiz.likes :
 export const monthId = (m, w, d) => (m === 1 ? `w${w}d${d}` : `m${m}w${w}d${d}`);
 export function buildProgram(profile, quiz, results, { month = 1, history = [] } = {}) {
   const group = CONFIG.ageGroups[(quiz && quiz.age) || CONFIG.defaultAge] || CONFIG.ageGroups[CONFIG.defaultAge];
-  const avail = group.plan.map((p) => p.key);
+  const avail = (group.program || group.plan).map((p) => p.key);
   const armsKey = avail.find((k) => ['pushups', 'wall_french_press', 'quadruped_arm_circles'].includes(k)) || 'squats';
   const pick = (k) => (k === 'ARMS' ? armsKey : k);
   const base = [...new Set(FOCUS[focusKey(quiz)].map(pick))].filter((k) => avail.includes(k));
@@ -54,7 +54,7 @@ export function buildProgram(profile, quiz, results, { month = 1, history = [] }
   const weakest = measured.length ? measured.reduce((a, b) => (profile.qualities[b].score < profile.qualities[a].score ? b : a)) : null;
   const weakKey = weakest && FOR_QUALITY[weakest] ? pick(FOR_QUALITY[weakest]) : null;
   const extra = weakKey && avail.includes(weakKey) && !base.includes(weakKey) ? weakKey : avail.find((k) => !base.includes(k));
-  const testTarget = Object.fromEntries(group.plan.map((p) => [p.key, p]));
+  const testTarget = Object.fromEntries((group.program || group.plan).map((p) => [p.key, p]));
   const did = Object.fromEntries((results || []).filter((r) => !r.skipped).map((r) => [r.key, Math.floor(r.done)]));
 
   // Лучший результат и цель прошлого месяца по каждому упражнению

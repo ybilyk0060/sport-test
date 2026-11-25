@@ -1,22 +1,22 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
-import { T } from './i18n/index.js?v=d7c783e-mwwdw4tk';
-import { CONFIG } from './config.js?v=d7c783e-mwwdw4tk';
-import { money, PRICE, CUR, fmtDate, } from './locale.js?v=d7c783e-mwwdw4tk';
-import { LANG, LOCALES } from './i18n/index.js?v=d7c783e-mwwdw4tk';
-import { state, setState, resetState, track, importHandoff, store } from './store.js?v=d7c783e-mwwdw4tk';
-import { detectEnv } from './env.js?v=d7c783e-mwwdw4tk';
-import { prefetchPose } from './pose.js?v=d7c783e-mwwdw4tk';
-import { unlockAudio } from './audio.js?v=d7c783e-mwwdw4tk';
-import { startStage, startFallback, toast } from './stage.js?v=d7c783e-mwwdw4tk';
-import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=d7c783e-mwwdw4tk';
-import { payment, newOrderId } from './payment.js?v=d7c783e-mwwdw4tk';
-import { ART } from './art.js?v=d7c783e-mwwdw4tk';
-import { initDebug } from './debug.js?v=d7c783e-mwwdw4tk';
-import { initConsent } from './analytics.js?v=d7c783e-mwwdw4tk';
-import * as subapi from './subapi.js?v=d7c783e-mwwdw4tk';
-import { drawShareCard } from './sharecard.js?v=d7c783e-mwwdw4tk';
-import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=d7c783e-mwwdw4tk';
+import { T } from './i18n/index.js?v=b0ff82c-mwweta3s';
+import { CONFIG } from './config.js?v=b0ff82c-mwweta3s';
+import { money, PRICE, CUR, fmtDate, } from './locale.js?v=b0ff82c-mwweta3s';
+import { LANG, LOCALES } from './i18n/index.js?v=b0ff82c-mwweta3s';
+import { state, setState, resetState, track, importHandoff, store } from './store.js?v=b0ff82c-mwweta3s';
+import { detectEnv } from './env.js?v=b0ff82c-mwweta3s';
+import { prefetchPose } from './pose.js?v=b0ff82c-mwweta3s';
+import { unlockAudio } from './audio.js?v=b0ff82c-mwweta3s';
+import { startStage, startFallback, toast } from './stage.js?v=b0ff82c-mwweta3s';
+import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=b0ff82c-mwweta3s';
+import { payment, newOrderId } from './payment.js?v=b0ff82c-mwweta3s';
+import { ART } from './art.js?v=b0ff82c-mwweta3s';
+import { initDebug } from './debug.js?v=b0ff82c-mwweta3s';
+import { initConsent } from './analytics.js?v=b0ff82c-mwweta3s';
+import * as subapi from './subapi.js?v=b0ff82c-mwweta3s';
+import { drawShareCard } from './sharecard.js?v=b0ff82c-mwweta3s';
+import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=b0ff82c-mwweta3s';
 
 const env = detectEnv();
 const app = document.getElementById('app');
@@ -50,7 +50,7 @@ function landing() {
   setState({ step: 'landing' });
   screen(`<div class="hero"><div class="hero-art">${ART.hero}</div><h1>${esc(T.landing.title)}</h1><p class="promise">${esc(T.landing.promise)}</p></div>
     <ul class="points">${T.landing.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul><div class="grow"></div>
-    <button class="btn" data-act="start">${esc(T.landing.cta)}</button><p class="small muted center land-note">${esc(T.landing.note)} ${esc(T.result.shortNote)}</p>
+    <button class="btn" data-act="start">${esc(T.landing.cta)}</button><p class="small muted center land-note">${esc(T.landing.note)} ${esc(T.result.shortNote)}</p><p class="small muted center land-note">${esc(T.landing.trust)}</p>
     ${Object.keys(LOCALES).length > 1 ? `<div class="langs">${Object.entries({ en: 'English', de: 'Deutsch', uk: 'Українська' }).filter(([k]) => LOCALES[k] && (k === LANG || !(CONFIG.linkOnlyLanguages || []).includes(k))).map(([k, v]) => `<a href="?lang=${k}" class="${k === LANG ? 'on' : ''}">${v}</a>`).join('')}</div>` : ''}
     ${subapi.subOn() ? `<button class="link center" data-act="restore">${esc(T.paywall.restore)}</button>` : ''}
     ${legalLinks()}`, {
@@ -348,7 +348,7 @@ function programBlock(program) {
         <div class="prog-bar"><i style="width:${Math.round((doneN / total) * 100)}%"></i></div>
         <div class="small">${list(next)}</div><button class="btn" data-act="workout">${esc(G.start)}</button></div>`
     : `<div class="next-w"><b>${esc(G.allDone)}</b><button class="btn" data-act="retest">${esc(G.retest)}</button></div>`;
-  const plan = `<details class="sec"><summary>${esc(G.title)} · ${esc(G.month(program.month))}</summary><p class="small muted">${esc(G.lead(G.focus[program.focus]))}</p>${[1, 2, 3, 4].map((wk) => `<div class="plan-week"><b>${esc(G.week(wk))}</b>${program.workouts.filter((w) => w.week === wk).map((w) => `<div class="plan-s"><b>${esc(T.report.session(w.day))}${doneIds.has(w.id) ? ` · ✓ ${esc(G.done)}` : ''}</b>${list(w)}</div>`).join('')}</div>`).join('')}</details>`;
+  const plan = `<details class="sec"><summary>${esc(G.title)} · ${esc(G.month(program.month))}</summary><p class="small muted">${esc(G.lead(G.focus[program.focus]))}</p><p class="small muted">${esc(String(state.quiz && state.quiz.age).startsWith('3') ? G.who34 : G.who)}</p>${[1, 2, 3, 4].map((wk) => `<div class="plan-week"><b>${esc(G.week(wk))}</b>${program.workouts.filter((w) => w.week === wk).map((w) => `<div class="plan-s"><b>${esc(T.report.session(w.day))}${doneIds.has(w.id) ? ` · ✓ ${esc(G.done)}` : ''}</b>${list(w)}</div>`).join('')}</div>`).join('')}</details>`;
   return { card, plan };
 }
 
@@ -377,7 +377,7 @@ function fullReport(justPaid = false) {
 
     <details class="sec"><summary>${esc(P.cardTitle)}</summary><canvas class="sharecard" width="1080" height="1350"></canvas>
       <button class="btn" data-act="share">${esc(P.share)}</button><button class="btn line" data-act="download">${esc(P.download)}</button></details>
-    <p class="small muted">${esc(T.result.prelimNote)} ${esc(T.landing.disclaimer)}</p>
+    <p class="small muted">${esc(T.report.howMeasured)} ${esc(T.landing.disclaimer)}${state.quiz && state.quiz.build ? ` ${esc(T.report.bodyNote)}` : ''}</p>
     <div class="foot-links"><span class="small muted">${esc(subLine())}</span><button class="link" data-act="manage">${esc(T.sub.manage)}</button><button class="link" data-act="again">${esc(R.again)}</button></div>${legalLinks()}`, {
     share: async () => {
       track('card_share');

@@ -29,7 +29,7 @@ export function balanceFrame(lm) {
 }
 
 // Прогон в интерфейсе createRun (session.js): target — секунды, capSec — сколько ждём начала и держим всего.
-export function createBalanceRun({ key, target, capSec, clock, on }) {
+export function createBalanceRun({ key, target, capSec, clock, on, leg = null }) {
   let startedAt = null, finished = false, result = null;
   let liftSince = null, holdStart = null, dropSince = null, lostSince = null, lastSec = 0, side = null, held = 0;
   const xs = [];
@@ -46,7 +46,7 @@ export function createBalanceRun({ key, target, capSec, clock, on }) {
     result = {
       key, target, capSec, done, completed: done >= target, skipped: reason === 'skip',
       elapsedSec: startedAt == null ? 0 : Math.round(((now - startedAt) / 1000) * 10) / 10, reason,
-      metrics: { sway, side, liftsLeft: sides.left, liftsRight: sides.right }, spec: 'balance@site1',
+      metrics: { sway, side, leg, liftsLeft: sides.left, liftsRight: sides.right }, spec: 'balance@site1',
     };
     on.finish && on.finish(result);
     return result;

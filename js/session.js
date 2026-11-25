@@ -2,11 +2,12 @@
 // Из каждого упражнения берём не только счёт: темп, ритм, глубину, симметрию, устойчивость.
 // Сохраняются только итоговые числа. Кадры и точки тела не сохраняются и не отправляются.
 
-import { createBalanceRun } from './balance.js?v=d7c783e-mwwdw4tk';
-import { SpecEngine, ExerciseAnalyzer, PoseSmoother, calibrationForAge } from './engine/kidsney-engine.js?v=d7c783e-mwwdw4tk';
-import { SPECS } from './engine/specs.js?v=d7c783e-mwwdw4tk';
-import { CONFIG } from './config.js?v=d7c783e-mwwdw4tk';
-import { detectPose } from './pose.js?v=d7c783e-mwwdw4tk';
+import { createBalanceRun } from './balance.js?v=b0ff82c-mwweta3s';
+import { createSideJumpRun, createBendRun } from './motor.js?v=b0ff82c-mwweta3s';
+import { SpecEngine, ExerciseAnalyzer, PoseSmoother, calibrationForAge } from './engine/kidsney-engine.js?v=b0ff82c-mwweta3s';
+import { SPECS } from './engine/specs.js?v=b0ff82c-mwweta3s';
+import { CONFIG } from './config.js?v=b0ff82c-mwweta3s';
+import { detectPose } from './pose.js?v=b0ff82c-mwweta3s';
 
 const VIS = 0.5;
 const seen = (p) => p && p.visibility >= VIS && p.x > 0 && p.x < 1 && p.y > 0 && p.y < 1;
@@ -49,7 +50,10 @@ const pct = (a, p) => { const s = [...a].sort((x, y) => x - y); return s[Math.mi
 // Создаёт прогон упражнения. clock() — время в мс (живая камера: performance.now, запись: позиция в видео).
 export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) {
   const ex = CONFIG.exercises[key] || {};
-  if (ex.custom === 'balance') return createBalanceRun({ key, target, capSec, clock, on }); // своя логика: время удержания на одной ноге
+  // Оценочные упражнения со своей логикой (js/balance.js, js/motor.js)
+  if (ex.custom === 'balance') return createBalanceRun({ key, target, capSec, clock, on, leg: ex.leg });
+  if (ex.custom === 'sidejump') return createSideJumpRun({ key, target, capSec, clock, on });
+  if (ex.custom === 'bend') return createBendRun({ key, target, capSec, clock, on });
   const spec = SPECS[ex.spec || key];
   const isSeconds = spec.goal === 'seconds';
   const engine = new SpecEngine(spec);
@@ -94,6 +98,8 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
     if (!isSeconds) {
       metrics.rhythmCv = iv.length >= 2 ? Math.round((std(iv) / meanOf(iv)) * 100) / 100 : null;
       metrics.tempoPerMin = iv.length >= 1 ? Math.round(60000 / meanOf(iv)) : null;
+      // Падение темпа: средний интервал 2-й половины / 1-й (>1 — к концу медленнее). Для «выносливости» в тесте на время.
+      if (iv.length >= 6) { const h = Math.floor(iv.length / 2); metrics.slowdown = Math.round((meanOf(iv.slice(h)) / meanOf(iv.slice(0, h))) * 100) / 100; }
     }
     if (key === 'jumping_jack') {
       metrics.armDiff = perRep.armDiffs.length ? Math.round(meanOf(perRep.armDiffs) * 100) / 100 : null;

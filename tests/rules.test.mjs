@@ -59,8 +59,30 @@ check('неправдоподобные числа — null', bodyBuild({ cm: 12
 check('пол не указан — больший порог', bodyBuild({ cm: 150, kg: 54, age: '12-15' }) === 'soft' && bodyBuild({ cm: 150, kg: 53, age: '12-15' }) === 'std' && bodyBuild({ cm: 150, kg: 53, age: '12-15', sex: 'boy' }) === 'soft');
 const climbQ = { age: '6-8', now: 'none', likes: 'climb', temper: 'mixed', goal: 'health', screen: 'low', sex: 'girl' };
 const climbStd = buildReport(full, { ...climbQ, build: 'std' }), climbG = buildReport(full, { ...climbQ, build: 'gentle' });
-check('gentle: гимнастика уходит из тройки, плавание входит', rank(climbStd, 'gymnastics') >= 0 && rank(climbG, 'gymnastics') < 0 && rank(climbG, 'swimming') >= 0, [climbStd.sports, climbG.sports]);
+check('gentle: гимнастика опускается, плавание первым', rank(climbStd, 'gymnastics') === 0 && rank(climbG, 'swimming') === 0 && (rank(climbG, 'gymnastics') < 0 || rank(climbG, 'gymnastics') > rank(climbStd, 'gymnastics')), [climbStd.sports, climbG.sports]);
 check('gentle: причина про суставы, без слов о весе; совет про кардио', climbG.sports.some((x) => x.reasons.includes('body.joints')) && climbG.plan.tips[0] === 'cardioTip');
+
+// Оценочный тест v3: пороги по возрасту
+const v3 = (o = {}) => [
+  { key: 'balance_r', target: 15, done: o.br ?? 15, elapsedSec: 15, metrics: { sway: o.sway ?? 0.03 } },
+  { key: 'balance_l', target: 15, done: o.bl ?? 15, elapsedSec: 15, metrics: { sway: o.sway ?? 0.03 } },
+  { key: 'side_jumps_1', target: 999, done: o.sj ?? 30, elapsedSec: 15, metrics: {} },
+  { key: 'side_jumps_2', target: 999, done: o.sj ?? 30, elapsedSec: 15, metrics: {} },
+  { key: 'bend', target: 4, done: o.bend ?? 4, elapsedSec: 8, metrics: {} },
+  { key: 'jumping_jack', target: 999, done: o.jj ?? 22, elapsedSec: 20, metrics: { rhythmCv: o.cv ?? 0.1, armDiff: 0.03, slowdown: o.slow ?? 1.05 } },
+  { key: 'shoulder_taps', target: 999, done: o.taps ?? 18, elapsedSec: 20, metrics: { rhythmCv: 0.2, liftsLeft: 9, liftsRight: 9 } },
+];
+let p3 = buildReport(v3(), { age: '6-8', likes: 'none' }).profile;
+check('v3 6–8: баланс 30 с, прыжки 30, наклон 4 — сильные стороны', p3.version === 3 && p3.qualities.balance.level === 3 && p3.qualities.speed.level === 3 && p3.qualities.flex.level === 3, p3.qualities);
+check('v3 6–8: jj 22 ≥ 20 — сильная, taps 18 ≥ 16 — сильная, темп держит', p3.qualities.coordination.level === 3 && p3.qualities.arms.level === 3 && p3.qualities.endurance.level === 3, p3.qualities);
+p3 = buildReport(v3({ sj: 10, jj: 8, cv: 0.7 }), { age: '6-8' }).profile;
+check('v3 6–8: 10 прыжков < 18 — зона роста; неровный ритм снижает', p3.qualities.speed.level === 1 && p3.qualities.coordination.level === 1, p3.qualities);
+p3 = buildReport(v3({ sway: 0.09 }), { age: '9-11' }).profile;
+check('v3 9–11: 30 с, но раскачка большая — не «сильная сторона»', p3.qualities.balance.level === 2, p3.qualities.balance);
+p3 = buildReport(v3({ br: 15, bl: 5 }), { age: '6-8' }).profile;
+check('v3: асимметрия ног снижает симметрию', p3.qualities.symmetry.score < 0.8, p3.qualities.symmetry);
+p3 = buildReport(v3().filter((r) => r.key !== 'shoulder_taps' && r.key !== 'side_jumps_2').map((r) => r.key.startsWith('balance') ? { ...r, target: 10, done: 10 } : r), { age: '3-5' }).profile;
+check('v3 3–5: без касаний плеч, сила рук не оценивается', p3.qualities.arms.level === 0 && p3.qualities.balance.level === 3, p3.qualities);
 
 // Программа подписчика: 4 недели × 3 тренировки, акцент по интересу, рост нагрузки
 const { buildProgram, nextWorkout } = await import('../js/program.js');
