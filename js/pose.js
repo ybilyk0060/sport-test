@@ -1,7 +1,7 @@
 // Распознавание позы в браузере: @mediapipe/tasks-vision, Pose Landmarker (lite).
 // Модель и wasm лежат на нашем адресе (vendor/mediapipe). Кадры обрабатываются на устройстве и никуда не уходят.
 
-import { CONFIG } from './config.js?v=2686ed8-mwwcza31';
+import { CONFIG } from './config.js?v=a1df8bb-mwwd9zb4';
 
 export const poseStatus = { state: 'idle', delegate: null, error: null, loadMs: null, fps: 0, frames: 0 };
 let landmarker = null;
@@ -44,7 +44,22 @@ async function load() {
   }
 }
 
-// Вызывается в начале квиза: модель грузится в фоне, пока родитель отвечает.
+// Только скачать файлы модели в кэш браузера, ничего не компилируя (Юрий 25.11: в Messenger/TikTok интерфейс замирал
+// на 10–16 с, пока на главном потоке компилировался wasm и шейдеры GPU). Компиляция — по нажатию «Включить камеру»,
+// под системным вопросом о камере и индикатором загрузки.
+let prefetching = null;
+export function prefetchPose() {
+  if (prefetching || loading) return prefetching;
+  const files = [CONFIG.modelPath, 'vendor/mediapipe/vision_bundle.mjs', `${CONFIG.wasmPath}/vision_wasm_internal.js`, `${CONFIG.wasmPath}/vision_wasm_internal.wasm`];
+  prefetching = (async () => {
+    for (const f of files) {
+      try { const r = await fetch(abs(f), { priority: 'low' }); if (r.ok) await r.arrayBuffer(); } catch { /* сеть — догрузится при камере */ }
+    }
+  })();
+  return prefetching;
+}
+
+// Полная загрузка и прогрев: только когда камера уже запрашивается (stage.js) или в отладке.
 export function preloadPose() {
   if (!loading) loading = load();
   return loading;

@@ -1,16 +1,16 @@
 // Экран камеры: разрешение → проверка кадра → 4 упражнения. И запасной путь: разбор записи.
 
-import { T } from './i18n/index.js?v=2686ed8-mwwcza31';
-import { CONFIG } from './config.js?v=2686ed8-mwwcza31';
-import { state, setState, track, exportHandoff } from './store.js?v=2686ed8-mwwcza31';
-import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=2686ed8-mwwcza31';
-import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=2686ed8-mwwcza31';
-import { preloadPose, poseStatus } from './pose.js?v=2686ed8-mwwcza31';
-import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=2686ed8-mwwcza31';
-import { framingCheck, frameLoop, createRun } from './session.js?v=2686ed8-mwwcza31';
-import { createRaiseHand } from './gesture.js?v=2686ed8-mwwcza31';
-import { recording } from './analytics.js?v=2686ed8-mwwcza31';
-import { EX_QUALITY } from './scoring.js?v=2686ed8-mwwcza31';
+import { T } from './i18n/index.js?v=a1df8bb-mwwd9zb4';
+import { CONFIG } from './config.js?v=a1df8bb-mwwd9zb4';
+import { state, setState, track, exportHandoff } from './store.js?v=a1df8bb-mwwd9zb4';
+import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=a1df8bb-mwwd9zb4';
+import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=a1df8bb-mwwd9zb4';
+import { preloadPose, poseStatus } from './pose.js?v=a1df8bb-mwwd9zb4';
+import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=a1df8bb-mwwd9zb4';
+import { framingCheck, frameLoop, createRun } from './session.js?v=a1df8bb-mwwd9zb4';
+import { createRaiseHand } from './gesture.js?v=a1df8bb-mwwd9zb4';
+import { recording } from './analytics.js?v=a1df8bb-mwwd9zb4';
+import { EX_QUALITY } from './scoring.js?v=a1df8bb-mwwd9zb4';
 
 const env = detectEnv();
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -293,10 +293,17 @@ function showBlocked(kind) {
     head = `<h1 class="rtitle">${esc(B.openChromeTitle)}</h1><p>${esc(B.openChromeLead)}</p>`;
     body = `<a class="btn" data-act="open-chrome" href="${esc(chromeIntentUrl(link))}">${esc(B.openChrome)}</a><p class="small muted center">${esc(B.openManual)}</p><button class="btn ghost" data-act="copy">${esc(B.copyLink)}</button>${fb}`;
     track('open_in_chrome_shown', { kind });
+  } else if (env.inApp && env.platform === 'ios' && !['Instagram', 'Facebook', 'Messenger'].includes(env.app)) {
+    // TikTok и др.: переход в Safari по схеме не работает (проверено Юрием 25.11), меню «Открыть в браузере» нет.
+    // Главное действие — скопировать ссылку с ответами и открыть её в Safari. Запасной путь «записать видео» здесь тоже не работает — не показываем.
+    head = `<h1 class="rtitle">${esc(B.copyTitle)}</h1><p>${esc(B.copyLead)}</p>`;
+    body = `<button class="btn" data-act="copy">${esc(B.copyLinkBig)}</button>${steps(B.copySteps)}`;
+    track('copy_link_shown', { kind });
   } else if (env.inApp && env.platform === 'ios') {
     head = `<h1 class="rtitle">${esc(B.openSafariTitle)}</h1><p>${esc(B.openSafariLead)}</p>`;
-    // Меньше касаний: главная кнопка — сразу в Safari с сохранёнными ответами; настройки Instagram — запасной путь ниже.
-    body = `<a class="btn" data-act="open-safari" href="${esc(safariUrl(link))}">${esc(B.openSafari)}</a><p class="small muted center">${esc(B.openManual)}</p><button class="btn ghost" data-act="copy">${esc(B.copyLink)}</button>${kind === 'denied' ? `<div class="box"><p class="small"><b>${esc(B.deniedTitle)}</b></p>${steps(B.howIosInApp)}<button class="btn line" data-act="retry">${esc(T.common.retry)}</button></div>` : ''}${fb}`;
+    // Меньше касаний: главная кнопка — сразу в Safari с сохранёнными ответами; копировать ссылку — запасной путь.
+    // Запись видео встроенной камерой в браузерах приложений на iOS даёт чёрный экран — не показываем.
+    body = `<a class="btn" data-act="open-safari" href="${esc(safariUrl(link))}">${esc(B.openSafari)}</a><p class="small muted center">${esc(B.openManual)}</p><button class="btn ghost" data-act="copy">${esc(B.copyLink)}</button>${kind === 'denied' ? `<div class="box"><p class="small"><b>${esc(B.deniedTitle)}</b></p>${steps(B.howIosInApp(env.app || 'Instagram'))}<button class="btn line" data-act="retry">${esc(T.common.retry)}</button></div>` : ''}`;
     track('open_in_safari_shown', { kind });
   } else if (kind === 'denied') {
     head = `<h1 class="rtitle">${esc(B.deniedTitle)}</h1><p>${esc(B.deniedLead)}</p>`;

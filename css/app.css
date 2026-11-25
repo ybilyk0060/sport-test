@@ -303,3 +303,12 @@ details.sec > * + * { margin-top: 10px; }
 .price-mini .btn { min-height: 52px; font-size: 16px; }
 .trust { color: var(--muted); margin-top: 10px; }
 .check a { color: inherit; text-decoration: underline; }
+
+/* Первый экран целиком помещается во встроенных браузерах (TikTok/Instagram ниже обычного Safari) */
+.hero { gap: 8px; padding-top: 0; }
+.hero-art { width: min(30vw, 130px); }
+.hero h1 { font-size: clamp(26px, 7.6vw, 34px); }
+.hero .promise { font-size: 17px; line-height: 1.35; }
+.points { gap: 8px; }
+.land-note { font-size: 13px; margin-top: -6px; }
+@media (max-height: 720px) { .hero-art { width: min(24vw, 96px); } .hero .promise { font-size: 16px; } .screen { gap: 12px; } }

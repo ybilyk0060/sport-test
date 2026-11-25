@@ -23,12 +23,15 @@ export function detectEnv(ua = navigator.userAgent, nav = navigator) {
   else if (/Chrome\//.test(ua)) browser = 'chrome';
   else if (/Safari\//.test(ua)) browser = 'safari';
 
+  // Какое приложение открыло сайт (для подсказок «Настройки → …» и выбора способа выйти в Safari)
+  const app = /Instagram/i.test(ua) ? 'Instagram' : /Messenger|MESSENGER/.test(ua) ? 'Messenger' : /FBAN|FBAV|FB_IAB|FBIOS|FB4A/i.test(ua) ? 'Facebook'
+    : /TikTok|musical_ly|BytedanceWebview|trill/i.test(ua) ? 'TikTok' : /Telegram/i.test(ua) ? 'Telegram' : /Viber/i.test(ua) ? 'Viber' : null;
   let osVersion = '';
   const mi = ua.match(/OS (\d+[_\d]*) like Mac/); if (mi) osVersion = mi[1].replace(/_/g, '.');
   const ma = ua.match(/Android (\d+(\.\d+)?)/); if (ma) osVersion = ma[1];
 
   return {
-    browser, platform, inApp, osVersion,
+    browser, platform, inApp, osVersion, app,
     hasMediaDevices: !!(nav.mediaDevices && nav.mediaDevices.getUserMedia),
     secure: typeof window !== 'undefined' ? window.isSecureContext : true,
     ua,

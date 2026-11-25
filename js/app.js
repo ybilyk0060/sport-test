@@ -1,22 +1,22 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
-import { T } from './i18n/index.js?v=2686ed8-mwwcza31';
-import { CONFIG } from './config.js?v=2686ed8-mwwcza31';
-import { money, PRICE, CUR, fmtDate, } from './locale.js?v=2686ed8-mwwcza31';
-import { LANG, LOCALES } from './i18n/index.js?v=2686ed8-mwwcza31';
-import { state, setState, resetState, track, importHandoff, store } from './store.js?v=2686ed8-mwwcza31';
-import { detectEnv } from './env.js?v=2686ed8-mwwcza31';
-import { preloadPose } from './pose.js?v=2686ed8-mwwcza31';
-import { unlockAudio } from './audio.js?v=2686ed8-mwwcza31';
-import { startStage, startFallback, toast } from './stage.js?v=2686ed8-mwwcza31';
-import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=2686ed8-mwwcza31';
-import { payment, newOrderId } from './payment.js?v=2686ed8-mwwcza31';
-import { ART } from './art.js?v=2686ed8-mwwcza31';
-import { initDebug } from './debug.js?v=2686ed8-mwwcza31';
-import { initConsent } from './analytics.js?v=2686ed8-mwwcza31';
-import * as subapi from './subapi.js?v=2686ed8-mwwcza31';
-import { drawShareCard } from './sharecard.js?v=2686ed8-mwwcza31';
-import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=2686ed8-mwwcza31';
+import { T } from './i18n/index.js?v=a1df8bb-mwwd9zb4';
+import { CONFIG } from './config.js?v=a1df8bb-mwwd9zb4';
+import { money, PRICE, CUR, fmtDate, } from './locale.js?v=a1df8bb-mwwd9zb4';
+import { LANG, LOCALES } from './i18n/index.js?v=a1df8bb-mwwd9zb4';
+import { state, setState, resetState, track, importHandoff, store } from './store.js?v=a1df8bb-mwwd9zb4';
+import { detectEnv } from './env.js?v=a1df8bb-mwwd9zb4';
+import { prefetchPose } from './pose.js?v=a1df8bb-mwwd9zb4';
+import { unlockAudio } from './audio.js?v=a1df8bb-mwwd9zb4';
+import { startStage, startFallback, toast } from './stage.js?v=a1df8bb-mwwd9zb4';
+import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=a1df8bb-mwwd9zb4';
+import { payment, newOrderId } from './payment.js?v=a1df8bb-mwwd9zb4';
+import { ART } from './art.js?v=a1df8bb-mwwd9zb4';
+import { initDebug } from './debug.js?v=a1df8bb-mwwd9zb4';
+import { initConsent } from './analytics.js?v=a1df8bb-mwwd9zb4';
+import * as subapi from './subapi.js?v=a1df8bb-mwwd9zb4';
+import { drawShareCard } from './sharecard.js?v=a1df8bb-mwwd9zb4';
+import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=a1df8bb-mwwd9zb4';
 
 const env = detectEnv();
 const app = document.getElementById('app');
@@ -50,7 +50,7 @@ function landing() {
   setState({ step: 'landing' });
   screen(`<div class="hero"><div class="hero-art">${ART.hero}</div><h1>${esc(T.landing.title)}</h1><p class="promise">${esc(T.landing.promise)}</p></div>
     <ul class="points">${T.landing.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul><div class="grow"></div>
-    <button class="btn" data-act="start">${esc(T.landing.cta)}</button><p class="small muted center">${esc(T.landing.note)}</p><p class="small muted center">${esc(T.landing.disclaimer)}</p>
+    <button class="btn" data-act="start">${esc(T.landing.cta)}</button><p class="small muted center land-note">${esc(T.landing.note)} ${esc(T.result.shortNote)}</p>
     ${Object.keys(LOCALES).length > 1 ? `<div class="langs">${Object.entries({ en: 'English', de: 'Deutsch', uk: 'Українська' }).filter(([k]) => LOCALES[k] && (k === LANG || !(CONFIG.linkOnlyLanguages || []).includes(k))).map(([k, v]) => `<a href="?lang=${k}" class="${k === LANG ? 'on' : ''}">${v}</a>`).join('')}</div>` : ''}
     ${subapi.subOn() ? `<button class="link center" data-act="restore">${esc(T.paywall.restore)}</button>` : ''}
     ${legalLinks()}`, {
@@ -60,7 +60,7 @@ function landing() {
       try { await subapi.restore(email, LANG); } catch { /* ответ одинаковый */ }
       track('sub_restore_asked'); toast(T.paywall.restoreSent);
     },
-    start: () => { unlockAudio(); track('quiz_start', { lang: LANG }); preloadPose().catch(() => {}); quiz(0); },
+    start: () => { unlockAudio(); track('quiz_start', { lang: LANG }); prefetchPose(); quiz(0); },
   });
 }
 
@@ -138,7 +138,7 @@ function bodyStep(i, q) {
 // ---------- 4. Подготовка к камере ----------
 function prep() {
   setState({ step: 'prep' });
-  preloadPose().catch(() => {});
+  prefetchPose();
   const P = T.prep;
   screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button><div class="progress"><i style="width:100%"></i></div></div><h1 class="qtitle">${esc(P.title)}</h1>
     <div class="cards">${P.cards.map((c, i) => `<div class="pcard">${ART.prep[i]}<div><b>${esc(c.t)}</b><span>${esc(c.d)}</span></div></div>`).join('')}</div>
@@ -459,8 +459,8 @@ function manageSub(confirm = false) {
 function boot() {
   initDebug({ paywallMode, restart: () => { resetState(); landing(); }, toast });
   initConsent();
-  // Модель позы начинает грузиться сразу, а не на экране камеры: к моменту камеры она уже готова.
-  preloadPose().catch(() => {});
+  // Файлы модели позы скачиваются в фоне после открытия (без компиляции — она блокирует нажатия)
+  setTimeout(() => prefetchPose(), 1500);
   // Перенос ответов из встроенного браузера («Відкрити в Chrome»): квиз заново не проходим.
   // Ссылка доступа из письма (?sub=…): подписка, ответы и результаты приезжают с сервера — на любом устройстве
   if (params.get('sub') && subapi.subOn()) {
