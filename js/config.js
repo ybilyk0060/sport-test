@@ -4,10 +4,12 @@ export const CONFIG = {
   // --- Продавец (оферта, контакты, подвал). null — ещё не подтверждено владельцем: на странице «уточнюється». ---
   seller: {
     name: 'ФОП Білик Юрій Георгійович',
-    rnokpp: null,          // РНОКПП — владелец решает, показывать ли
-    address: null,         // адрес для связи — владелец решает (в ЕДР: м. Харків)
-    email: null,           // напр. support@kids-test.com
+    rnokpp: '3421104013',  // владелец 25.11: показывать
+    address: 'Україна, 61123, м. Харків, вул. Валентинівська, 33, кв. 145', // из ЕДР, владелец 25.11: показывать
+    email: 'support@kids-test.com', // владелец 25.11; телефон не показываем
     phone: null,
+    nameEn: 'Yurii Bilyk, individual entrepreneur (FOP), Ukraine',
+    addressEn: '33 Valentynivska St., apt. 145, Kharkiv 61123, Ukraine',
     edrRecord: '24800000000184060 від 22.06.2016',
   },
 

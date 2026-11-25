@@ -223,6 +223,8 @@ export default {
       ['Do you see the camera video?', () => 'No. Video is processed on your phone and never uploaded.'],
     ],
     fine: (first, regular, days) => `By tapping “Subscribe”, you agree to a subscription: first payment ${first} for ${days} days, then ${regular} every ${days} days until you cancel. Cancel anytime in “My subscription”; access stays until the end of the paid period. Prices include all applicable taxes.`,
+    withdrawal: '',
+    withdrawalNeeded: '',
     notNow: 'Not now',
     hardLead: 'The result is ready. It opens right after you subscribe.',
     cancelled: 'Payment wasn’t completed. You can try again.',

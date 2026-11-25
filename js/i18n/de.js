@@ -3,7 +3,7 @@
 export default {
   meta: { title: 'Der 3-Minuten-Test, der die Stärken Ihres Kindes zeigt', lang: 'de' },
 
-  common: { offer: 'AGB', refund: 'Rückerstattung', contacts: 'Kontakt', next: 'Weiter', back: 'Zurück', skip: 'Überspringen', retry: 'Erneut versuchen', close: 'Schließen', privacy: 'Datenschutzerklärung' },
+  common: { offer: 'AGB', refund: 'Rückerstattung', contacts: 'Impressum', next: 'Weiter', back: 'Zurück', skip: 'Überspringen', retry: 'Erneut versuchen', close: 'Schließen', privacy: 'Datenschutzerklärung' },
 
   landing: {
     title: 'Entdecken Sie die Stärken Ihres Kindes in 3 Minuten',
@@ -222,6 +222,8 @@ export default {
       ['Sehen Sie das Kameravideo?', () => 'Nein. Das Video wird auf dem Handy verarbeitet und nirgendwohin gesendet.'],
     ],
     fine: (first, regular, days) => `Mit Tippen auf „Abo abschließen“ stimmen Sie einem Abo zu: erste Zahlung ${first} für ${days} Tage, danach ${regular} alle ${days} Tage bis zur Kündigung. Jederzeit kündbar unter „Mein Abo“; der Zugang bleibt bis zum Ende des bezahlten Zeitraums. Preise inkl. MwSt.`,
+    withdrawal: 'Ich stimme zu, dass der Zugang sofort beginnt, und weiß, dass ich dadurch mein Widerrufsrecht verliere. Die freiwillige 14-Tage-Erstattung bleibt.',
+    withdrawalNeeded: 'Bitte bestätigen Sie das Kästchen über der Schaltfläche.',
     notNow: 'Nicht jetzt',
     hardLead: 'Das Ergebnis ist fertig. Es öffnet sich direkt nach Abschluss des Abos.',
     cancelled: 'Die Zahlung wurde nicht abgeschlossen. Sie können es erneut versuchen.',

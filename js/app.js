@@ -26,7 +26,8 @@ const QUIZ = ['age', 'now', 'likes', 'temper', 'goal', 'screen'];
 const SUB = CONFIG.subscription;
 const privacyUrl = LANG === 'uk' ? 'privacy.html' : `privacy-${LANG}.html`;
 // Юридические ссылки: рядом с кнопкой оплаты и внизу страниц
-const legalLinks = () => `<nav class="legal-links"><a href="oferta.html">${esc(T.common.offer)}</a><a href="povernennya.html">${esc(T.common.refund)}</a><a href="${privacyUrl}">${esc(T.common.privacy)}</a><a href="kontakty.html">${esc(T.common.contacts)}</a></nav>`;
+const LEGAL = { uk: ['oferta.html', 'povernennya.html', 'kontakty.html'], en: ['terms-en.html', 'refund-en.html', 'contact-en.html'], de: ['agb-de.html', 'refund-de.html', 'impressum-de.html'] }[LANG] || ['terms-en.html', 'refund-en.html', 'contact-en.html'];
+const legalLinks = () => `<nav class="legal-links"><a href="${LEGAL[0]}">${esc(T.common.offer)}</a><a href="${LEGAL[1]}">${esc(T.common.refund)}</a><a href="${privacyUrl}">${esc(T.common.privacy)}</a><a href="${LEGAL[2]}">${esc(T.common.contacts)}</a></nav>`;
 const DAY = 86400000;
 
 document.title = T.meta.title;
@@ -149,6 +150,7 @@ function paywallCard(note = '', profile = null) {
       <div class="pc-row"><div><b>${esc(P.firstLabel(SUB.periodDays))}</b><small>${esc(P.perDay(money(Math.round((first / SUB.periodDays) * 100) / 100)))}</small></div>
       <div class="pc-price">${on ? `<s>${esc(money(PRICE.regular))}</s>` : ''}<b>${esc(money(first))}</b></div></div>
       <p class="renew">${esc(P.renew(money(PRICE.regular), SUB.periodDays, fmtDate(renewAt)))}</p>
+      ${P.withdrawal ? `<label class="check small"><input type="checkbox" data-el="withdrawal"><span>${esc(P.withdrawal)}</span></label>` : ''}
       <button class="btn" data-act="pay">${esc(P.cta(money(first)))}</button>
       <p class="small center testmode" hidden style="color:#b45309;font-weight:600">${esc(P.testMode)}</p></div>`;
   return `<div class="paywall" id="paywall"><h2>${esc(P.title)}</h2>${note ? `<p class="err">${esc(note)}</p>` : ''}
@@ -195,7 +197,9 @@ function result(note = '') {
       <button class="link center" data-act="again">${esc(R.again)}</button>`;
   }
   screen(body, {
-    pay: () => {
+    pay: (btn) => {
+      // ЕС (de): согласие на немедленный старт цифровой услуги — без него не оплачиваем
+      if (T.paywall.withdrawal) { const box = btn.closest('.price-card') && btn.closest('.price-card').querySelector('[data-el=withdrawal]'); if (!box) { setState({ paywallDismissed: false }); result(); return; } if (!box.checked) { toast(T.paywall.withdrawalNeeded); return; } }
       const orderId = newOrderId(state.sid);
       setState({ orderId });
       const amount = firstPrice();

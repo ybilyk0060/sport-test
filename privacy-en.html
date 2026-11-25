@@ -6,13 +6,15 @@
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>Privacy policy — the 3-minute kids’ strengths test</title>
 <link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="legal.css">
 <style>.doc h2{font-size:19px;margin-top:10px}.doc ul{margin:0;padding-left:20px;display:grid;gap:6px}.doc p,.doc li{font-size:15px}</style>
 </head>
 <body>
 <main class="screen doc">
   <a class="link" href="index.html?lang=en">← Back to the test</a>
+  <nav class="legal-nav"><a href="terms-en.html">Terms</a><a href="refund-en.html">Refunds</a><a href="privacy-en.html">Privacy</a><a href="contact-en.html">Contact</a></nav>
   <h1 class="rtitle">Privacy policy</h1>
-  <p class="muted small">The 3-minute kids’ strengths test. Test version. Last updated 25.11.2026.</p>
+  <p class="muted small">The 3-minute kids’ strengths test. Last updated 25.11.2026.</p>
 
   <h2>What we do NOT collect</h2>
   <ul>
@@ -44,11 +46,12 @@
   <p>An adult takes the test together with the child. The child does not enter any data about themselves.</p>
 
   <h2>Contact</h2>
-  <p>Questions about data: <span id="contact">seller contact will be added before ads launch</span>.</p>
+  <p>Data controller: <span data-s="name"></span>. Questions about data: <span data-s="email"></span>.</p>
 </main>
 <script type="module">
 import { store } from './js/store.js';
 document.getElementById('wipe').onclick = () => { store.clearAll(); try { localStorage.removeItem('sporttest.consent'); localStorage.removeItem('sporttest.v1.offer'); } catch {} document.getElementById('done').hidden = false; };
 </script>
+<script type="module" src="js/legal.js"></script>
 </body>
 </html>
