@@ -141,7 +141,7 @@ function paywallCard(note = '') {
     <ul>${T.result.lockedItems.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
     <button class="btn" data-act="pay">${esc(P.cta(priceLabel()))}</button>
     <p class="small muted center">${esc(P.usdNote(CONFIG.price.usd))}</p>
-    <p class="terms">${esc(P.terms)}</p><p class="small muted center">${esc(P.how)}</p>
+    <p class="terms">${esc(P.terms)}</p><p class="small muted center">${esc(P.how)}</p><p class="small center testmode" hidden style="color:#b45309;font-weight:600">${esc(P.testMode)}</p>
     <button class="btn ghost" data-act="not-now">${esc(P.notNow)}</button></div>`;
 }
 
@@ -184,11 +184,13 @@ function result(note = '') {
       const ret = new URL(location.href); ret.search = ''; ret.hash = '';
       if (params.get('debug')) ret.searchParams.set('debug', '1');
       if (params.get('paywall')) ret.searchParams.set('paywall', params.get('paywall'));
-      payment.startCheckout({ orderId, amountUah: CONFIG.price.uah, description: T.paywall.title, returnUrl: ret.toString() });
+      Promise.resolve(payment.startCheckout({ orderId, amountUah: CONFIG.price.uah, description: T.paywall.title, returnUrl: ret.toString() }))
+        .catch(() => { track('pay_error', { provider: payment.name }); toast(T.paywall.payError); });
     },
     'not-now': () => { setState({ paywallDismissed: true }); track('paywall_dismissed', { mode: paywallMode }); result(); },
     again: () => { resetState(); track('restart'); landing(); },
   });
+  if (payment.mode) payment.mode().then((m) => { if (m === 'test') app.querySelectorAll('.testmode').forEach((e) => { e.hidden = false; }); });
   if (!state.resultTracked) { track('result_shown', { summary: profile.summary, strongest: profile.strongest, mode: paywallMode }); track('paywall_shown', { mode: paywallMode, amount: CONFIG.price.uah }); setState({ resultTracked: true }); }
 }
 
@@ -241,6 +243,21 @@ function boot() {
   }
   // Возврат со страницы оплаты
   const ret = payment.readReturn(location.href);
+  if (ret.status === 'check') {
+    cleanUrl();
+    const orderId = ret.orderId || state.orderId;
+    screen(`<div class="center" style="padding:48px 0"><h2>${esc(T.paywall.checking)}</h2></div>`);
+    payment.verify(orderId).then((ok) => {
+      if (ok && state.results) {
+        setState({ paid: true, paidAt: Date.now(), orderId });
+        track('paid', { provider: payment.name, amount: CONFIG.price.uah, test: !!payment.isTest });
+        return fullReport(true);
+      }
+      track('pay_cancelled', { provider: payment.name });
+      return state.results ? result(T.paywall.cancelled) : landing();
+    });
+    return;
+  }
   if (ret.status) {
     cleanUrl();
     if (ret.status === 'paid' && state.orderId && ret.orderId === state.orderId && state.results) {

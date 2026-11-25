@@ -32,7 +32,43 @@ const testProvider = {
   },
 };
 
-const providers = { test: testProvider };
+// WayForPay через функцию Supabase sport-test-pay: подпись и секрет — на сервере,
+// оплата подтверждается сервером (callback WayForPay + CHECK_STATUS), а не адресом возврата.
+// Без секретов функция работает на публичном тестовом мерчанте WayForPay (деньги не списываются).
+const wayforpayProvider = {
+  name: 'wayforpay',
+  isTest: true, // уточняется ответом сервера (mode)
+  async mode() {
+    try { const r = await fetch(CONFIG.payFn).then((x) => x.json()); this.isTest = r.mode !== 'live'; return r.mode; } catch { return null; }
+  },
+  async startCheckout({ orderId, returnUrl }) {
+    const r = await fetch(CONFIG.payFn, { method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'create', orderRef: orderId, sid: orderId.split('-')[1] || '', returnTo: returnUrl }) }).then((x) => x.json());
+    if (!r.payUrl) throw new Error(r.error || 'checkout failed');
+    const f = document.createElement('form'); f.method = 'POST'; f.action = r.payUrl; f.acceptCharset = 'utf-8';
+    for (const [k, v] of Object.entries(r.fields)) { const i = document.createElement('input'); i.type = 'hidden'; i.name = k; i.value = v; f.appendChild(i); }
+    document.body.appendChild(f); f.submit();
+  },
+  readReturn(url) {
+    const p = new URL(url).searchParams;
+    return p.get('pay') === 'check' ? { status: 'check', orderId: p.get('order') } : { status: null, orderId: null };
+  },
+  // Ждём подтверждения до ~20 секунд (callback иногда приходит чуть позже возврата).
+  async verify(orderId) {
+    for (let i = 0; i < 10; i++) {
+      try {
+        const r = await fetch(CONFIG.payFn, { method: 'POST', headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ action: 'status', orderRef: orderId }) }).then((x) => x.json());
+        if (r.paid) return true;
+        if (['Declined', 'Expired', 'Refunded', 'Voided'].includes(r.status) && i >= 2) return false;
+      } catch { /* повтор */ }
+      await new Promise((res) => setTimeout(res, 2000));
+    }
+    return false;
+  },
+};
+
+const providers = { test: testProvider, wayforpay: wayforpayProvider };
 
 export const payment = providers[CONFIG.paymentProvider] || testProvider;
 
