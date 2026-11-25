@@ -29,7 +29,7 @@ export function initDebug({ paywallMode, restart, toast }) {
     ['Кадрів за секунду', `<b class="${poseStatus.fps >= 15 ? 'good' : poseStatus.fps > 0 ? 'bad' : ''}">${poseStatus.fps || '—'}</b> (оброблено ${poseStatus.frames})`],
     ['Звук', audioStatus.state],
     ['Екран', `${innerWidth}×${innerHeight} · dpr ${devicePixelRatio}`],
-    ['Крок / пейвол', `${state.step} · ${paywallMode} · ${CONFIG.price.uah} грн · оплата: ${CONFIG.paymentProvider}`],
+    ['Крок / пейвол', `${state.step} · ${paywallMode} · ${CONFIG.subscription.firstUah}→${CONFIG.subscription.regularUah} грн · підписка: ${state.sub ? state.sub.status : '—'} · оплата: ${CONFIG.paymentProvider}`],
     ['Події', `${store.events().length} · останні: ${store.events().slice(-4).map((e) => e.name).join(', ')}`],
     ['Помилка', lastErr ? `<span class="bad">${lastErr}</span>` : '—'],
     ['UA', `<span style="word-break:break-all">${env.ua}</span>`],

@@ -1,10 +1,14 @@
-// Спеки счёта 4 упражнений из публичного каталога Студії вправ (exercise-catalog, status=published).
-// Сверено по md5(spec::text) с базой каталога 25.11.2026. Не править руками: tools/README.
+// Спеки счёта упражнений. Из публичного каталога Студії вправ (exercise-catalog, status=published):
+// squats@3, high_knees@2, jumping_jack@4, plank@1 (сверены 25.11.2026), good_morning@1 (добавлена 25.11.2026, в Студії помечена PROPOSED).
+// shoulder_taps_front — своя спека сайта (в Студії есть только shoulder_taps боком): см. notes внутри.
+// Не править руками без повторной проверки tests/engine.test.mjs.
 export const SPEC_MD5 = {
-  "squats": "422d34f4e857c3c9347505c8445130e8",
-  "plank": "e3a7274262745ec09e541ca92b5e5fc7",
-  "high_knees": "171f14edf10cfe5a26d1389f759c4768",
-  "jumping_jack": "122f484eef2f2a278586fbe85bcbfb22"
+ "squats": "094396b23e4dbc84449d4a135b11a998",
+ "plank": "b254da6d588d8b8c55f684ac04b01e7d",
+ "high_knees": "3a43b203f11d4f774927b504d6167665",
+ "jumping_jack": "7ca6467f269ba5df1d176dd2eeeff3ec",
+ "good_morning": "7fae1c13856ed12bab93c97fe490713c",
+ "shoulder_taps_front": "0e284fd8eee20b7dc24267c9dec19982"
 };
 export const SPECS = {
  "squats": {
@@ -734,5 +738,228 @@ export const SPECS = {
     "consequence": "reject"
    }
   ]
+ },
+ "good_morning": {
+  "key": "good_morning",
+  "goal": "reps",
+  "media": {
+   "poster": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/good_morning-v1-91b13db9.jpg",
+   "pandaVideo": "https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/video/exercise-demo/eotd/good_morning-v1-91b13db9.mp4"
+  },
+  "notes": "Turnkey from the owner's video 2026-11-23 (scripts/pipeline). PROPOSED — needs owner approval: thresholds from the owner's reference video (young top line +25 %), difficulty 2, ages 6–18, trainer bounds in the run report.",
+  "facing": "side",
+  "motion": {
+   "top": {
+    "all": [
+     {
+      "m": "left_hip",
+      "max": {
+       "young": 91.9,
+       "standard": 65.95
+      }
+     },
+     {
+      "m": "left_wrist_h",
+      "min": -0.52
+     },
+     {
+      "m": "left_torso_tilt",
+      "max": 41.5
+     }
+    ]
+   },
+   "type": "reps",
+   "drive": {
+    "m": "left_hip"
+   },
+   "start": {
+    "all": [
+     {
+      "m": "left_hip",
+      "min": 117.85
+     }
+    ]
+   },
+   "abandon": {
+    "hint": "good_morning_not_reached",
+    "onlyIfReached": {
+     "m": "left_hip",
+     "max": 104.88
+    }
+   },
+   "finishGraceMs": 300
+  },
+  "phrases": {
+   "good_morning_coach_1": {
+    "text": {
+     "de": "Tolle Verneigung!",
+     "en": "Great bow!",
+     "uk": "Чудовий нахил!"
+    }
+   },
+   "good_morning_coach_2": {
+    "text": {
+     "de": "Du bist ein Superstar!",
+     "en": "You are a superstar!",
+     "uk": "Ти суперзірка!"
+    }
+   },
+   "good_morning_coach_3": {
+    "text": {
+     "de": "Wunderbar gemacht!",
+     "en": "Wonderful job!",
+     "uk": "Прекрасна робота!"
+    }
+   },
+   "good_morning_coach_4": {
+    "text": {
+     "de": "Weiter so!",
+     "en": "Keep it up!",
+     "uk": "Так тримати!"
+    }
+   },
+   "good_morning_face_wrong": {
+    "text": {
+     "de": "Drehe dich seitlich zur Kamera!",
+     "en": "Turn your side to camera!",
+     "uk": "Повернися до камери боком!"
+    }
+   },
+   "good_morning_not_reached": {
+    "text": {
+     "de": "Beuge dich noch etwas weiter!",
+     "en": "Bow just a little deeper!",
+     "uk": "Нахилися ще трошки нижче!"
+    }
+   }
+  },
+  "version": 1,
+  "facingHint": "good_morning_face_wrong",
+  "specVersion": 1,
+  "measurements": [
+   {
+    "id": "left_hip",
+    "kind": "angle",
+    "points": [
+     "near_shoulder",
+     "near_hip",
+     "near_knee"
+    ]
+   },
+   {
+    "id": "left_wrist_h",
+    "ref": "shoulder_mid",
+    "kind": "height",
+    "point": "near_wrist"
+   },
+   {
+    "id": "left_torso_tilt",
+    "kind": "tilt",
+    "points": [
+     "near_shoulder",
+     "near_hip"
+    ]
+   }
+  ]
+ },
+ "shoulder_taps_front": {
+  "specVersion": 1,
+  "key": "shoulder_taps_front",
+  "version": 1,
+  "goal": "reps",
+  "facing": "front",
+  "facingHint": "jumping_jack_face_wrong",
+  "measurements": [
+   {
+    "id": "elbow",
+    "kind": "angle",
+    "points": [
+     "side_shoulder",
+     "side_elbow",
+     "side_wrist"
+    ]
+   },
+   {
+    "id": "other_elbow",
+    "kind": "angle",
+    "points": [
+     "other_shoulder",
+     "other_elbow",
+     "other_wrist"
+    ]
+   }
+  ],
+  "motion": {
+   "type": "alternating",
+   "lift": {
+    "all": [
+     {
+      "m": "elbow",
+      "max": {
+       "young": 115,
+       "standard": 105
+      }
+     }
+    ]
+   },
+   "rearm": {
+    "all": [
+     {
+      "m": "elbow",
+      "min": {
+       "young": 140,
+       "standard": 145
+      }
+     }
+    ]
+   },
+   "otherDown": {
+    "all": [
+     {
+      "m": "other_elbow",
+      "min": {
+       "young": 135,
+       "standard": 140
+      }
+     }
+    ]
+   },
+   "otherStaleMs": 700,
+   "nearOnlyWindowMs": 2500,
+   "timing": {
+    "mode": "count",
+    "activeWindowMs": 2500,
+    "youngWindowScale": 1.3
+   },
+   "minRepIntervalMs": 300,
+   "hints": {
+    "start": "get_into_plank",
+    "low": "shoulder_taps_not_reached",
+    "sameSide": "switch_hands",
+    "bothUp": "get_into_plank"
+   }
+  },
+  "gates": {
+   "minVisibility": 0.5,
+   "maxInvalidFrames": 45
+  },
+  "phrases": {
+   "get_into_plank": {
+    "text": {
+     "uk": "Стань в упор лежачи обличчям до камери"
+    }
+   },
+   "shoulder_taps_not_reached": {
+    "text": {
+     "uk": "Торкнися плеча долонею"
+    }
+   },
+   "switch_hands": {
+    "text": {
+     "uk": "Чергуй руки"
+    }
+   }
+  },
+  "notes": "Сайт sport-test, 25.11.2026: варіант shoulder_taps обличчям до камери (власник). Кут ліктя активної руки: торкання < 105° (молодші < 115°), повернення > 145° (140°); друга рука пряма > 140° (135°). Один дотик = один повтор. Пороги робочі, на відео дітей не перевірені."
  }
 };

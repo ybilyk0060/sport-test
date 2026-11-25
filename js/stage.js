@@ -6,7 +6,7 @@ import { state, setState, track, exportHandoff } from './store.js';
 import { detectEnv, chromeIntentUrl, safariUrl } from './env.js';
 import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js';
 import { preloadPose, poseStatus } from './pose.js';
-import { unlockAudio, preloadClips, say, stopVoice } from './audio.js';
+import { unlockAudio, preloadClips, say, stopVoice, exists } from './audio.js';
 import { framingCheck, frameLoop, createRun } from './session.js';
 
 const env = detectEnv();
@@ -14,9 +14,9 @@ const $ = (sel, root = document) => root.querySelector(sel);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-let root, video, canvas, hud, stopLoop = null, facing = 'environment', alive = false, onDone = null, onExit = null;
+let root, video, canvas, hud, stopLoop = null, facing = 'environment', alive = false, onDone = null, onExit = null, customList = null;
 
-const plan = () => CONFIG.ageGroups[state.quiz.age || '7-9'].plan;
+const plan = () => customList || CONFIG.ageGroups[state.quiz.age || '7-9'].plan;
 const exName = (k) => T.ex[k].name;
 
 function mount() {
@@ -32,20 +32,30 @@ function unmount() {
   if (video) { try { video.pause(); } catch { /* уже остановлено */ } if (video.src) { URL.revokeObjectURL(video.src); video.removeAttribute('src'); } video.srcObject = null; }
 }
 
-// --- Скелет поверх видео (только рисуем, не сохраняем) ---
-const BONES = [[11, 12], [11, 13], [13, 15], [12, 14], [14, 16], [11, 23], [12, 24], [23, 24], [23, 25], [25, 27], [24, 26], [26, 28]];
-function drawSkeleton(lm) {
-  const w = canvas.clientWidth, h = canvas.clientHeight;
+// --- Кадр + скелет на одном холсте (только рисуем, не сохраняем) ---
+// Кадр, по которому найдена поза, рисуется на тот же холст в тот же момент, что и скелет:
+// скелет не отстаёт и не съезжает с тела (раньше видео и скелет жили в разных слоях и расходились при задержке распознавания).
+const BONES = [[11, 12], [11, 13], [13, 15], [12, 14], [14, 16], [11, 23], [12, 24], [23, 24], [23, 25], [25, 27], [24, 26], [26, 28], [27, 31], [28, 32]];
+const JOINTS = [0, 11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28];
+function drawFrame(lm) {
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const w = Math.round(canvas.clientWidth * dpr), h = Math.round(canvas.clientHeight * dpr);
   if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
-  const g = canvas.getContext('2d'); g.clearRect(0, 0, w, h);
-  if (!lm || !video.videoWidth) return;
+  const g = canvas.getContext('2d');
+  if (lm === null || !video.videoWidth) { g.clearRect(0, 0, w, h); return; } // без позы: виден живой <video> под холстом
   const vw = video.videoWidth, vh = video.videoHeight, sc = Math.max(w / vw, h / vh), dx = (w - vw * sc) / 2, dy = (h - vh * sc) / 2;
+  g.drawImage(video, dx, dy, vw * sc, vh * sc);
+  if (!lm) return;
   const P = (i) => [dx + lm[i].x * vw * sc, dy + lm[i].y * vh * sc];
-  g.lineWidth = 4; g.lineCap = 'round'; g.strokeStyle = 'rgba(255,255,255,.85)';
-  for (const [a, b] of BONES) { if (lm[a].visibility < 0.5 || lm[b].visibility < 0.5) continue; const [x1, y1] = P(a), [x2, y2] = P(b); g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); }
+  const vis = (i) => lm[i] && lm[i].visibility >= 0.5;
+  g.lineCap = 'round'; g.lineJoin = 'round';
+  g.lineWidth = 7 * dpr; g.strokeStyle = 'rgba(0,0,0,.35)';
+  const bones = () => { for (const [a, b] of BONES) { if (!vis(a) || !vis(b)) continue; const [x1, y1] = P(a), [x2, y2] = P(b); g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); } };
+  bones(); g.lineWidth = 4 * dpr; g.strokeStyle = 'rgba(255,255,255,.95)'; bones();
   g.fillStyle = '#ff7a1a';
-  for (const i of [0, 11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28]) { if (lm[i].visibility < 0.5) continue; const [x, y] = P(i); g.beginPath(); g.arc(x, y, 5, 0, 7); g.fill(); }
+  for (const i of JOINTS) { if (!vis(i)) continue; const [x, y] = P(i); g.beginPath(); g.arc(x, y, 5 * dpr, 0, 7); g.fill(); }
 }
+const drawSkeleton = drawFrame;
 
 function topBar(label, { switchBtn = true, skip = false } = {}) {
   return `<div class="hud-top"><span class="pill">${esc(label)}</span><span style="display:flex;gap:8px">${skip ? `<button class="pill" data-act="skip-ex">${esc(T.cam.skipEx)}</button>` : ''}${switchBtn ? `<button class="pill" data-act="switch-cam">${esc(T.cam.switch)}</button>` : ''}</span></div>`;
@@ -58,12 +68,16 @@ async function switchCamera() {
 }
 
 // ---------- Запуск с живой камерой ----------
-export async function startStage({ done, exit }) {
-  onDone = done; onExit = exit;
+export async function startStage({ done, exit, list = null, mode = 'live' }) {
+  onDone = done; onExit = exit; customList = list;
   unlockAudio();
   mount();
   hud.innerHTML = `<div class="big-center"><div><div class="spinner"></div><p class="t" style="margin-top:16px">${esc(T.cam.requesting)}</p><p style="margin-top:8px;opacity:.85">${esc(T.cam.allowHint)}</p></div></div>`;
-  track('camera_request', { facing });
+  track('camera_request', { facing, mode });
+  // Камера и модель позы стартуют одновременно: пока телефон спрашивает разрешение, модель уже грузится.
+  const t0 = performance.now();
+  const model = preloadPose().then(() => null, (e) => e || new Error('model'));
+  preloadClips(['session_get_ready', 'session_start', 'session_finished', 'count_1', 'count_2', 'count_3', ...plan().map((p) => CONFIG.exercises[p.key].intro)]);
   try {
     await openCamera(video, facing);
   } catch (e) {
@@ -72,31 +86,27 @@ export async function startStage({ done, exit }) {
     return showBlocked(kind);
   }
   if (!alive) return;
-  track('camera_granted', { facing: camStatus.facing, label: camStatus.label, w: camStatus.width, h: camStatus.height });
+  track('camera_granted', { facing: camStatus.facing, label: camStatus.label, w: camStatus.width, h: camStatus.height, ms: Math.round(performance.now() - t0) });
   root.classList.toggle('mirror', facing === 'user');
   keepAwake(true);
-  preloadClips(['session_get_ready', 'session_start', 'session_finished', 'count_1', 'count_2', 'count_3']);
-  try {
-    hud.innerHTML = `<div class="big-center"><div><div class="spinner"></div><p class="t" style="margin-top:16px">${esc(T.prep.modelLoading)}</p></div></div>`;
-    await preloadPose();
-  } catch (e) {
-    track('model_error', { error: String(e && e.message ? e.message : e) });
-    return showBlocked('model');
-  }
+  if (poseStatus.state !== 'ready') hud.innerHTML = `<div class="big-center small-overlay"><div><div class="spinner"></div><p class="t" style="margin-top:16px">${esc(T.prep.modelLoading)}</p></div></div>`;
+  const err = await model;
+  if (err) { track('model_error', { error: String(err && err.message ? err.message : err) }); return showBlocked('model'); }
   if (!alive) return;
+  track('stage_ready', { ms: Math.round(performance.now() - t0) });
   setState({ fallback: false });
   await framing();
   if (!alive) return;
-  track('test_start', { mode: 'live', age: state.quiz.age });
+  track('test_start', { mode, age: state.quiz.age });
   const results = [];
-  const list = plan();
-  for (let i = 0; i < list.length; i++) {
-    const r = await liveExercise(list[i], i, list.length);
+  const items = plan();
+  for (let i = 0; i < items.length; i++) {
+    const r = await liveExercise(items[i], i, items.length);
     if (!alive) return;
     results.push(r);
   }
   say('session_finished');
-  finish(results, 'live');
+  finish(results, mode);
 }
 
 function finish(results, mode) {
@@ -114,7 +124,7 @@ function framing() {
     const end = (how) => { if (doneFlag) return; doneFlag = true; if (stopLoop) { stopLoop(); stopLoop = null; } track('framing_ok', { how, ms: Math.round(performance.now() - t0), fps: poseStatus.fps }); resolve(); };
     hud.onclick = (e) => { const a = e.target.closest('[data-act]'); if (!a) return; if (a.dataset.act === 'start-anyway') end('manual'); if (a.dataset.act === 'switch-cam') switchCamera(); };
     stopLoop = frameLoop(video, (lm) => {
-      drawSkeleton(lm);
+      drawSkeleton(lm || false);
       const c = framingCheck(lm);
       head.classList.toggle('ok', c.head); feet.classList.toggle('ok', c.feet);
       msg.textContent = c.ok ? T.cam.frameOk : !c.body ? T.cam.frameNoBody : !c.head ? T.cam.frameNoHead : T.cam.frameNoFeet;
@@ -127,10 +137,10 @@ function framing() {
 
 function introSheet(p, i, n, btnHtml) {
   const ex = CONFIG.exercises[p.key], tx = T.ex[p.key];
-  const note = p.key === 'plank' ? T.cam.floorNote : ex.facing === 'side' ? T.cam.sideNote : T.cam.frontNote;
+  const note = ex.floor ? T.cam.floorFrontNote : ex.facing === 'side' ? T.cam.sideNote : T.cam.frontNote;
   return `<div class="sheet"><span class="tag">${esc(T.cam.exOf(i + 1, n))}</span><h2>${esc(tx.task(p.target))}</h2>
     <video class="panda" playsinline muted loop autoplay preload="auto" poster="${CONFIG.mediaBase + ex.poster}" src="${CONFIG.mediaBase + ex.video}"></video>
-    <p>${esc(tx.how)}</p><p class="note">↻ ${esc(note)}</p>${btnHtml}</div>`;
+    <p>${esc(tx.how)}</p>${tx.pandaNote ? `<p class="small" style="opacity:.8">${esc(tx.pandaNote)}</p>` : ''}<p class="note">↻ ${esc(note)}</p>${btnHtml}</div>`;
 }
 
 // Короткое видео с пандой и голос студии перед упражнением
@@ -139,7 +149,7 @@ function intro(p, i, n) {
     hud.innerHTML = introSheet(p, i, n, `<button class="btn" data-act="go">${esc(T.cam.go)}</button><button class="btn ghost" data-act="skip-ex">${esc(T.cam.skipEx)}</button>`);
     const ex = CONFIG.exercises[p.key];
     drawSkeleton(null);
-    preloadClips(Object.keys(T.hints).map((h) => 'hint_' + h));
+    preloadClips([...Object.keys(T.hints).map((h) => 'hint_' + h), ...Object.keys(T.hints), ...(ex.coach ? [1, 2].map((n) => ex.coach + n) : [])]);
     say(ex.intro);
     const pv = $('video.panda', hud); pv.play().catch(() => {});
     pv.onerror = () => { pv.style.display = 'none'; }; // нет сети до видео — остаются текст и голос
@@ -162,11 +172,24 @@ async function countdown() {
   say('session_start');
 }
 
+// Крупная шкала, видна издалека: кольцо = сколько осталось, с каждым засчитанным повтором (секундой) уменьшается.
+const RING_R = 88, RING_C = 2 * Math.PI * RING_R;
 function runHud(p, i, n, isSeconds) {
   hud.innerHTML = `${topBar(`${T.cam.exOf(i + 1, n)} · ${exName(p.key)}`, { skip: true, switchBtn: false })}
-    <div class="count"><div class="num" data-el="num">0</div><div class="of">${esc(isSeconds ? T.cam.secs(p.target) : T.cam.reps(p.target))}</div></div>
+    <div class="gauge"><svg viewBox="0 0 200 200" aria-hidden="true"><circle class="g-bg" cx="100" cy="100" r="${RING_R}"/><circle class="g-fg" data-el="ring" cx="100" cy="100" r="${RING_R}" stroke-dasharray="${RING_C}" stroke-dashoffset="0"/></svg>
+      <div class="g-in"><div class="num" data-el="num">0</div><div class="of">${esc(isSeconds ? T.cam.secs(p.target) : T.cam.reps(p.target))}</div></div></div>
+    <div class="left" data-el="left">${esc(T.cam.left(p.target, isSeconds))}</div>
     <div class="hint" data-el="hint"></div><div class="timebar"><i data-el="bar"></i></div>`;
-  return { num: $('[data-el=num]', hud), hint: $('[data-el=hint]', hud), bar: $('[data-el=bar]', hud) };
+  const ring = $('[data-el=ring]', hud), left = $('[data-el=left]', hud);
+  return {
+    num: $('[data-el=num]', hud), hint: $('[data-el=hint]', hud), bar: $('[data-el=bar]', hud),
+    set(c) {
+      const rest = Math.max(0, p.target - c);
+      ring.style.strokeDashoffset = String(RING_C * (1 - rest / p.target));
+      left.textContent = rest > 0 ? T.cam.left(rest, isSeconds) : T.cam.done;
+      ring.classList.remove('hit'); void ring.getBoundingClientRect(); ring.classList.add('hit');
+    },
+  };
 }
 
 async function liveExercise(p, i, n) {
@@ -183,8 +206,8 @@ async function liveExercise(p, i, n) {
       aspect: video.videoWidth && video.videoHeight ? video.videoWidth / video.videoHeight : null,
       clock: () => performance.now(),
       on: {
-        count: (c) => { ui.num.textContent = c; ui.num.classList.remove('pop'); void ui.num.offsetWidth; ui.num.classList.add('pop'); if (c <= 30) say('count_' + c); },
-        hint: (id) => { const text = T.hints[id]; if (!text) return; ui.hint.textContent = text; clearTimeout(hintTimer); hintTimer = setTimeout(() => { ui.hint.textContent = ''; }, 2500); say('hint_' + id, { interrupt: false }); },
+        count: (c) => { ui.num.textContent = c; ui.set(c); ui.num.classList.remove('pop'); void ui.num.offsetWidth; ui.num.classList.add('pop'); if (c <= 30) say('count_' + c); const ex = CONFIG.exercises[p.key]; if (ex.coach && !run.isSeconds && c % 5 === 0 && c < p.target) setTimeout(() => say(ex.coach + (1 + ((c / 5 - 1) % 4)), { interrupt: false }), 650); },
+        hint: (id) => { const text = T.hints[id]; if (!text) return; ui.hint.textContent = text; clearTimeout(hintTimer); hintTimer = setTimeout(() => { ui.hint.textContent = ''; }, 2500); say(exists('hint_' + id) ? 'hint_' + id : id, { interrupt: false }); },
         tick: ({ left }) => { ui.bar.style.width = `${Math.max(0, (left / p.capSec) * 100)}%`; },
         finish: async (r) => {
           if (stopLoop) { stopLoop(); stopLoop = null; }
@@ -201,7 +224,7 @@ async function liveExercise(p, i, n) {
     track('exercise_start', { key: p.key, target: p.target });
     run.start();
     stopLoop = frameLoop(video, (lm) => {
-      drawSkeleton(lm);
+      drawSkeleton(lm || false);
       if (!lm) { lostSince = lostSince ?? performance.now(); if (performance.now() - lostSince > 1500 && !ui.hint.textContent) ui.hint.textContent = T.cam.lost; }
       else if (lostSince) { lostSince = null; if (ui.hint.textContent === T.cam.lost) ui.hint.textContent = ''; }
       run.frame(lm);
@@ -324,7 +347,7 @@ function fileExercise(p, i, n) {
       run.start();
       video.onended = () => run.end('ended');
       video.onerror = () => { if (!run.finished) fail(); };
-      stopLoop = frameLoop(video, (lm) => { drawSkeleton(lm); run.frame(lm); });
+      stopLoop = frameLoop(video, (lm) => { drawSkeleton(lm || false); run.frame(lm); });
       video.play().catch(() => fail());
     }
   });

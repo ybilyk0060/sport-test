@@ -32,7 +32,7 @@ export async function openCamera(video, facing = 'environment') {
     camStatus.state = 'error'; camStatus.error = 'unsupported'; camStatus.errorName = 'NoMediaDevices';
     const err = new Error('getUserMedia недоступен'); err.kind = 'unsupported'; throw err;
   }
-  const base = { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } };
+  const base = { width: { ideal: 960 }, height: { ideal: 540 }, frameRate: { ideal: 30 } }; // 960×540: быстрее открывается и распознаётся, для позы хватает
   const tries = [{ ...base, facingMode: { ideal: facing } }, { facingMode: facing }, true];
   let lastErr = null;
   for (const v of tries) {

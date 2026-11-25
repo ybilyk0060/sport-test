@@ -1,7 +1,7 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
 import { T } from './i18n/index.js';
-import { CONFIG, priceLabel } from './config.js';
+import { CONFIG, priceLabel, uah } from './config.js';
 import { state, setState, resetState, track, importHandoff, store } from './store.js';
 import { detectEnv } from './env.js';
 import { preloadPose } from './pose.js';
@@ -12,18 +12,23 @@ import { payment, newOrderId } from './payment.js';
 import { ART } from './art.js';
 import { initDebug } from './debug.js';
 import { drawShareCard } from './sharecard.js';
+import { buildProgram, nextWorkout, WEEKS, PER_WEEK } from './program.js';
 
 const env = detectEnv();
 const app = document.getElementById('app');
 const params = new URLSearchParams(location.search);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const paywallMode = ['teaser', 'hard'].includes(params.get('paywall')) ? params.get('paywall') : CONFIG.paywallMode;
-const QUIZ = ['age', 'now', 'likes', 'temper', 'goal', 'screen', 'city'];
+const QUIZ = ['age', 'now', 'likes', 'temper', 'goal', 'screen'];
+const SUB = CONFIG.subscription;
+const DAY = 86400000;
+const fmtDate = (t) => new Date(t).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' });
 
 document.title = T.meta.title;
 document.documentElement.lang = T.meta.lang;
 
 function screen(html, handlers = {}) {
+  clearInterval(offerTimer);
   app.innerHTML = `<section class="screen">${html}</section>`;
   window.scrollTo(0, 0);
   app.onclick = (e) => {
@@ -46,11 +51,11 @@ function landing() {
 
 // ---------- 2. Квиз: 7 вопросов, один на экран, ответ одним нажатием ----------
 function quiz(i) {
-  if (i >= QUIZ.length) return contact();
+  if (i >= QUIZ.length) return prep();
   setState({ step: 'quiz', quizIndex: i });
   const id = QUIZ[i], q = T.quiz.q[id];
-  const opts = id === 'city' ? [...CONFIG.cities.map((c) => [c, c]), ['other', q.other]] : Object.entries(q.options);
-  const two = id === 'city' || id === 'age';
+  const opts = Object.entries(q.options);
+  const two = id === 'age';
   screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button><div class="progress"><i style="width:${Math.round(((i + 1) / QUIZ.length) * 100)}%"></i></div></div>
     <p class="small muted">${esc(T.quiz.progress(i + 1, QUIZ.length))}</p><h1 class="qtitle">${esc(q.title)}</h1>
     <div class="opts ${two ? 'two' : ''}">${opts.map(([v, label]) => `<button class="opt ${state.quiz[id] === v ? 'sel' : ''}" data-act="pick" data-v="${esc(v)}">${esc(label)}</button>`).join('')}</div>`, {
@@ -64,48 +69,17 @@ function quiz(i) {
   });
 }
 
-// ---------- 3. Контакт (можно пропустить) ----------
-function contact() {
-  setState({ step: 'contact' });
-  let channel = (state.contact && state.contact.channel) || 'telegram';
-  const C = T.contact;
-  const draw = (err = '') => {
-    const val = document.querySelector('.field') ? document.querySelector('.field').value : (state.contact && state.contact.value) || '';
-    const checked = document.querySelector('#consent') ? document.querySelector('#consent').checked : false;
-    screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button><div class="progress"><i style="width:100%"></i></div></div>
-      <h1 class="qtitle">${esc(C.title)}</h1><p class="muted">${esc(C.lead)}</p>
-      <div class="seg">${Object.entries(C.channels).map(([k, v]) => `<button data-act="ch" data-v="${k}" class="${k === channel ? 'sel' : ''}">${esc(v)}</button>`).join('')}</div>
-      <input class="field" type="${channel === 'telegram' ? 'text' : 'tel'}" inputmode="${channel === 'telegram' ? 'text' : 'tel'}" autocomplete="${channel === 'telegram' ? 'off' : 'tel'}" placeholder="${esc(C.placeholder[channel])}" value="${esc(val)}" maxlength="64">
-      <label class="check"><input type="checkbox" id="consent" ${checked ? 'checked' : ''}><span>${esc(C.consent)} <a href="privacy.html" target="_blank" rel="noopener">${esc(T.common.privacy)}</a></span></label>
-      <p class="err">${esc(err)}</p><div class="grow"></div>
-      <button class="btn" data-act="submit">${esc(C.submit)}</button><button class="btn ghost" data-act="skip">${esc(C.skip)}</button>`, {
-      back: () => quiz(QUIZ.length - 1),
-      ch: (a) => { channel = a.dataset.v; draw(); },
-      skip: () => { setState({ contact: null }); track('contact_skipped'); prep(); },
-      submit: () => {
-        const v = document.querySelector('.field').value.trim();
-        const ok = document.querySelector('#consent').checked;
-        if (v.length < 3) return draw(C.errValue);
-        if (!ok) return draw(C.errConsent);
-        setState({ contact: { channel, value: v, consent: true, at: new Date().toISOString() } });
-        track('contact_left', { channel }); // само значение контакта в события не пишем
-        prep();
-      },
-    });
-  };
-  draw();
-}
-
 // ---------- 4. Подготовка к камере ----------
 function prep() {
   setState({ step: 'prep' });
   preloadPose().catch(() => {});
   const P = T.prep;
-  screen(`<h1 class="qtitle">${esc(P.title)}</h1>
+  screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button><div class="progress"><i style="width:100%"></i></div></div><h1 class="qtitle">${esc(P.title)}</h1>
     <div class="cards">${P.cards.map((c, i) => `<div class="pcard">${ART.prep[i]}<div><b>${esc(c.t)}</b><span>${esc(c.d)}</span></div></div>`).join('')}</div>
     <p class="privacy-line">${esc(P.privacy)}</p><div class="grow"></div>
     <button class="btn" data-act="cam">${esc(P.cta)}</button><button class="link center" data-act="alt">${esc(P.alt)}</button>`, {
     cam: () => { app.onclick = null; startStage({ done: testDone, exit: prep }); },
+    back: () => quiz(QUIZ.length - 1),
     alt: () => { app.onclick = null; startFallback({ done: testDone, exit: prep }); },
   });
   track('prep_shown');
@@ -135,19 +109,57 @@ function factLines(results) {
   return results.map((r) => (r.skipped ? F.skipped(T.ex[r.key].name) : F[r.key](r.done, r.target, Math.round(r.elapsedSec))));
 }
 
-function paywallCard(note = '') {
-  const P = T.paywall;
+const pct = () => Math.round((1 - SUB.firstUah / SUB.regularUah) * 100);
+// Таймер скидки: дедлайн ставится при первом показе пейвола и живёт отдельно от прохождения (resetState его не трогает).
+const OFFER_KEY = 'sporttest.v1.offer';
+function offerDeadline(start = false) {
+  let d = null;
+  try { d = JSON.parse(localStorage.getItem(OFFER_KEY) || 'null'); } catch { /* нет доступа */ }
+  if (!d && start) { d = { deadline: Date.now() + SUB.offerMinutes * 60000 }; try { localStorage.setItem(OFFER_KEY, JSON.stringify(d)); } catch { /* нет доступа */ } track('offer_timer_start', { minutes: SUB.offerMinutes }); }
+  return d ? d.deadline : null;
+}
+const discountOn = () => { const d = offerDeadline(); return !!d && Date.now() < d; };
+const firstPrice = () => (discountOn() ? SUB.firstUah : SUB.regularUah);
+const mmss = (ms) => { const s = Math.max(0, Math.ceil(ms / 1000)); return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; };
+let offerTimer = 0;
+function runOfferTimer() {
+  clearInterval(offerTimer);
+  const d = offerDeadline();
+  if (!d || Date.now() >= d) return;
+  offerTimer = setInterval(() => {
+    const left = d - Date.now();
+    document.querySelectorAll('[data-el=offer-timer]').forEach((el) => { el.textContent = T.paywall.timer(mmss(left)); });
+    if (left <= 0) { clearInterval(offerTimer); track('offer_timer_end'); if (state.step === 'result') result(); }
+  }, 1000);
+}
+function paywallCard(note = '', profile = null) {
+  const P = T.paywall, R = T.result;
+  const renewAt = Date.now() + SUB.periodDays * DAY;
+  const weak = profile ? QUALITIES.filter((q) => profile.qualities[q].level > 0).sort((a, b) => profile.qualities[a].score - profile.qualities[b].score)[0] : null;
+  const focus = T.program.focus[state.quiz.likes] || T.program.focus.none;
+  offerDeadline(true);
+  const on = discountOn(), first = firstPrice(), d = offerDeadline();
+  const priceBox = (id) => `<div class="price-card${on ? '' : ' no-disc'}"${id ? ` id="${id}"` : ''}>${on ? `<span class="disc">${esc(P.discount(pct()))}</span><div class="timer" data-el="offer-timer">${esc(P.timer(mmss(d - Date.now())))}</div>` : `<div class="timer over">${esc(P.timerOver)}</div>`}
+      <div class="pc-row"><div><b>${esc(P.firstLabel(SUB.periodDays))}</b><small>${esc(P.perDay(Math.round(first / SUB.periodDays)))}</small></div>
+      <div class="pc-price">${on ? `<s>${esc(uah(SUB.regularUah))}</s>` : ''}<b>${esc(uah(first))}</b></div></div>
+      <p class="renew">${esc(P.renew(uah(SUB.regularUah), SUB.periodDays, fmtDate(renewAt)))}</p>
+      <button class="btn" data-act="pay">${esc(P.cta(uah(first)))}</button>
+      <p class="small center testmode" hidden style="color:#b45309;font-weight:600">${esc(P.testMode)}</p></div>`;
   return `<div class="paywall" id="paywall"><h2>${esc(P.title)}</h2>${note ? `<p class="err">${esc(note)}</p>` : ''}
-    <ul>${T.result.lockedItems.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
-    <button class="btn" data-act="pay">${esc(P.cta(priceLabel()))}</button>
-    <p class="small muted center">${esc(P.usdNote(CONFIG.price.usd))}</p>
-    <p class="terms">${esc(P.terms)}</p><p class="small muted center">${esc(P.how)}</p><p class="small center testmode" hidden style="color:#b45309;font-weight:600">${esc(P.testMode)}</p>
+    <p>${esc(weak ? P.lead(R.qualities[weak].name.toLowerCase()) : P.leadNoWeak)}</p>
+    <div class="focus-box"><small>${esc(P.focusTitle)}</small><b>${esc(focus)}</b></div>
+    ${priceBox('price-top')}
+    <h3>${esc(P.inside)}</h3><ul class="checks-list">${P.insideItems.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+    <p class="small muted">${esc(P.how)}</p>
+    <h3>${esc(P.faqTitle)}</h3>${P.faq.map(([q, a]) => `<details class="faq"><summary>${esc(q)}</summary><p>${esc(a(uah(first), uah(SUB.regularUah), SUB.periodDays))}</p></details>`).join('')}
+    ${priceBox('')}
+    <p class="fine">${esc(P.fine(uah(first), uah(SUB.regularUah), SUB.periodDays))}</p>
     <button class="btn ghost" data-act="not-now">${esc(P.notNow)}</button></div>`;
 }
 
 function result(note = '') {
   if (!state.results) return landing();
-  if (state.paid) return fullReport();
+  if (subActive()) return fullReport();
   setState({ step: 'result' });
   const report = buildReport(state.results, state.quiz);
   const { profile } = report;
@@ -158,14 +170,14 @@ function result(note = '') {
   if (profile.summary === 'none') {
     // Данных мало (упражнения пропущены) — отчёт не продаём, предлагаем пройти ещё раз.
     screen(`<span class="badge">${esc(R.badge)}</span><h1 class="rtitle">${esc(R.title)}</h1><p class="summary">${esc(R.summary.none)}</p><div class="grow"></div><button class="btn" data-act="again">${esc(R.again)}</button>`, {
-      again: () => { const quizKeep = state.quiz, contactKeep = state.contact; resetState(); setState({ quiz: quizKeep, contact: contactKeep }); track('restart', { reason: 'no_data' }); prep(); },
+      again: () => { const quizKeep = state.quiz; resetState(); setState({ quiz: quizKeep }); track('restart', { reason: 'no_data' }); prep(); },
     });
     if (!state.resultTracked) { track('result_shown', { summary: 'none', mode: paywallMode }); setState({ resultTracked: true }); }
     return;
   }
   if (hard) {
     body = `<span class="badge">${esc(R.badge)}</span><h1 class="rtitle">${esc(R.title)}</h1><p class="summary">${esc(T.paywall.hardLead)}</p>
-      <div class="locked"><div class="locked-list">${QUALITIES.slice(0, 3).map(qRowLocked).join('')}</div></div>${paywallCard(note)}`;
+      <div class="locked"><div class="locked-list">${QUALITIES.slice(0, 3).map(qRowLocked).join('')}</div></div>${paywallCard(note, profile)}`;
   } else {
     const s = profile.strongest;
     body = `<span class="badge">${esc(R.badge)}</span><h1 class="rtitle">${esc(R.title)}</h1><p class="summary">${esc(R.summary[profile.summary])}</p>
@@ -173,47 +185,102 @@ function result(note = '') {
       <p class="small muted">${esc(R.prelimNote)}</p>
       <h2 class="sec-title">${esc(R.profile)}</h2>
       <div class="locked"><div class="locked-list">${QUALITIES.filter((q) => q !== s).map(qRowLocked).join('')}</div></div>
-      ${dismissed ? `<div class="sticky-pay"><button class="btn" data-act="pay">${esc(T.paywall.cta(priceLabel()))}</button></div><p class="terms">${esc(T.paywall.terms)}</p>` : paywallCard(note)}
+      ${dismissed ? `<div class="sticky-pay"><button class="btn" data-act="pay">${esc(T.paywall.cta(uah(firstPrice())))}</button></div><p class="renew">${esc(T.paywall.renew(uah(SUB.regularUah), SUB.periodDays, fmtDate(Date.now() + SUB.periodDays * DAY)))}</p><p class="terms">${esc(T.paywall.terms)}</p>` : paywallCard(note, profile)}
       <button class="link center" data-act="again">${esc(R.again)}</button>`;
   }
   screen(body, {
     pay: () => {
       const orderId = newOrderId(state.sid);
       setState({ orderId });
-      track('pay_click', { provider: payment.name, amount: CONFIG.price.uah, mode: paywallMode });
+      const amount = firstPrice();
+      track('pay_click', { provider: payment.name, amount, discount: amount < SUB.regularUah, plan: 'sub', mode: paywallMode });
       const ret = new URL(location.href); ret.search = ''; ret.hash = '';
       if (params.get('debug')) ret.searchParams.set('debug', '1');
       if (params.get('paywall')) ret.searchParams.set('paywall', params.get('paywall'));
-      Promise.resolve(payment.startCheckout({ orderId, amountUah: CONFIG.price.uah, description: T.paywall.title, returnUrl: ret.toString() }))
+      Promise.resolve(payment.startCheckout({ orderId, amountUah: amount, description: T.payTest.sub(uah(amount), uah(SUB.regularUah), SUB.periodDays), returnUrl: ret.toString() }))
         .catch(() => { track('pay_error', { provider: payment.name }); toast(T.paywall.payError); });
     },
     'not-now': () => { setState({ paywallDismissed: true }); track('paywall_dismissed', { mode: paywallMode }); result(); },
     again: () => { resetState(); track('restart'); landing(); },
   });
   if (payment.mode) payment.mode().then((m) => { if (m === 'test') app.querySelectorAll('.testmode').forEach((e) => { e.hidden = false; }); });
-  if (!state.resultTracked) { track('result_shown', { summary: profile.summary, strongest: profile.strongest, mode: paywallMode }); track('paywall_shown', { mode: paywallMode, amount: CONFIG.price.uah }); setState({ resultTracked: true }); }
+  runOfferTimer();
+  if (!state.resultTracked) { track('result_shown', { summary: profile.summary, strongest: profile.strongest, mode: paywallMode }); track('paywall_shown', { mode: paywallMode, amount: firstPrice(), regular: SUB.regularUah }); setState({ resultTracked: true }); }
 }
 
-// ---------- 8. Полный отчёт (после оплаты) ----------
+// ---------- Подписка (тестовая заглушка: состояние на устройстве) ----------
+function subActive() { return !!(state.sub && Date.now() < state.sub.paidUntil); }
+function startSub(orderId) {
+  const now = Date.now();
+  setState({ paid: true, paidAt: now, orderId, sub: { status: 'active', startedAt: now, paidUntil: now + SUB.periodDays * DAY, orderId, test: !!payment.isTest }, workouts: state.workouts || [] });
+  track('paid', { provider: payment.name, amount: firstPrice(), plan: 'sub', test: !!payment.isTest });
+}
+
+function subLine() {
+  const S = T.sub, sub = state.sub;
+  return sub.status === 'active' ? S.nextCharge(fmtDate(sub.paidUntil), uah(SUB.regularUah)) : S.cancelledUntil(fmtDate(sub.paidUntil));
+}
+
+// Наши приложения: по возрасту ребёнка первым идёт подходящее. Подписчику — код на месяц.
+function giftCode(app) {
+  const codes = state.giftCodes || {};
+  if (!codes[app]) { codes[app] = `TEST-${app.toUpperCase().slice(0, 3)}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`; setState({ giftCodes: codes }); }
+  return codes[app];
+}
+function appsBlock() {
+  const A = T.apps, age = parseInt(state.quiz.age, 10) || 7;
+  const fits = (a) => age >= a.ages[0] && age <= a.ages[1];
+  const order = Object.entries(CONFIG.apps).sort(([, a], [, b]) => fits(b) - fits(a));
+  const codes = state.giftCodes || {};
+  return `<h2 class="sec-title">${esc(A.title)}</h2><p class="small muted">${esc(A.lead)}</p>
+    <div class="focus-box"><small>${esc(A.giftTitle)}</small><span class="small">${esc(A.giftLead)}</span></div>
+    ${order.map(([k, a]) => {
+    const links = [a.ios.live && `<a class="pill-link" href="${esc(a.ios.url)}" target="_blank" rel="noopener" data-act="app" data-app="${k}">${esc(A.ios)}</a>`, a.android.live && `<a class="pill-link" href="${esc(a.android.url)}" target="_blank" rel="noopener" data-act="app" data-app="${k}">${esc(A.android)}</a>`].filter(Boolean).join('');
+    const code = codes[k];
+    return `<div class="app-card"><div><b>${esc(A[k].name)}</b>${fits(a) ? `<span class="tag-ok">${esc(A.forAge)}</span>` : ''}</div><span class="small muted">${esc(A[k].d)}</span>
+      ${links ? `<div class="row-links">${links}</div>` : ''}${a.ios.live && a.android.live ? '' : `<span class="small muted">${esc(A.soon([!a.ios.live && A.ios, !a.android.live && A.android].filter(Boolean).join(' і ')))}</span>`}
+      ${code ? `<div class="code-box"><small>${esc(A.giftCode)}</small><b>${esc(code)}</b><button class="link" data-act="copy-code" data-code="${esc(code)}">${esc(A.copy)}</button>
+        <span class="small">${esc(A.giftHowIos)}</span><span class="small">${esc(A.giftHowAndroid)}</span>${CONFIG.promoMode === 'test' ? `<span class="small" style="color:#b45309;font-weight:600">${esc(A.giftTest)}</span>` : ''}</div>`
+        : `<button class="btn line" data-act="gift" data-app="${k}">${esc(A.giftGet(A[k].name))}</button>`}</div>`;
+  }).join('')}`;
+}
+
+function programBlock(program) {
+  const G = T.program, done = state.workouts || [];
+  const next = nextWorkout(program, done);
+  const total = program.workouts.length;
+  const unit = (key) => (CONFIG.exercises[key].goal === 'seconds' ? T.report.unitSec : T.report.unitReps);
+  const list = (w) => w.items.map((it) => `${esc(T.report.planEx[it.key])} — ${it.target} ${esc(unit(it.key))}`).join('<br>');
+  return `<h2 class="sec-title">${esc(G.title)}</h2><p class="small muted">${esc(G.lead(G.focus[program.focus]))}</p>
+    <div class="prog-bar"><i style="width:${Math.round((done.length / total) * 100)}%"></i></div><p class="small">${esc(G.progress(Math.min(done.length, total), total))}</p>
+    ${next ? `<div class="next-w"><small>${esc(G.today)}</small><b>${esc(G.workout(next.week, next.day))}</b><div class="small">${list(next)}</div><button class="btn" data-act="workout">${esc(G.start)}</button></div>`
+      : `<p class="tip">${esc(G.allDone)}</p><button class="btn" data-act="retest">${esc(G.retest)}</button>`}
+    <details class="faq"><summary>${esc(G.title)}: ${WEEKS} × ${PER_WEEK}</summary>${[1, 2, 3, 4].map((wk) => `<div class="plan-week"><b>${esc(G.week(wk))}</b>${program.workouts.filter((w) => w.week === wk).map((w) => `<div class="plan-s"><b>${esc(T.report.session(w.day))}${done.some((x) => x.id === w.id) ? ` · ✓ ${esc(G.done)}` : ''}</b>${list(w)}</div>`).join('')}</div>`).join('')}</details>`;
+}
+
+// ---------- 8. Полный отчёт + программа (подписка активна) ----------
 function fullReport(justPaid = false) {
   if (!state.results) return landing();
+  if (!subActive()) return result();
   setState({ step: 'report' });
-  const { profile, sports, plan } = buildReport(state.results, state.quiz);
+  const { profile, sports } = buildReport(state.results, state.quiz);
+  const program = buildProgram(profile, state.quiz, state.results);
   const R = T.result, P = T.report;
-  const city = state.quiz.city && state.quiz.city !== 'other' ? state.quiz.city : null;
-  const unit = (u) => (u === 'sec' ? P.unitSec : P.unitReps);
-  screen(`${justPaid ? `<p class="tip">${esc(P.paidOk)}</p>` : ''}<span class="badge">${esc(R.badge)}</span><h1 class="rtitle">${esc(P.title)}</h1>
+  screen(`${justPaid ? `<p class="tip">${esc(P.paidOk)}</p>` : ''}
+    <div class="sub-line"><b>${esc(T.sub.active)}</b><span class="small">${esc(subLine())}</span><button class="link" data-act="manage">${esc(T.sub.manage)}</button></div>
+    ${programBlock(program)}
+    <span class="badge">${esc(R.badge)}</span><h1 class="rtitle">${esc(P.title)}</h1>
     <p class="summary">${esc(R.summary[profile.summary])}</p><p class="small muted">${esc(R.prelimNote)}</p>
     <h2 class="sec-title">${esc(R.profile)}</h2>${QUALITIES.map((q) => qRow(q, profile.qualities[q])).join('')}
     <ul class="facts">${factLines(state.results).map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
     <h2 class="sec-title">${esc(P.sportsTitle)}</h2>
     ${sports.map((s, i) => `<div class="sport"><div><span class="n">${i + 1}</span><b>${esc(P.sports[s.sport].name)}</b></div><span class="small muted">${esc(P.sports[s.sport].ex)}</span><span class="small"><b>${esc(P.why)}:</b></span><ul>${s.reasons.map((r) => `<li>${esc(P.reasons[r] || r)}</li>`).join('')}</ul></div>`).join('')}
-    <p class="small muted">${esc(P.sportsNote)}${city ? ' ' + esc(P.cityNote(city)) : ''}</p>
-    <h2 class="sec-title">${esc(P.planTitle)}</h2><p class="small muted">${esc(P.planNote)}</p>
-    ${plan.weeks.map((w) => `<div class="plan-week"><b>${esc(P.week(w.week))}</b>${w.sessions.map((s) => `<div class="plan-s"><b>${esc(P.session(s.n))}</b>${s.items.map((it) => `${esc(P.planEx[it.key])} — ${it.amount} ${esc(unit(it.unit))}`).join('<br>')}</div>`).join('')}</div>`).join('')}
-    ${plan.tips.map((t) => `<p class="tip">${esc(P[t])}</p>`).join('')}
+    <p class="small muted">${esc(P.sportsNote)}</p>
+    ${buildReport(state.results, state.quiz).plan.tips.map((t) => `<p class="tip">${esc(P[t])}</p>`).join('')}
+    ${appsBlock()}
     <h2 class="sec-title">${esc(P.cardTitle)}</h2><canvas class="sharecard" width="1080" height="1350"></canvas>
     <button class="btn" data-act="share">${esc(P.share)}</button><button class="btn line" data-act="download">${esc(P.download)}</button>
+    <button class="link center" data-act="manage">${esc(T.sub.manage)}</button>
     <button class="link center" data-act="again">${esc(R.again)}</button><a class="link center" href="privacy.html">${esc(T.common.privacy)}</a>`, {
     share: async () => {
       track('card_share');
@@ -223,7 +290,13 @@ function fullReport(justPaid = false) {
       download(blob);
     },
     download: async () => { track('card_download'); download(await new Promise((r) => cv.toBlob(r, 'image/png'))); },
-    again: () => { resetState(); track('restart'); landing(); },
+    manage: () => manageSub(),
+    workout: () => startWorkout(program),
+    retest: () => retest(),
+    app: (a) => track('app_link', { app: a.dataset.app }),
+    gift: (a) => { giftCode(a.dataset.app); track('gift_code', { app: a.dataset.app, mode: CONFIG.promoMode }); const y = window.scrollY; fullReport(); window.scrollTo(0, y); },
+    'copy-code': async (a) => { try { await navigator.clipboard.writeText(a.dataset.code); } catch { /* нет доступа к буферу */ } toast(T.apps.copied); },
+    again: () => retest(),
   });
   const cv = app.querySelector('canvas.sharecard');
   drawShareCard(cv, profile, T);
@@ -231,9 +304,55 @@ function fullReport(justPaid = false) {
   if (!state.reportTracked) { track('report_shown'); setState({ reportTracked: true }); }
 }
 
+// Повторный тест: подписка и выполненные тренировки сохраняются, квиз и результаты — заново
+function retest() {
+  const keep = { sub: state.sub, paid: state.paid, workouts: state.workouts, history: [...(state.history || []), state.results ? { at: state.finishedAt, results: state.results } : null].filter(Boolean) };
+  resetState(); setState(keep); track('restart', { sub: !!keep.sub }); landing();
+}
+
+// ---------- 9. Тренировка по программе ----------
+function startWorkout(program) {
+  const w = nextWorkout(program, state.workouts || []);
+  if (!w) return fullReport();
+  track('workout_start', { id: w.id });
+  app.onclick = null;
+  startStage({ list: w.items, mode: 'workout', exit: fullReport, done: (results) => {
+    const rec = { id: w.id, at: Date.now(), done: results.map((r) => ({ key: r.key, done: r.done, target: r.target, skipped: !!r.skipped })) };
+    setState({ workouts: [...(state.workouts || []), rec] });
+    track('workout_done', { id: w.id, done: rec.done.map((r) => `${r.key}:${r.skipped ? 'skip' : r.done}`).join(',') });
+    const G = T.program;
+    screen(`<div class="grow"></div><h1 class="rtitle center">${esc(G.resultTitle)}</h1><p class="center">${esc(G.resultLead)}</p>
+      <ul class="facts">${rec.done.map((r) => `<li>${esc(T.ex[r.key].name)}: ${r.skipped ? esc(T.result.facts.skipped('').replace(/^: /, '')) : `${r.done} / ${r.target}`}</li>`).join('')}</ul>
+      <div class="grow"></div><button class="btn" data-act="back">${esc(G.toProgram)}</button>`, { back: () => fullReport() });
+  } });
+}
+
+// ---------- 10. Моя подписка ----------
+function manageSub(confirm = false) {
+  const S = T.sub, sub = state.sub;
+  if (!sub) return result();
+  setState({ step: 'manage' });
+  const row = (k, v) => `<div class="rowline"><span class="muted">${esc(k)}</span><b>${esc(v)}</b></div>`;
+  screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button></div><h1 class="rtitle">${esc(S.manageTitle)}</h1>
+    <div class="box">${row(S.status, sub.status === 'active' ? S.statusActive : S.statusCancelled)}${row(S.started, fmtDate(sub.startedAt))}${row(S.paidUntil, fmtDate(sub.paidUntil))}${sub.status === 'active' ? row(S.price, S.perPeriod(uah(SUB.regularUah), SUB.periodDays)) : ''}</div>
+    <p class="small">${esc(subLine())}</p>${sub.test ? `<p class="small" style="color:#b45309;font-weight:600">${esc(S.testNote)}</p>` : ''}
+    <div class="grow"></div>
+    ${sub.status === 'active' ? (confirm ? `<p><b>${esc(S.cancelAsk)}</b></p><button class="btn" data-act="cancel-yes">${esc(S.cancelYes)}</button><button class="btn ghost" data-act="cancel-no">${esc(S.cancelNo)}</button>`
+      : `<button class="btn line" data-act="cancel">${esc(S.cancel)}</button>`) : `<button class="btn" data-act="resume">${esc(S.resume)}</button>`}
+    <button class="btn ghost" data-act="back">${esc(S.back)}</button>`, {
+    back: () => fullReport(),
+    cancel: () => manageSub(true),
+    'cancel-no': () => manageSub(),
+    'cancel-yes': () => { setState({ sub: { ...state.sub, status: 'cancelled', cancelledAt: Date.now() } }); track('sub_cancelled', { test: !!sub.test }); toast(S.cancelDone); manageSub(); },
+    resume: () => { setState({ sub: { ...state.sub, status: 'active', cancelledAt: null } }); track('sub_resumed'); toast(S.resumeDone); manageSub(); },
+  });
+}
+
 // ---------- Запуск ----------
 function boot() {
   initDebug({ paywallMode, restart: () => { resetState(); landing(); }, toast });
+  // Модель позы начинает грузиться сразу, а не на экране камеры: к моменту камеры она уже готова.
+  setTimeout(() => { preloadPose().catch(() => {}); }, 1200);
   // Перенос ответов из встроенного браузера («Відкрити в Chrome»): квиз заново не проходим.
   if (params.get('s')) {
     const ok = importHandoff(params.get('s'));
@@ -249,8 +368,7 @@ function boot() {
     screen(`<div class="center" style="padding:48px 0"><h2>${esc(T.paywall.checking)}</h2></div>`);
     payment.verify(orderId).then((ok) => {
       if (ok && state.results) {
-        setState({ paid: true, paidAt: Date.now(), orderId });
-        track('paid', { provider: payment.name, amount: CONFIG.price.uah, test: !!payment.isTest });
+        startSub(orderId);
         return fullReport(true);
       }
       track('pay_cancelled', { provider: payment.name });
@@ -261,8 +379,7 @@ function boot() {
   if (ret.status) {
     cleanUrl();
     if (ret.status === 'paid' && state.orderId && ret.orderId === state.orderId && state.results) {
-      setState({ paid: true, paidAt: Date.now() });
-      track('paid', { provider: payment.name, amount: CONFIG.price.uah, test: !!payment.isTest });
+      startSub(state.orderId);
       return fullReport(true);
     }
     track('pay_cancelled', { provider: payment.name });
@@ -270,10 +387,9 @@ function boot() {
   }
   track('open', { ref: document.referrer ? new URL(document.referrer).hostname : '', utm: params.get('utm_source') || '' });
   // Продолжаем с места остановки (обновление страницы, возврат из другого приложения)
-  if (state.paid && state.results) return fullReport();
-  if (state.results && ['calc', 'result', 'report'].includes(state.step)) return result();
+  if (subActive() && state.results) return state.step === 'manage' ? manageSub() : fullReport();
+  if (state.results && ['calc', 'result', 'report', 'manage'].includes(state.step)) return result();
   if (state.step === 'prep' && state.quiz.age) return prep();
-  if (state.step === 'contact') return contact();
   if (state.step === 'quiz') return quiz(Math.min(state.quizIndex || 0, QUIZ.length - 1));
   landing();
 }
