@@ -4,7 +4,7 @@
 export default {
   meta: { title: 'A 3-minute test that shows your child’s strengths', lang: 'en' },
 
-  common: { offer: 'Terms', refund: 'Refunds', contacts: 'Contacts', next: 'Next', back: 'Back', skip: 'Skip', retry: 'Try again', close: 'Close', privacy: 'Privacy policy' },
+  common: { pricing: 'Pricing', offer: 'Terms', refund: 'Refunds', contacts: 'Contacts', next: 'Next', back: 'Back', skip: 'Skip', retry: 'Try again', close: 'Close', privacy: 'Privacy policy' },
 
   landing: {
     title: 'Discover your child’s strengths in 3 minutes',

@@ -48,7 +48,7 @@ check('пороги уровней', levelOf(0.75) === 3 && levelOf(0.5) === 2 &
 // Запрещённые слова и цена: в строках интерфейса и html
 // «талант» разрешён владельцем 25.11 (крючок теста). «free/gratis» — только в контексте промокодов не используем на странице.
 const banned = /безкоштовн|безоплатн|бесплатн/i;
-const files = ['js/i18n/uk.js', 'index.html', 'privacy.html', 'pay-test.html', 'privacy-en.html', 'privacy-de.html', 'oferta.html', 'povernennya.html', 'kontakty.html', 'terms-en.html', 'refund-en.html', 'contact-en.html', 'agb-de.html', 'refund-de.html', 'impressum-de.html'].filter((f) => fs.existsSync(f));
+const files = ['js/i18n/uk.js', 'index.html', 'privacy.html', 'pay-test.html', 'privacy-en.html', 'privacy-de.html', 'oferta.html', 'povernennya.html', 'kontakty.html', 'terms-en.html', 'refund-en.html', 'contact-en.html', 'agb-de.html', 'refund-de.html', 'impressum-de.html', 'pricing-en.html', 'pricing-de.html', 'ciny.html'].filter((f) => fs.existsSync(f));
 for (const f of files) {
   const txt = fs.readFileSync(f, 'utf8').split('\n').filter((l) => !l.trim().startsWith('//')).join('\n');
   const m = txt.match(banned);
@@ -58,7 +58,7 @@ for (const f of files) {
 const uk = (await import('../js/i18n/uk.js')).default;
 const priceWords = /грн|оплат|платіж|\$|(^|[^а-яіїєґ])цін|коштує|купити/i;
 const flat = (o, p = '') => Object.entries(o).flatMap(([k, v]) => typeof v === 'function' ? [[p + k, String(v(1, 2, 3))]] : typeof v === 'object' && v ? flat(v, p + k + '.') : [[p + k, String(v)]]);
-const early = flat(uk).filter(([k]) => !/^(paywall|payTest|sub|report\.paidOk)/.test(k)).filter(([, v]) => priceWords.test(v));
+const early = flat(uk).filter(([k]) => !/^(paywall|payTest|sub|report\.paidOk|common\.pricing)/.test(k)).filter(([, v]) => priceWords.test(v));
 check('до экрана результата нет слов о цене и оплате', early.length === 0, early);
 // Все языки: одинаковые ключи (en — эталон), функции те же
 const en = (await import('../js/i18n/en.js')).default, de = (await import('../js/i18n/de.js')).default;

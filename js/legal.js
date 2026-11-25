@@ -6,7 +6,10 @@ const en = document.documentElement.lang !== 'uk';
 const val = { name: en ? S.nameEn : S.name, address: en ? S.addressEn : S.address, rnokpp: S.rnokpp, email: S.email, phone: S.phone, edr: S.edrRecord,
   first: `${P.first} грн`, regular: `${P.regular} грн`, days: String(D),
   usd: `$${U.first} → $${U.regular}`, eur: `${E.first} € → ${E.regular} €`,
+  usdFirst: `$${U.first}`, usdRegular: `$${U.regular}`, eurFirst: `${E.first} €`, eurRegular: `${E.regular} €`,
 };
+// Абзацы про Paddle (EN/DE) показываются, только когда владелец решит подавать заявку в Paddle
+if (CONFIG.paddle) document.querySelectorAll('[data-paddle]').forEach((el) => { el.hidden = false; });
 document.querySelectorAll('[data-s]').forEach((el) => {
   const v = val[el.dataset.s];
   el.textContent = v || (en ? '—' : 'уточнюється');

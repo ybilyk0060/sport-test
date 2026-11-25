@@ -27,8 +27,8 @@ const QUIZ = ['age', 'now', 'likes', 'temper', 'goal', 'screen'];
 const SUB = CONFIG.subscription;
 const privacyUrl = LANG === 'uk' ? 'privacy.html' : `privacy-${LANG}.html`;
 // Юридические ссылки: рядом с кнопкой оплаты и внизу страниц
-const LEGAL = { uk: ['oferta.html', 'povernennya.html', 'kontakty.html'], en: ['terms-en.html', 'refund-en.html', 'contact-en.html'], de: ['agb-de.html', 'refund-de.html', 'impressum-de.html'] }[LANG] || ['terms-en.html', 'refund-en.html', 'contact-en.html'];
-const legalLinks = () => `<nav class="legal-links"><a href="${LEGAL[0]}">${esc(T.common.offer)}</a><a href="${LEGAL[1]}">${esc(T.common.refund)}</a><a href="${privacyUrl}">${esc(T.common.privacy)}</a><a href="${LEGAL[2]}">${esc(T.common.contacts)}</a></nav>`;
+const LEGAL = { uk: ['oferta.html', 'povernennya.html', 'kontakty.html', 'ciny.html'], en: ['terms-en.html', 'refund-en.html', 'contact-en.html', 'pricing-en.html'], de: ['agb-de.html', 'refund-de.html', 'impressum-de.html', 'pricing-de.html'] }[LANG] || ['terms-en.html', 'refund-en.html', 'contact-en.html', 'pricing-en.html'];
+const legalLinks = () => `<nav class="legal-links"><a href="${LEGAL[3]}">${esc(T.common.pricing)}</a><a href="${LEGAL[0]}">${esc(T.common.offer)}</a><a href="${LEGAL[1]}">${esc(T.common.refund)}</a><a href="${privacyUrl}">${esc(T.common.privacy)}</a><a href="${LEGAL[2]}">${esc(T.common.contacts)}</a></nav>`;
 const DAY = 86400000;
 
 document.title = T.meta.title;
