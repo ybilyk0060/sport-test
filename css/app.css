@@ -328,3 +328,20 @@ details.sec > * + * { margin-top: 10px; }
 .demo.n4 .f { animation-name: demo4; animation-duration: 2.8s; }
 @keyframes demo3 { 0% { opacity: 1; } 33.3% { opacity: 0; } 100% { opacity: 0; } }
 @keyframes demo4 { 0% { opacity: 1; } 25% { opacity: 0; } 100% { opacity: 0; } }
+
+/* Карточка упражнения целиком на экране без прокрутки (Юрий 25.11, iPhone Safari) */
+.sheet { gap: 8px; padding-top: 14px; max-height: 96dvh; }
+.sheet .tag { font-size: 13px; padding: 4px 10px; }
+.sheet h2 { font-size: 19px; line-height: 1.2; }
+.sheet .panda, .sheet .demo { max-height: 26dvh; }
+.sheet .panda { aspect-ratio: auto; height: 26dvh; }
+.sheet .demo { padding: 4px; }
+.sheet .demo svg { width: auto; height: min(24dvh, 200px); }
+.sheet > p { font-size: 15px; line-height: 1.35; margin: 0; }
+.sheet .note { font-size: 14px; }
+.sheet .raise { padding: 6px 10px; font-size: 14px; }
+.sheet .raise svg { width: 44px; height: 44px; }
+.sheet .btn { min-height: 50px; }
+.sheet .btn.ghost { min-height: 36px; font-size: 15px; }
+@media (max-height: 700px) { .sheet .panda { height: 20dvh; } .sheet .demo svg { height: 18dvh; } .sheet > p.small { display: none; } }
+.sheet .tags { display: flex; flex-wrap: wrap; gap: 6px; } .sheet .tags .tag { margin: 0; }
