@@ -38,7 +38,7 @@ export function buildProgram(profile, quiz, results) {
   const measured = QUALITIES.filter((q) => profile && profile.qualities[q] && profile.qualities[q].level > 0);
   const weakest = measured.length ? measured.reduce((a, b) => (profile.qualities[b].score < profile.qualities[a].score ? b : a)) : null;
   const extra = weakest && FOR_QUALITY[weakest] && !base.includes(FOR_QUALITY[weakest]) ? FOR_QUALITY[weakest] : Object.keys(DOSE).find((k) => !base.includes(k));
-  const group = CONFIG.ageGroups[(quiz && quiz.age) || '7-9'] || CONFIG.ageGroups['7-9'];
+  const group = CONFIG.ageGroups[(quiz && quiz.age) || CONFIG.defaultAge] || CONFIG.ageGroups[CONFIG.defaultAge];
   const testTarget = Object.fromEntries(group.plan.map((p) => [p.key, p]));
   const did = Object.fromEntries((results || []).filter((r) => !r.skipped).map((r) => [r.key, Math.floor(r.done)]));
 

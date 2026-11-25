@@ -3,8 +3,12 @@
 import en from './en.js';
 import de from './de.js';
 import uk from './uk.js';
+import { CONFIG } from '../config.js';
 
-export const LOCALES = { en, de, uk };
+const ALL = { en, de, uk };
+// Только включённые в CONFIG.languages; первый в списке — язык по умолчанию
+export const LOCALES = Object.fromEntries((CONFIG.languages || ['en']).map((k) => [k, ALL[k]]).filter(([, v]) => v));
+const FIRST = Object.keys(LOCALES)[0] || 'en';
 function pick() {
   let q = null;
   try { q = new URLSearchParams(location.search).get('lang'); } catch { /* без адреса — тесты */ }
@@ -13,11 +17,11 @@ function pick() {
   const langs = (typeof navigator !== 'undefined' && (navigator.languages || [navigator.language])) || [];
   for (const l of langs) {
     const c = String(l || '').slice(0, 2).toLowerCase();
-    if (c === 'uk' || c === 'ru') return 'uk'; // русскоязычные из Украины получают украинский; русской версии нет
-    if (c === 'de') return 'de';
-    if (c === 'en') return 'en';
+    if ((c === 'uk' || c === 'ru') && LOCALES.uk) return 'uk'; // русскоязычные из Украины получают украинский; русской версии нет
+    if (c === 'de' && LOCALES.de) return 'de';
+    if (c === 'en' && LOCALES.en) return 'en';
   }
-  return 'en';
+  return FIRST;
 }
 export const LANG = pick();
-export const T = LOCALES[LANG];
+export const T = LOCALES[LANG] || ALL.en;

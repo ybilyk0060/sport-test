@@ -8,15 +8,16 @@ import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js';
 import { preloadPose, poseStatus } from './pose.js';
 import { unlockAudio, preloadClips, say, stopVoice, exists } from './audio.js';
 import { framingCheck, frameLoop, createRun } from './session.js';
+import { createRaiseHand } from './gesture.js';
 
 const env = detectEnv();
 const $ = (sel, root = document) => root.querySelector(sel);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-let root, video, canvas, hud, stopLoop = null, facing = 'environment', alive = false, onDone = null, onExit = null, customList = null;
+let root, video, canvas, hud, stopLoop = null, facing = 'user', alive = false, onDone = null, onExit = null, customList = null;
 
-const plan = () => customList || CONFIG.ageGroups[state.quiz.age || '7-9'].plan;
+const plan = () => customList || (CONFIG.ageGroups[state.quiz.age] || CONFIG.ageGroups[CONFIG.defaultAge]).plan;
 const exName = (k) => T.ex[k].name;
 
 function mount() {
@@ -143,20 +144,41 @@ function introSheet(p, i, n, btnHtml) {
     <p>${esc(tx.how)}</p>${tx.pandaNote ? `<p class="small" style="opacity:.8">${esc(tx.pandaNote)}</p>` : ''}<p class="note">↻ ${esc(note)}</p>${btnHtml}</div>`;
 }
 
-// Короткое видео с пандой и голос студии перед упражнением
+// Короткое видео с пандой и голос студии перед упражнением.
+// Дальше — поднятой рукой (держать 1,5 с), как во всех приложениях Kidsney, или кнопкой. Подходить к телефону не нужно.
+const HAND_R = 34, HAND_C = 2 * Math.PI * HAND_R;
 function intro(p, i, n) {
   return new Promise((resolve) => {
-    hud.innerHTML = introSheet(p, i, n, `<button class="btn" data-act="go">${esc(T.cam.go)}</button><button class="btn ghost" data-act="skip-ex">${esc(T.cam.skipEx)}</button>`);
+    const handHtml = `<div class="raise"><svg viewBox="0 0 80 80" aria-hidden="true"><circle class="r-bg" cx="40" cy="40" r="${HAND_R}"/><circle class="r-fg" data-el="ring" cx="40" cy="40" r="${HAND_R}" stroke-dasharray="${HAND_C}" stroke-dashoffset="${HAND_C}"/><text x="40" y="52" text-anchor="middle" font-size="34">✋</text></svg><span>${esc(T.cam.raiseHand)}</span></div>`;
+    hud.innerHTML = introSheet(p, i, n, `${handHtml}<button class="btn" data-act="go">${esc(T.cam.go)}</button><button class="btn ghost" data-act="skip-ex">${esc(T.cam.skipEx)}</button>`);
     const ex = CONFIG.exercises[p.key];
-    drawSkeleton(null);
-    preloadClips([...Object.keys(T.hints).map((h) => 'hint_' + h), ...Object.keys(T.hints), ...(ex.coach ? [1, 2].map((n) => ex.coach + n) : [])]);
+    preloadClips([...Object.keys(T.hints).map((h) => 'hint_' + h), ...Object.keys(T.hints), ...(ex.coach ? [1, 2].map((n) => ex.coach + n) : []), 'ui_raise_hand']);
     say(ex.intro);
     const pv = $('video.panda', hud); pv.play().catch(() => {});
     pv.onerror = () => { pv.style.display = 'none'; }; // нет сети до видео — остаются текст и голос
+    const ring = $('[data-el=ring]', hud);
+    const gesture = createRaiseHand();
+    // Голос «Підніми руку»: после инструкции, потом напоминания (как в Kidsney: 20 с, затем каждые 15 с, не больше 3 раз)
+    let reminders = 0;
+    const remind = () => { if (ended) return; say('ui_raise_hand', { interrupt: false }); if (++reminders < 3) remindTimer = setTimeout(remind, 15000); };
+    let remindTimer = setTimeout(remind, 7000);
     let ended = false;
-    const end = (v) => { if (ended) return; ended = true; clearTimeout(timer); resolve(v); };
-    const timer = setTimeout(() => end('go'), 12000); // руки заняты телефоном — стартуем сами
-    hud.onclick = (e) => { const a = e.target.closest('[data-act]'); if (!a) return; if (a.dataset.act === 'go') end('go'); if (a.dataset.act === 'skip-ex') end('skip'); };
+    const end = (v, how) => {
+      if (ended) return; ended = true; clearTimeout(remindTimer);
+      if (stopLoop) { stopLoop(); stopLoop = null; }
+      track('exercise_go', { key: p.key, how });
+      resolve(v);
+    };
+    hud.onclick = (e) => { const a = e.target.closest('[data-act]'); if (!a) return; if (a.dataset.act === 'go') end('go', 'button'); if (a.dataset.act === 'skip-ex') end('skip', 'button'); };
+    // Камера живая и под карточкой: распознаём позу только ради жеста
+    if (stopLoop) { stopLoop(); stopLoop = null; }
+    stopLoop = frameLoop(video, (lm) => {
+      drawSkeleton(lm || false);
+      const r = gesture.frame(lm, performance.now());
+      ring.style.strokeDashoffset = String(HAND_C * (1 - r.progress));
+      ring.parentNode.parentNode.classList.toggle('on', r.progress > 0);
+      if (r.fired) end('go', 'hand');
+    });
   });
 }
 
@@ -202,7 +224,7 @@ async function liveExercise(p, i, n) {
   return new Promise((resolve) => {
     let ui, hintTimer = 0, lostSince = null;
     const run = createRun({
-      key: p.key, target: p.target, capSec: p.capSec, ageGroup: state.quiz.age || '7-9',
+      key: p.key, target: p.target, capSec: p.capSec, ageGroup: state.quiz.age || CONFIG.defaultAge,
       aspect: video.videoWidth && video.videoHeight ? video.videoWidth / video.videoHeight : null,
       clock: () => performance.now(),
       on: {
@@ -338,7 +360,7 @@ function fileExercise(p, i, n) {
       } catch { return fail(); }
       const dur = Number.isFinite(video.duration) ? video.duration : CONFIG.fallbackMaxSec;
       const run = createRun({
-        key: p.key, target: p.target, capSec: Math.min(CONFIG.fallbackMaxSec, dur + 1), ageGroup: state.quiz.age || '7-9',
+        key: p.key, target: p.target, capSec: Math.min(CONFIG.fallbackMaxSec, dur + 1), ageGroup: state.quiz.age || CONFIG.defaultAge,
         aspect: video.videoWidth / video.videoHeight, clock: () => 1000 + video.currentTime * 1000,
         on: {
           count: (c) => { num.textContent = c; },

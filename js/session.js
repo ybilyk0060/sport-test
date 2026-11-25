@@ -52,7 +52,7 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
   const isSeconds = spec.goal === 'seconds';
   const engine = new SpecEngine(spec);
   const an = new ExerciseAnalyzer(engine, isSeconds ? 0 : target, spec.gates?.minVisibility ?? 0.5, isSeconds ? target : 0);
-  const age = (CONFIG.ageGroups[ageGroup] || CONFIG.ageGroups['7-9']).engineAge;
+  const age = (CONFIG.ageGroups[ageGroup] || CONFIG.ageGroups[CONFIG.defaultAge]).engineAge;
   an.setCalibration(calibrationForAge(ex.maxEngineAge ? Math.min(age, ex.maxEngineAge) : age));
   if (aspect) an.setFrameAspect(aspect);
   const smoother = new PoseSmoother();

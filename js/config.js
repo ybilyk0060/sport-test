@@ -1,6 +1,10 @@
 // ЕДИНЫЕ НАСТРОЙКИ. Всё, что владелец может захотеть поменять без программиста, — здесь.
 
 export const CONFIG = {
+  // --- Языки ---
+  // Видимые языки сайта. Владелец 25.11: пока только украинский, en/de тестируем позже (тексты готовы).
+  languages: ['uk'],
+
   // --- Пейвол ---
   // 'teaser' — общий итог и самое сильное качество открыты, остальное размыто. 'hard' — всё закрыто. Проверка: ?paywall=hard
   paywallMode: 'teaser',
@@ -50,8 +54,8 @@ export const CONFIG = {
   // Статус 25.11: Zoo Google Play — опубликовано; Zoo App Store — на ревью; Chill Move App Store — одобрено, ждёт выпуска владельцем;
   // Chill Move Google Play — на проверке. Как выйдут — поставить live: true.
   apps: {
-    zoo: { ages: [4, 6], ios: { url: 'https://apps.apple.com/app/id6835778169', live: false }, android: { url: 'https://play.google.com/store/apps/details?id=tech.kidsney.zoo', live: true } },
-    chillmove: { ages: [7, 15], ios: { url: 'https://apps.apple.com/app/id6835860395', live: false }, android: { url: 'https://play.google.com/store/apps/details?id=com.chillmove.app', live: false } },
+    zoo: { ages: [3, 5], ios: { url: 'https://apps.apple.com/app/id6835778169', live: false }, android: { url: 'https://play.google.com/store/apps/details?id=tech.kidsney.zoo', live: true } },
+    chillmove: { ages: [6, 15], ios: { url: 'https://apps.apple.com/app/id6835860395', live: false }, android: { url: 'https://play.google.com/store/apps/details?id=com.chillmove.app', live: false } },
   },
   // Подарок подписчику: месяц бесплатно в этих приложениях по промокоду.
   // Коды настоящие только из стора: App Store Offer Codes (подписки zoo_monthly / family_monthly) и промокоды Google Play.
@@ -63,28 +67,28 @@ export const CONFIG = {
   // target — задание (повторы или секунды), capSec — предел времени. Это параметры ЗАДАНИЯ, а не возрастные нормы.
   // engineAge — возраст для калибровки движка студии (≤7 «young», 8–10 «mid», 11+ «standard»).
   ageGroups: {
-    '4-6': { engineAge: 5, plan: [
-      { key: 'jumping_jack', target: 6, capSec: 20 },
-      { key: 'squats', target: 5, capSec: 25 },
-      { key: 'high_knees', target: 8, capSec: 20 },
-      { key: 'good_morning', target: 5, capSec: 25 },
-      { key: 'shoulder_taps', target: 6, capSec: 25 },
+    '3-5': { engineAge: 4, plan: [
+      { key: 'jumping_jack', target: 5, capSec: 20 },
+      { key: 'squats', target: 4, capSec: 25 },
+      { key: 'high_knees', target: 6, capSec: 20 },
+      { key: 'good_morning', target: 4, capSec: 25 },
+      { key: 'shoulder_taps', target: 4, capSec: 25 },
     ] },
-    '7-9': { engineAge: 8, plan: [
+    '6-8': { engineAge: 7, plan: [
+      { key: 'jumping_jack', target: 8, capSec: 25 },
+      { key: 'squats', target: 6, capSec: 25 },
+      { key: 'high_knees', target: 8, capSec: 25 },
+      { key: 'good_morning', target: 5, capSec: 25 },
+      { key: 'shoulder_taps', target: 8, capSec: 30 },
+    ] },
+    '9-11': { engineAge: 10, plan: [
       { key: 'jumping_jack', target: 10, capSec: 25 },
       { key: 'squats', target: 8, capSec: 30 },
       { key: 'high_knees', target: 10, capSec: 25 },
       { key: 'good_morning', target: 6, capSec: 25 },
       { key: 'shoulder_taps', target: 10, capSec: 30 },
     ] },
-    '10-12': { engineAge: 11, plan: [
-      { key: 'jumping_jack', target: 12, capSec: 25 },
-      { key: 'squats', target: 10, capSec: 30 },
-      { key: 'high_knees', target: 12, capSec: 25 },
-      { key: 'good_morning', target: 8, capSec: 30 },
-      { key: 'shoulder_taps', target: 12, capSec: 30 },
-    ] },
-    '13-15': { engineAge: 14, plan: [
+    '12-15': { engineAge: 13, plan: [
       { key: 'jumping_jack', target: 15, capSec: 30 },
       { key: 'squats', target: 12, capSec: 30 },
       { key: 'high_knees', target: 15, capSec: 30 },
@@ -92,6 +96,7 @@ export const CONFIG = {
       { key: 'shoulder_taps', target: 16, capSec: 30 },
     ] },
   },
+  defaultAge: '6-8',
 
   // Медиа, спека и голос упражнений (из каталога студии; голос — Achird, js/voice-map.js)
   // spec — ключ в js/engine/specs.js; intro — клип-инструкция; coach — префикс клипов похвалы (каждый 5-й повтор).

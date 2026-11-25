@@ -5,6 +5,7 @@ import fs from 'fs'; import crypto from 'crypto';
 const BASE = 'https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/';
 const LOCS = ['en', 'de', 'uk'];
 const WANT = {
+  coach: ['ui_raise_hand'],
   voice: [
     ...Array.from({ length: 30 }, (_, i) => `count_${i + 1}`),
     'session_get_ready', 'session_start', 'session_finished', 'session_time_up', 'session_last_one', 'session_halfway', 'session_camera_lost',

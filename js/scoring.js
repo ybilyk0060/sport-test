@@ -103,8 +103,8 @@ export const QUIZ_RULES = {
     result: { athletics: 1, gymnastics: 1, racket: 1, swimming: 1 },
   },
 };
-// Возраст 4–6: приоритет направлениям с разносторонней базой
-export const AGE_RULES = { '4-6': { gymnastics: 1, dance: 1, swimming: 1 } };
+// Возраст 3–5: приоритет направлениям с разносторонней базой
+export const AGE_RULES = { '3-5': { gymnastics: 1, dance: 1, swimming: 1 } };
 // Качество → направления. Вклад = вес × (уровень − 1) / 2: «зона роста» 0, «есть запас» — половина веса, «сильная сторона» — полный вес.
 // Желание ребёнка (likes, до 4 баллов) весит больше любого одного качества из теста (до 2 баллов).
 export const QUALITY_RULES = {

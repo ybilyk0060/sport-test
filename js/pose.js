@@ -31,6 +31,9 @@ async function load() {
     fileset = await vision.FilesetResolver.forVisionTasks(abs(CONFIG.wasmPath));
     try { landmarker = await create('GPU'); poseStatus.delegate = 'GPU'; }
     catch (e) { landmarker = await create('CPU'); poseStatus.delegate = 'CPU'; }
+    // Прогрев: первый кадр на GPU компилирует шейдеры (на iPhone — секунды). Делаем это заранее, на пустом холсте,
+    // пока родитель отвечает на вопросы, а не в момент, когда ребёнок уже стоит перед камерой.
+    try { const c = document.createElement('canvas'); c.width = 64; c.height = 64; c.getContext('2d').fillRect(0, 0, 64, 64); landmarker.detectForVideo(c, (lastTs = performance.now())); } catch { /* не критично */ }
     poseStatus.state = 'ready';
     poseStatus.loadMs = Math.round(performance.now() - t0);
   } catch (e) {

@@ -16,7 +16,7 @@ export default {
   quiz: {
     progress: (i, n) => `Frage ${i} von ${n}`,
     q: {
-      age: { title: 'Wie alt ist Ihr Kind?', options: { '4-6': '4–6 Jahre', '7-9': '7–9 Jahre', '10-12': '10–12 Jahre', '13-15': '13–15 Jahre' } },
+      age: { title: 'Wie alt ist Ihr Kind?', options: { '3-5': '3–5 Jahre', '6-8': '6–8 Jahre', '9-11': '9–11 Jahre', '12-15': '12–15 Jahre' } },
       now: { title: 'Was macht Ihr Kind zurzeit?', options: { none: 'Noch nichts', section: 'Geht in einen Sportverein', yard: 'Spielt draußen, Bewegungsspiele' } },
       likes: { title: 'Was macht Ihrem Kind am meisten Spaß?', options: { team: 'Mannschaft und Ball', solo: 'Lieber für sich allein', music: 'Musik und Tanz', fight: 'Ringen und Kraft', climb: 'Klettern und Springen' } },
       temper: { title: 'Wie ist Ihr Kind vom Temperament?', options: { active: 'Sehr aktiv', calm: 'Ruhig', mixed: 'Mal so, mal so' } },
@@ -53,6 +53,7 @@ export default {
     exOf: (i, n) => `Übung ${i} von ${n}`,
     watch: 'Schau, wie Panda es macht',
     go: 'Verstanden, los geht’s',
+    raiseHand: 'Hand heben und halten — wir starten ohne Tippen',
     sideNote: 'Seitlich zur Kamera stellen',
     frontNote: 'Mit dem Gesicht zur Kamera stellen',
     floorNote: 'Übung am Boden: Handy tiefer stellen',
@@ -277,7 +278,7 @@ export default {
 
   report: {
     title: 'Vollständiger Bericht',
-    paidOk: 'Danke! Ihr Abo ist aktiv — Bericht und Programm sind freigeschaltet.',
+    paidOk: 'Danke! Ihr Abo ist aktiv.',
     sportsTitle: 'Drei Sportarten für den Start',
     sportsNote: 'Das sind Startpunkte, kein Urteil. Der beste Sport ist der, zu dem Ihr Kind gerne geht. Probieren Sie in jedem ein Probetraining.',
     why: 'Warum',
@@ -290,6 +291,7 @@ export default {
     screenTip: 'Bewegungspause: Nach jeder Stunde am Handy oder Tablet 2 Minuten beliebige Bewegung.',
     startTip: 'Ihr Kind macht noch keinen Sport — starten Sie mit zwei Einheiten pro Woche und nehmen Sie eine dritte dazu, wenn es zur Gewohnheit wird.',
     sectionTip: 'Ihr Kind ist schon im Verein — zeigen Sie dieses Profil dem Trainer und besprechen Sie, was dazukommen kann.',
+    resultsTitle: 'Übungsergebnisse',
     cardTitle: 'Karte für den Messenger',
     share: 'Karte senden',
     download: 'Karte speichern',
@@ -316,7 +318,7 @@ export default {
       'goal.discipline': 'Ihr Ziel: Disziplin',
       'goal.confidence': 'Ihr Ziel: Selbstvertrauen',
       'goal.result': 'Ihr Ziel: sportlicher Erfolg',
-      'age.young': 'mit 4–6 Jahren zählt eine breite Bewegungsbasis',
+      'age.young': 'mit 3–5 Jahren zählt eine breite Bewegungsbasis',
       'q.coordination': 'im Test zeigte sich gute Koordination',
       'q.legs': 'im Test zeigte sich gute Beinkraft',
       'q.speed': 'im Test zeigte sich gute Schnelligkeit',

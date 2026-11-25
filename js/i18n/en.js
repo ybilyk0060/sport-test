@@ -17,7 +17,7 @@ export default {
   quiz: {
     progress: (i, n) => `Question ${i} of ${n}`,
     q: {
-      age: { title: 'How old is your child?', options: { '4-6': '4–6 years', '7-9': '7–9 years', '10-12': '10–12 years', '13-15': '13–15 years' } },
+      age: { title: 'How old is your child?', options: { '3-5': '3–5 years', '6-8': '6–8 years', '9-11': '9–11 years', '12-15': '12–15 years' } },
       now: { title: 'What does your child do now?', options: { none: 'Nothing yet', section: 'Goes to a sports club', yard: 'Plays outside, active games' } },
       likes: { title: 'What does your child enjoy most?', options: { team: 'Team games and balls', solo: 'Doing things on their own', music: 'Music and dancing', fight: 'Wrestling and strength', climb: 'Climbing and jumping' } },
       temper: { title: 'What is your child’s temperament?', options: { active: 'Very active', calm: 'Calm', mixed: 'It depends' } },
@@ -54,6 +54,7 @@ export default {
     exOf: (i, n) => `Move ${i} of ${n}`,
     watch: 'Watch how Panda does it',
     go: 'Got it, let’s go',
+    raiseHand: 'Raise a hand and hold it — we’ll start without a tap',
     sideNote: 'Stand sideways to the camera',
     frontNote: 'Face the camera',
     floorNote: 'Floor move: put the phone lower',
@@ -278,7 +279,7 @@ export default {
 
   report: {
     title: 'Full report',
-    paidOk: 'Thank you! You’re subscribed — the full report and program are unlocked.',
+    paidOk: 'Thank you! You’re subscribed.',
     sportsTitle: 'Three sports to start with',
     sportsNote: 'These are starting points, not a verdict. The best sport is the one your child loves going to. Try a trial class in each.',
     why: 'Why',
@@ -291,6 +292,7 @@ export default {
     screenTip: 'Movement break: after every hour on a phone or tablet — 2 minutes of any movement.',
     startTip: 'Your child doesn’t do any sport yet — start with two sessions a week and add a third once it becomes a habit.',
     sectionTip: 'Your child already goes to a club — show this profile to the coach and discuss what to add.',
+    resultsTitle: 'Exercise results',
     cardTitle: 'Card for messengers',
     share: 'Send the card',
     download: 'Save the card',
@@ -317,7 +319,7 @@ export default {
       'goal.discipline': 'your goal is discipline',
       'goal.confidence': 'your goal is self-confidence',
       'goal.result': 'your goal is competitive results',
-      'age.young': 'at 4–6, a broad movement base matters most',
+      'age.young': 'at 3–5, a broad movement base matters most',
       'q.coordination': 'coordination showed well in the test',
       'q.legs': 'leg strength showed well in the test',
       'q.speed': 'speed showed well in the test',

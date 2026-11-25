@@ -3,7 +3,7 @@
 import { T } from './i18n/index.js';
 import { CONFIG } from './config.js';
 import { money, PRICE, CUR, fmtDate, } from './locale.js';
-import { LANG } from './i18n/index.js';
+import { LANG, LOCALES } from './i18n/index.js';
 import { state, setState, resetState, track, importHandoff, store } from './store.js';
 import { detectEnv } from './env.js';
 import { preloadPose } from './pose.js';
@@ -47,7 +47,7 @@ function landing() {
   screen(`<div class="hero"><div class="hero-art">${ART.hero}</div><h1>${esc(T.landing.title)}</h1><p class="promise">${esc(T.landing.promise)}</p></div>
     <ul class="points">${T.landing.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul><div class="grow"></div>
     <button class="btn" data-act="start">${esc(T.landing.cta)}</button><p class="small muted center">${esc(T.landing.note)}</p>
-    <div class="langs">${Object.entries({ en: 'English', de: 'Deutsch', uk: 'Українська' }).map(([k, v]) => `<a href="?lang=${k}" class="${k === LANG ? 'on' : ''}">${v}</a>`).join('')}</div>
+    ${Object.keys(LOCALES).length > 1 ? `<div class="langs">${Object.entries({ en: 'English', de: 'Deutsch', uk: 'Українська' }).map(([k, v]) => `<a href="?lang=${k}" class="${k === LANG ? 'on' : ''}">${v}</a>`).join('')}</div>` : ''}
     <a class="link center" href="${privacyUrl}">${esc(T.common.privacy)}</a>`, {
     start: () => { unlockAudio(); track('quiz_start', { lang: LANG }); preloadPose().catch(() => {}); quiz(0); },
   });
@@ -155,7 +155,6 @@ function paywallCard(note = '', profile = null) {
     ${priceBox('price-top')}
     <h3>${esc(P.inside)}</h3><ul class="checks-list">${P.insideItems.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
     <p class="small muted">${esc(P.how)}</p>
-    <h3>${esc(P.faqTitle)}</h3>${P.faq.map(([q, a]) => `<details class="faq"><summary>${esc(q)}</summary><p>${esc(a(money(first), money(PRICE.regular), SUB.periodDays))}</p></details>`).join('')}
     ${priceBox('')}
     <p class="fine">${esc(P.fine(money(first), money(PRICE.regular), SUB.periodDays))}</p>
     <button class="btn ghost" data-act="not-now">${esc(P.notNow)}</button></div>`;
@@ -236,8 +235,7 @@ function appsBlock() {
   const fits = (a) => age >= a.ages[0] && age <= a.ages[1];
   const order = Object.entries(CONFIG.apps).sort(([, a], [, b]) => fits(b) - fits(a));
   const codes = state.giftCodes || {};
-  return `<h2 class="sec-title">${esc(A.title)}</h2><p class="small muted">${esc(A.lead)}</p>
-    <div class="focus-box"><small>${esc(A.giftTitle)}</small><span class="small">${esc(A.giftLead)}</span></div>
+  return `<p class="small muted">${esc(A.giftLead)}</p>
     ${order.map(([k, a]) => {
     const links = [a.ios.live && `<a class="pill-link" href="${esc(a.ios.url)}" target="_blank" rel="noopener" data-act="app" data-app="${k}">${esc(A.ios)}</a>`, a.android.live && `<a class="pill-link" href="${esc(a.android.url)}" target="_blank" rel="noopener" data-act="app" data-app="${k}">${esc(A.android)}</a>`].filter(Boolean).join('');
     const code = codes[k];
@@ -255,37 +253,40 @@ function programBlock(program) {
   const total = program.workouts.length;
   const unit = (key) => (CONFIG.exercises[key].goal === 'seconds' ? T.report.unitSec : T.report.unitReps);
   const list = (w) => w.items.map((it) => `${esc(T.report.planEx[it.key])} — ${it.target} ${esc(unit(it.key))}`).join('<br>');
-  return `<h2 class="sec-title">${esc(G.title)}</h2><p class="small muted">${esc(G.lead(G.focus[program.focus]))}</p>
-    <div class="prog-bar"><i style="width:${Math.round((done.length / total) * 100)}%"></i></div><p class="small">${esc(G.progress(Math.min(done.length, total), total))}</p>
-    ${next ? `<div class="next-w"><small>${esc(G.today)}</small><b>${esc(G.workout(next.week, next.day))}</b><div class="small">${list(next)}</div><button class="btn" data-act="workout">${esc(G.start)}</button></div>`
-      : `<p class="tip">${esc(G.allDone)}</p><button class="btn" data-act="retest">${esc(G.retest)}</button>`}
-    <details class="faq"><summary>${esc(G.title)}: ${WEEKS} × ${PER_WEEK}</summary>${[1, 2, 3, 4].map((wk) => `<div class="plan-week"><b>${esc(G.week(wk))}</b>${program.workouts.filter((w) => w.week === wk).map((w) => `<div class="plan-s"><b>${esc(T.report.session(w.day))}${done.some((x) => x.id === w.id) ? ` · ✓ ${esc(G.done)}` : ''}</b>${list(w)}</div>`).join('')}</div>`).join('')}</details>`;
+  const card = next
+    ? `<div class="next-w"><div class="nw-top"><small>${esc(G.today)} · ${esc(G.workout(next.week, next.day))}</small><small>${esc(G.progress(Math.min(done.length, total), total))}</small></div>
+        <div class="prog-bar"><i style="width:${Math.round((done.length / total) * 100)}%"></i></div>
+        <div class="small">${list(next)}</div><button class="btn" data-act="workout">${esc(G.start)}</button></div>`
+    : `<div class="next-w"><b>${esc(G.allDone)}</b><button class="btn" data-act="retest">${esc(G.retest)}</button></div>`;
+  const plan = `<details class="sec"><summary>${esc(G.title)}</summary><p class="small muted">${esc(G.lead(G.focus[program.focus]))}</p>${[1, 2, 3, 4].map((wk) => `<div class="plan-week"><b>${esc(G.week(wk))}</b>${program.workouts.filter((w) => w.week === wk).map((w) => `<div class="plan-s"><b>${esc(T.report.session(w.day))}${done.some((x) => x.id === w.id) ? ` · ✓ ${esc(G.done)}` : ''}</b>${list(w)}</div>`).join('')}</div>`).join('')}</details>`;
+  return { card, plan };
 }
 
 // ---------- 8. Полный отчёт + программа (подписка активна) ----------
+// Сверху главное: талант и профиль одним блоком, следующая тренировка. Остальное — в сворачиваемых разделах.
 function fullReport(justPaid = false) {
   if (!state.results) return landing();
   if (!subActive()) return result();
   setState({ step: 'report' });
-  const { profile, sports } = buildReport(state.results, state.quiz);
+  const { profile, sports, plan: homePlan } = buildReport(state.results, state.quiz);
   const program = buildProgram(profile, state.quiz, state.results);
   const R = T.result, P = T.report;
+  const pb = programBlock(program);
+  const s = profile.strongest;
+  const bars = QUALITIES.map((q) => { const d = profile.qualities[q]; return `<div class="mini"><span>${esc(R.qualities[q].name)}</span><span class="dots l${d.level}"><i></i><i></i><i></i></span><em class="lvl l${d.level}">${esc(R.levels[d.level])}</em></div>`; }).join('');
+  const tip = homePlan.tips[0];
   screen(`${justPaid ? `<p class="tip">${esc(P.paidOk)}</p>` : ''}
-    <div class="sub-line"><b>${esc(T.sub.active)}</b><span class="small">${esc(subLine())}</span><button class="link" data-act="manage">${esc(T.sub.manage)}</button></div>
-    ${programBlock(program)}
-    <span class="badge">${esc(R.badge)}</span><h1 class="rtitle">${esc(P.title)}</h1>
-    <p class="summary">${esc(R.summary[profile.summary])}</p><p class="small muted">${esc(R.prelimNote)}</p>
-    <h2 class="sec-title">${esc(R.profile)}</h2>${QUALITIES.map((q) => qRow(q, profile.qualities[q])).join('')}
-    <ul class="facts">${factLines(state.results).map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
-    <h2 class="sec-title">${esc(P.sportsTitle)}</h2>
-    ${sports.map((s, i) => `<div class="sport"><div><span class="n">${i + 1}</span><b>${esc(P.sports[s.sport].name)}</b></div><span class="small muted">${esc(P.sports[s.sport].ex)}</span><span class="small"><b>${esc(P.why)}:</b></span><ul>${s.reasons.map((r) => `<li>${esc(P.reasons[r] || r)}</li>`).join('')}</ul></div>`).join('')}
-    <p class="small muted">${esc(P.sportsNote)}</p>
-    ${buildReport(state.results, state.quiz).plan.tips.map((t) => `<p class="tip">${esc(P[t])}</p>`).join('')}
-    ${appsBlock()}
-    <h2 class="sec-title">${esc(P.cardTitle)}</h2><canvas class="sharecard" width="1080" height="1350"></canvas>
-    <button class="btn" data-act="share">${esc(P.share)}</button><button class="btn line" data-act="download">${esc(P.download)}</button>
-    <button class="link center" data-act="manage">${esc(T.sub.manage)}</button>
-    <button class="link center" data-act="again">${esc(R.again)}</button><a class="link center" href="${privacyUrl}">${esc(T.common.privacy)}</a>`, {
+    <div class="rep-head">${s ? `<small>${esc(R.strongest)}</small><h1>${esc(R.qualities[s].name)}</h1>` : `<h1>${esc(R.title)}</h1>`}<p>${esc(R.summary[profile.summary])}</p>${bars}</div>
+    ${pb.card}
+    <details class="sec"><summary>${esc(P.sportsTitle)}</summary>
+      ${sports.map((x, i) => `<div class="sport-row"><span class="n">${i + 1}</span><div><b>${esc(P.sports[x.sport].name)}</b><span class="small muted">${esc(P.sports[x.sport].ex)}</span><span class="small">${x.reasons.map((r) => esc(P.reasons[r] || r)).join(' · ')}</span></div></div>`).join('')}
+      <p class="small muted">${esc(P.sportsNote)}</p>${tip ? `<p class="tip">${esc(P[tip])}</p>` : ''}</details>
+    ${pb.plan}
+    <details class="sec"><summary>${esc(P.resultsTitle)}</summary><ul class="facts">${factLines(state.results).map((f) => `<li>${esc(f)}</li>`).join('')}</ul><p class="small muted">${esc(R.prelimNote)}</p></details>
+    <details class="sec"><summary>${esc(T.apps.giftTitle)}</summary>${appsBlock()}</details>
+    <details class="sec"><summary>${esc(P.cardTitle)}</summary><canvas class="sharecard" width="1080" height="1350"></canvas>
+      <button class="btn" data-act="share">${esc(P.share)}</button><button class="btn line" data-act="download">${esc(P.download)}</button></details>
+    <div class="foot-links"><span class="small muted">${esc(subLine())}</span><button class="link" data-act="manage">${esc(T.sub.manage)}</button><button class="link" data-act="again">${esc(R.again)}</button><a class="link" href="${privacyUrl}">${esc(T.common.privacy)}</a></div>`, {
     share: async () => {
       track('card_share');
       const blob = await new Promise((r) => cv.toBlob(r, 'image/png'));
@@ -298,7 +299,7 @@ function fullReport(justPaid = false) {
     workout: () => startWorkout(program),
     retest: () => retest(),
     app: (a) => track('app_link', { app: a.dataset.app }),
-    gift: (a) => { giftCode(a.dataset.app); track('gift_code', { app: a.dataset.app, mode: CONFIG.promoMode }); const y = window.scrollY; fullReport(); window.scrollTo(0, y); },
+    gift: (a) => { giftCode(a.dataset.app); track('gift_code', { app: a.dataset.app, mode: CONFIG.promoMode }); const y = window.scrollY; fullReport(); const d = app.querySelectorAll('details.sec')[3]; if (d) d.open = true; window.scrollTo(0, y); },
     'copy-code': async (a) => { try { await navigator.clipboard.writeText(a.dataset.code); } catch { /* нет доступа к буферу */ } toast(T.apps.copied); },
     again: () => retest(),
   });
@@ -357,7 +358,7 @@ function boot() {
   initDebug({ paywallMode, restart: () => { resetState(); landing(); }, toast });
   initConsent();
   // Модель позы начинает грузиться сразу, а не на экране камеры: к моменту камеры она уже готова.
-  setTimeout(() => { preloadPose().catch(() => {}); }, 1200);
+  preloadPose().catch(() => {});
   // Перенос ответов из встроенного браузера («Відкрити в Chrome»): квиз заново не проходим.
   if (params.get('s')) {
     const ok = importHandoff(params.get('s'));
