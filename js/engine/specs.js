@@ -3,6 +3,7 @@
 // arm_circles@4, quadruped_arm_circles@1, wall_french_press@1, pushups@4 — из каталога (25.11, второй заход).
 // pushups_front — своя спека (віджимання лицом к камере). shoulder_taps_front — своя спека сайта (в Студії есть только shoulder_taps боком): см. notes внутри.
 // cross_crawl, glute_bridge, side_bend, side_leg_raise, superman_lifts, tuck_jump @1 — из каталога (25.11, третий заход: помечены в Студії для sport_test). toe_touch и windmill ещё в статусе testing — не берём.
+// crunches — из каталога Студії (25.11, заготовка нормативов).
 // Не править руками без повторной проверки tests/engine.test.mjs.
 export const SPEC_MD5 = {
  "squats": "094396b23e4dbc84449d4a135b11a998",
@@ -2288,6 +2289,208 @@ export const SPECS = {
      "right_shoulder",
      "right_hip",
      "right_knee"
+    ]
+   }
+  ]
+ },
+ "crunches": {
+  "key": "crunches",
+  "goal": "reps",
+  "gates": {
+   "sideBy": "knee",
+   "notSeenHint": "show_full_body",
+   "minVisibility": 0.5,
+   "maxInvalidFrames": 45
+  },
+  "notes": "Ported 1:1 from sitUpAlgorithm.ts (05.11). v3 (10.11): young — feet_planted / knees_bent are hints (lying_flat stays reject).",
+  "rules": [
+   {
+    "m": "thigh_tilt",
+    "id": "feet_planted",
+    "max": 80,
+    "hint": "keep_feet_planted",
+    "check": "between",
+    "scope": "keyframes",
+    "consequence": "reject",
+    "consequenceByAge": {
+     "young": "hint"
+    }
+   },
+   {
+    "m": "knee",
+    "id": "knees_bent",
+    "max": 130,
+    "hint": "bend_your_knees",
+    "check": "between",
+    "scope": "keyframes",
+    "optional": true,
+    "consequence": "reject",
+    "consequenceByAge": {
+     "young": "hint"
+    }
+   },
+   {
+    "m": "torso_tilt",
+    "id": "lying_flat",
+    "max": 40,
+    "hint": "lie_down_flat",
+    "check": "between",
+    "scope": "ends",
+    "consequence": "reject"
+   }
+  ],
+  "facing": "side",
+  "motion": {
+   "top": {
+    "all": [
+     {
+      "m": "hip_angle",
+      "max": {
+       "young": 97,
+       "standard": 90
+      }
+     }
+    ]
+   },
+   "type": "reps",
+   "drive": {
+    "m": "hip_angle",
+    "velocity": 0.09,
+    "trendFrames": 3
+   },
+   "start": {
+    "all": [
+     {
+      "m": "torso_tilt",
+      "max": 40,
+      "hint": "lie_down_flat"
+     },
+     {
+      "m": "knee",
+      "max": 130,
+      "hint": "bend_your_knees",
+      "optional": true
+     },
+     {
+      "m": "thigh_tilt",
+      "max": 80,
+      "hint": "keep_feet_planted"
+     },
+     {
+      "m": "hip_angle",
+      "min": {
+       "young": 128,
+       "standard": 135
+      },
+      "hint": "lie_down_flat"
+     }
+    ]
+   },
+   "abandon": {
+    "hint": "sit_up_higher",
+    "onlyIfReached": {
+     "m": "hip_angle",
+     "max": 112
+    }
+   },
+   "bounceHint": "lie_all_the_way_back",
+   "blockedStartHint": "lie_down_flat",
+   "startConfirmMaxAgeMs": 1500
+  },
+  "phrases": {
+   "lie_down_flat": {
+    "text": {
+     "de": "Leg dich auf den Rücken, Knie angewinkelt",
+     "en": "Lie down on your back with your knees bent",
+     "uk": "Ляж на спину, коліна зігнуті"
+    },
+    "voice": "exercise.hint.lie_down_flat"
+   },
+   "sit_up_higher": {
+    "text": {
+     "de": "Komm höher hoch — Brust Richtung Knie",
+     "en": "Sit up higher — bring your chest to your knees",
+     "uk": "Піднімайся вище — груди до колін"
+    },
+    "voice": "exercise.hint.sit_up_higher"
+   },
+   "turn_sideways": {
+    "text": {
+     "de": "Dreh dich seitlich zur Kamera",
+     "en": "Turn sideways to the camera",
+     "uk": "Повернись боком до камери"
+    },
+    "voice": "exercise.hint.turn_sideways"
+   },
+   "show_full_body": {
+    "text": {
+     "de": "Geh weiter weg, damit dein ganzer Körper im Bild ist",
+     "en": "Move back so your whole body is in the picture",
+     "uk": "Відійди далі, щоб було видно все тіло"
+    },
+    "voice": "exercise.hint.show_full_body"
+   },
+   "bend_your_knees": {
+    "text": {
+     "de": "Winkle die Knie an und lass die Füße am Boden",
+     "en": "Bend your knees and keep your feet on the floor",
+     "uk": "Зігни коліна і тримай стопи на підлозі"
+    },
+    "voice": "exercise.hint.bend_your_knees"
+   },
+   "keep_feet_planted": {
+    "text": {
+     "de": "Beide Füße bleiben am Boden",
+     "en": "Keep both feet on the floor",
+     "uk": "Тримай обидві ноги на підлозі"
+    },
+    "voice": "exercise.hint.keep_feet_planted"
+   },
+   "lie_all_the_way_back": {
+    "text": {
+     "de": "Leg dich ganz zurück, bevor du wieder hochkommst",
+     "en": "Lie all the way back down before the next one",
+     "uk": "Лягай повністю назад перед наступним разом"
+    },
+    "voice": "exercise.hint.lie_all_the_way_back"
+   }
+  },
+  "version": 3,
+  "facingHint": "turn_sideways",
+  "specVersion": 1,
+  "measurements": [
+   {
+    "id": "hip_angle",
+    "kind": "angle",
+    "points": [
+     "near_knee",
+     "near_hip",
+     "near_shoulder"
+    ]
+   },
+   {
+    "id": "torso_tilt",
+    "kind": "tilt",
+    "points": [
+     "near_shoulder",
+     "near_hip"
+    ]
+   },
+   {
+    "id": "thigh_tilt",
+    "kind": "tilt",
+    "points": [
+     "near_hip",
+     "near_knee"
+    ]
+   },
+   {
+    "id": "knee",
+    "kind": "angle",
+    "points": [
+     "near_ankle",
+     "near_knee",
+     "near_hip"
     ]
    }
   ]

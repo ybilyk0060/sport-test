@@ -1,16 +1,16 @@
 // Экран камеры: разрешение → проверка кадра → 4 упражнения. И запасной путь: разбор записи.
 
-import { T } from './i18n/index.js?v=9fb3c18-mwwdk7wm';
-import { CONFIG } from './config.js?v=9fb3c18-mwwdk7wm';
-import { state, setState, track, exportHandoff } from './store.js?v=9fb3c18-mwwdk7wm';
-import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=9fb3c18-mwwdk7wm';
-import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=9fb3c18-mwwdk7wm';
-import { preloadPose, poseStatus } from './pose.js?v=9fb3c18-mwwdk7wm';
-import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=9fb3c18-mwwdk7wm';
-import { framingCheck, frameLoop, createRun } from './session.js?v=9fb3c18-mwwdk7wm';
-import { createRaiseHand } from './gesture.js?v=9fb3c18-mwwdk7wm';
-import { recording } from './analytics.js?v=9fb3c18-mwwdk7wm';
-import { EX_QUALITY } from './scoring.js?v=9fb3c18-mwwdk7wm';
+import { T } from './i18n/index.js?v=d7c783e-mwwdw4tk';
+import { CONFIG } from './config.js?v=d7c783e-mwwdw4tk';
+import { state, setState, track, exportHandoff } from './store.js?v=d7c783e-mwwdw4tk';
+import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=d7c783e-mwwdw4tk';
+import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=d7c783e-mwwdw4tk';
+import { preloadPose, poseStatus } from './pose.js?v=d7c783e-mwwdw4tk';
+import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=d7c783e-mwwdw4tk';
+import { framingCheck, frameLoop, createRun } from './session.js?v=d7c783e-mwwdw4tk';
+import { createRaiseHand } from './gesture.js?v=d7c783e-mwwdw4tk';
+import { recording } from './analytics.js?v=d7c783e-mwwdw4tk';
+import { EX_QUALITY } from './scoring.js?v=d7c783e-mwwdw4tk';
 
 const env = detectEnv();
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -157,7 +157,7 @@ function introSheet(p, i, n, btnHtml) {
   const note = ex.wall ? T.cam.wallNote : ex.floor === 'any' ? T.cam.floorAnyNote : ex.floor === 'side' ? T.cam.floorSideNote : ex.floor ? T.cam.floorFrontNote : ex.facing === 'side' ? T.cam.sideNote : T.cam.frontNote;
   const checks = (EX_QUALITY[p.key] || []).map((q) => T.result.qualities[q].name.toLowerCase()).join(', ');
   return `<div class="sheet"><span class="tag">${esc(T.cam.exOf(i + 1, n))}</span>${checks ? `<span class="tag checks">${esc(T.cam.checks(checks))}</span>` : ''}<h2>${esc(tx.task(p.target))}</h2>
-    <video class="panda" playsinline muted loop autoplay preload="auto" poster="${CONFIG.mediaBase + ex.poster}" src="${CONFIG.mediaBase + ex.video}"></video>
+    ${ex.video ? `<video class="panda" playsinline muted loop autoplay preload="auto" poster="${CONFIG.mediaBase + ex.poster}" src="${CONFIG.mediaBase + ex.video}"></video>` : (ex.art || '')}
     <p>${esc(tx.how)}</p>${tx.pandaNote ? `<p class="small" style="opacity:.8">${esc(tx.pandaNote)}</p>` : ''}<p class="note">↻ ${esc(note)}</p>${btnHtml}</div>`;
 }
 
@@ -172,8 +172,7 @@ function intro(p, i, n) {
     preloadClips([...Object.keys(T.hints).map((h) => 'hint_' + h), ...Object.keys(T.hints), ...(ex.coach ? [1, 2].map((n) => ex.coach + n) : []), 'ui_raise_hand']);
     // «Далі!» / «Останнє!», для вправи на підлозі — «Телефон на підлогу!», затем полная инструкция (пока её нет — короткий клип студии)
     sayQueue([...(i > 0 ? [i === n - 1 ? 'intro_last' : 'intro_next'] : ['cue_great']), ...(ex.floor ? ['ui_phone_tip'] : []), exists(ex.intro) ? ex.intro : ex.introFallback]);
-    const pv = $('video.panda', hud); pv.play().catch(() => {});
-    pv.onerror = () => { pv.style.display = 'none'; }; // нет сети до видео — остаются текст и голос
+    const pv = $('video.panda', hud); if (pv) { pv.play().catch(() => {}); pv.onerror = () => { pv.style.display = 'none'; }; } // нет сети до видео — остаются текст и голос
     const ring = $('[data-el=ring]', hud);
     const gesture = createRaiseHand();
     // Голос «Підніми руку»: после инструкции, потом напоминания (как в Kidsney: 20 с, затем каждые 15 с, не больше 3 раз)
@@ -365,7 +364,7 @@ function fileExercise(p, i, n) {
       hud.innerHTML = introSheet(p, i, n, `<p>${esc(F.lead(CONFIG.fallbackClipSec))}</p>${errText ? `<p class="err">${esc(errText)}</p>` : ''}
         <label class="btn">${esc(F.pick)}<input type="file" accept="video/*" capture="environment" hidden data-el="file"></label>
         <p class="small muted center">${esc(F.privacy)}</p><button class="btn ghost" data-act="skip-ex">${esc(T.cam.skipEx)}</button>`);
-      const pv = $('video.panda', hud); pv.play().catch(() => {}); pv.onerror = () => { pv.style.display = 'none'; };
+      const pv = $('video.panda', hud); if (pv) { pv.play().catch(() => {}); pv.onerror = () => { pv.style.display = 'none'; }; }
       $('[data-el=file]', hud).onchange = (e) => { const f = e.target.files && e.target.files[0]; if (f) analyze(f); };
     };
     hud.onclick = (e) => { const a = e.target.closest('[data-act]'); if (a && a.dataset.act === 'skip-ex') { track('exercise_done', { key: p.key, skipped: true, mode: 'file' }); resolve(skipped(p)); } };

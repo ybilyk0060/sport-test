@@ -137,6 +137,10 @@ export const CONFIG = {
     wall_french_press: { spec: 'wall_french_press', facing: 'side', wall: true, goal: 'reps', video: 'eotd/wall_french_press-v1-31517c7c.mp4', poster: 'eotd/wall_french_press-v1-31517c7c.jpg', intro: 'wall_french_press_howto', coach: 'wall_french_press_coach_' },
     // Віджимання: считаются и боком (спека студии pushups@4), и лицом (своя pushups_front) — берётся больший счёт
     pushups: { spec: 'pushups', altSpec: 'pushups_front', facing: 'any', floor: 'any', goal: 'reps', video: 'studio/pushups-v4-d83d1e9c.mp4', poster: 'studio/pushups-v4-e414f5bc.jpg', intro: 'howto_pushups' },
+    // Баланс на одной ноге: своя логика сайта (js/balance.js), без видео панды — рисунок. В тест войдёт после утверждения протокола и норм.
+    balance: { custom: 'balance', facing: 'front', goal: 'seconds', art: '<div class="bal-art" aria-hidden="true">🦩</div>' },
+    // Подъёмы корпуса (спека crunches из Студії): заготовка норматива «за 30 с» — capSec задаётся в плане теста
+    crunches: { spec: 'crunches', facing: 'side', floor: 'side', goal: 'reps', video: 'studio/crunches-v3-2ac7586d.mp4', poster: 'studio/crunches-v3-f7f280fe.jpg', intro: 'howto_crunches' },
     // Новые из Студії (25.11, помечены для sport_test): пока в пуле программы подписчика, в тест не входят
     cross_crawl: { spec: 'cross_crawl', facing: 'front', goal: 'reps', video: 'eotd/cross_crawl-v1-fd54560f.mp4', poster: 'eotd/cross_crawl-v1-fd54560f.jpg', intro: 'cross_crawl_howto', coach: 'cross_crawl_coach_' },
     glute_bridge: { spec: 'glute_bridge', facing: 'side', floor: 'side', goal: 'reps', video: 'eotd/glute_bridge-v1-e141df68.mp4', poster: 'eotd/glute_bridge-v1-e141df68.jpg', intro: 'glute_bridge_howto', coach: 'glute_bridge_coach_' },

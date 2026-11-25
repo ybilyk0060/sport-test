@@ -2,10 +2,11 @@
 // Из каждого упражнения берём не только счёт: темп, ритм, глубину, симметрию, устойчивость.
 // Сохраняются только итоговые числа. Кадры и точки тела не сохраняются и не отправляются.
 
-import { SpecEngine, ExerciseAnalyzer, PoseSmoother, calibrationForAge } from './engine/kidsney-engine.js?v=9fb3c18-mwwdk7wm';
-import { SPECS } from './engine/specs.js?v=9fb3c18-mwwdk7wm';
-import { CONFIG } from './config.js?v=9fb3c18-mwwdk7wm';
-import { detectPose } from './pose.js?v=9fb3c18-mwwdk7wm';
+import { createBalanceRun } from './balance.js?v=d7c783e-mwwdw4tk';
+import { SpecEngine, ExerciseAnalyzer, PoseSmoother, calibrationForAge } from './engine/kidsney-engine.js?v=d7c783e-mwwdw4tk';
+import { SPECS } from './engine/specs.js?v=d7c783e-mwwdw4tk';
+import { CONFIG } from './config.js?v=d7c783e-mwwdw4tk';
+import { detectPose } from './pose.js?v=d7c783e-mwwdw4tk';
 
 const VIS = 0.5;
 const seen = (p) => p && p.visibility >= VIS && p.x > 0 && p.x < 1 && p.y > 0 && p.y < 1;
@@ -48,6 +49,7 @@ const pct = (a, p) => { const s = [...a].sort((x, y) => x - y); return s[Math.mi
 // Создаёт прогон упражнения. clock() — время в мс (живая камера: performance.now, запись: позиция в видео).
 export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) {
   const ex = CONFIG.exercises[key] || {};
+  if (ex.custom === 'balance') return createBalanceRun({ key, target, capSec, clock, on }); // своя логика: время удержания на одной ноге
   const spec = SPECS[ex.spec || key];
   const isSeconds = spec.goal === 'seconds';
   const engine = new SpecEngine(spec);
@@ -114,6 +116,9 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
       metrics.liftsLeft = lifts.left || 0; metrics.liftsRight = lifts.right || 0;
       metrics.cadence = done > 0 ? Math.round(((lifts.left + lifts.right) / done) * 10) / 10 : null;
     }
+    if (key === 'crunches') metrics.shallow = m.hints.sit_up_higher || 0;
+    // Остальные спеки Студії: неполные повторы — по подсказке «не дотянул» из самой спеки
+    if (metrics.shallow == null && spec.motion && spec.motion.abandon && spec.motion.abandon.hint) metrics.shallow = m.hints[spec.motion.abandon.hint] || 0;
     if (key === 'plank') {
       metrics.driftDeg = hipLine.length >= 15 ? Math.round((pct(hipLine, 0.95) - pct(hipLine, 0.05)) * 10) / 10 : null;
       metrics.broken = an.holdPhase() === 'broken';

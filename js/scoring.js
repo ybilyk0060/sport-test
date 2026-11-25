@@ -2,22 +2,22 @@
 // Чистые функции без браузера (проверяются в tests/rules.test.mjs). Тексты — по ключам из js/i18n.
 // Важно: возрастных норм нет. Все оценки — «выполнено задание / нет» и «ровно / неровно», пороги рабочие.
 
-import { CONFIG } from './config.js?v=9fb3c18-mwwdk7wm';
+import { CONFIG } from './config.js?v=d7c783e-mwwdw4tk';
 
 const clamp01 = (x) => Math.max(0, Math.min(1, x));
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);
 
-export const QUALITIES = ['coordination', 'legs', 'speed', 'arms', 'core', 'flex', 'symmetry'];
+export const QUALITIES = ['coordination', 'balance', 'legs', 'speed', 'arms', 'core', 'flex', 'symmetry'];
 // Какие качества проверяет каждое упражнение (для подписи «Перевіряємо: …» и чтобы не показывать то, что в наборе возраста не мерили)
 export const EX_QUALITY = { jumping_jack: ['coordination', 'symmetry'], squats: ['legs'], high_knees: ['speed', 'symmetry'], arm_circles: ['flex'], quadruped_arm_circles: ['core'], wall_french_press: ['arms'], pushups: ['arms', 'core'], good_morning: ['flex'], shoulder_taps: ['core', 'symmetry'],
-  cross_crawl: ['coordination'], glute_bridge: ['core'], side_bend: ['flex'], side_leg_raise: ['legs'], superman_lifts: ['core'], tuck_jump: ['legs'] };
+  cross_crawl: ['coordination'], glute_bridge: ['core'], side_bend: ['flex'], side_leg_raise: ['legs'], superman_lifts: ['core'], tuck_jump: ['legs'], balance: ['balance'], crunches: ['core'] };
 export function qualitiesOf(results) { const set = new Set((results || []).flatMap((r) => EX_QUALITY[r.key] || [])); return QUALITIES.filter((q) => set.has(q)); }
 
 // --- Показатели (каждый 0..1 или null, если не измерен) ---
 // Рабочие пороги (не нормы):
 //   RHYTHM_CV_MAX   — разброс интервалов между повторами, при котором «ритм» = 0
 //   ARM_DIFF_MAX    — разница высоты кистей в верхней точке (в длинах туловища), при которой «симметрия рук» = 0
-export const WORK = { RHYTHM_CV_MAX: 0.5, ARM_DIFF_MAX: 0.3 };
+export const WORK = { RHYTHM_CV_MAX: 0.5, ARM_DIFF_MAX: 0.3, SWAY_MAX: 0.15 }; // SWAY_MAX — покачивание таза (в длинах корпуса), при котором «ровность» = 0
 
 export function indicators(results) {
   const by = Object.fromEntries((results || []).map((r) => [r.key, r]));
@@ -51,9 +51,12 @@ export function indicators(results) {
   if (ok(wp)) { ind.wp_done = clamp01(wp.done / wp.target); ind.wp_clean = clean(wp); }
   if (ok(pu)) { ind.pu_done = clamp01(pu.done / pu.target); ind.pu_clean = clean(pu); }
   // Новые из Студії: доля выполненного задания и чистых повторов
-  for (const [k, pre] of [['cross_crawl', 'cc'], ['glute_bridge', 'gb'], ['side_bend', 'sb'], ['side_leg_raise', 'sl'], ['superman_lifts', 'sm'], ['tuck_jump', 'tj']]) {
+  for (const [k, pre] of [['cross_crawl', 'cc'], ['glute_bridge', 'gb'], ['side_bend', 'sb'], ['side_leg_raise', 'sl'], ['superman_lifts', 'sm'], ['tuck_jump', 'tj'], ['crunches', 'cr']]) {
     const r = by[k]; if (ok(r)) { ind[pre + '_done'] = clamp01(r.done / r.target); ind[pre + '_clean'] = clean(r); }
   }
+  // Баланс на одной ноге: время удержания относительно цели + насколько ровно стоит (покачивание таза)
+  const bl = by.balance;
+  if (ok(bl)) { ind.bal_hold = clamp01(bl.done / bl.target); ind.bal_sway = bl.metrics.sway == null ? null : clamp01(1 - bl.metrics.sway / WORK.SWAY_MAX); }
   if (ok(st)) {
     ind.st_done = clamp01(st.done / st.target);
     ind.st_rhythm = st.metrics.rhythmCv == null ? null : clamp01(1 - st.metrics.rhythmCv / WORK.RHYTHM_CV_MAX);
@@ -68,8 +71,9 @@ export const QUALITY_MAP = {
   legs: ['sq_done', 'sq_clean', 'sl_done', 'sl_clean', 'tj_done', 'tj_clean'],
   speed: ['hk_done', 'hk_pace'],
   arms: ['wp_done', 'wp_clean', 'pu_done', 'pu_clean'],
-  core: ['qa_done', 'qa_clean', 'pu_done', 'st_done', 'st_rhythm', 'gb_done', 'gb_clean', 'sm_done', 'sm_clean'],
+  core: ['qa_done', 'qa_clean', 'pu_done', 'st_done', 'st_rhythm', 'gb_done', 'gb_clean', 'sm_done', 'sm_clean', 'cr_done', 'cr_clean'],
   flex: ['ac_done', 'ac_clean', 'gm_done', 'gm_clean', 'sb_done', 'sb_clean'],
+  balance: ['bal_hold', 'bal_sway'],
   symmetry: ['jj_arm_sym', 'hk_side', 'st_side'],
 };
 
@@ -157,6 +161,7 @@ export const QUALITY_RULES = {
   core: { gymnastics: 2, martial: 1, swimming: 1, climbing: 1 },
   flex: { gymnastics: 2, dance: 1, martial: 1, swimming: 1 },
   arms: { climbing: 2, swimming: 1, martial: 2, racket: 1, gymnastics: 1 },
+  balance: { gymnastics: 2, dance: 1, martial: 1, climbing: 1 },
   symmetry: { gymnastics: 1, dance: 1, swimming: 1 },
 };
 
@@ -198,6 +203,7 @@ export const PLAN_EX = {
   core: ['shoulder_taps', 'squats'],
   flex: ['good_morning', 'squats'],
   arms: ['squats', 'jumping_jack'],
+  balance: ['squats', 'jumping_jack'],
   symmetry: ['shoulder_taps', 'jumping_jack'],
 };
 export const PLAN_DOSE = {

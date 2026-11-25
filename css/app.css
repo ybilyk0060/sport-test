@@ -312,3 +312,4 @@ details.sec > * + * { margin-top: 10px; }
 .points { gap: 8px; }
 .land-note { font-size: 13px; margin-top: -6px; }
 @media (max-height: 720px) { .hero-art { width: min(24vw, 96px); } .hero .promise { font-size: 16px; } .screen { gap: 12px; } }
+.bal-art { font-size: 96px; text-align: center; line-height: 1.2; }

@@ -5,8 +5,8 @@
 // Плюс одно упражнение на самое слабое качество из теста. Дозировка — от собственного результата ребёнка
 // в тесте и растёт каждую неделю на небольшой шаг. Упражнения — только 5 вправ теста (их считает камера).
 
-import { CONFIG } from './config.js?v=9fb3c18-mwwdk7wm';
-import { QUALITIES } from './scoring.js?v=9fb3c18-mwwdk7wm';
+import { CONFIG } from './config.js?v=d7c783e-mwwdw4tk';
+import { QUALITIES } from './scoring.js?v=d7c783e-mwwdw4tk';
 
 export const WEEKS = 4;
 export const PER_WEEK = 3;
@@ -21,7 +21,7 @@ export const FOCUS = {
   none: ['jumping_jack', 'squats', 'high_knees'],
 };
 // Качество → упражнение, которое его развивает
-const FOR_QUALITY = { coordination: 'jumping_jack', legs: 'squats', speed: 'high_knees', flex: 'arm_circles', core: 'ARMS', arms: 'ARMS', symmetry: 'jumping_jack' };
+const FOR_QUALITY = { coordination: 'jumping_jack', legs: 'squats', speed: 'high_knees', flex: 'arm_circles', core: 'ARMS', arms: 'ARMS', symmetry: 'jumping_jack', balance: 'squats' };
 // Шаг роста за неделю и минимум недели 1
 const DOSE = {
   jumping_jack: { min: 5, step: 2 },

@@ -1,1 +1,1 @@
-{"type":"module","private":true,"name":"sport-test","scripts":{"test":"node tests/engine.test.mjs && node tests/session.test.mjs && node tests/rules.test.mjs && node tests/gesture.test.mjs","serve":"python3 -m http.server 8080"}}
+{"type":"module","private":true,"name":"sport-test","scripts":{"test":"node tests/engine.test.mjs && node tests/session.test.mjs && node tests/rules.test.mjs && node tests/gesture.test.mjs && node tests/balance.test.mjs","serve":"python3 -m http.server 8080"}}
