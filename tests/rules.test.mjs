@@ -84,6 +84,12 @@ check('v3: асимметрия ног снижает симметрию', p3.qu
 p3 = buildReport(v3().filter((r) => r.key !== 'shoulder_taps' && r.key !== 'side_jumps_2').map((r) => r.key.startsWith('balance') ? { ...r, target: 10, done: 10 } : r), { age: '3-5' }).profile;
 check('v3 3–5: без касаний плеч, сила рук не оценивается', p3.qualities.arms.level === 0 && p3.qualities.balance.level === 3, p3.qualities);
 
+const hkRes = (l, r) => ({ key: 'high_knees', target: 15, done: 15, elapsedSec: 15, metrics: { liftsLeft: l, liftsRight: r } });
+p3 = buildReport([...v3().filter((r) => !r.key.startsWith('side_jumps')), hkRes(18, 17)], { age: '9-11' }).profile;
+check('v3: бег на месте 35 подъёмов колен в 9–11 — «есть запас»', p3.qualities.speed.level === 2, p3.qualities.speed);
+p3 = buildReport([...v3().filter((r) => !r.key.startsWith('side_jumps')), hkRes(22, 20)], { age: '6-8' }).profile;
+check('v3: 42 подъёма в 6–8 — сильная сторона', p3.qualities.speed.level === 3, p3.qualities.speed);
+
 // Программа подписчика: 4 недели × 3 тренировки, акцент по интересу, рост нагрузки
 const { buildProgram, nextWorkout } = await import('../js/program.js');
 const pg = buildProgram(r.profile, quiz, full);

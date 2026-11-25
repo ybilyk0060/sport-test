@@ -10,7 +10,7 @@ export default {
     title: 'Discover your child’s strengths in 3 minutes',
     promise: 'A short test in front of your phone camera shows your child’s strengths and which sport suits them best.',
     cta: 'Start the test',
-    points: ['8 quick questions', '3–4 short exercises: balance, a forward bend, jumping jacks and more', 'Video is processed on your phone and never uploaded'],
+    points: ['8 quick questions', '4–5 short exercises: balance, running in place, a forward bend and more', 'Video is processed on your phone and never uploaded'],
     note: 'You’ll need a phone with a camera and a clear 2×2 m (6×6 ft) space.',
     disclaimer: 'A playful movement test, not a medical assessment and not an official test. It doesn’t predict sporting success. It shows where your child is strong today.',
     trust: 'Some exercises are adapted from established youth fitness test batteries: EUROFIT (Council of Europe) and the German Motor Test (DMT 6–18). Adapted for a phone camera at home, so results are a guide, not a lab measurement.',

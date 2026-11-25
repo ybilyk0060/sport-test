@@ -9,7 +9,7 @@ export default {
     title: 'Entdecken Sie die Stärken Ihres Kindes in 3 Minuten',
     promise: 'Ein kurzer Test vor der Handykamera zeigt die Stärken Ihres Kindes und welcher Sport am besten passt.',
     cta: 'Test starten',
-    points: ['8 kurze Fragen', '3–4 kurze Übungen: Gleichgewicht, Rumpfbeuge, Hampelmann und mehr', 'Das Video wird auf dem Handy verarbeitet und nirgendwohin gesendet'],
+    points: ['8 kurze Fragen', '4–5 kurze Übungen: Gleichgewicht, Laufen auf der Stelle, Rumpfbeuge und mehr', 'Das Video wird auf dem Handy verarbeitet und nirgendwohin gesendet'],
     note: 'Sie brauchen ein Handy mit Kamera und 2×2 m freien Platz.',
     disclaimer: 'Ein spielerischer Bewegungstest, keine medizinische Untersuchung und kein offizieller Test. Er sagt keinen sportlichen Erfolg voraus, sondern zeigt, wo Ihr Kind heute stark ist.',
     trust: 'Einige Übungen sind an etablierte Fitnesstests für Kinder angelehnt: EUROFIT (Europarat) und den Deutschen Motorik-Test (DMT 6–18). Für die Handykamera zu Hause angepasst, die Ergebnisse sind eine Orientierung, keine Labormessung.',

@@ -2,8 +2,8 @@
 // Без согласия события остаются только на устройстве (store.track). Видео, точки тела и ответы о ребёнке наружу не уходят:
 // в события идут только имя шага, номер вопроса, ключ упражнения, сумма и валюта.
 
-import { CONFIG } from './config.js?v=ee7001c-mwwo3tzn';
-import { T } from './i18n/index.js?v=ee7001c-mwwo3tzn';
+import { CONFIG } from './config.js?v=892a6cf-mwwo6xi7';
+import { T } from './i18n/index.js?v=892a6cf-mwwo6xi7';
 
 const KEY = 'sporttest.consent';
 let consent = null;

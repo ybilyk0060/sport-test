@@ -2,7 +2,7 @@
 // Чистые функции без браузера (проверяются в tests/rules.test.mjs). Тексты — по ключам из js/i18n.
 // Важно: возрастных норм нет. Все оценки — «выполнено задание / нет» и «ровно / неровно», пороги рабочие.
 
-import { CONFIG } from './config.js?v=ee7001c-mwwo3tzn';
+import { CONFIG } from './config.js?v=892a6cf-mwwo6xi7';
 
 const clamp01 = (x) => Math.max(0, Math.min(1, x));
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);
@@ -14,7 +14,7 @@ export const EX_QUALITY = { jumping_jack: ['coordination', 'symmetry'], squats: 
   // Оценочный тест v3
   balance_r: ['balance', 'symmetry'], balance_l: ['balance', 'symmetry'], side_jumps_1: ['speed'], side_jumps_2: ['speed'], bend: ['flex'] };
 export function qualitiesOf(results) {
-  if (isV3(results)) { const set = new Set(['balance', 'speed', 'flex', 'coordination', 'endurance', 'arms', 'symmetry']); const have = new Set((results || []).filter((r) => !r.skipped).map((r) => r.key)); if (!have.has('shoulder_taps')) set.delete('arms'); if (!have.has('side_jumps_1') && !have.has('side_jumps_2')) set.delete('speed'); if (!have.has('jumping_jack')) { set.delete('coordination'); set.delete('endurance'); } return QUALITIES.filter((q) => set.has(q)); } const set = new Set((results || []).flatMap((r) => EX_QUALITY[r.key] || [])); return QUALITIES.filter((q) => set.has(q)); }
+  if (isV3(results)) { const set = new Set(['balance', 'speed', 'flex', 'coordination', 'endurance', 'arms', 'symmetry']); const have = new Set((results || []).filter((r) => !r.skipped).map((r) => r.key)); if (!have.has('shoulder_taps')) set.delete('arms'); if (!have.has('side_jumps_1') && !have.has('side_jumps_2') && !have.has('high_knees')) set.delete('speed'); if (!have.has('jumping_jack')) { set.delete('coordination'); set.delete('endurance'); } return QUALITIES.filter((q) => set.has(q)); } const set = new Set((results || []).flatMap((r) => EX_QUALITY[r.key] || [])); return QUALITIES.filter((q) => set.has(q)); }
 
 // --- Показатели (каждый 0..1 или null, если не измерен) ---
 // Рабочие пороги (не нормы):
@@ -90,10 +90,10 @@ export function levelOf(score) {
 // Ниже A — «зона роста», A…B — «есть запас», от B — «сильная сторона». Рабочие оценки, не нормы; пока одинаково для мальчиков и девочек.
 // После ~300 тестов на группу «возраст × пол» заменить на P25 / P75 собственных данных.
 export const NORMS = {
-  '3-5': { balance: [6, 15], speed: [6, 12], flex: [2, 4], coordination: [5, 12], arms: null },
-  '6-8': { balance: [15, 26], speed: [18, 28], flex: [3, 4], coordination: [12, 20], arms: [8, 16] },
-  '9-11': { balance: [20, 30], speed: [25, 35], flex: [3, 4], coordination: [15, 24], arms: [12, 22] },
-  '12-15': { balance: [24, 30], speed: [30, 40], flex: [3, 4], coordination: [18, 28], arms: [16, 28] },
+  '3-5': { balance: [6, 15], knees: [14, 24], speed: [6, 12], flex: [2, 4], coordination: [5, 12], arms: null },
+  '6-8': { balance: [15, 26], knees: [20, 32], speed: [18, 28], flex: [3, 4], coordination: [12, 20], arms: [8, 16] },
+  '9-11': { balance: [20, 30], knees: [26, 38], speed: [25, 35], flex: [3, 4], coordination: [15, 24], arms: [12, 22] },
+  '12-15': { balance: [24, 30], knees: [30, 42], speed: [30, 40], flex: [3, 4], coordination: [18, 28], arms: [16, 28] },
 };
 export const V3 = { SWAY_STRONG: 0.05, RHYTHM_CV_MAX: 0.5, SLOW_OK: 1.1, SLOW_MID: 1.3 }; // SWAY_STRONG — раскачка таза, ниже которой 9+ получают «сильную сторону» в балансе (временно, до медианы по данным)
 const V3_KEYS = ['balance_r', 'balance_l', 'side_jumps_1', 'side_jumps_2', 'bend'];
@@ -123,6 +123,14 @@ export function buildProfileV3(results, ageGroup) {
     if (br && bl && Math.max(br.done, bl.done) > 0) metr.balanceSym = Math.min(br.done, bl.done) / Math.max(br.done, bl.done);
   }
   // 2. Быстрота и ловкость ног: среднее число прыжков через линию за попытку
+  // 2'. Быстрота ног — бег на месте с высокими коленями 15 с (26.11 вместо прыжков через полоску): число подъёмов колен
+  const hk = by.high_knees;
+  if (hk && hk.metrics) {
+    const lifts = (hk.metrics.liftsLeft || 0) + (hk.metrics.liftsRight || 0);
+    q.speed = graded(lifts, N.knees); metr.kneeLifts = lifts;
+    const lr = [hk.metrics.liftsLeft || 0, hk.metrics.liftsRight || 0];
+    if (lifts >= 8) metr.kneeSym = Math.min(...lr) / Math.max(...lr);
+  }
   const sj = [by.side_jumps_1, by.side_jumps_2].filter(Boolean);
   if (sj.length) { const avg = sj.reduce((a, r) => a + r.done, 0) / sj.length; q.speed = graded(avg, N.speed); metr.sideJumps = Math.round(avg * 10) / 10; }
   // 3. Гибкость: уровень наклона 1–4
@@ -147,6 +155,7 @@ export function buildProfileV3(results, ageGroup) {
   // Симметрия: баланс Л/П, руки в jumping jack, касания Л/П
   const symParts = [];
   if (metr.balanceSym != null) symParts.push(metr.balanceSym);
+  if (metr.kneeSym != null) symParts.push(metr.kneeSym);
   if (jj && jj.metrics.armDiff != null) symParts.push(clamp01(1 - jj.metrics.armDiff / WORK.ARM_DIFF_MAX));
   if (st && (st.metrics.liftsLeft || 0) + (st.metrics.liftsRight || 0) >= 4) symParts.push(Math.min(st.metrics.liftsLeft, st.metrics.liftsRight) / Math.max(st.metrics.liftsLeft, st.metrics.liftsRight));
   if (symParts.length) { const sc = mean(symParts); q.symmetry = { score: Math.round(sc * 100) / 100, level: levelOf(sc) }; }
