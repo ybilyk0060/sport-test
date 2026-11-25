@@ -170,7 +170,7 @@ export default {
 
   paywall: {
     title: 'Your child’s program is ready',
-    lead: (q) => `Based on the test and what your child enjoys, we built a 4-week program. First focus: ${q.toLowerCase()}.`,
+    lead: (q) => `Based on the test and what your child enjoys, we built a 4-week program. First focus: ${String(q).toLowerCase()}.`,
     leadNoWeak: 'Based on the test and what your child enjoys, we built a 4-week program.',
     inside: 'What’s included',
     insideItems: [
