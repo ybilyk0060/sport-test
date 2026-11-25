@@ -17,7 +17,8 @@ function pick() {
   const langs = (typeof navigator !== 'undefined' && (navigator.languages || [navigator.language])) || [];
   for (const l of langs) {
     const c = String(l || '').slice(0, 2).toLowerCase();
-    if ((c === 'uk' || c === 'ru') && LOCALES.uk) return 'uk'; // русскоязычные из Украины получают украинский; русской версии нет
+    const linkOnly = CONFIG.linkOnlyLanguages || [];
+    if ((c === 'uk' || c === 'ru') && LOCALES.uk && !linkOnly.includes('uk')) return 'uk'; // русской версии нет
     if (c === 'de' && LOCALES.de) return 'de';
     if (c === 'en' && LOCALES.en) return 'en';
   }

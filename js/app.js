@@ -51,7 +51,7 @@ function landing() {
   screen(`<div class="hero"><div class="hero-art">${ART.hero}</div><h1>${esc(T.landing.title)}</h1><p class="promise">${esc(T.landing.promise)}</p></div>
     <ul class="points">${T.landing.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul><div class="grow"></div>
     <button class="btn" data-act="start">${esc(T.landing.cta)}</button><p class="small muted center">${esc(T.landing.note)}</p><p class="small muted center">${esc(T.landing.disclaimer)}</p>
-    ${Object.keys(LOCALES).length > 1 ? `<div class="langs">${Object.entries({ en: 'English', de: 'Deutsch', uk: 'Українська' }).map(([k, v]) => `<a href="?lang=${k}" class="${k === LANG ? 'on' : ''}">${v}</a>`).join('')}</div>` : ''}
+    ${Object.keys(LOCALES).length > 1 ? `<div class="langs">${Object.entries({ en: 'English', de: 'Deutsch', uk: 'Українська' }).filter(([k]) => LOCALES[k] && (k === LANG || !(CONFIG.linkOnlyLanguages || []).includes(k))).map(([k, v]) => `<a href="?lang=${k}" class="${k === LANG ? 'on' : ''}">${v}</a>`).join('')}</div>` : ''}
     ${subapi.subOn() ? `<button class="link center" data-act="restore">${esc(T.paywall.restore)}</button>` : ''}
     ${legalLinks()}`, {
     restore: async () => {

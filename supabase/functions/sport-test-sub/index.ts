@@ -8,6 +8,7 @@
 // POST {action:'resume', token}            -> {sub}
 // POST {action:'sync', token, workouts}    -> {ok}         (выполненные тренировки — для других устройств)
 // POST {action:'restore', email, returnTo} -> {ok:true}    (всегда ok; письмо со ссылкой, если подписка есть)
+// POST {action:'remind'} + заголовок x-cron-secret -> письма «через 3 дня продление: цена, дата, ссылка отмены» (cron раз в час)
 //
 // Письма — через Brevo (секреты BREVO_API_KEY, SPORT_TEST_MAIL_FROM). Без секретов письма не отправляются, остальное работает.
 // verify_jwt=false (вызывается со страницы без входа).
@@ -20,6 +21,7 @@ const SITE_HOSTS = (Deno.env.get("SPORT_TEST_RETURN_HOSTS") || "kids-test.com,ww
 const BREVO = Deno.env.get("BREVO_API_KEY");
 const FROM = Deno.env.get("SPORT_TEST_MAIL_FROM") || "support@kids-test.com";
 const PERIOD_DAYS = 30;
+const CRON_SECRET = Deno.env.get("SPORT_TEST_CRON_SECRET");
 
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type", "Access-Control-Allow-Methods": "POST, OPTIONS" };
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...cors, "Content-Type": "application/json" } });
@@ -93,7 +95,8 @@ Deno.serve(async (req) => {
           order_ref: orderRef, email, mode: MODE, currency: String(b.currency || "USD").slice(0, 3),
           first_amount: Number(b.first) || 0, regular_amount: Number(b.regular) || 0, period_days: PERIOD_DAYS,
           started_at: new Date(now).toISOString(), paid_until: new Date(now + PERIOD_DAYS * 86400000).toISOString(),
-          quiz: clip(b.quiz), results: clip(b.results),
+          quiz: clip(b.quiz), results: clip(b.results), lang: ["en", "de", "uk"].includes(String(b.lang)) ? String(b.lang) : "en",
+          site: safeSite(String(b.returnTo || "")),
         }).select("*").single();
         if (error) return json({ error: error.message }, 500);
         sub = data;
@@ -102,6 +105,27 @@ Deno.serve(async (req) => {
       const site = safeSite(String(b.returnTo || ""));
       if (site && !existing) { const m = termsMail(String(b.lang || "en"), sub, `${site}?sub=${token}`); await mail(email, m.subject, m.text); }
       return json({ token, sub: view(sub) });
+    }
+
+    if (b.action === "remind") {
+      if (!CRON_SECRET || req.headers.get("x-cron-secret") !== CRON_SECRET) return json({ error: "forbidden" }, 403);
+      const soon = new Date(Date.now() + 3 * 86400000).toISOString();
+      const { data: subs } = await db.from("sport_test_subscriptions").select("*").eq("status", "active").lte("paid_until", soon).gt("paid_until", new Date().toISOString()).limit(200);
+      let sent = 0;
+      for (const s of subs || []) {
+        if (s.reminded_for === s.paid_until || !s.site) continue;
+        const token = await issueToken(s.id);
+        const link = `${s.site}?sub=${token}`;
+        const price = money(Number(s.regular_amount), String(s.currency));
+        const date = new Date(String(s.paid_until)).toISOString().slice(0, 10);
+        const m = s.lang === "uk"
+          ? { subject: `Через 3 дні продовження підписки: ${price}`, text: `${date} підписка продовжиться за ${price} на наступні ${PERIOD_DAYS} днів.\n\nЯкщо не хочете продовжувати — скасуйте в один дотик:\n${link}\n\nПитання: ${FROM}` }
+          : s.lang === "de"
+          ? { subject: `In 3 Tagen verlängert sich Ihr Abo: ${price}`, text: `Am ${date} verlängert sich Ihr Abo für ${price} um weitere ${PERIOD_DAYS} Tage.\n\nWenn Sie nicht verlängern möchten, kündigen Sie mit einem Klick:\n${link}\n\nFragen: ${FROM}` }
+          : { subject: `Your subscription renews in 3 days: ${price}`, text: `On ${date} your subscription renews for ${price} for another ${PERIOD_DAYS} days.\n\nIf you don't want to continue, cancel in one tap:\n${link}\n\nQuestions: ${FROM}` };
+        if (await mail(s.email, m.subject, m.text)) { await db.from("sport_test_subscriptions").update({ reminded_for: s.paid_until }).eq("id", s.id); sent++; }
+      }
+      return json({ ok: true, sent });
     }
 
     if (b.action === "restore") {

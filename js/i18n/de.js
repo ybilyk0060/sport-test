@@ -227,7 +227,7 @@ export default {
     restore: 'Schon abonniert? Zugang wiederherstellen',
     restoreAsk: 'E-Mail, mit der Sie abonniert haben',
     restoreSent: 'Falls ein Abo besteht, haben wir einen Link an diese E-Mail gesendet.',
-    withdrawal: 'Ich stimme zu, dass der Zugang sofort beginnt, und weiß, dass ich dadurch mein Widerrufsrecht verliere. Die freiwillige 14-Tage-Erstattung bleibt.',
+    withdrawal: 'Ich stimme zu, dass der Zugang sofort nach der Zahlung beginnt, und weiß, dass ich dadurch mein Widerrufsrecht verliere.',
     withdrawalNeeded: 'Bitte bestätigen Sie das Kästchen über der Schaltfläche.',
     notNow: 'Nicht jetzt',
     hardLead: 'Das Ergebnis ist fertig. Es öffnet sich direkt nach Abschluss des Abos.',
