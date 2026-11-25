@@ -1,22 +1,22 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
-import { T } from './i18n/index.js';
-import { CONFIG } from './config.js';
-import { money, PRICE, CUR, fmtDate, } from './locale.js';
-import { LANG, LOCALES } from './i18n/index.js';
-import { state, setState, resetState, track, importHandoff, store } from './store.js';
-import { detectEnv } from './env.js';
-import { preloadPose } from './pose.js';
-import { unlockAudio } from './audio.js';
-import { startStage, startFallback, toast } from './stage.js';
-import { buildReport, QUALITIES, qualitiesOf } from './scoring.js';
-import { payment, newOrderId } from './payment.js';
-import { ART } from './art.js';
-import { initDebug } from './debug.js';
-import { initConsent } from './analytics.js';
-import * as subapi from './subapi.js';
-import { drawShareCard } from './sharecard.js';
-import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js';
+import { T } from './i18n/index.js?v=9f4d998-mww96iti';
+import { CONFIG } from './config.js?v=9f4d998-mww96iti';
+import { money, PRICE, CUR, fmtDate, } from './locale.js?v=9f4d998-mww96iti';
+import { LANG, LOCALES } from './i18n/index.js?v=9f4d998-mww96iti';
+import { state, setState, resetState, track, importHandoff, store } from './store.js?v=9f4d998-mww96iti';
+import { detectEnv } from './env.js?v=9f4d998-mww96iti';
+import { preloadPose } from './pose.js?v=9f4d998-mww96iti';
+import { unlockAudio } from './audio.js?v=9f4d998-mww96iti';
+import { startStage, startFallback, toast } from './stage.js?v=9f4d998-mww96iti';
+import { buildReport, QUALITIES, qualitiesOf } from './scoring.js?v=9f4d998-mww96iti';
+import { payment, newOrderId } from './payment.js?v=9f4d998-mww96iti';
+import { ART } from './art.js?v=9f4d998-mww96iti';
+import { initDebug } from './debug.js?v=9f4d998-mww96iti';
+import { initConsent } from './analytics.js?v=9f4d998-mww96iti';
+import * as subapi from './subapi.js?v=9f4d998-mww96iti';
+import { drawShareCard } from './sharecard.js?v=9f4d998-mww96iti';
+import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=9f4d998-mww96iti';
 
 const env = detectEnv();
 const app = document.getElementById('app');

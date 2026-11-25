@@ -111,7 +111,10 @@ Deno.serve(async (req) => {
     }
 
     if (b.action === "remind") {
-      if (!CRON_SECRET || req.headers.get("x-cron-secret") !== CRON_SECRET) return json({ error: "forbidden" }, 403);
+      const got = req.headers.get("x-cron-secret") || "";
+      let want = CRON_SECRET || "";
+      if (!want) { const { data } = await db.from("sport_test_settings").select("value").eq("key", "cron_secret").maybeSingle(); want = String(data?.value || ""); }
+      if (!want || got.length < 32 || got !== want) return json({ error: "forbidden" }, 403);
       const soon = new Date(Date.now() + 3 * 86400000).toISOString();
       const { data: subs } = await db.from("sport_test_subscriptions").select("*").eq("status", "active").lte("paid_until", soon).gt("paid_until", new Date().toISOString()).limit(200);
       let sent = 0;

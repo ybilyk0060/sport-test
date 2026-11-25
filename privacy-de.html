@@ -51,9 +51,9 @@
   <p>Verantwortlicher: <span data-s="name"></span>. Fragen zum Datenschutz: <span data-s="email"></span>.</p>
 </main>
 <script type="module">
-import { store } from './js/store.js';
+import { store } from './js/store.js?v=9f4d998-mww96iti';
 document.getElementById('wipe').onclick = () => { store.clearAll(); try { localStorage.removeItem('sporttest.consent'); localStorage.removeItem('sporttest.v1.offer'); } catch {} document.getElementById('done').hidden = false; };
 </script>
-<script type="module" src="js/legal.js"></script>
+<script type="module" src="js/legal.js?v=9f4d998-mww96iti"></script>
 </body>
 </html>
