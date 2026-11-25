@@ -27,7 +27,7 @@
 
   <h2>Що ми зберігаємо</h2>
   <ul>
-    <li>Відповіді на 6 запитань (вік дитини діапазоном, уподобання).</li>
+    <li>Відповіді на 7 запитань (вік дитини діапазоном, стать — якщо ви її вказали, уподобання).</li>
     <li>Підсумкові числа тесту: кількість повторів, секунди, рівні за якостями.</li>
 
     <li>Події проходження: які кроки відкрито, тип браузера та телефона (iOS чи Android).</li>
@@ -52,9 +52,9 @@
   <p>Володілець даних: <span data-s="name"></span>. Питання щодо даних: <span data-s="email"></span>.</p>
 </main>
 <script type="module">
-import { store } from './js/store.js?v=9f4d998-mww96iti';
+import { store } from './js/store.js?v=3e3444f-mww9acps';
 document.getElementById('wipe').onclick = () => { store.clearAll(); try { localStorage.removeItem('sporttest.consent'); localStorage.removeItem('sporttest.v1.offer'); } catch {} document.getElementById('done').hidden = false; };
 </script>
-<script type="module" src="js/legal.js?v=9f4d998-mww96iti"></script>
+<script type="module" src="js/legal.js?v=3e3444f-mww9acps"></script>
 </body>
 </html>

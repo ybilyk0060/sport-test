@@ -28,7 +28,7 @@
 
   <h2>What we keep</h2>
   <ul>
-    <li>Answers to 6 questions (age range, interests).</li>
+    <li>Answers to 7 questions (age range, sex if you choose to give it, interests).</li>
     <li>Test totals: reps, seconds, quality levels.</li>
     <li>Journey events: which steps were opened, browser and phone type (iOS or Android).</li>
     <li>Subscription state (start date, paid until, cancelled or not) and completed program workouts.</li>
@@ -51,9 +51,9 @@
   <p>Data controller: <span data-s="name"></span>. Questions about data: <span data-s="email"></span>.</p>
 </main>
 <script type="module">
-import { store } from './js/store.js?v=9f4d998-mww96iti';
+import { store } from './js/store.js?v=3e3444f-mww9acps';
 document.getElementById('wipe').onclick = () => { store.clearAll(); try { localStorage.removeItem('sporttest.consent'); localStorage.removeItem('sporttest.v1.offer'); } catch {} document.getElementById('done').hidden = false; };
 </script>
-<script type="module" src="js/legal.js?v=9f4d998-mww96iti"></script>
+<script type="module" src="js/legal.js?v=3e3444f-mww9acps"></script>
 </body>
 </html>

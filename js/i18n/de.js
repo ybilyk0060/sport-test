@@ -18,6 +18,7 @@ export default {
     progress: (i, n) => `Frage ${i} von ${n}`,
     q: {
       age: { title: 'Wie alt ist Ihr Kind?', options: { '3-5': '3–5 Jahre', '6-8': '6–8 Jahre', '9-11': '9–11 Jahre', '12-15': '12–15 Jahre' } },
+      sex: { title: 'Ihr Kind ist…', options: { girl: 'Ein Mädchen', boy: 'Ein Junge', skip: 'Keine Angabe' } },
       now: { title: 'Was macht Ihr Kind zurzeit?', options: { none: 'Noch nichts', section: 'Geht in einen Sportverein', yard: 'Spielt draußen, Bewegungsspiele' } },
       likes: { title: 'Was macht Ihrem Kind am meisten Spaß?', options: { team: 'Mannschaft und Ball', solo: 'Lieber für sich allein', music: 'Musik und Tanz', fight: 'Ringen und Kraft', climb: 'Klettern und Springen' } },
       temper: { title: 'Wie ist Ihr Kind vom Temperament?', options: { active: 'Sehr aktiv', calm: 'Ruhig', mixed: 'Mal so, mal so' } },

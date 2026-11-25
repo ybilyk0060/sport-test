@@ -1,29 +1,29 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
-import { T } from './i18n/index.js?v=9f4d998-mww96iti';
-import { CONFIG } from './config.js?v=9f4d998-mww96iti';
-import { money, PRICE, CUR, fmtDate, } from './locale.js?v=9f4d998-mww96iti';
-import { LANG, LOCALES } from './i18n/index.js?v=9f4d998-mww96iti';
-import { state, setState, resetState, track, importHandoff, store } from './store.js?v=9f4d998-mww96iti';
-import { detectEnv } from './env.js?v=9f4d998-mww96iti';
-import { preloadPose } from './pose.js?v=9f4d998-mww96iti';
-import { unlockAudio } from './audio.js?v=9f4d998-mww96iti';
-import { startStage, startFallback, toast } from './stage.js?v=9f4d998-mww96iti';
-import { buildReport, QUALITIES, qualitiesOf } from './scoring.js?v=9f4d998-mww96iti';
-import { payment, newOrderId } from './payment.js?v=9f4d998-mww96iti';
-import { ART } from './art.js?v=9f4d998-mww96iti';
-import { initDebug } from './debug.js?v=9f4d998-mww96iti';
-import { initConsent } from './analytics.js?v=9f4d998-mww96iti';
-import * as subapi from './subapi.js?v=9f4d998-mww96iti';
-import { drawShareCard } from './sharecard.js?v=9f4d998-mww96iti';
-import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=9f4d998-mww96iti';
+import { T } from './i18n/index.js?v=3e3444f-mww9acps';
+import { CONFIG } from './config.js?v=3e3444f-mww9acps';
+import { money, PRICE, CUR, fmtDate, } from './locale.js?v=3e3444f-mww9acps';
+import { LANG, LOCALES } from './i18n/index.js?v=3e3444f-mww9acps';
+import { state, setState, resetState, track, importHandoff, store } from './store.js?v=3e3444f-mww9acps';
+import { detectEnv } from './env.js?v=3e3444f-mww9acps';
+import { preloadPose } from './pose.js?v=3e3444f-mww9acps';
+import { unlockAudio } from './audio.js?v=3e3444f-mww9acps';
+import { startStage, startFallback, toast } from './stage.js?v=3e3444f-mww9acps';
+import { buildReport, QUALITIES, qualitiesOf } from './scoring.js?v=3e3444f-mww9acps';
+import { payment, newOrderId } from './payment.js?v=3e3444f-mww9acps';
+import { ART } from './art.js?v=3e3444f-mww9acps';
+import { initDebug } from './debug.js?v=3e3444f-mww9acps';
+import { initConsent } from './analytics.js?v=3e3444f-mww9acps';
+import * as subapi from './subapi.js?v=3e3444f-mww9acps';
+import { drawShareCard } from './sharecard.js?v=3e3444f-mww9acps';
+import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=3e3444f-mww9acps';
 
 const env = detectEnv();
 const app = document.getElementById('app');
 const params = new URLSearchParams(location.search);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const paywallMode = ['teaser', 'hard'].includes(params.get('paywall')) ? params.get('paywall') : CONFIG.paywallMode;
-const QUIZ = ['age', 'now', 'likes', 'temper', 'goal', 'screen'];
+const QUIZ = ['age', 'sex', 'now', 'likes', 'temper', 'goal', 'screen'];
 const SUB = CONFIG.subscription;
 const privacyUrl = LANG === 'uk' ? 'privacy.html' : `privacy-${LANG}.html`;
 // Юридические ссылки: рядом с кнопкой оплаты и внизу страниц
@@ -71,6 +71,7 @@ function quiz(i) {
   const id = QUIZ[i], q = T.quiz.q[id];
   const opts = Object.entries(q.options);
   const two = id === 'age';
+  // пол: только лёгкий сдвиг среди подходящих видов (см. SEX_RULES в scoring.js), можно не указывать
   screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button><div class="progress"><i style="width:${Math.round(((i + 1) / QUIZ.length) * 100)}%"></i></div></div>
     <p class="small muted">${esc(T.quiz.progress(i + 1, QUIZ.length))}</p><h1 class="qtitle">${esc(q.title)}</h1>
     <div class="opts ${two ? 'two' : ''}">${opts.map(([v, label]) => `<button class="opt ${state.quiz[id] === v ? 'sel' : ''}" data-act="pick" data-v="${esc(v)}">${esc(label)}</button>`).join('')}</div>`, {

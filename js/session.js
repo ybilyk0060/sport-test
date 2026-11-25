@@ -2,10 +2,10 @@
 // Из каждого упражнения берём не только счёт: темп, ритм, глубину, симметрию, устойчивость.
 // Сохраняются только итоговые числа. Кадры и точки тела не сохраняются и не отправляются.
 
-import { SpecEngine, ExerciseAnalyzer, PoseSmoother, calibrationForAge } from './engine/kidsney-engine.js?v=9f4d998-mww96iti';
-import { SPECS } from './engine/specs.js?v=9f4d998-mww96iti';
-import { CONFIG } from './config.js?v=9f4d998-mww96iti';
-import { detectPose } from './pose.js?v=9f4d998-mww96iti';
+import { SpecEngine, ExerciseAnalyzer, PoseSmoother, calibrationForAge } from './engine/kidsney-engine.js?v=3e3444f-mww9acps';
+import { SPECS } from './engine/specs.js?v=3e3444f-mww9acps';
+import { CONFIG } from './config.js?v=3e3444f-mww9acps';
+import { detectPose } from './pose.js?v=3e3444f-mww9acps';
 
 const VIS = 0.5;
 const seen = (p) => p && p.visibility >= VIS && p.x > 0 && p.x < 1 && p.y > 0 && p.y < 1;

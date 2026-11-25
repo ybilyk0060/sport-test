@@ -2,7 +2,7 @@
 // Чистые функции без браузера (проверяются в tests/rules.test.mjs). Тексты — по ключам из js/i18n.
 // Важно: возрастных норм нет. Все оценки — «выполнено задание / нет» и «ровно / неровно», пороги рабочие.
 
-import { CONFIG } from './config.js?v=9f4d998-mww96iti';
+import { CONFIG } from './config.js?v=3e3444f-mww9acps';
 
 const clamp01 = (x) => Math.max(0, Math.min(1, x));
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);
@@ -112,17 +112,21 @@ export const QUIZ_RULES = {
     result: { athletics: 1, gymnastics: 1, racket: 1, swimming: 1 },
   },
 };
+// Пол (по желанию Юрия 25.11): только лёгкий сдвиг при прочих равных, 0,5 балла — меньше любой сильной стороны из теста
+// (до 2) и меньше желания ребёнка (до 4). Ничего не отсекает: девочке с сильными руками и корпусом единоборства выйдут выше танцев.
+// В причины отчёта не попадает — объясняем только результатами и ответами родителя.
+export const SEX_RULES = { girl: { dance: 0.5, gymnastics: 0.5 }, boy: { team: 0.5, martial: 0.5 } };
 // Возраст 3–5: приоритет направлениям с разносторонней базой
 export const AGE_RULES = { '3-5': { gymnastics: 1, dance: 1, swimming: 1 } };
 // Качество → направления. Вклад = вес × (уровень − 1) / 2: «зона роста» 0, «есть запас» — половина веса, «сильная сторона» — полный вес.
 // Желание ребёнка (likes, до 4 баллов) весит больше любого одного качества из теста (до 2 баллов).
 export const QUALITY_RULES = {
   coordination: { team: 1, gymnastics: 1, dance: 2, martial: 1, climbing: 1, racket: 1 },
-  legs: { athletics: 1, martial: 1, climbing: 1 },
+  legs: { athletics: 1, martial: 2, climbing: 1 },
   speed: { team: 1, athletics: 2, racket: 1 },
   core: { gymnastics: 2, martial: 1, swimming: 1, climbing: 1 },
   flex: { gymnastics: 2, dance: 1, martial: 1, swimming: 1 },
-  arms: { climbing: 2, swimming: 1, martial: 1, racket: 1, gymnastics: 1 },
+  arms: { climbing: 2, swimming: 1, martial: 2, racket: 1, gymnastics: 1 },
   symmetry: { gymnastics: 1, dance: 1, swimming: 1 },
 };
 
@@ -133,6 +137,7 @@ export function recommendSports(profile, quiz) {
     for (const [s, w] of Object.entries(table || {})) { score[s] += w; reasons[s].push({ key: reason, w }); }
   };
   for (const q of ['likes', 'temper', 'goal']) if (quiz[q]) add(QUIZ_RULES[q][quiz[q]], `${q}.${quiz[q]}`);
+  for (const [s, w] of Object.entries(SEX_RULES[quiz.sex] || {})) score[s] += w; // без причины в отчёте
   if (AGE_RULES[quiz.age]) add(AGE_RULES[quiz.age], 'age.young');
   for (const q of QUALITIES) {
     const lvl = profile.qualities[q].level;
@@ -143,7 +148,7 @@ export function recommendSports(profile, quiz) {
     }
   }
   return SPORTS
-    .map((s, i) => ({ sport: s, score: score[s], order: i, reasons: reasons[s].sort((a, b) => b.w - a.w).slice(0, 3).map((r) => r.key) }))
+    .map((s, i) => ({ sport: s, score: score[s], order: i, reasons: reasons[s].sort((a, b) => (b.key.startsWith('q.') - a.key.startsWith('q.')) || b.w - a.w).slice(0, 3).map((r) => r.key) }))
     .sort((a, b) => b.score - a.score || a.order - b.order)
     .slice(0, 3)
     .map(({ sport, score: sc, reasons: rs }) => ({ sport, score: sc, reasons: rs }));

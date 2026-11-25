@@ -30,6 +30,27 @@ const w = buildReport(weak, { age: '3-5', likes: 'music', temper: 'calm', goal: 
 check('слабый результат: уровни 1, руки не измерены', w.profile.qualities.legs.level === 1 && w.profile.qualities.flex.level === 1 && w.profile.qualities.arms.level === 0, w.profile.qualities);
 check('итог low', w.profile.summary === 'low');
 check('музыка → танцы первыми', w.sports[0].sport === 'dance', w.sports);
+// Пол: лёгкий сдвиг, не перебивает результаты и в причины не попадает
+const strongArms = [
+  { key: 'jumping_jack', target: 10, done: 4, elapsedSec: 25, metrics: { rhythmCv: 0.45, armDiff: 0.2 } },
+  { key: 'squats', target: 8, done: 8, elapsedSec: 20, metrics: { shallow: 0 } },
+  { key: 'high_knees', target: 10, done: 3, elapsedSec: 25, metrics: { liftsLeft: 3, liftsRight: 2 } },
+  { key: 'arm_circles', target: 8, done: 3, elapsedSec: 20, metrics: { shallow: 4 } },
+  { key: 'wall_french_press', target: 8, done: 8, elapsedSec: 14, metrics: { shallow: 0 } },
+  { key: 'pushups', target: 8, done: 8, elapsedSec: 20, metrics: { shallow: 0 } },
+];
+const neutral = { age: '12-15', now: 'yard', likes: 'solo', temper: 'mixed', goal: 'confidence', screen: 'low' };
+const gS = buildReport(strongArms, { ...neutral, sex: 'girl' });
+const rank = (rep, s) => rep.sports.findIndex((x) => x.sport === s);
+check('сильная девочка: единоборства в тройке, танцев нет', rank(gS, 'martial') >= 0 && rank(gS, 'dance') < 0, gS.sports);
+const eq = [{ key: 'jumping_jack', target: 10, done: 10, elapsedSec: 14, metrics: { rhythmCv: 0.1, armDiff: 0.03 } }];
+const g0 = buildReport(eq, { ...neutral, likes: 'music', sex: 'girl' }), b0 = buildReport(eq, { ...neutral, likes: 'music', sex: 'boy' });
+check('при прочих равных пол меняет только порядок, сумма сдвига 0,5', Math.abs(g0.sports[0].score - b0.sports[0].score) <= 0.5, [g0.sports, b0.sports]);
+const n0 = buildReport(eq, { ...neutral, sex: 'skip' }), nb = buildReport(eq, { ...neutral, sex: 'boy' });
+check('пол в причины не попадает', [...g0.sports, ...b0.sports, ...nb.sports].every((x) => x.reasons.every((k) => !k.startsWith('sex'))));
+check('«не вказувати» = без пола', JSON.stringify(n0.sports) === JSON.stringify(buildReport(eq, neutral).sports));
+check('причины: сначала результаты теста', gS.sports.every((x) => !x.reasons.some((k, i) => k.startsWith('q.') && x.reasons.slice(0, i).some((p) => !p.startsWith('q.')))), gS.sports);
+
 // Программа подписчика: 4 недели × 3 тренировки, акцент по интересу, рост нагрузки
 const { buildProgram, nextWorkout } = await import('../js/program.js');
 const pg = buildProgram(r.profile, quiz, full);

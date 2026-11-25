@@ -28,7 +28,7 @@
 
   <h2>Was wir speichern</h2>
   <ul>
-    <li>Antworten auf 6 Fragen (Altersgruppe, Interessen).</li>
+    <li>Antworten auf 7 Fragen (Altersgruppe, Geschlecht falls angegeben, Interessen).</li>
     <li>Testergebnisse: Wiederholungen, Sekunden, Stufen der Fähigkeiten.</li>
     <li>Ablaufereignisse: welche Schritte geöffnet wurden, Browser- und Gerätetyp (iOS oder Android).</li>
     <li>Abo-Status (Beginn, bezahlt bis, gekündigt oder nicht) und erledigte Programmeinheiten.</li>
@@ -51,9 +51,9 @@
   <p>Verantwortlicher: <span data-s="name"></span>. Fragen zum Datenschutz: <span data-s="email"></span>.</p>
 </main>
 <script type="module">
-import { store } from './js/store.js?v=9f4d998-mww96iti';
+import { store } from './js/store.js?v=3e3444f-mww9acps';
 document.getElementById('wipe').onclick = () => { store.clearAll(); try { localStorage.removeItem('sporttest.consent'); localStorage.removeItem('sporttest.v1.offer'); } catch {} document.getElementById('done').hidden = false; };
 </script>
-<script type="module" src="js/legal.js?v=9f4d998-mww96iti"></script>
+<script type="module" src="js/legal.js?v=3e3444f-mww9acps"></script>
 </body>
 </html>
