@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="css/app.css">
 <style>
   .test-banner { position: sticky; top: 0; z-index: 10; background: repeating-linear-gradient(45deg, #1d1b2f, #1d1b2f 14px, #3a3660 14px, #3a3660 28px); color: #ffe45c; text-align: center; font-weight: 800; letter-spacing: .08em; padding: calc(10px + env(safe-area-inset-top, 0px)) 10px 10px; }
-  .rowline { display: flex; justify-content: space-between; gap: 12px; font-size: 16px; } .rowline b { font-size: 18px; }
+  .rowline b { font-size: 18px; }
 </style>
 </head>
 <body>
@@ -31,6 +31,7 @@ document.title = P.title;
 document.getElementById('app').innerHTML = `<section class="screen"><h1 class="rtitle">${esc(P.title)}</h1><p>${esc(P.lead)}</p>
   <div class="box"><div class="rowline"><span>${esc(P.order)}</span><span class="small muted">${esc(q.get('order') || '—')}</span></div>
   <div class="rowline"><span>${esc(q.get('desc') || '')}</span></div><div class="rowline"><span>${esc(P.amount)}</span><b>${esc(q.get('amount') || '—')} грн</b></div></div>
+  <p class="small muted">${esc(P.subNote)}</p>
   <div class="grow"></div><button class="btn" id="ok">${esc(P.pay)}</button><button class="btn ghost" id="no">${esc(P.cancel)}</button></section>`;
 track('pay_page_shown', { test: true });
 document.getElementById('ok').onclick = () => go('paid');

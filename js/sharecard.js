@@ -13,7 +13,8 @@ export function drawShareCard(cv, profile, T) {
     g.font = font(600, 34); g.fillText(`${T.card.strongest}: ${T.result.qualities[profile.strongest].name}`, 72, 306);
   }
   const colors = { 3: '#1f9d6b', 2: '#e0a100', 1: '#d9682f', 0: '#b9b5c6' };
-  let y = 470;
+  let y = 450;
+  const step = Math.min(150, (H - 150 - y) / QUALITIES.length);
   for (const q of QUALITIES) {
     const lvl = profile.qualities[q].level;
     g.fillStyle = '#1d1b2f'; g.font = font(700, 46); g.fillText(T.result.qualities[q].name, 72, y);
@@ -23,7 +24,7 @@ export function drawShareCard(cv, profile, T) {
       const x = 72 + i * ((W - 144 - 32) / 3 + 16), w = (W - 144 - 32) / 3;
       g.beginPath(); g.roundRect ? g.roundRect(x, y + 26, w, 22, 11) : g.rect(x, y + 26, w, 22); g.fill();
     }
-    y += 150;
+    y += step;
   }
   g.fillStyle = '#6b6880'; g.font = font(500, 30); g.fillText(T.card.foot, 72, H - 72);
 }

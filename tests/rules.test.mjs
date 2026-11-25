@@ -8,9 +8,10 @@ const full = [
   { key: 'jumping_jack', target: 10, done: 10, elapsedSec: 14, metrics: { rhythmCv: 0.1, armDiff: 0.03 } },
   { key: 'squats', target: 8, done: 8, elapsedSec: 20, metrics: { shallow: 0 } },
   { key: 'high_knees', target: 10, done: 10, elapsedSec: 11, metrics: { liftsLeft: 14, liftsRight: 14 } },
-  { key: 'plank', target: 15, done: 15, elapsedSec: 18, metrics: { driftDeg: 2 } },
+  { key: 'good_morning', target: 6, done: 6, elapsedSec: 15, metrics: { shallow: 0 } },
+  { key: 'shoulder_taps', target: 10, done: 10, elapsedSec: 14, metrics: { rhythmCv: 0.1, liftsLeft: 5, liftsRight: 5, shallow: 0 } },
 ];
-const quiz = { age: '7-9', now: 'none', likes: 'team', temper: 'active', goal: 'confidence', screen: 'high', city: 'Київ' };
+const quiz = { age: '7-9', now: 'none', likes: 'team', temper: 'active', goal: 'confidence', screen: 'high' };
 const r = buildReport(full, quiz);
 check('все качества — уровень 3', Object.values(r.profile.qualities).every((q) => q.level === 3), r.profile.qualities);
 check('итог high', r.profile.summary === 'high');
@@ -23,12 +24,23 @@ const weak = [
   { key: 'jumping_jack', target: 10, done: 2, elapsedSec: 25, metrics: { rhythmCv: null, armDiff: 0.25 } },
   { key: 'squats', target: 8, done: 1, elapsedSec: 30, metrics: { shallow: 5 } },
   { key: 'high_knees', target: 10, done: 2, elapsedSec: 25, metrics: { liftsLeft: 3, liftsRight: 1 } },
-  { key: 'plank', target: 15, done: 0, elapsedSec: 40, skipped: true, metrics: {} },
+  { key: 'good_morning', target: 5, done: 1, elapsedSec: 25, metrics: { shallow: 4 } },
+  { key: 'shoulder_taps', target: 6, done: 0, elapsedSec: 0, skipped: true, metrics: {} },
 ];
 const w = buildReport(weak, { age: '4-6', likes: 'music', temper: 'calm', goal: 'health', screen: 'low', now: 'yard' });
-check('слабый результат: уровни 1, планка не измерена', w.profile.qualities.legs.level === 1 && w.profile.qualities.core.level === 0, w.profile.qualities);
+check('слабый результат: уровни 1, корпус не измерен', w.profile.qualities.legs.level === 1 && w.profile.qualities.flex.level === 1 && w.profile.qualities.core.level === 0, w.profile.qualities);
 check('итог low', w.profile.summary === 'low');
 check('музыка → танцы первыми', w.sports[0].sport === 'dance', w.sports);
+// Программа подписчика: 4 недели × 3 тренировки, акцент по интересу, рост нагрузки
+const { buildProgram, nextWorkout } = await import('../js/program.js');
+const pg = buildProgram(r.profile, quiz, full);
+check('программа: 12 тренировок по 4 упражнения', pg.workouts.length === 12 && pg.workouts.every((x) => x.items.length === 4), pg.workouts.map((x) => x.items.length));
+check('футбол → бег в каждой тренировке', pg.focus === 'team' && pg.workouts.every((x) => x.items.some((i) => i.key === 'high_knees')));
+const sq = (wk) => pg.workouts.find((x) => x.week === wk && x.day === 1).items.find((i) => i.key === 'squats').target;
+check('нагрузка растёт по неделям', sq(4) > sq(1), [sq(1), sq(4)]);
+check('следующая тренировка после выполненной', nextWorkout(pg, [{ id: 'w1d1' }]).id === 'w1d2' && nextWorkout(pg, pg.workouts) === null);
+const pf = buildProgram(w.profile, { age: '4-6', likes: 'fight' }, weak);
+check('борьба → сила ног и корпуса', pf.workouts[0].items.some((i) => i.key === 'squats') && pf.workouts[0].items.some((i) => i.key === 'shoulder_taps'), pf.workouts[0].items);
 const none = buildProfile(full.map((x) => ({ ...x, skipped: true })));
 check('всё пропущено → none', none.summary === 'none' && none.strongest === null);
 check('пороги уровней', levelOf(0.75) === 3 && levelOf(0.5) === 2 && levelOf(0.2) === 1 && levelOf(null) === 0);
@@ -45,6 +57,6 @@ for (const f of files) {
 const uk = (await import('../js/i18n/uk.js')).default;
 const priceWords = /грн|оплат|платіж|\$|(^|[^а-яіїєґ])цін|коштує|купити/i;
 const flat = (o, p = '') => Object.entries(o).flatMap(([k, v]) => typeof v === 'function' ? [[p + k, String(v(1, 2, 3))]] : typeof v === 'object' && v ? flat(v, p + k + '.') : [[p + k, String(v)]]);
-const early = flat(uk).filter(([k]) => !/^(paywall|payTest|report\.paidOk)/.test(k)).filter(([, v]) => priceWords.test(v));
+const early = flat(uk).filter(([k]) => !/^(paywall|payTest|sub|report\.paidOk)/.test(k)).filter(([, v]) => priceWords.test(v));
 check('до экрана результата нет слов о цене и оплате', early.length === 0, early);
 console.log(fail ? `\n${fail} FAILED` : '\nALL OK'); process.exit(fail ? 1 : 0);

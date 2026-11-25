@@ -7,19 +7,20 @@ import { CONFIG } from './config.js';
 const clamp01 = (x) => Math.max(0, Math.min(1, x));
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);
 
-export const QUALITIES = ['coordination', 'legs', 'speed', 'core', 'symmetry'];
+export const QUALITIES = ['coordination', 'legs', 'speed', 'core', 'flex', 'symmetry'];
 
 // --- Показатели (каждый 0..1 или null, если не измерен) ---
 // Рабочие пороги (не нормы):
 //   RHYTHM_CV_MAX   — разброс интервалов между повторами, при котором «ритм» = 0
 //   ARM_DIFF_MAX    — разница высоты кистей в верхней точке (в длинах туловища), при которой «симметрия рук» = 0
-//   PLANK_DRIFT_MAX — дрейф линии корпуса в градусах; взят из спека планки студии (stillness.maxDrift = 10)
-export const WORK = { RHYTHM_CV_MAX: 0.5, ARM_DIFF_MAX: 0.3, PLANK_DRIFT_MAX: 10 };
+export const WORK = { RHYTHM_CV_MAX: 0.5, ARM_DIFF_MAX: 0.3 };
 
 export function indicators(results) {
   const by = Object.fromEntries((results || []).map((r) => [r.key, r]));
   const ok = (r) => r && !r.skipped;
-  const jj = by.jumping_jack, sq = by.squats, hk = by.high_knees, pl = by.plank;
+  const jj = by.jumping_jack, sq = by.squats, hk = by.high_knees, gm = by.good_morning, st = by.shoulder_taps;
+  const clean = (r) => { const tries = r.done + (r.metrics.shallow || 0); return tries > 0 ? r.done / tries : 0; };
+  const sides = (r) => { const l = r.metrics.liftsLeft || 0, rr = r.metrics.liftsRight || 0; return l + rr >= 4 ? Math.min(l, rr) / Math.max(l, rr) : null; };
   const ind = {};
 
   if (ok(jj)) {
@@ -29,18 +30,21 @@ export function indicators(results) {
   }
   if (ok(sq)) {
     ind.sq_done = clamp01(sq.done / sq.target);
-    const tries = sq.done + (sq.metrics.shallow || 0);
-    ind.sq_clean = tries > 0 ? sq.done / tries : 0; // доля приседаний, засчитанных без подсказки «ниже»
+    ind.sq_clean = clean(sq); // доля приседаний, засчитанных без подсказки «ниже»
   }
   if (ok(hk)) {
     ind.hk_done = clamp01(hk.done / hk.target);
     ind.hk_pace = hk.elapsedSec > 0 ? clamp01(hk.done / hk.elapsedSec) : 0; // доля времени в активном беге
-    const l = hk.metrics.liftsLeft || 0, r = hk.metrics.liftsRight || 0;
-    ind.hk_side = l + r >= 4 ? Math.min(l, r) / Math.max(l, r) : null;
+    ind.hk_side = sides(hk);
   }
-  if (ok(pl)) {
-    ind.pl_done = clamp01(pl.done / pl.target);
-    ind.pl_steady = pl.metrics.driftDeg == null ? null : clamp01(1 - pl.metrics.driftDeg / WORK.PLANK_DRIFT_MAX);
+  if (ok(gm)) {
+    ind.gm_done = clamp01(gm.done / gm.target);
+    ind.gm_clean = clean(gm); // доля наклонов без подсказки «нижче»
+  }
+  if (ok(st)) {
+    ind.st_done = clamp01(st.done / st.target);
+    ind.st_rhythm = st.metrics.rhythmCv == null ? null : clamp01(1 - st.metrics.rhythmCv / WORK.RHYTHM_CV_MAX);
+    ind.st_side = sides(st);
   }
   return ind;
 }
@@ -50,8 +54,9 @@ export const QUALITY_MAP = {
   coordination: ['jj_done', 'jj_rhythm'],
   legs: ['sq_done', 'sq_clean'],
   speed: ['hk_done', 'hk_pace'],
-  core: ['pl_done', 'pl_steady'],
-  symmetry: ['jj_arm_sym', 'hk_side'],
+  core: ['st_done', 'st_rhythm'],
+  flex: ['gm_done', 'gm_clean'],
+  symmetry: ['jj_arm_sym', 'hk_side', 'st_side'],
 };
 
 export function levelOf(score) {
@@ -107,6 +112,7 @@ export const QUALITY_RULES = {
   legs: { athletics: 1, martial: 1, climbing: 1 },
   speed: { team: 1, athletics: 2, racket: 1 },
   core: { gymnastics: 2, martial: 1, swimming: 1, climbing: 1 },
+  flex: { gymnastics: 2, dance: 1, martial: 1, swimming: 1 },
   symmetry: { gymnastics: 1, dance: 1, swimming: 1 },
 };
 
@@ -134,24 +140,24 @@ export function recommendSports(profile, quiz) {
 }
 
 // --- План на 2 недели дома ---
-// Упражнения — только из каталога студии с возрастом 4+ и проверкой позы.
+// Упражнения — только 5 вправ тесту (их ребёнок уже знает и их считает камера).
 // Состав занятия: 2 упражнения на «зоны роста» (самые слабые качества) + 1 на самую сильную сторону.
 // Дозировка: неделя 1 — собственный результат ребёнка в тесте (не меньше минимума), неделя 2 — на шаг больше.
 export const PLAN_EX = {
-  coordination: ['jumping_jack', 'arm_circles'],
+  coordination: ['jumping_jack', 'shoulder_taps'],
   legs: ['squats', 'high_knees'],
   speed: ['high_knees', 'jumping_jack'],
-  core: ['plank', 'crunches'],
-  symmetry: ['arm_circles', 'jumping_jack'],
+  core: ['shoulder_taps', 'squats'],
+  flex: ['good_morning', 'squats'],
+  symmetry: ['shoulder_taps', 'jumping_jack'],
 };
 export const PLAN_DOSE = {
   // unit, min — минимум недели 1, step — прибавка на неделе 2
   jumping_jack: { unit: 'reps', min: 4, step: 2 },
   squats: { unit: 'reps', min: 3, step: 2 },
-  arm_circles: { unit: 'reps', min: 6, step: 2 },
-  crunches: { unit: 'reps', min: 3, step: 2 },
+  good_morning: { unit: 'reps', min: 4, step: 2 },
+  shoulder_taps: { unit: 'reps', min: 6, step: 2 },
   high_knees: { unit: 'sec', min: 5, step: 5 },
-  plank: { unit: 'sec', min: 5, step: 5 },
 };
 
 export function buildPlan(profile, quiz, results) {

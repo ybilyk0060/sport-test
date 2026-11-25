@@ -1,6 +1,6 @@
 // Хранилище за одним интерфейсом. Сейчас — устройство (localStorage).
 // Чтобы подключить сервер: реализовать те же методы в новом адаптере и выбрать его в CONFIG.storage.
-// Сохраняем: ответы квиза, баллы, контакт с согласием, события пути. Видео и точки тела — никогда.
+// Сохраняем: ответы квиза, баллы, состояние подписки и выполненные тренировки, события пути. Видео и точки тела — никогда.
 
 import { CONFIG } from './config.js';
 import { detectEnv } from './env.js';
@@ -35,7 +35,7 @@ export const store = adapters[CONFIG.storage] || deviceAdapter;
 // --- Состояние прохождения ---
 const newSid = () => 's' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 export function freshState() {
-  return { sid: newSid(), step: 'landing', quiz: {}, contact: null, results: null, profile: null, paid: false, fallback: false, startedAt: Date.now() };
+  return { sid: newSid(), step: 'landing', quiz: {}, results: null, profile: null, paid: false, fallback: false, startedAt: Date.now() };
 }
 export let state = store.loadState() || freshState();
 export function setState(patch) { Object.assign(state, patch); store.saveState(state); return state; }
@@ -57,13 +57,13 @@ const b64u = {
   dec: (s) => decodeURIComponent(escape(atob(s.replace(/-/g, '+').replace(/_/g, '/')))),
 };
 export function exportHandoff() {
-  return b64u.enc(JSON.stringify({ sid: state.sid, quiz: state.quiz, contact: state.contact, startedAt: state.startedAt }));
+  return b64u.enc(JSON.stringify({ sid: state.sid, quiz: state.quiz, startedAt: state.startedAt }));
 }
 export function importHandoff(token) {
   try {
     const d = JSON.parse(b64u.dec(token));
     if (!d || typeof d !== 'object' || !d.quiz) return false;
-    replaceState({ ...freshState(), sid: d.sid || newSid(), quiz: d.quiz, contact: d.contact || null, startedAt: d.startedAt || Date.now(), step: 'prep' });
+    replaceState({ ...freshState(), sid: d.sid || newSid(), quiz: d.quiz, startedAt: d.startedAt || Date.now(), step: 'prep' });
     return true;
   } catch { return false; }
 }

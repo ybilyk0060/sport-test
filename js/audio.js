@@ -1,5 +1,8 @@
-// Голос студии: счёт, подсказки, вступления. WebAudio — чтобы счёт звучал без задержки.
+// Голос студии (Achird, один на всё): счёт, подсказки, вступления. WebAudio — чтобы счёт звучал без задержки.
+// Какие клипы есть — js/voice-map.js (генерирует tools/fetch-voice.mjs из манифеста Студії вправ).
 // Звук разблокируется первым нажатием пользователя (требование iOS).
+
+import { VOICE_FILES } from './voice-map.js';
 
 const base = 'assets/audio/';
 let ctx = null;
@@ -18,7 +21,7 @@ export function unlockAudio() {
 
 async function loadClip(name) {
   if (!ctx || buffers.has(name)) return buffers.get(name);
-  const p = fetch(base + name + '.wav').then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error('404'))))
+  const p = fetch(base + VOICE_FILES[name]).then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error('404'))))
     .then((ab) => new Promise((res, rej) => ctx.decodeAudioData(ab, res, rej)))
     .then((buf) => { audioStatus.loaded++; return buf; })
     .catch(() => null);
@@ -26,9 +29,8 @@ async function loadClip(name) {
   return p;
 }
 
-// Клипы подсказок, которые есть в студии (у прыжков голосовых подсказок нет — только текст).
-const HINT_CLIPS = new Set(['sit_lower', 'turn_sideways', 'keep_feet_planted', 'stand_straight_arms_down', 'keep_moving', 'switch_legs', 'start_high_knees', 'lift_knees_higher', 'hold_your_plank', 'get_into_plank_position', 'show_full_body']);
-const exists = (name) => !name.startsWith('hint_') || HINT_CLIPS.has(name.slice(5));
+// Только клипы из набора студии; чего нет — молчим (текст остаётся на экране). Системный TTS не используем: другой голос.
+export const exists = (name) => Object.prototype.hasOwnProperty.call(VOICE_FILES, name);
 
 export function preloadClips(names) { for (const n of names) if (exists(n)) loadClip(n); }
 

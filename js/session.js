@@ -47,11 +47,13 @@ const pct = (a, p) => { const s = [...a].sort((x, y) => x - y); return s[Math.mi
 
 // Создаёт прогон упражнения. clock() — время в мс (живая камера: performance.now, запись: позиция в видео).
 export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) {
-  const spec = SPECS[key];
+  const ex = CONFIG.exercises[key] || {};
+  const spec = SPECS[ex.spec || key];
   const isSeconds = spec.goal === 'seconds';
   const engine = new SpecEngine(spec);
   const an = new ExerciseAnalyzer(engine, isSeconds ? 0 : target, spec.gates?.minVisibility ?? 0.5, isSeconds ? target : 0);
-  an.setCalibration(calibrationForAge(CONFIG.ageGroups[ageGroup].engineAge));
+  const age = (CONFIG.ageGroups[ageGroup] || CONFIG.ageGroups['7-9']).engineAge;
+  an.setCalibration(calibrationForAge(ex.maxEngineAge ? Math.min(age, ex.maxEngineAge) : age));
   if (aspect) an.setFrameAspect(aspect);
   const smoother = new PoseSmoother();
 
@@ -89,6 +91,11 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
     if (key === 'squats') {
       metrics.depth = perRep.depths.length ? Math.round(meanOf(perRep.depths) * 100) / 100 : null;
       metrics.shallow = m.hints.sit_lower || 0;
+    }
+    if (key === 'good_morning') metrics.shallow = m.hints.good_morning_not_reached || 0;
+    if (key === 'shoulder_taps') {
+      metrics.liftsLeft = lifts.left || 0; metrics.liftsRight = lifts.right || 0;
+      metrics.shallow = m.hints.shoulder_taps_not_reached || 0;
     }
     if (key === 'high_knees') {
       metrics.liftsLeft = lifts.left || 0; metrics.liftsRight = lifts.right || 0;

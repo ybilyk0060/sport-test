@@ -3,7 +3,7 @@
 import { SpecEngine, ExerciseAnalyzer, PoseSmoother, calibrationForAge } from '../js/engine/kidsney-engine.js';
 import { SPECS } from '../js/engine/specs.js';
 import * as mock from './studio-mock-poses.mjs';
-import { jacks } from './synthetic.mjs';
+import { jacks, goodMornings, shoulderTaps } from './synthetic.mjs';
 
 const DT = 1000 / 30;
 function run(key, frames, { age = 8, target = 0, hold = 0, aspect = 9 / 16 } = {}) {
@@ -45,5 +45,11 @@ for (const age of [5, 8, 11]) for (const n of [1, 6, 10]) { const r = run('jumpi
 { const r = run('jumping_jack', jacks(6, { legs: false }), { age: 8 }); check('jumping_jack arms only → 0', { reps: r.reps }, r.reps === 0); }
 { const r = run('jumping_jack', jacks(6, { arms: false }), { age: 8 }); check('jumping_jack legs only → 0', { reps: r.reps }, r.reps === 0); }
 
+// 5. Нахили (спека студії good_morning@1): 6 глибоких нахилів → 6; без нахилу → 0
+for (const age of [5, 11]) { const r = run('good_morning', goodMornings(6, 120), { age }); check(`good_morning age${age} x6`, { reps: r.reps, hints: r.hints }, r.reps === 6); }
+{ const r = run('good_morning', goodMornings(6, 30), { age: 5 }); check('good_morning shallow → 0', { reps: r.reps }, r.reps === 0); }
+// 6. Торкання плечей обличчям до камери (своя спека): кожен дотик = 1; рука не до плеча → 0
+for (const age of [5, 8, 11, 14]) { const r = run('shoulder_taps_front', shoulderTaps(10), { age }); check(`shoulder_taps_front age${age} x10`, { reps: r.reps }, r.reps === 10); }
+{ const r = run('shoulder_taps_front', shoulderTaps(10, { reach: 0.4 }), { age: 8 }); check('shoulder_taps_front short reach → 0', { reps: r.reps }, r.reps === 0); }
 console.log(fail ? `\n${fail} FAILED` : '\nALL OK');
 process.exit(fail ? 1 : 0);
