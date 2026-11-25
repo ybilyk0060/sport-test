@@ -15,7 +15,7 @@ import { ART } from './art.js';
 import { initDebug } from './debug.js';
 import { initConsent } from './analytics.js';
 import { drawShareCard } from './sharecard.js';
-import { buildProgram, nextWorkout, WEEKS, PER_WEEK } from './program.js';
+import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js';
 
 const env = detectEnv();
 const app = document.getElementById('app');
@@ -251,14 +251,16 @@ function programBlock(program) {
   const G = T.program, done = state.workouts || [];
   const next = nextWorkout(program, done);
   const total = program.workouts.length;
+  const doneIds = new Set(done.map((x) => x.id));
+  const doneN = program.workouts.filter((w) => doneIds.has(w.id)).length;
   const unit = (key) => (CONFIG.exercises[key].goal === 'seconds' ? T.report.unitSec : T.report.unitReps);
   const list = (w) => w.items.map((it) => `${esc(T.report.planEx[it.key])} — ${it.target} ${esc(unit(it.key))}`).join('<br>');
   const card = next
-    ? `<div class="next-w"><div class="nw-top"><small>${esc(G.today)} · ${esc(G.workout(next.week, next.day))}</small><small>${esc(G.progress(Math.min(done.length, total), total))}</small></div>
-        <div class="prog-bar"><i style="width:${Math.round((done.length / total) * 100)}%"></i></div>
+    ? `<div class="next-w"><div class="nw-top"><small>${esc(G.today)} · ${esc(G.month(program.month))} · ${esc(G.workout(next.week, next.day))}</small><small>${esc(G.progress(doneN, total))}</small></div>
+        <div class="prog-bar"><i style="width:${Math.round((doneN / total) * 100)}%"></i></div>
         <div class="small">${list(next)}</div><button class="btn" data-act="workout">${esc(G.start)}</button></div>`
     : `<div class="next-w"><b>${esc(G.allDone)}</b><button class="btn" data-act="retest">${esc(G.retest)}</button></div>`;
-  const plan = `<details class="sec"><summary>${esc(G.title)}</summary><p class="small muted">${esc(G.lead(G.focus[program.focus]))}</p>${[1, 2, 3, 4].map((wk) => `<div class="plan-week"><b>${esc(G.week(wk))}</b>${program.workouts.filter((w) => w.week === wk).map((w) => `<div class="plan-s"><b>${esc(T.report.session(w.day))}${done.some((x) => x.id === w.id) ? ` · ✓ ${esc(G.done)}` : ''}</b>${list(w)}</div>`).join('')}</div>`).join('')}</details>`;
+  const plan = `<details class="sec"><summary>${esc(G.title)} · ${esc(G.month(program.month))}</summary><p class="small muted">${esc(G.lead(G.focus[program.focus]))}</p>${[1, 2, 3, 4].map((wk) => `<div class="plan-week"><b>${esc(G.week(wk))}</b>${program.workouts.filter((w) => w.week === wk).map((w) => `<div class="plan-s"><b>${esc(T.report.session(w.day))}${doneIds.has(w.id) ? ` · ✓ ${esc(G.done)}` : ''}</b>${list(w)}</div>`).join('')}</div>`).join('')}</details>`;
   return { card, plan };
 }
 
@@ -269,7 +271,7 @@ function fullReport(justPaid = false) {
   if (!subActive()) return result();
   setState({ step: 'report' });
   const { profile, sports, plan: homePlan } = buildReport(state.results, state.quiz);
-  const program = buildProgram(profile, state.quiz, state.results);
+  const program = buildProgram(profile, state.quiz, state.results, { month: currentMonth(state.sub, state.workouts, Date.now(), SUB.periodDays), history: state.workouts || [] });
   const R = T.result, P = T.report;
   const pb = programBlock(program);
   const s = profile.strongest;
@@ -278,12 +280,13 @@ function fullReport(justPaid = false) {
   screen(`${justPaid ? `<p class="tip">${esc(P.paidOk)}</p>` : ''}
     <div class="rep-head">${s ? `<small>${esc(R.strongest)}</small><h1>${esc(R.qualities[s].name)}</h1>` : `<h1>${esc(R.title)}</h1>`}<p>${esc(R.summary[profile.summary])}</p>${bars}</div>
     ${pb.card}
+    <div class="apps-block"><h2 class="sec-title">${esc(T.apps.giftTitle)}</h2>${appsBlock()}</div>
     <details class="sec"><summary>${esc(P.sportsTitle)}</summary>
       ${sports.map((x, i) => `<div class="sport-row"><span class="n">${i + 1}</span><div><b>${esc(P.sports[x.sport].name)}</b><span class="small muted">${esc(P.sports[x.sport].ex)}</span><span class="small">${x.reasons.map((r) => esc(P.reasons[r] || r)).join(' · ')}</span></div></div>`).join('')}
       <p class="small muted">${esc(P.sportsNote)}</p>${tip ? `<p class="tip">${esc(P[tip])}</p>` : ''}</details>
     ${pb.plan}
     <details class="sec"><summary>${esc(P.resultsTitle)}</summary><ul class="facts">${factLines(state.results).map((f) => `<li>${esc(f)}</li>`).join('')}</ul><p class="small muted">${esc(R.prelimNote)}</p></details>
-    <details class="sec"><summary>${esc(T.apps.giftTitle)}</summary>${appsBlock()}</details>
+
     <details class="sec"><summary>${esc(P.cardTitle)}</summary><canvas class="sharecard" width="1080" height="1350"></canvas>
       <button class="btn" data-act="share">${esc(P.share)}</button><button class="btn line" data-act="download">${esc(P.download)}</button></details>
     <div class="foot-links"><span class="small muted">${esc(subLine())}</span><button class="link" data-act="manage">${esc(T.sub.manage)}</button><button class="link" data-act="again">${esc(R.again)}</button><a class="link" href="${privacyUrl}">${esc(T.common.privacy)}</a></div>`, {
@@ -299,7 +302,7 @@ function fullReport(justPaid = false) {
     workout: () => startWorkout(program),
     retest: () => retest(),
     app: (a) => track('app_link', { app: a.dataset.app }),
-    gift: (a) => { giftCode(a.dataset.app); track('gift_code', { app: a.dataset.app, mode: CONFIG.promoMode }); const y = window.scrollY; fullReport(); const d = app.querySelectorAll('details.sec')[3]; if (d) d.open = true; window.scrollTo(0, y); },
+    gift: (a) => { giftCode(a.dataset.app); track('gift_code', { app: a.dataset.app, mode: CONFIG.promoMode }); const y = window.scrollY; fullReport(); window.scrollTo(0, y); },
     'copy-code': async (a) => { try { await navigator.clipboard.writeText(a.dataset.code); } catch { /* нет доступа к буферу */ } toast(T.apps.copied); },
     again: () => retest(),
   });

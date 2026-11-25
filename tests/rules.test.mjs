@@ -34,7 +34,7 @@ check('музыка → танцы первыми', w.sports[0].sport === 'dance
 const { buildProgram, nextWorkout } = await import('../js/program.js');
 const pg = buildProgram(r.profile, quiz, full);
 check('программа: 12 тренировок по 4 упражнения', pg.workouts.length === 12 && pg.workouts.every((x) => x.items.length === 4), pg.workouts.map((x) => x.items.length));
-check('в программе только упражнения возраста', pg.workouts.every((x) => x.items.every((i) => ['jumping_jack', 'arm_circles', 'squats', 'high_knees', 'quadruped_arm_circles'].includes(i.key))));
+check('в программе только упражнения возраста', pg.workouts.every((x) => x.items.every((i) => ['jumping_jack', 'arm_circles', 'squats', 'high_knees', 'good_morning', 'quadruped_arm_circles'].includes(i.key))));
 check('футбол → бег в каждой тренировке', pg.focus === 'team' && pg.workouts.every((x) => x.items.some((i) => i.key === 'high_knees')));
 const sq = (wk) => pg.workouts.find((x) => x.week === wk && x.day === 1).items.find((i) => i.key === 'squats').target;
 check('нагрузка растёт по неделям', sq(4) > sq(1), [sq(1), sq(4)]);
@@ -64,4 +64,11 @@ check('до экрана результата нет слов о цене и о�
 const en = (await import('../js/i18n/en.js')).default, de = (await import('../js/i18n/de.js')).default;
 const keys = (o) => flat(o).map(([k]) => k).sort();
 for (const [n, L] of [['de', de], ['uk', uk]]) { const a = keys(en), b = keys(L); const miss = a.filter((k) => !b.includes(k)), extra = b.filter((k) => !a.includes(k)); check(`ключи ${n} = en`, !miss.length && !extra.length, { miss, extra }); }
+// Следующий месяц: id другие, нагрузка от лучшего результата прошлого месяца
+const { currentMonth } = await import('../js/program.js');
+const hist = pg.workouts.map((x) => ({ id: x.id, done: x.items.map((i) => ({ key: i.key, done: i.target + 1, target: i.target })) }));
+const p2 = buildProgram(r.profile, quiz, full, { month: 2, history: hist });
+const sqm = (p, wk) => p.workouts.find((x) => x.week === wk && x.day === 1).items.find((i) => i.key === 'squats');
+check('месяц 2: новые id и рост нагрузки', p2.workouts[0].id === 'm2w1d1' && sqm(p2, 1).target > sqm(pg, 1).target, [sqm(pg, 1), sqm(p2, 1)]);
+check('месяц по времени и по выполненному', currentMonth({ startedAt: Date.now() - 31 * 86400000 }, []) === 2 && currentMonth({ startedAt: Date.now() }, hist) === 2 && currentMonth({ startedAt: Date.now() }, []) === 1);
 console.log(fail ? `\n${fail} FAILED` : '\nALL OK'); process.exit(fail ? 1 : 0);

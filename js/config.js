@@ -51,9 +51,10 @@ export const CONFIG = {
 
   // --- Наши приложения (полезные ссылки и подарок подписчику) ---
   // live: false — карточка без кнопки этого стора (страница ещё не опубликована: ссылка дала бы 404).
-  // Статус 25.11: Zoo Google Play — опубликовано; Zoo App Store — на ревью; Chill Move App Store — одобрено, ждёт выпуска владельцем;
+  // Статус 25.11: Kidsney — App Store и Google Play опубликованы; Zoo Google Play — опубликовано; Zoo App Store — на ревью; Chill Move App Store — одобрено, ждёт выпуска владельцем;
   // Chill Move Google Play — на проверке. Как выйдут — поставить live: true.
   apps: {
+    kidsney: { ages: [4, 8], ios: { url: 'https://apps.apple.com/app/id6820046006', live: true }, android: { url: 'https://play.google.com/store/apps/details?id=tech.kidsney.hero', live: true } },
     zoo: { ages: [3, 5], ios: { url: 'https://apps.apple.com/app/id6835778169', live: false }, android: { url: 'https://play.google.com/store/apps/details?id=tech.kidsney.zoo', live: true } },
     chillmove: { ages: [6, 15], ios: { url: 'https://apps.apple.com/app/id6835860395', live: false }, android: { url: 'https://play.google.com/store/apps/details?id=com.chillmove.app', live: false } },
   },
@@ -79,6 +80,7 @@ export const CONFIG = {
       { key: 'arm_circles', target: 6, capSec: 25 },
       { key: 'squats', target: 6, capSec: 25 },
       { key: 'high_knees', target: 8, capSec: 25 },
+      { key: 'good_morning', target: 5, capSec: 25 },
       { key: 'quadruped_arm_circles', target: 5, capSec: 25 },
     ] },
     '9-11': { engineAge: 10, plan: [
@@ -86,6 +88,7 @@ export const CONFIG = {
       { key: 'arm_circles', target: 8, capSec: 25 },
       { key: 'squats', target: 8, capSec: 30 },
       { key: 'high_knees', target: 10, capSec: 25 },
+      { key: 'good_morning', target: 6, capSec: 25 },
       { key: 'wall_french_press', target: 8, capSec: 30 },
     ] },
     '12-15': { engineAge: 13, plan: [
@@ -93,6 +96,7 @@ export const CONFIG = {
       { key: 'arm_circles', target: 10, capSec: 25 },
       { key: 'squats', target: 12, capSec: 30 },
       { key: 'high_knees', target: 15, capSec: 30 },
+      { key: 'good_morning', target: 8, capSec: 30 },
       { key: 'pushups', target: 8, capSec: 30 },
     ] },
   },

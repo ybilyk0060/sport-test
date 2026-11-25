@@ -38,7 +38,10 @@ const ORDER = ['jumping_jack', 'arm_circles', 'squats', 'high_knees', 'good_morn
 
 export function focusKey(quiz) { return FOCUS[quiz && quiz.likes] ? quiz.likes : 'none'; }
 
-export function buildProgram(profile, quiz, results) {
+// month — номер месяца подписки (1, 2, 3…). history — выполненные тренировки [{ id, done: [{ key, done, target, skipped }] }].
+// Месяц 1 — от результата теста. Месяц N — от лучшего результата прошлого месяца: справился — растём, нет — держим уровень.
+export const monthId = (m, w, d) => (m === 1 ? `w${w}d${d}` : `m${m}w${w}d${d}`);
+export function buildProgram(profile, quiz, results, { month = 1, history = [] } = {}) {
   const group = CONFIG.ageGroups[(quiz && quiz.age) || CONFIG.defaultAge] || CONFIG.ageGroups[CONFIG.defaultAge];
   const avail = group.plan.map((p) => p.key);
   const armsKey = avail.find((k) => ['pushups', 'wall_french_press', 'quadruped_arm_circles'].includes(k)) || 'squats';
@@ -51,24 +54,52 @@ export function buildProgram(profile, quiz, results) {
   const testTarget = Object.fromEntries(group.plan.map((p) => [p.key, p]));
   const did = Object.fromEntries((results || []).filter((r) => !r.skipped).map((r) => [r.key, Math.floor(r.done)]));
 
+  // Лучший результат и цель прошлого месяца по каждому упражнению
+  const prevIds = month > 1 ? new Set([1, 2, 3, 4].flatMap((w) => [1, 2, 3].map((d) => monthId(month - 1, w, d)))) : new Set();
+  const best = {}, hit = {};
+  for (const rec of history || []) {
+    if (!prevIds.has(rec.id)) continue;
+    for (const it of rec.done || []) {
+      if (it.skipped) continue;
+      best[it.key] = Math.max(best[it.key] || 0, Math.floor(it.done));
+      if (it.done >= it.target) hit[it.key] = (hit[it.key] || 0) + 1;
+    }
+  }
+  const startOf = (key) => {
+    const d = DOSE[key];
+    const m1 = Math.max(d.min, did[key] || Math.round((testTarget[key] ? testTarget[key].target : d.min) * 0.7));
+    if (month === 1) return m1;
+    if (best[key] != null) return Math.max(d.min, best[key] + (hit[key] ? d.step : 0));
+    return m1 + (month - 1) * 2 * d.step; // прошлый месяц не занимались этим упражнением — растём умеренно
+  };
   const dose = (key, week) => {
     const d = DOSE[key];
-    const start = Math.max(d.min, did[key] || Math.round((testTarget[key] ? testTarget[key].target : d.min) * 0.7));
-    const target = start + (week - 1) * d.step;
+    const target = startOf(key) + (week - 1) * d.step;
     const isSec = CONFIG.exercises[key].goal === 'seconds';
     return { key, target, capSec: isSec ? target + 20 : Math.max(25, Math.round(target * 3.5)) };
   };
   const workouts = [];
   for (let w = 1; w <= WEEKS; w++) {
     for (let d = 1; d <= PER_WEEK; d++) {
-      // Тренировка: основа по интересу + 1 упражнение на слабое качество; во 2-й тренировке недели одно меняем
+      // Тренировка: основа по интересу + 1 упражнение на слабое качество; во 2-й тренировке недели одно меняем,
+      // в чётные месяцы — другое, чтобы программа не повторялась
       const keys = [...base, extra].filter(Boolean);
-      if (d === 2 && keys.length > 2) keys[2] = avail.find((k) => !keys.includes(k)) || keys[2];
+      const swapAt = month % 2 === 0 ? 1 : 2;
+      if (d === 2 && keys.length > swapAt) keys[swapAt] = avail.find((k) => !keys.includes(k)) || keys[swapAt];
       const items = [...new Set(keys)].sort((a, b) => ORDER.indexOf(a) - ORDER.indexOf(b)).map((k) => dose(k, w));
-      workouts.push({ id: `w${w}d${d}`, week: w, day: d, items });
+      workouts.push({ id: monthId(month, w, d), month, week: w, day: d, items });
     }
   }
-  return { focus: focusKey(quiz), weakest, workouts };
+  return { focus: focusKey(quiz), weakest, month, workouts };
+}
+
+// Какой месяц программы сейчас: по времени подписки, но если месяц пройден раньше — можно начать следующий.
+export function currentMonth(sub, history, now = Date.now(), periodDays = 30) {
+  const byTime = sub && sub.startedAt ? Math.floor((now - sub.startedAt) / (periodDays * 86400000)) + 1 : 1;
+  const done = new Set((history || []).map((x) => x.id));
+  let m = 1;
+  while ([1, 2, 3, 4].every((w) => [1, 2, 3].every((d) => done.has(monthId(m, w, d))))) m++;
+  return Math.max(byTime, m);
 }
 
 export function nextWorkout(program, done) {

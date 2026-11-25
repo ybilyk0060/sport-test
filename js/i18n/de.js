@@ -169,7 +169,7 @@ export default {
       speed: { name: 'Schnelligkeit', d: 'Wie schnell und ausdauernd sich Ihr Kind bewegt.' },
       arms: { name: 'Armkraft', d: 'Wie Ihr Kind mit den Armen drückt und den Körper gerade hält.' },
       core: { name: 'Rumpfkraft', d: 'Wie ruhig Ihr Kind den Körper im Vierfüßler- oder Liegestütz hält.' },
-      flex: { name: 'Gelenkbeweglichkeit', d: 'Wie frei und weit sich die Schultern bewegen.' },
+      flex: { name: 'Beweglichkeit & Gelenke', d: 'Vorbeugen mit geradem Rücken und weite Armkreise.' },
       symmetry: { name: 'Symmetrie', d: 'Wie gleichmäßig linke und rechte Seite arbeiten.' },
     },
     facts: {
@@ -264,6 +264,7 @@ export default {
       climb: 'Arm- und Rumpfkraft, Beweglichkeit — wie für Klettern und Turnen',
       none: 'von allem etwas: Ausdauer, Kraft, Beweglichkeit',
     },
+    month: (m) => `Monat ${m}`,
     today: 'Nächste Einheit',
     workout: (w, d) => `Woche ${w} · Einheit ${d}`,
     start: 'Einheit starten',
@@ -281,6 +282,7 @@ export default {
   apps: {
     title: 'Mehr für Ihr Kind',
     lead: 'Unsere Apps, in denen Bewegung Teil des Spiels ist. Ein Teil des Programms geht auch dort.',
+    kidsney: { name: 'Kidsney', d: 'Für 4–8 Jahre: Training mit einem Helden, der mit jeder Übung wächst.' },
     zoo: { name: 'Kidsney Zoo', d: 'Für Jüngere: Bewegungsspiele mit Tieren vor der Kamera.' },
     chillmove: { name: 'Chill Move', d: 'Für Ältere: Übungen vor der Kamera statt zusätzlicher Bildschirmzeit.' },
     soon: (stores) => `Demnächst im ${stores}`,

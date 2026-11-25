@@ -170,7 +170,7 @@ export default {
       speed: { name: 'Speed', d: 'How fast and steadily your child keeps moving.' },
       arms: { name: 'Arm strength', d: 'How your child pushes with the arms and keeps the body straight.' },
       core: { name: 'Core strength', d: 'How steady your child keeps the body on all fours or in a plank.' },
-      flex: { name: 'Joint mobility', d: 'How freely and widely the shoulders move.' },
+      flex: { name: 'Flexibility & joints', d: 'Bends with a straight back and wide arm circles.' },
       symmetry: { name: 'Symmetry', d: 'How evenly the left and right sides work.' },
     },
     facts: {
@@ -265,6 +265,7 @@ export default {
       climb: 'arm and core strength, flexibility — like climbing and gymnastics',
       none: 'a bit of everything: endurance, strength, flexibility',
     },
+    month: (m) => `Month ${m}`,
     today: 'Next workout',
     workout: (w, d) => `Week ${w} · workout ${d}`,
     start: 'Start workout',
@@ -282,6 +283,7 @@ export default {
   apps: {
     title: 'More for your child',
     lead: 'Our apps where movement is part of the game. Part of the program can be done there.',
+    kidsney: { name: 'Kidsney', d: 'For ages 4–8: workouts with a hero who grows with every exercise.' },
     zoo: { name: 'Kidsney Zoo', d: 'For younger kids: active games with animals in front of the camera.' },
     chillmove: { name: 'Chill Move', d: 'For older kids: camera workouts instead of extra screen time.' },
     soon: (stores) => `Coming soon to ${stores}`,
