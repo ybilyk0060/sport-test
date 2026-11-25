@@ -70,7 +70,60 @@ const wayforpayProvider = {
   },
 };
 
-const providers = { test: testProvider, wayforpay: wayforpayProvider };
+// Paddle Billing (Merchant of Record для США и ЕС). Окно оплаты Paddle поверх страницы: карта вводится у Paddle, не у нас.
+// Первые 30 дней по сниженной цене — скидка Paddle на первый период (discountId), дальше цена подписки (priceId).
+// Доступ открывается только после вебхука Paddle на сервер (sport-test-paddle → sport_test_orders.status='paid'),
+// а не по событию в браузере. CONFIG.paddleCheckout: { env: 'sandbox' | 'production', token, prices: { USD: { price, discount }, EUR: {...} } }.
+let paddleReady = null;
+function loadPaddle(onEvent) {
+  if (paddleReady) return paddleReady;
+  const C = CONFIG.paddleCheckout;
+  paddleReady = new Promise((resolve, reject) => {
+    const s = document.createElement('script'); s.src = 'https://cdn.paddle.com/paddle/v2/paddle.js'; s.async = true;
+    s.onload = () => {
+      try {
+        if (C.env === 'sandbox') window.Paddle.Environment.set('sandbox');
+        window.Paddle.Initialize({ token: C.token, eventCallback: (e) => onEvent && onEvent(e) });
+        resolve(window.Paddle);
+      } catch (e) { reject(e); }
+    };
+    s.onerror = () => { paddleReady = null; reject(new Error('paddle.js')); };
+    document.head.appendChild(s);
+  });
+  return paddleReady;
+}
+const paddleProvider = {
+  name: 'paddle',
+  get isTest() { return !CONFIG.paddleCheckout || CONFIG.paddleCheckout.env !== 'production'; },
+  async mode() { return this.isTest ? 'test' : 'live'; },
+  async startCheckout({ orderId, currency = 'USD', lang, email, discount, returnUrl }) {
+    const C = CONFIG.paddleCheckout, pr = C && C.prices[currency];
+    if (!pr || !pr.price) throw new Error('no paddle price for ' + currency);
+    const done = new URL(returnUrl); done.searchParams.set('pay', 'check'); done.searchParams.set('order', orderId);
+    const P = await loadPaddle((e) => { if (e && e.name === 'checkout.completed') setTimeout(() => { location.href = done.toString(); }, 300); });
+    P.Checkout.open({
+      items: [{ priceId: pr.price, quantity: 1 }],
+      ...(discount && pr.discount ? { discountId: pr.discount } : {}),
+      ...(email ? { customer: { email } } : {}),
+      customData: { order_ref: orderId },
+      settings: { displayMode: 'overlay', theme: 'light', locale: lang || 'en', allowLogout: false, successUrl: done.toString() },
+    });
+  },
+  readReturn: wayforpayProvider.readReturn,
+  // Ждём вебхук Paddle (обычно секунды): сервер отвечает, оплачен ли заказ
+  async verify(orderId) {
+    for (let i = 0; i < 15; i++) {
+      try {
+        const r = await fetch(CONFIG.subFn, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'order', orderRef: orderId }) }).then((x) => x.json());
+        if (r.paid) return true;
+      } catch { /* повтор */ }
+      await new Promise((res) => setTimeout(res, 2000));
+    }
+    return false;
+  },
+};
+
+const providers = { test: testProvider, wayforpay: wayforpayProvider, paddle: paddleProvider };
 
 export const payment = providers[CONFIG.paymentProvider] || testProvider;
 

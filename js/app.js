@@ -282,7 +282,7 @@ function result(note = '') {
       const ret = new URL(location.href); ret.search = ''; ret.hash = '';
       if (params.get('debug')) ret.searchParams.set('debug', '1');
       if (params.get('paywall')) ret.searchParams.set('paywall', params.get('paywall'));
-      Promise.resolve(payment.startCheckout({ orderId, amount, currency: CUR, lang: LANG, description: T.payTest.sub(money(amount), money(PRICE.regular), SUB.periodDays), returnUrl: ret.toString() }))
+      Promise.resolve(payment.startCheckout({ orderId, amount, currency: CUR, lang: LANG, email, discount: amount < PRICE.regular, description: T.payTest.sub(money(amount), money(PRICE.regular), SUB.periodDays), returnUrl: ret.toString() }))
         .catch(() => { track('pay_error', { provider: payment.name }); toast(T.paywall.payError); });
     },
     'to-top': () => { const el = app.querySelector('#price-top'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); track('paywall_to_top'); },

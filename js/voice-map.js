@@ -155,8 +155,15 @@ export const VOICE_FILES = {
   "tuck_jump_coach_2": "en/tuck_jump_coach_2.wav",
   "tuck_jump_coach_3": "en/tuck_jump_coach_3.wav",
   "tuck_jump_coach_4": "en/tuck_jump_coach_4.wav",
+  "balance_howto": "en/custom/balance_howto.wav",
+  "balance_left": "en/custom/balance_left.wav",
+  "bend_howto": "en/custom/bend_howto.wav",
+  "bend_knees_straight": "en/custom/bend_knees_straight.wav",
   "good_morning_full_howto": "en/custom/good_morning_full_howto.m4a",
-  "shoulder_taps_front_howto": "en/custom/shoulder_taps_front_howto.m4a"
+  "shoulder_taps_front_howto": "en/custom/shoulder_taps_front_howto.m4a",
+  "shoulder_taps_head_howto": "en/custom/shoulder_taps_head_howto.wav",
+  "side_jumps_again": "en/custom/side_jumps_again.wav",
+  "side_jumps_howto": "en/custom/side_jumps_howto.wav"
  },
  "de": {
   "ui_raise_hand": "de/ui_raise_hand.m4a",
@@ -313,8 +320,15 @@ export const VOICE_FILES = {
   "tuck_jump_coach_2": "de/tuck_jump_coach_2.wav",
   "tuck_jump_coach_3": "de/tuck_jump_coach_3.wav",
   "tuck_jump_coach_4": "de/tuck_jump_coach_4.wav",
+  "balance_howto": "de/custom/balance_howto.wav",
+  "balance_left": "de/custom/balance_left.wav",
+  "bend_howto": "de/custom/bend_howto.wav",
+  "bend_knees_straight": "de/custom/bend_knees_straight.wav",
   "good_morning_full_howto": "de/custom/good_morning_full_howto.m4a",
-  "shoulder_taps_front_howto": "de/custom/shoulder_taps_front_howto.m4a"
+  "shoulder_taps_front_howto": "de/custom/shoulder_taps_front_howto.m4a",
+  "shoulder_taps_head_howto": "de/custom/shoulder_taps_head_howto.wav",
+  "side_jumps_again": "de/custom/side_jumps_again.wav",
+  "side_jumps_howto": "de/custom/side_jumps_howto.wav"
  },
  "uk": {
   "ui_raise_hand": "uk/ui_raise_hand.m4a",
@@ -471,7 +485,14 @@ export const VOICE_FILES = {
   "tuck_jump_coach_2": "uk/tuck_jump_coach_2.wav",
   "tuck_jump_coach_3": "uk/tuck_jump_coach_3.wav",
   "tuck_jump_coach_4": "uk/tuck_jump_coach_4.wav",
+  "balance_howto": "uk/custom/balance_howto.wav",
+  "balance_left": "uk/custom/balance_left.wav",
+  "bend_howto": "uk/custom/bend_howto.wav",
+  "bend_knees_straight": "uk/custom/bend_knees_straight.wav",
   "good_morning_full_howto": "uk/custom/good_morning_full_howto.m4a",
-  "shoulder_taps_front_howto": "uk/custom/shoulder_taps_front_howto.m4a"
+  "shoulder_taps_front_howto": "uk/custom/shoulder_taps_front_howto.m4a",
+  "shoulder_taps_head_howto": "uk/custom/shoulder_taps_head_howto.wav",
+  "side_jumps_again": "uk/custom/side_jumps_again.wav",
+  "side_jumps_howto": "uk/custom/side_jumps_howto.wav"
  }
 };

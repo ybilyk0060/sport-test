@@ -17,6 +17,15 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
 const MODE = Deno.env.get("WFP_MERCHANT") ? "live" : "test";
+// Paddle: заказы оплачиваются через вебхук sport-test-paddle; отмена/возобновление — через API Paddle (ключ PADDLE_API_KEY)
+const PADDLE_KEY = Deno.env.get("PADDLE_API_KEY") || "";
+const PADDLE_API = (Deno.env.get("PADDLE_ENV") || "sandbox") === "production" ? "https://api.paddle.com" : "https://sandbox-api.paddle.com";
+async function paddle(path: string, method: string, body?: unknown) {
+  if (!PADDLE_KEY) throw new Error("no PADDLE_API_KEY");
+  const r = await fetch(PADDLE_API + path, { method, headers: { authorization: `Bearer ${PADDLE_KEY}`, "content-type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
+  if (!r.ok) throw new Error(`paddle ${r.status} ${(await r.text()).slice(0, 200)}`);
+  return r.json();
+}
 const SITE_HOSTS = (Deno.env.get("SPORT_TEST_RETURN_HOSTS") || "kids-test.com,www.kids-test.com,ybilyk0060.github.io,localhost,127.0.0.1").split(",");
 const BREVO = Deno.env.get("BREVO_API_KEY");
 const FROM = Deno.env.get("SPORT_TEST_MAIL_FROM") || "support@kids-test.com";
@@ -81,20 +90,30 @@ Deno.serve(async (req) => {
   try {
     const b = await req.json().catch(() => ({})) as Record<string, any>;
 
+    // Оплачен ли заказ (ждём вебхук Paddle после окна оплаты). Отвечает только да/нет.
+    if (b.action === "order") {
+      const { data: o } = await db.from("sport_test_orders").select("status").eq("order_ref", String(b.orderRef || "")).maybeSingle();
+      return json({ paid: !!o && o.status === "paid" });
+    }
+
     if (b.action === "activate") {
       const email = String(b.email || "").trim().toLowerCase();
       const orderRef = String(b.orderRef || "");
       if (!emailOk(email) || !/^st-[A-Za-z0-9_-]{4,76}$/.test(orderRef)) return json({ error: "bad input" }, 400);
-      if (MODE === "live") {
-        const { data: o } = await db.from("sport_test_orders").select("status, amount, currency").eq("order_ref", orderRef).maybeSingle();
-        if (!o || o.status !== "paid") return json({ error: "order not paid" }, 402);
+      const { data: order } = await db.from("sport_test_orders").select("status, amount, currency, provider, provider_sub, mode").eq("order_ref", orderRef).maybeSingle();
+      let subMode = MODE;
+      if (order && order.provider === "paddle") {
+        if (order.status !== "paid") return json({ error: "order not paid" }, 402);
+        subMode = order.mode === "production" ? "live" : "sandbox";
+      } else if (MODE === "live") {
+        if (!order || order.status !== "paid") return json({ error: "order not paid" }, 402);
       } else if (!b.test) return json({ error: "test mode only" }, 400);
       const { data: existing } = await db.from("sport_test_subscriptions").select("*").eq("order_ref", orderRef).maybeSingle();
       let sub = existing;
       if (!sub) {
         const now = Date.now();
         const { data, error } = await db.from("sport_test_subscriptions").insert({
-          order_ref: orderRef, email, mode: MODE, currency: String(b.currency || "USD").slice(0, 3),
+          order_ref: orderRef, email, mode: subMode, currency: String(b.currency || "USD").slice(0, 3), provider_sub: order?.provider_sub || null,
           first_amount: Number(b.first) || 0, regular_amount: Number(b.regular) || 0, period_days: PERIOD_DAYS,
           started_at: new Date(now).toISOString(), paid_until: new Date(now + PERIOD_DAYS * 86400000).toISOString(),
           quiz: clip(b.quiz), results: clip(b.results), lang: ["en", "de", "uk"].includes(String(b.lang)) ? String(b.lang) : "en",
@@ -158,7 +177,13 @@ Deno.serve(async (req) => {
     if (b.action === "status") return json({ sub: view(sub) });
     if (b.action === "cancel" || b.action === "resume") {
       const patch = b.action === "cancel" ? { status: "cancelled", cancelled_at: new Date().toISOString() } : { status: "active", cancelled_at: null };
-      // Настоящая отмена у платёжного провайдера (регулярный платёж WayForPay) — добавить при подключении мерчанта
+      // Подписка Paddle: отмена с конца оплаченного периода / снятие запланированной отмены — у Paddle, иначе списания продолжатся
+      if (sub.provider_sub) {
+        try {
+          if (b.action === "cancel") await paddle(`/subscriptions/${sub.provider_sub}/cancel`, "POST", { effective_from: "next_billing_period" });
+          else await paddle(`/subscriptions/${sub.provider_sub}`, "PATCH", { scheduled_change: null });
+        } catch (e) { console.error("paddle", String(e)); return json({ error: "provider" }, 502); }
+      }
       const { data } = await db.from("sport_test_subscriptions").update(patch).eq("id", sub.id).select("*").single();
       return json({ sub: view(data) });
     }
