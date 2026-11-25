@@ -2,8 +2,8 @@
 // Без согласия события остаются только на устройстве (store.track). Видео, точки тела и ответы о ребёнке наружу не уходят:
 // в события идут только имя шага, номер вопроса, ключ упражнения, сумма и валюта.
 
-import { CONFIG } from './config.js?v=78560a1-mww9uyj5';
-import { T } from './i18n/index.js?v=78560a1-mww9uyj5';
+import { CONFIG } from './config.js?v=44a2951-mww9vvwm';
+import { T } from './i18n/index.js?v=44a2951-mww9vvwm';
 
 const KEY = 'sporttest.consent';
 let consent = null;
@@ -24,6 +24,7 @@ function loadPixel(id) {
   window.fbq('init', id);
   window.fbq('track', 'PageView');
 }
+const stripUrl = (u) => { try { const x = new URL(u, location.href); for (const k of ['sub', 's', 'order', 'orderReference']) x.searchParams.delete(k); return x.toString(); } catch { return u; } };
 function loadPosthog(key, host) {
   /* eslint-disable */
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -33,7 +34,9 @@ function loadPosthog(key, host) {
   window.posthog.init(key, {
     api_host: host, autocapture: true, capture_pageview: true, capture_pageleave: true, enable_heatmaps: true,
     disable_session_recording: false, persistence: 'localStorage', ip: false, mask_all_text: false,
-    session_recording: { maskAllInputs: true, blockClass: 'ph-no-capture', blockSelector: 'video, canvas, .stage' },
+    session_recording: { maskAllInputs: true, blockClass: 'ph-no-capture', blockSelector: 'video, canvas, .stage', maskCapturedNetworkRequestFn: (r) => ({ ...r, name: stripUrl(r.name) }) },
+    // ссылка доступа к подписке (?sub=) и перенос ответов (?s=) не уходят в аналитику
+    sanitize_properties: (props) => { for (const k of ['$current_url', '$referrer', '$initial_current_url', '$prev_pageview_pathname']) if (typeof props[k] === 'string') props[k] = stripUrl(props[k]); return props; },
   });
   window.posthog.register({ app: 'sport-test', lang: T.meta.lang });
 }
