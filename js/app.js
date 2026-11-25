@@ -1,22 +1,22 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
-import { T } from './i18n/index.js?v=2f1885c-mww9zzmx';
-import { CONFIG } from './config.js?v=2f1885c-mww9zzmx';
-import { money, PRICE, CUR, fmtDate, } from './locale.js?v=2f1885c-mww9zzmx';
-import { LANG, LOCALES } from './i18n/index.js?v=2f1885c-mww9zzmx';
-import { state, setState, resetState, track, importHandoff, store } from './store.js?v=2f1885c-mww9zzmx';
-import { detectEnv } from './env.js?v=2f1885c-mww9zzmx';
-import { preloadPose } from './pose.js?v=2f1885c-mww9zzmx';
-import { unlockAudio } from './audio.js?v=2f1885c-mww9zzmx';
-import { startStage, startFallback, toast } from './stage.js?v=2f1885c-mww9zzmx';
-import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=2f1885c-mww9zzmx';
-import { payment, newOrderId } from './payment.js?v=2f1885c-mww9zzmx';
-import { ART } from './art.js?v=2f1885c-mww9zzmx';
-import { initDebug } from './debug.js?v=2f1885c-mww9zzmx';
-import { initConsent } from './analytics.js?v=2f1885c-mww9zzmx';
-import * as subapi from './subapi.js?v=2f1885c-mww9zzmx';
-import { drawShareCard } from './sharecard.js?v=2f1885c-mww9zzmx';
-import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=2f1885c-mww9zzmx';
+import { T } from './i18n/index.js?v=2686ed8-mwwcza31';
+import { CONFIG } from './config.js?v=2686ed8-mwwcza31';
+import { money, PRICE, CUR, fmtDate, } from './locale.js?v=2686ed8-mwwcza31';
+import { LANG, LOCALES } from './i18n/index.js?v=2686ed8-mwwcza31';
+import { state, setState, resetState, track, importHandoff, store } from './store.js?v=2686ed8-mwwcza31';
+import { detectEnv } from './env.js?v=2686ed8-mwwcza31';
+import { preloadPose } from './pose.js?v=2686ed8-mwwcza31';
+import { unlockAudio } from './audio.js?v=2686ed8-mwwcza31';
+import { startStage, startFallback, toast } from './stage.js?v=2686ed8-mwwcza31';
+import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=2686ed8-mwwcza31';
+import { payment, newOrderId } from './payment.js?v=2686ed8-mwwcza31';
+import { ART } from './art.js?v=2686ed8-mwwcza31';
+import { initDebug } from './debug.js?v=2686ed8-mwwcza31';
+import { initConsent } from './analytics.js?v=2686ed8-mwwcza31';
+import * as subapi from './subapi.js?v=2686ed8-mwwcza31';
+import { drawShareCard } from './sharecard.js?v=2686ed8-mwwcza31';
+import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=2686ed8-mwwcza31';
 
 const env = detectEnv();
 const app = document.getElementById('app');
@@ -198,10 +198,19 @@ function runOfferTimer() {
     if (left <= 0) { clearInterval(offerTimer); track('offer_timer_end'); if (state.step === 'result') result(); }
   }, 1000);
 }
+// Топ-3 вида спорта до оплаты: только закрытые карточки. Названий видов спорта в разметке нет вообще (Юрий 25.11) —
+// показываем, что совпадение найдено, и на каких реальных сильных сторонах ребёнка оно основано. Никаких процентов.
+function sportsTeaser(profile) {
+  if (!profile) return '';
+  const P = T.paywall, R = T.result;
+  const { sports } = buildReport(state.results, state.quiz);
+  const why = (x) => { const qs = x.reasons.filter((k) => k.startsWith('q.')).slice(0, 2).map((k) => R.qualities[k.slice(2)].name); return qs.length ? qs.join(' + ') : P.basedInterests; };
+  return `<div class="teaser"><h3>${esc(P.sportsTitle)}</h3><p class="small muted">${esc(P.sportsLead)}</p>
+    ${sports.map((x, i) => `<div class="lock-card"><span class="lock-n">${i + 1}</span><div><b>${esc(P.match(i + 1))}</b><small>${esc(P.basedOn(why(x)))}</small></div><span class="lock-ic" aria-hidden="true">🔒</span></div>`).join('')}</div>`;
+}
 function paywallCard(note = '', profile = null) {
   const P = T.paywall, R = T.result;
   const renewAt = Date.now() + SUB.periodDays * DAY;
-  const weak = profile ? QUALITIES.filter((q) => profile.qualities[q].level > 0).sort((a, b) => profile.qualities[a].score - profile.qualities[b].score)[0] : null;
   const focus = T.program.focus[state.quiz.likes] || T.program.focus.none;
   offerDeadline(true);
   const on = discountOn(), first = firstPrice(), d = offerDeadline();
@@ -210,16 +219,17 @@ function paywallCard(note = '', profile = null) {
       <div class="pc-price">${on ? `<s>${esc(money(PRICE.regular))}</s>` : ''}<b>${esc(money(first))}</b></div></div>
       <p class="renew">${esc(P.renew(money(PRICE.regular), SUB.periodDays, fmtDate(renewAt)))}</p>
       ${id ? `<label class="email-field"><span class="small">${esc(P.emailLabel)}</span><input class="field" type="email" inputmode="email" autocomplete="email" data-el="email" value="${esc(state.email || '')}" maxlength="120" placeholder="name@example.com"></label>` : ''}
-      ${P.withdrawal ? `<label class="check small"><input type="checkbox" data-el="withdrawal"><span>${esc(P.withdrawal)}</span></label>` : ''}
+      ${P.withdrawal ? `<label class="check small"><input type="checkbox" data-el="withdrawal"><span>${esc(P.withdrawal)}${P.withdrawalLink ? ` <a href="${P.withdrawalLink.href}" target="_blank" rel="noopener">${esc(P.withdrawalLink.text)}</a>` : ''}</span></label>` : ''}
       <button class="btn" data-act="pay">${esc(P.cta(money(first)))}</button>
+      <p class="trust small center">🔒 ${esc(P.trust)}</p>
       <p class="small center testmode" hidden style="color:#b45309;font-weight:600">${esc(P.testMode)}</p></div>`;
   return `<div class="paywall" id="paywall"><h2>${esc(P.title)}</h2>${note ? `<p class="err">${esc(note)}</p>` : ''}
-    <p>${esc(weak ? P.lead(R.qualities[weak].name) : P.leadNoWeak)}</p>
+    <p>${esc(P.lead())}</p>
+    ${sportsTeaser(profile)}
     <div class="focus-box"><small>${esc(P.focusTitle)}</small><b>${esc(focus)}</b></div>
     ${priceBox('price-top')}
     <h3>${esc(P.inside)}</h3><ul class="checks-list">${P.insideItems.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
-    <p class="small muted">${esc(P.how)}</p>
-    ${priceBox('')}
+    <div class="price-mini"><div><b>${esc(money(first))}</b>${on ? ` <s>${esc(money(PRICE.regular))}</s>` : ''}<small>${esc(P.firstLabel(SUB.periodDays))}</small></div><button class="btn" data-act="to-top">${esc(P.unlock)}</button></div>
     <p class="fine">${esc(P.fine(money(first), money(PRICE.regular), SUB.periodDays))}</p>
     ${legalLinks()}
     <button class="btn ghost" data-act="not-now">${esc(P.notNow)}</button></div>`;
@@ -250,7 +260,7 @@ function result(note = '') {
     const s = profile.strongest;
     body = `<span class="badge">${esc(R.badge)}</span><h1 class="rtitle">${esc(R.title)}</h1><p class="summary">${esc(R.summary[profile.summary])}</p>
       ${s ? `<div class="strong"><small>${esc(R.strongest)}</small><b>${esc(R.qualities[s].name)}</b><span>${esc(R.qualities[s].d)}</span><span><b style="font-size:16px">${esc(R.levels[profile.qualities[s].level])}</b></span></div>` : ''}
-      <p class="small muted">${esc(R.prelimNote)} ${esc(T.landing.disclaimer)}</p>
+      <p class="small muted">${esc(R.shortNote)}</p>
       <h2 class="sec-title">${esc(R.profile)}</h2>
       <div class="locked"><div class="locked-list">${qualitiesOf(state.results).filter((q) => q !== s).map(qRowLocked).join('')}</div></div>
       ${dismissed ? `<div class="sticky-pay"><button class="btn" data-act="pay">${esc(T.paywall.cta(money(firstPrice())))}</button></div><p class="renew">${esc(T.paywall.renew(money(PRICE.regular), SUB.periodDays, fmtDate(Date.now() + SUB.periodDays * DAY)))}</p><p class="terms">${esc(T.paywall.terms)}</p>` : paywallCard(note, profile)}
@@ -275,6 +285,7 @@ function result(note = '') {
       Promise.resolve(payment.startCheckout({ orderId, amount, currency: CUR, lang: LANG, description: T.payTest.sub(money(amount), money(PRICE.regular), SUB.periodDays), returnUrl: ret.toString() }))
         .catch(() => { track('pay_error', { provider: payment.name }); toast(T.paywall.payError); });
     },
+    'to-top': () => { const el = app.querySelector('#price-top'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); track('paywall_to_top'); },
     'not-now': () => { setState({ paywallDismissed: true }); track('paywall_dismissed', { mode: paywallMode }); result(); },
     again: () => { resetState(); track('restart'); landing(); },
   });
@@ -362,10 +373,11 @@ function fullReport(justPaid = false) {
       ${sports.map((x, i) => `<div class="sport-row"><span class="n">${i + 1}</span><div><b>${esc(P.sports[x.sport].name)}</b><span class="small muted">${esc(P.sports[x.sport].ex)}</span><span class="small">${x.reasons.map((r) => esc(P.reasons[r] || r)).join(' · ')}</span></div></div>`).join('')}
       <p class="small muted">${esc(P.sportsNote)}</p>${tip ? `<p class="tip">${esc(P[tip])}</p>` : ''}</details>
     ${pb.plan}
-    <details class="sec"><summary>${esc(P.resultsTitle)}</summary><ul class="facts">${factLines(state.results).map((f) => `<li>${esc(f)}</li>`).join('')}</ul><p class="small muted">${esc(R.prelimNote)} ${esc(T.landing.disclaimer)}</p></details>
+    <details class="sec"><summary>${esc(P.resultsTitle)}</summary><ul class="facts">${factLines(state.results).map((f) => `<li>${esc(f)}</li>`).join('')}</ul><p class="small muted">${esc(R.shortNote)}</p></details>
 
     <details class="sec"><summary>${esc(P.cardTitle)}</summary><canvas class="sharecard" width="1080" height="1350"></canvas>
       <button class="btn" data-act="share">${esc(P.share)}</button><button class="btn line" data-act="download">${esc(P.download)}</button></details>
+    <p class="small muted">${esc(T.result.prelimNote)} ${esc(T.landing.disclaimer)}</p>
     <div class="foot-links"><span class="small muted">${esc(subLine())}</span><button class="link" data-act="manage">${esc(T.sub.manage)}</button><button class="link" data-act="again">${esc(R.again)}</button></div>${legalLinks()}`, {
     share: async () => {
       track('card_share');

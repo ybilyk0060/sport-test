@@ -2,8 +2,8 @@
 // Какие клипы есть — js/voice-map.js (генерирует tools/fetch-voice.mjs из манифеста Студії вправ).
 // Звук разблокируется первым нажатием пользователя (требование iOS).
 
-import { VOICE_FILES } from './voice-map.js?v=2f1885c-mww9zzmx';
-import { LANG } from './i18n/index.js?v=2f1885c-mww9zzmx';
+import { VOICE_FILES } from './voice-map.js?v=2686ed8-mwwcza31';
+import { LANG } from './i18n/index.js?v=2686ed8-mwwcza31';
 
 const CLIPS = VOICE_FILES[LANG] || VOICE_FILES.en;
 
@@ -42,8 +42,11 @@ export function preloadClips(names) { for (const n of names) if (exists(n)) load
 // say(name): проиграть клип. interrupt=true прерывает текущий (для счёта).
 export async function say(name, { interrupt = true } = {}) {
   if (!ctx || !exists(name)) return;
+  const epoch = queueId;
   const buf = await loadClip(name);
   if (!buf) return;
+  // Пока клип грузился, началась очередь (вступление упражнения) — не перебиваем её запоздавшим клипом
+  if (epoch !== queueId) return;
   if (current && interrupt) { try { current.stop(); } catch { /* уже остановлен */ } current = null; }
   if (current && !interrupt) return;
   const src = ctx.createBufferSource(); src.buffer = buf; src.connect(ctx.destination);

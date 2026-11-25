@@ -156,6 +156,7 @@ export default {
   result: {
     badge: 'Vorläufiges Ergebnis',
     title: 'Bewegungsprofil Ihres Kindes',
+    shortNote: 'Ein spielerischer Bewegungstest, keine medizinische Untersuchung.',
     prelimNote: 'Das ist ein vorläufiges Ergebnis aus einem kurzen Test. Altersnormen gibt es noch nicht: Wir vergleichen Ihr Kind mit der Aufgabe, nicht mit anderen Kindern.',
     summary: {
       high: 'Sicheres Bewegungsprofil: Ihr Kind hat die meisten Aufgaben komplett geschafft.',
@@ -194,8 +195,16 @@ export default {
   },
 
   paywall: {
+    sportsTitle: 'Die 3 besten Sportarten für Ihr Kind',
+    sportsLead: 'Ausgewählt nach den Testergebnissen und Interessen Ihres Kindes. Freischalten, um zu sehen, welche und warum.',
+    match: (n) => `Treffer #${n} gefunden`,
+    basedOn: (x) => `Grundlage: ${x}`,
+    basedInterests: 'die Interessen Ihres Kindes',
+    unlock: 'Top 3 Sportarten freischalten',
+    trust: 'Jederzeit kündbar · Sichere Zahlung · Wir sehen Ihre Kartendaten nie',
+    toTop: (price) => `Vollständiges Ergebnis für ${price}`,
     title: 'Das Programm für Ihr Kind ist fertig',
-    lead: (q) => `Auf Basis des Tests und der Interessen Ihres Kindes haben wir ein 4-Wochen-Programm erstellt. Erster Schwerpunkt: ${q}.`,
+    lead: () => 'Aus dem Test und den Vorlieben Ihres Kindes haben wir passende Sportarten gefunden und ein 4-Wochen-Programm für zu Hause erstellt.',
     leadNoWeak: 'Auf Basis des Tests und der Interessen Ihres Kindes haben wir ein 4-Wochen-Programm erstellt.',
     inside: 'Im Abo enthalten',
     insideItems: [
@@ -230,6 +239,7 @@ export default {
     restoreAsk: 'E-Mail, mit der Sie abonniert haben',
     restoreSent: 'Falls ein Abo besteht, haben wir einen Link an diese E-Mail gesendet.',
     withdrawal: 'Ich stimme zu, dass der Zugang sofort nach der Zahlung beginnt, und weiß, dass ich dadurch mein Widerrufsrecht verliere.',
+    withdrawalLink: { text: 'Erstattung', href: 'refund-de.html' },
     withdrawalNeeded: 'Bitte bestätigen Sie das Kästchen über der Schaltfläche.',
     notNow: 'Nicht jetzt',
     hardLead: 'Das Ergebnis ist fertig. Es öffnet sich direkt nach Abschluss des Abos.',

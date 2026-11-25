@@ -157,6 +157,7 @@ export default {
   result: {
     badge: 'Preliminary result',
     title: 'Your child’s movement profile',
+    shortNote: 'A playful movement test, not a medical assessment.',
     prelimNote: 'This is a preliminary result from one short test. There are no age norms yet: we compare your child with the task, not with other children.',
     summary: {
       high: 'Confident movement profile: your child completed most tasks in full.',
@@ -195,8 +196,16 @@ export default {
   },
 
   paywall: {
+    sportsTitle: 'Your child’s top 3 sports',
+    sportsLead: 'Picked from your child’s test results and interests. Unlock to see which sports and why.',
+    match: (n) => `Match #${n} found`,
+    basedOn: (x) => `Based on: ${x}`,
+    basedInterests: 'your child’s interests',
+    unlock: 'Unlock your child’s top 3 sports',
+    trust: 'Cancel anytime · Secure checkout · We never see your card details',
+    toTop: (price) => `Get the full result for ${price}`,
     title: 'Your child’s program is ready',
-    lead: (q) => `Based on the test and what your child enjoys, we built a 4-week program. First focus: ${String(q).toLowerCase()}.`,
+    lead: () => 'Based on the test and what your child enjoys, we matched sports where your child can shine and built a 4-week home program.',
     leadNoWeak: 'Based on the test and what your child enjoys, we built a 4-week program.',
     inside: 'What’s included',
     insideItems: [
@@ -230,7 +239,8 @@ export default {
     restore: 'Already subscribed? Restore access',
     restoreAsk: 'Email you subscribed with',
     restoreSent: 'If there is a subscription, we sent a link to this email.',
-    withdrawal: 'I agree that access to the report and program starts right after payment (refunds within 14 days apply only while the report is unopened — see Refund Policy).',
+    withdrawal: 'I want access right away. A 14-day refund is available until the report is opened.',
+    withdrawalLink: { text: 'Refund Policy', href: 'refund-en.html' },
     withdrawalNeeded: 'Please tick the box above the button to continue.',
     notNow: 'Not now',
     hardLead: 'The result is ready. It opens right after you subscribe.',
