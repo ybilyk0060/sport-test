@@ -3,7 +3,7 @@
 export default {
   meta: { title: 'Der 3-Minuten-Test, der die Stärken Ihres Kindes zeigt', lang: 'de' },
 
-  common: { next: 'Weiter', back: 'Zurück', skip: 'Überspringen', retry: 'Erneut versuchen', close: 'Schließen', privacy: 'Datenschutzerklärung' },
+  common: { offer: 'AGB', refund: 'Rückerstattung', contacts: 'Kontakt', next: 'Weiter', back: 'Zurück', skip: 'Überspringen', retry: 'Erneut versuchen', close: 'Schließen', privacy: 'Datenschutzerklärung' },
 
   landing: {
     title: 'Entdecken Sie die Stärken Ihres Kindes in 3 Minuten',

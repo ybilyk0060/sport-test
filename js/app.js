@@ -25,6 +25,8 @@ const paywallMode = ['teaser', 'hard'].includes(params.get('paywall')) ? params.
 const QUIZ = ['age', 'now', 'likes', 'temper', 'goal', 'screen'];
 const SUB = CONFIG.subscription;
 const privacyUrl = LANG === 'uk' ? 'privacy.html' : `privacy-${LANG}.html`;
+// Юридические ссылки: рядом с кнопкой оплаты и внизу страниц
+const legalLinks = () => `<nav class="legal-links"><a href="oferta.html">${esc(T.common.offer)}</a><a href="povernennya.html">${esc(T.common.refund)}</a><a href="${privacyUrl}">${esc(T.common.privacy)}</a><a href="kontakty.html">${esc(T.common.contacts)}</a></nav>`;
 const DAY = 86400000;
 
 document.title = T.meta.title;
@@ -48,7 +50,7 @@ function landing() {
     <ul class="points">${T.landing.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul><div class="grow"></div>
     <button class="btn" data-act="start">${esc(T.landing.cta)}</button><p class="small muted center">${esc(T.landing.note)}</p><p class="small muted center">${esc(T.landing.disclaimer)}</p>
     ${Object.keys(LOCALES).length > 1 ? `<div class="langs">${Object.entries({ en: 'English', de: 'Deutsch', uk: 'Українська' }).map(([k, v]) => `<a href="?lang=${k}" class="${k === LANG ? 'on' : ''}">${v}</a>`).join('')}</div>` : ''}
-    <a class="link center" href="${privacyUrl}">${esc(T.common.privacy)}</a>`, {
+    ${legalLinks()}`, {
     start: () => { unlockAudio(); track('quiz_start', { lang: LANG }); preloadPose().catch(() => {}); quiz(0); },
   });
 }
@@ -157,6 +159,7 @@ function paywallCard(note = '', profile = null) {
     <p class="small muted">${esc(P.how)}</p>
     ${priceBox('')}
     <p class="fine">${esc(P.fine(money(first), money(PRICE.regular), SUB.periodDays))}</p>
+    ${legalLinks()}
     <button class="btn ghost" data-act="not-now">${esc(P.notNow)}</button></div>`;
 }
 
@@ -289,7 +292,7 @@ function fullReport(justPaid = false) {
 
     <details class="sec"><summary>${esc(P.cardTitle)}</summary><canvas class="sharecard" width="1080" height="1350"></canvas>
       <button class="btn" data-act="share">${esc(P.share)}</button><button class="btn line" data-act="download">${esc(P.download)}</button></details>
-    <div class="foot-links"><span class="small muted">${esc(subLine())}</span><button class="link" data-act="manage">${esc(T.sub.manage)}</button><button class="link" data-act="again">${esc(R.again)}</button><a class="link" href="${privacyUrl}">${esc(T.common.privacy)}</a></div>`, {
+    <div class="foot-links"><span class="small muted">${esc(subLine())}</span><button class="link" data-act="manage">${esc(T.sub.manage)}</button><button class="link" data-act="again">${esc(R.again)}</button></div>${legalLinks()}`, {
     share: async () => {
       track('card_share');
       const blob = await new Promise((r) => cv.toBlob(r, 'image/png'));

@@ -48,7 +48,7 @@ check('пороги уровней', levelOf(0.75) === 3 && levelOf(0.5) === 2 &
 // Запрещённые слова и цена: в строках интерфейса и html
 // «талант» разрешён владельцем 25.11 (крючок теста). «free/gratis» — только в контексте промокодов не используем на странице.
 const banned = /безкоштовн|безоплатн|бесплатн/i;
-const files = ['js/i18n/uk.js', 'index.html', 'privacy.html', 'pay-test.html', 'privacy-en.html', 'privacy-de.html'].filter((f) => fs.existsSync(f));
+const files = ['js/i18n/uk.js', 'index.html', 'privacy.html', 'pay-test.html', 'privacy-en.html', 'privacy-de.html', 'oferta.html', 'povernennya.html', 'kontakty.html'].filter((f) => fs.existsSync(f));
 for (const f of files) {
   const txt = fs.readFileSync(f, 'utf8').split('\n').filter((l) => !l.trim().startsWith('//')).join('\n');
   const m = txt.match(banned);
