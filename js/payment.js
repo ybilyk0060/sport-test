@@ -34,10 +34,11 @@ const testProvider = {
 
 // WayForPay через функцию Supabase sport-test-pay: подпись и секрет — на сервере,
 // оплата подтверждается сервером (callback WayForPay + CHECK_STATUS), а не адресом возврата.
-// Без секретов функция работает на публичном тестовом мерчанте WayForPay (деньги не списываются).
+// ВНИМАНИЕ: публичный демо-мерчант WayForPay test_merch_n1 проводит НАСТОЯЩИЕ списания (инцидент 25.11.2026, 210 грн).
+// Без ключей своего мерчанта функция платёж не создаёт; провайдер включать только с ними.
 const wayforpayProvider = {
   name: 'wayforpay',
-  isTest: true, // уточняется ответом сервера (mode)
+  isTest: false, // настоящий провайдер: считаем платёж реальным
   async mode() {
     try { const r = await fetch(CONFIG.payFn).then((x) => x.json()); this.isTest = r.mode !== 'live'; return r.mode; } catch { return null; }
   },

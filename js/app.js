@@ -141,7 +141,7 @@ function paywallCard(note = '') {
     <ul>${T.result.lockedItems.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
     <button class="btn" data-act="pay">${esc(P.cta(priceLabel()))}</button>
     <p class="small muted center">${esc(P.usdNote(CONFIG.price.usd))}</p>
-    <p class="terms">${esc(P.terms)}</p><p class="small muted center">${esc(P.how)}</p><p class="small center testmode" hidden style="color:#b45309;font-weight:600">${esc(P.testMode)}</p>
+    <p class="terms">${esc(P.terms)}</p><p class="small muted center">${esc(P.how)}</p>
     <button class="btn ghost" data-act="not-now">${esc(P.notNow)}</button></div>`;
 }
 
@@ -190,7 +190,6 @@ function result(note = '') {
     'not-now': () => { setState({ paywallDismissed: true }); track('paywall_dismissed', { mode: paywallMode }); result(); },
     again: () => { resetState(); track('restart'); landing(); },
   });
-  if (payment.mode) payment.mode().then((m) => { if (m === 'test') app.querySelectorAll('.testmode').forEach((e) => { e.hidden = false; }); });
   if (!state.resultTracked) { track('result_shown', { summary: profile.summary, strongest: profile.strongest, mode: paywallMode }); track('paywall_shown', { mode: paywallMode, amount: CONFIG.price.uah }); setState({ resultTracked: true }); }
 }
 
