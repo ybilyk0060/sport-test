@@ -15,7 +15,7 @@ export const CONFIG = {
   // --- Оплата ---
   // 'test' — тестовая страница оплаты (pay-test.html), настоящих платежей нет.
   // Подключение провайдера: добавить модуль в js/payment.js и поменять это значение.
-  paymentProvider: 'wayforpay',
+  paymentProvider: 'test', // 'wayforpay' включать ТОЛЬКО с ключами своего мерчанта: демо test_merch_n1 списывает реальные деньги
   // Функция оплаты (Supabase). Сумма к оплате берётся на сервере (SPORT_TEST_PRICE_UAH), держите price.uah равной ей.
   payFn: 'https://iiafijcmajkitvtktntk.supabase.co/functions/v1/sport-test-pay',
 

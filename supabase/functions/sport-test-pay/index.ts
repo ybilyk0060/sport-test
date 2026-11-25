@@ -1,5 +1,5 @@
 // Веб-тест спорту: оплата результата через WayForPay.
-// Без секретов в env работает в ТЕСТОВОМ режиме на публичном тестовом мерчанте WayForPay (деньги не списываются).
+// Без секретов приём оплаты ВЫКЛЮЧЕН: демо-мерчант test_merch_n1 списывает реальные деньги.
 // Боевой режим: задать секреты WFP_MERCHANT, WFP_SECRET, WFP_DOMAIN (+ SPORT_TEST_PRICE_UAH).
 //
 // Маршруты (verify_jwt=false):
@@ -101,6 +101,8 @@ Deno.serve(async (req) => {
     const b = await readBody(req);
 
     if (b.action === "create") {
+      // Демо-мерчант WayForPay (test_merch_n1) списывает реальные деньги с карт: без своих ключей приём оплаты выключен.
+      if (mode !== "live") return json({ error: "payments disabled: merchant keys not configured" }, 503);
       const sid = String(b.sid || "").slice(0, 64);
       const returnTo = safeReturn(String(b.returnTo || ""));
       if (!returnTo) return json({ error: "returnTo not allowed" }, 400);
