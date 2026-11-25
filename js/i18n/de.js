@@ -375,6 +375,7 @@ export default {
   },
 
   report: {
+    confidence: { high: 'Starke Übereinstimmung: durch die Testergebnisse gestützt', medium: 'Gute Übereinstimmung: teilweise durch den Test gestützt', low: 'Mögliche Übereinstimmung: vor allem nach Ihren Antworten' },
     howMeasured: 'So haben wir gemessen: Der Einbeinstand ist an EUROFIT angelehnt, die Rumpfbeuge an den Deutschen Motorik-Test. Laufen auf der Stelle und Hampelmann zeigen Schnelligkeit, Koordination und Rhythmus; wir vergleichen sie mit anderen Kindern, die unseren Test gemacht haben.',
     bodyNote: 'Größe und Gewicht nutzen wir nur, um gelenkschonende Sportarten zu bevorzugen. Grundlage sind die internationalen BMI-Grenzwerte für Kinder (IOTF, Cole et al., BMJ 2000). Die Angaben bleiben auf Ihrem Gerät.',
     title: 'Vollständiger Bericht',

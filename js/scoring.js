@@ -2,7 +2,7 @@
 // Чистые функции без браузера (проверяются в tests/rules.test.mjs). Тексты — по ключам из js/i18n.
 // Важно: возрастных норм нет. Все оценки — «выполнено задание / нет» и «ровно / неровно», пороги рабочие.
 
-import { CONFIG } from './config.js?v=ff3d1e2-mwwor4iu';
+import { CONFIG } from './config.js?v=1b46f03-mwwowj7q';
 
 const clamp01 = (x) => Math.max(0, Math.min(1, x));
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);
@@ -281,10 +281,12 @@ export function recommendSports(profile, quiz) {
     }
   }
   return SPORTS
-    .map((s, i) => ({ sport: s, score: score[s], order: i, reasons: reasons[s].sort((a, b) => rprio(b.key) - rprio(a.key) || b.w - a.w).slice(0, 3).map((r) => r.key) }))
+    .map((s, i) => ({ sport: s, score: score[s], order: i, testW: reasons[s].filter((r) => r.key.startsWith('q.')).reduce((a, r) => a + r.w, 0), reasons: reasons[s].sort((a, b) => rprio(b.key) - rprio(a.key) || b.w - a.w).slice(0, 3).map((r) => r.key) }))
     .sort((a, b) => b.score - a.score || a.order - b.order)
     .slice(0, 3)
-    .map(({ sport, score: sc, reasons: rs }) => ({ sport, score: sc, reasons: rs }));
+    // Уверенность (честно, без процентов): насколько выбор опирается на результаты теста, а не только на ответы родителя
+    //   high — сильные стороны из теста дают ≥ 3 балла этому направлению; medium — ≥ 1; low — выбор почти только по интересам
+    .map(({ sport, score: sc, reasons: rs, testW }) => ({ sport, score: sc, reasons: rs, confidence: testW >= 3 ? 'high' : testW >= 1 ? 'medium' : 'low' }));
 }
 
 // --- План на 2 недели дома ---

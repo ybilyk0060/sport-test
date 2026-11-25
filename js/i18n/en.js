@@ -376,6 +376,7 @@ export default {
   },
 
   report: {
+    confidence: { high: 'Strong match: backed by the test results', medium: 'Good match: partly backed by the test', low: 'Possible match: based mostly on your answers' },
     howMeasured: 'How we measured: one-leg balance is adapted from EUROFIT, the forward bend from the German Motor Test. Running in place and jumping jacks show speed, coordination and rhythm; we compare them with other children who took our test.',
     bodyNote: 'Height and weight only help us favor joint-friendly sports. We use the international child BMI cut-offs (IOTF, Cole et al., BMJ 2000). Your data stays on your device.',
     title: 'Full report',

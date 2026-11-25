@@ -1,22 +1,22 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
-import { T } from './i18n/index.js?v=ff3d1e2-mwwor4iu';
-import { CONFIG } from './config.js?v=ff3d1e2-mwwor4iu';
-import { money, PRICE, CUR, fmtDate, } from './locale.js?v=ff3d1e2-mwwor4iu';
-import { LANG, LOCALES } from './i18n/index.js?v=ff3d1e2-mwwor4iu';
-import { state, setState, resetState, track, importHandoff, store } from './store.js?v=ff3d1e2-mwwor4iu';
-import { detectEnv } from './env.js?v=ff3d1e2-mwwor4iu';
-import { prefetchPose } from './pose.js?v=ff3d1e2-mwwor4iu';
-import { unlockAudio } from './audio.js?v=ff3d1e2-mwwor4iu';
-import { startStage, startFallback, toast } from './stage.js?v=ff3d1e2-mwwor4iu';
-import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=ff3d1e2-mwwor4iu';
-import { payment, newOrderId, loadPaddle } from './payment.js?v=ff3d1e2-mwwor4iu';
-import { ART } from './art.js?v=ff3d1e2-mwwor4iu';
-import { initDebug } from './debug.js?v=ff3d1e2-mwwor4iu';
-import { initConsent } from './analytics.js?v=ff3d1e2-mwwor4iu';
-import * as subapi from './subapi.js?v=ff3d1e2-mwwor4iu';
-import { drawShareCard } from './sharecard.js?v=ff3d1e2-mwwor4iu';
-import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=ff3d1e2-mwwor4iu';
+import { T } from './i18n/index.js?v=1b46f03-mwwowj7q';
+import { CONFIG } from './config.js?v=1b46f03-mwwowj7q';
+import { money, PRICE, CUR, fmtDate, } from './locale.js?v=1b46f03-mwwowj7q';
+import { LANG, LOCALES } from './i18n/index.js?v=1b46f03-mwwowj7q';
+import { state, setState, resetState, track, importHandoff, store } from './store.js?v=1b46f03-mwwowj7q';
+import { detectEnv } from './env.js?v=1b46f03-mwwowj7q';
+import { prefetchPose } from './pose.js?v=1b46f03-mwwowj7q';
+import { unlockAudio } from './audio.js?v=1b46f03-mwwowj7q';
+import { startStage, startFallback, toast } from './stage.js?v=1b46f03-mwwowj7q';
+import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=1b46f03-mwwowj7q';
+import { payment, newOrderId, loadPaddle } from './payment.js?v=1b46f03-mwwowj7q';
+import { ART } from './art.js?v=1b46f03-mwwowj7q';
+import { initDebug } from './debug.js?v=1b46f03-mwwowj7q';
+import { initConsent } from './analytics.js?v=1b46f03-mwwowj7q';
+import * as subapi from './subapi.js?v=1b46f03-mwwowj7q';
+import { drawShareCard } from './sharecard.js?v=1b46f03-mwwowj7q';
+import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=1b46f03-mwwowj7q';
 
 const env = detectEnv();
 const app = document.getElementById('app');
@@ -376,7 +376,7 @@ function fullReport(justPaid = false) {
     ${pb.card}
     <div class="apps-block"><h2 class="sec-title">${esc(T.apps.giftTitle)}</h2>${appsBlock()}</div>
     <details class="sec"><summary>${esc(P.sportsTitle)}</summary>
-      ${sports.map((x, i) => `<div class="sport-row"><span class="n">${i + 1}</span><div><b>${esc(P.sports[x.sport].name)}</b><span class="small muted">${esc(P.sports[x.sport].ex)}</span><span class="small">${x.reasons.map((r) => esc(P.reasons[r] || r)).join(' · ')}</span></div></div>`).join('')}
+      ${sports.map((x, i) => `<div class="sport-row"><span class="n">${i + 1}</span><div><b>${esc(P.sports[x.sport].name)}</b><span class="small muted">${esc(P.sports[x.sport].ex)}</span><span class="conf c-${x.confidence}">${esc(P.confidence[x.confidence])}</span><span class="small">${x.reasons.map((r) => esc(P.reasons[r] || r)).join(' · ')}</span></div></div>`).join('')}
       <p class="small muted">${esc(P.sportsNote)}</p>${tip ? `<p class="tip">${esc(P[tip])}</p>` : ''}</details>
     ${pb.plan}
     <details class="sec"><summary>${esc(P.resultsTitle)}</summary><ul class="facts">${factLines(state.results).map((f) => `<li>${esc(f)}</li>`).join('')}</ul><p class="small muted">${esc(R.shortNote)}</p></details>
