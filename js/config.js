@@ -51,6 +51,10 @@ export const CONFIG = {
   // PostHog: проект владельца (публичный ключ клиента, его можно держать в коде). События сайта помечены app = 'sport-test'.
   analytics: { metaPixelId: null, posthogKey: 'phc_AfhhsP7znm7dZiNtsycEcsq8R6qhMcqjdUaLb9vY72yn', posthogHost: 'https://eu.i.posthog.com' },
 
+  // --- Подписка на сервере (Supabase sport-test-sub). false — пока функция и таблицы не задеплоены (нужен ОК владельца). ---
+  subServer: false,
+  subFn: 'https://iiafijcmajkitvtktntk.supabase.co/functions/v1/sport-test-sub',
+
   // --- Хранение данных ---
   // 'device' — на устройстве (localStorage). Сервер не подключён: см. вопросы владельцу.
   storage: 'device',

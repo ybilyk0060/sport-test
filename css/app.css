@@ -251,3 +251,4 @@ details.sec > * + * { margin-top: 10px; }
 .sheet .tag.checks { background: #e9f6ef; color: #17603f; margin-left: 6px; }
 .apps-block { display: grid; gap: 10px; }
 .legal-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; font-size: 13px; } .legal-links a { color: var(--muted); }
+.email-field { display: grid; gap: 6px; } .email-field .field { width: 100%; }

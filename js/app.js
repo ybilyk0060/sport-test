@@ -14,6 +14,7 @@ import { payment, newOrderId } from './payment.js';
 import { ART } from './art.js';
 import { initDebug } from './debug.js';
 import { initConsent } from './analytics.js';
+import * as subapi from './subapi.js';
 import { drawShareCard } from './sharecard.js';
 import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js';
 
@@ -51,7 +52,14 @@ function landing() {
     <ul class="points">${T.landing.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul><div class="grow"></div>
     <button class="btn" data-act="start">${esc(T.landing.cta)}</button><p class="small muted center">${esc(T.landing.note)}</p><p class="small muted center">${esc(T.landing.disclaimer)}</p>
     ${Object.keys(LOCALES).length > 1 ? `<div class="langs">${Object.entries({ en: 'English', de: 'Deutsch', uk: 'Українська' }).map(([k, v]) => `<a href="?lang=${k}" class="${k === LANG ? 'on' : ''}">${v}</a>`).join('')}</div>` : ''}
+    ${subapi.subOn() ? `<button class="link center" data-act="restore">${esc(T.paywall.restore)}</button>` : ''}
     ${legalLinks()}`, {
+    restore: async () => {
+      const email = (prompt(T.paywall.restoreAsk) || '').trim();
+      if (!email) return;
+      try { await subapi.restore(email, LANG); } catch { /* ответ одинаковый */ }
+      track('sub_restore_asked'); toast(T.paywall.restoreSent);
+    },
     start: () => { unlockAudio(); track('quiz_start', { lang: LANG }); preloadPose().catch(() => {}); quiz(0); },
   });
 }
@@ -150,6 +158,7 @@ function paywallCard(note = '', profile = null) {
       <div class="pc-row"><div><b>${esc(P.firstLabel(SUB.periodDays))}</b><small>${esc(P.perDay(money(Math.round((first / SUB.periodDays) * 100) / 100)))}</small></div>
       <div class="pc-price">${on ? `<s>${esc(money(PRICE.regular))}</s>` : ''}<b>${esc(money(first))}</b></div></div>
       <p class="renew">${esc(P.renew(money(PRICE.regular), SUB.periodDays, fmtDate(renewAt)))}</p>
+      ${id ? `<label class="email-field"><span class="small">${esc(P.emailLabel)}</span><input class="field" type="email" inputmode="email" autocomplete="email" data-el="email" value="${esc(state.email || '')}" maxlength="120" placeholder="name@example.com"></label>` : ''}
       ${P.withdrawal ? `<label class="check small"><input type="checkbox" data-el="withdrawal"><span>${esc(P.withdrawal)}</span></label>` : ''}
       <button class="btn" data-act="pay">${esc(P.cta(money(first)))}</button>
       <p class="small center testmode" hidden style="color:#b45309;font-weight:600">${esc(P.testMode)}</p></div>`;
@@ -200,6 +209,11 @@ function result(note = '') {
     pay: (btn) => {
       // ЕС (de): согласие на немедленный старт цифровой услуги — без него не оплачиваем
       if (T.paywall.withdrawal) { const box = btn.closest('.price-card') && btn.closest('.price-card').querySelector('[data-el=withdrawal]'); if (!box) { setState({ paywallDismissed: false }); result(); return; } if (!box.checked) { toast(T.paywall.withdrawalNeeded); return; } }
+      // Email на шаге оплаты: условия подписки и ссылка доступа на любом устройстве (аудит 25.11)
+      const emailEl = app.querySelector('[data-el=email]');
+      const email = (emailEl ? emailEl.value : state.email || '').trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { if (emailEl) { emailEl.focus(); emailEl.scrollIntoView({ block: 'center' }); } else { setState({ paywallDismissed: false }); result(); } toast(T.paywall.emailBad); return; }
+      setState({ email });
       const orderId = newOrderId(state.sid);
       setState({ orderId });
       const amount = firstPrice();
@@ -224,6 +238,11 @@ function startSub(orderId) {
   const now = Date.now();
   setState({ paid: true, paidAt: now, orderId, sub: { status: 'active', startedAt: now, paidUntil: now + SUB.periodDays * DAY, orderId, test: !!payment.isTest }, workouts: state.workouts || [] });
   track('paid', { provider: payment.name, amount: firstPrice(), currency: CUR, plan: 'sub', test: !!payment.isTest });
+  if (subapi.subOn() && state.email) {
+    subapi.activate({ orderRef: orderId, email: state.email, currency: CUR, first: firstPrice(), regular: PRICE.regular, quiz: state.quiz, results: state.results, test: !!payment.isTest, lang: LANG })
+      .then((r) => { setState({ subToken: r.token, sub: { ...subapi.fromServer(r.sub), orderId } }); track('sub_server', { ok: true }); })
+      .catch(() => track('sub_server', { ok: false }));
+  }
 }
 
 function subLine() {
@@ -334,6 +353,7 @@ function startWorkout(program) {
   startStage({ list: w.items, mode: 'workout', exit: fullReport, done: (results) => {
     const rec = { id: w.id, at: Date.now(), done: results.map((r) => ({ key: r.key, done: r.done, target: r.target, skipped: !!r.skipped })) };
     setState({ workouts: [...(state.workouts || []), rec] });
+    if (state.subToken) subapi.sync(state.subToken, state.workouts);
     track('workout_done', { id: w.id, done: rec.done.map((r) => `${r.key}:${r.skipped ? 'skip' : r.done}`).join(',') });
     const G = T.program;
     screen(`<div class="grow"></div><h1 class="rtitle center">${esc(G.resultTitle)}</h1><p class="center">${esc(G.resultLead)}</p>
@@ -358,8 +378,16 @@ function manageSub(confirm = false) {
     back: () => fullReport(),
     cancel: () => manageSub(true),
     'cancel-no': () => manageSub(),
-    'cancel-yes': () => { setState({ sub: { ...state.sub, status: 'cancelled', cancelledAt: Date.now() } }); track('sub_cancelled', { test: !!sub.test }); toast(S.cancelDone); manageSub(); },
-    resume: () => { setState({ sub: { ...state.sub, status: 'active', cancelledAt: null } }); track('sub_resumed'); toast(S.resumeDone); manageSub(); },
+    'cancel-yes': async () => {
+      if (state.subToken) { try { const r = await subapi.cancel(state.subToken); setState({ sub: { ...state.sub, ...subapi.fromServer(r.sub) } }); } catch { toast(T.paywall.payError); return; } }
+      else setState({ sub: { ...state.sub, status: 'cancelled', cancelledAt: Date.now() } });
+      track('sub_cancelled', { test: !!sub.test }); toast(S.cancelDone); manageSub();
+    },
+    resume: async () => {
+      if (state.subToken) { try { const r = await subapi.resume(state.subToken); setState({ sub: { ...state.sub, ...subapi.fromServer(r.sub) } }); } catch { toast(T.paywall.payError); return; } }
+      else setState({ sub: { ...state.sub, status: 'active', cancelledAt: null } });
+      track('sub_resumed'); toast(S.resumeDone); manageSub();
+    },
   });
 }
 
@@ -370,6 +398,21 @@ function boot() {
   // Модель позы начинает грузиться сразу, а не на экране камеры: к моменту камеры она уже готова.
   preloadPose().catch(() => {});
   // Перенос ответов из встроенного браузера («Відкрити в Chrome»): квиз заново не проходим.
+  // Ссылка доступа из письма (?sub=…): подписка, ответы и результаты приезжают с сервера — на любом устройстве
+  if (params.get('sub') && subapi.subOn()) {
+    const token = params.get('sub');
+    cleanUrl();
+    screen(`<div class="center" style="padding:48px 0"><div class="spinner"></div></div>`);
+    subapi.status(token).then((r) => {
+      const s = r.sub;
+      setState({ subToken: token, sub: subapi.fromServer(s), paid: true, quiz: s.quiz || state.quiz, results: s.results || state.results, workouts: Array.isArray(s.workouts) && s.workouts.length ? s.workouts : (state.workouts || []), step: 'report' });
+      track('sub_restored');
+      return fullReport();
+    }).catch(() => landing());
+    return;
+  }
+  // Освежаем статус подписки с сервера (отмена с другого устройства)
+  if (state.subToken && subapi.subOn()) subapi.status(state.subToken).then((r) => setState({ sub: { ...state.sub, ...subapi.fromServer(r.sub) } })).catch(() => {});
   if (params.get('s')) {
     const ok = importHandoff(params.get('s'));
     cleanUrl();
