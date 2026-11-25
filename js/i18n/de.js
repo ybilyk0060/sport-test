@@ -9,10 +9,10 @@ export default {
     title: 'Entdecken Sie die Stärken Ihres Kindes in 3 Minuten',
     promise: 'Ein kurzer Test vor der Handykamera zeigt die Stärken Ihres Kindes und welcher Sport am besten passt.',
     cta: 'Test starten',
-    points: ['8 kurze Fragen', '4–5 kurze Übungen: Gleichgewicht, seitliche Sprünge, Rumpfbeuge und mehr', 'Das Video wird auf dem Handy verarbeitet und nirgendwohin gesendet'],
+    points: ['8 kurze Fragen', '3–4 kurze Übungen: Gleichgewicht, Rumpfbeuge, Hampelmann und mehr', 'Das Video wird auf dem Handy verarbeitet und nirgendwohin gesendet'],
     note: 'Sie brauchen ein Handy mit Kamera und 2×2 m freien Platz.',
     disclaimer: 'Ein spielerischer Bewegungstest, keine medizinische Untersuchung und kein offizieller Test. Er sagt keinen sportlichen Erfolg voraus, sondern zeigt, wo Ihr Kind heute stark ist.',
-    trust: 'Die meisten Übungen sind an etablierte Fitnesstests für Kinder angelehnt: EUROFIT (Europarat) und den Deutschen Motorik-Test (DMT 6–18). Für die Handykamera zu Hause angepasst, die Ergebnisse sind eine Orientierung, keine Labormessung.',
+    trust: 'Einige Übungen sind an etablierte Fitnesstests für Kinder angelehnt: EUROFIT (Europarat) und den Deutschen Motorik-Test (DMT 6–18). Für die Handykamera zu Hause angepasst, die Ergebnisse sind eine Orientierung, keine Labormessung.',
   },
 
   quiz: {
@@ -375,7 +375,7 @@ export default {
   },
 
   report: {
-    howMeasured: 'So haben wir gemessen: Der Einbeinstand ist an EUROFIT angelehnt, seitliches Hin- und Herspringen und Rumpfbeuge an den Deutschen Motorik-Test. Hampelmann zeigt Koordination und Rhythmus, Schulterberührungen zeigen Kraft in Armen und Rumpf; wir vergleichen sie mit anderen Kindern, die unseren Test gemacht haben.',
+    howMeasured: 'So haben wir gemessen: Der Einbeinstand ist an EUROFIT angelehnt, die Rumpfbeuge an den Deutschen Motorik-Test. Hampelmann zeigt Koordination und Rhythmus, Schulterberührungen zeigen Kraft in Armen und Rumpf; wir vergleichen sie mit anderen Kindern, die unseren Test gemacht haben.',
     bodyNote: 'Größe und Gewicht nutzen wir nur, um gelenkschonende Sportarten zu bevorzugen. Grundlage sind die internationalen BMI-Grenzwerte für Kinder (IOTF, Cole et al., BMJ 2000). Die Angaben bleiben auf Ihrem Gerät.',
     title: 'Vollständiger Bericht',
     paidOk: 'Danke! Ihr Abo ist aktiv.',

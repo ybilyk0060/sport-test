@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>Тестова сторінка оплати</title>
-<link rel="stylesheet" href="css/app.css?v=1482512-mwwnvcy0">
+<link rel="stylesheet" href="css/app.css?v=ee7001c-mwwo3tzn">
 <style>
   .test-banner { position: sticky; top: 0; z-index: 10; background: repeating-linear-gradient(45deg, #1d1b2f, #1d1b2f 14px, #3a3660 14px, #3a3660 28px); color: #ffe45c; text-align: center; font-weight: 800; letter-spacing: .08em; padding: calc(10px + env(safe-area-inset-top, 0px)) 10px 10px; }
   .rowline b { font-size: 18px; }
@@ -17,9 +17,9 @@
 <script type="module">
 // Тестовая страница оплаты. Настоящих платежей нет. Полей для карты здесь нет и быть не должно:
 // у настоящего провайдера карта вводится на ЕГО странице.
-import { T } from './js/i18n/index.js?v=1482512-mwwnvcy0';
-import { money } from './js/locale.js?v=1482512-mwwnvcy0';
-import { track } from './js/store.js?v=1482512-mwwnvcy0';
+import { T } from './js/i18n/index.js?v=ee7001c-mwwo3tzn';
+import { money } from './js/locale.js?v=ee7001c-mwwo3tzn';
+import { track } from './js/store.js?v=ee7001c-mwwo3tzn';
 const P = T.payTest;
 const q = new URLSearchParams(location.search);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));

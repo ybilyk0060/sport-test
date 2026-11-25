@@ -10,10 +10,10 @@ export default {
     title: 'Discover your child’s strengths in 3 minutes',
     promise: 'A short test in front of your phone camera shows your child’s strengths and which sport suits them best.',
     cta: 'Start the test',
-    points: ['8 quick questions', '4–5 short exercises: balance, side jumps, a forward bend and more', 'Video is processed on your phone and never uploaded'],
+    points: ['8 quick questions', '3–4 short exercises: balance, a forward bend, jumping jacks and more', 'Video is processed on your phone and never uploaded'],
     note: 'You’ll need a phone with a camera and a clear 2×2 m (6×6 ft) space.',
     disclaimer: 'A playful movement test, not a medical assessment and not an official test. It doesn’t predict sporting success. It shows where your child is strong today.',
-    trust: 'Most exercises are adapted from established youth fitness test batteries: EUROFIT (Council of Europe) and the German Motor Test (DMT 6–18). Adapted for a phone camera at home, so results are a guide, not a lab measurement.',
+    trust: 'Some exercises are adapted from established youth fitness test batteries: EUROFIT (Council of Europe) and the German Motor Test (DMT 6–18). Adapted for a phone camera at home, so results are a guide, not a lab measurement.',
   },
 
   quiz: {
@@ -376,7 +376,7 @@ export default {
   },
 
   report: {
-    howMeasured: 'How we measured: one-leg balance is adapted from EUROFIT, side jumps and the forward bend from the German Motor Test. Jumping jacks show coordination and rhythm, shoulder taps show arm and core strength; we compare them with other children who took our test.',
+    howMeasured: 'How we measured: one-leg balance is adapted from EUROFIT, the forward bend from the German Motor Test. Jumping jacks show coordination and rhythm, shoulder taps show arm and core strength; we compare them with other children who took our test.',
     bodyNote: 'Height and weight only help us favor joint-friendly sports. We use the international child BMI cut-offs (IOTF, Cole et al., BMJ 2000). Your data stays on your device.',
     title: 'Full report',
     paidOk: 'Thank you! You’re subscribed.',

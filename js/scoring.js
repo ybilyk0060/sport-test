@@ -2,7 +2,7 @@
 // Чистые функции без браузера (проверяются в tests/rules.test.mjs). Тексты — по ключам из js/i18n.
 // Важно: возрастных норм нет. Все оценки — «выполнено задание / нет» и «ровно / неровно», пороги рабочие.
 
-import { CONFIG } from './config.js?v=1482512-mwwnvcy0';
+import { CONFIG } from './config.js?v=ee7001c-mwwo3tzn';
 
 const clamp01 = (x) => Math.max(0, Math.min(1, x));
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);
@@ -14,7 +14,7 @@ export const EX_QUALITY = { jumping_jack: ['coordination', 'symmetry'], squats: 
   // Оценочный тест v3
   balance_r: ['balance', 'symmetry'], balance_l: ['balance', 'symmetry'], side_jumps_1: ['speed'], side_jumps_2: ['speed'], bend: ['flex'] };
 export function qualitiesOf(results) {
-  if (isV3(results)) { const set = new Set(['balance', 'speed', 'flex', 'coordination', 'endurance', 'arms', 'symmetry']); const have = new Set((results || []).filter((r) => !r.skipped).map((r) => r.key)); if (!have.has('shoulder_taps')) set.delete('arms'); if (!have.has('jumping_jack')) { set.delete('coordination'); set.delete('endurance'); } return QUALITIES.filter((q) => set.has(q)); } const set = new Set((results || []).flatMap((r) => EX_QUALITY[r.key] || [])); return QUALITIES.filter((q) => set.has(q)); }
+  if (isV3(results)) { const set = new Set(['balance', 'speed', 'flex', 'coordination', 'endurance', 'arms', 'symmetry']); const have = new Set((results || []).filter((r) => !r.skipped).map((r) => r.key)); if (!have.has('shoulder_taps')) set.delete('arms'); if (!have.has('side_jumps_1') && !have.has('side_jumps_2')) set.delete('speed'); if (!have.has('jumping_jack')) { set.delete('coordination'); set.delete('endurance'); } return QUALITIES.filter((q) => set.has(q)); } const set = new Set((results || []).flatMap((r) => EX_QUALITY[r.key] || [])); return QUALITIES.filter((q) => set.has(q)); }
 
 // --- Показатели (каждый 0..1 или null, если не измерен) ---
 // Рабочие пороги (не нормы):
