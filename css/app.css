@@ -392,3 +392,7 @@ button, .btn, .opt, .glass-btn, .pill-link, a.btn, [data-act] { -webkit-user-sel
 .hud-title b, .hud-title small { font-size: 13px; }
 .hud-actions { flex: none; }
 .hud-actions .glass-btn[data-act=skip-ex] { font-size: 12px; padding: 0 11px; }
+
+.sheet.show .panda.vert { object-position: center 30%; background: #f3ece2; }
+.sheet.show .panda.vert { object-fit: contain; object-position: center; background: #ece4d8; }
+.sheet.show > p:not(.note):not(.small) { display: none; }

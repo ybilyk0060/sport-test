@@ -90,8 +90,8 @@ const videoSrc = (url) => videoBlobs.get(url) || url;
 export function prefetchVideos() {
   for (const p of plan()) {
     const ex = CONFIG.exercises[p.key]; if (!ex) continue;
-    const url = ex.localVideo || (ex.video ? CONFIG.mediaBase + ex.video : null);
-    const poster = ex.localPoster || (ex.poster ? CONFIG.mediaBase + ex.poster : null);
+    const url = ex.vVideo || ex.localVideo || (ex.video ? CONFIG.mediaBase + ex.video : null);
+    const poster = ex.vPoster || ex.localPoster || (ex.poster ? CONFIG.mediaBase + ex.poster : null);
     if (poster) { const im = new Image(); im.src = poster; }
     if (!url || videoBlobs.has(url)) continue;
     videoBlobs.set(url, url);
@@ -180,7 +180,7 @@ function introSheet(p, i, n, btnHtml) {
   const note = ex.wall ? T.cam.wallNote : ex.floor === 'any' ? T.cam.floorAnyNote : ex.floor === 'side' ? T.cam.floorSideNote : ex.floor ? T.cam.floorFrontNote : ex.facing === 'side' ? T.cam.sideNote : T.cam.frontNote;
   const checks = (EX_QUALITY[p.key] || []).map((q) => T.result.qualities[q].name.toLowerCase()).join(', ');
   return `<div class="sheet show"><div class="tags"><span class="tag">${esc(exOf(i, n))}</span>${checks ? `<span class="tag checks">${esc(T.cam.checks(checks))}</span>` : ''}</div><h2>${esc(p.timed ? T.cam.forSec(tx.name, p.capSec) : tx.task(p.target))}</h2>
-    ${ex.localVideo ? `<video class="panda" playsinline muted loop autoplay preload="auto" poster="${ex.localPoster}" src="${videoSrc(ex.localVideo)}"></video>` : ex.demo ? demoSvg(ex.demo) : ex.video ? `<video class="panda" playsinline muted loop autoplay preload="auto" poster="${CONFIG.mediaBase + ex.poster}" src="${videoSrc(CONFIG.mediaBase + ex.video)}"></video>` : (ex.art || '')}
+    ${ex.vVideo || ex.localVideo ? `<video class="panda${ex.vVideo ? ' vert' : ''}" playsinline muted loop autoplay preload="auto" poster="${ex.vPoster || ex.localPoster}" src="${videoSrc(ex.vVideo || ex.localVideo)}"></video>` : ex.demo ? demoSvg(ex.demo) : ex.video ? `<video class="panda" playsinline muted loop autoplay preload="auto" poster="${CONFIG.mediaBase + ex.poster}" src="${videoSrc(CONFIG.mediaBase + ex.video)}"></video>` : (ex.art || '')}
     <p>${esc(tx.how)}</p>${tx.pandaNote ? `<p class="small" style="opacity:.8">${esc(tx.pandaNote)}</p>` : ''}<p class="note">↻ ${esc(note)}</p>${btnHtml}</div>`;
 }
 
