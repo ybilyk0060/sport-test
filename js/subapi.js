@@ -1,6 +1,6 @@
 // Подписка на сервере (функция Supabase sport-test-sub). Включается CONFIG.subServer после деплоя.
 // Без сервера всё работает как раньше — на устройстве.
-import { CONFIG } from './config.js?v=bc3acf8-mwxp73fq';
+import { CONFIG } from './config.js?v=96d96ab-mwxqemy6';
 
 const call = async (body) => {
   const r = await fetch(CONFIG.subFn, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
