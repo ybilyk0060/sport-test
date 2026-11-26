@@ -281,7 +281,7 @@ async function liveExercise(p, i, n) {
   await countdown();
   if (!alive) return null;
   return new Promise((resolve) => {
-    let ui, hintTimer = 0, lostSince = null;
+    let ui, hintTimer = 0, lostSince = null, lostSaidAt = 0;
     const run = createRun({
       key: p.key, target: p.target, capSec: p.capSec, ageGroup: state.quiz.age || CONFIG.defaultAge, timed: !!p.timed,
       aspect: video.videoWidth && video.videoHeight ? video.videoWidth / video.videoHeight : null,
@@ -306,7 +306,9 @@ async function liveExercise(p, i, n) {
     run.start();
     stopLoop = frameLoop(video, (lm) => {
       drawSkeleton(lm || false);
-      if (!lm) { lostSince = lostSince ?? performance.now(); if (performance.now() - lostSince > 1500 && !ui.hint.textContent) ui.hint.textContent = T.cam.lost; }
+      // Тело должно быть в кадре целиком (стоя): иначе подсказка «отойдите» (прогон 26.11: вплотную к телефону было видно одно лицо)
+      const seen = lm && (CONFIG.exercises[p.key].floor || framingCheck(lm).ok);
+      if (!seen) { lostSince = lostSince ?? performance.now(); if (performance.now() - lostSince > 1500 && !ui.hint.textContent) { ui.hint.textContent = T.cam.lost; if (performance.now() - lostSaidAt > 6000) { lostSaidAt = performance.now(); say('ui_steps_back', { interrupt: false }); } } }
       else if (lostSince) { lostSince = null; if (ui.hint.textContent === T.cam.lost) ui.hint.textContent = ''; }
       run.frame(lm);
       if (window.__poseTap) try { window.__poseTap(p.key, lm); } catch { /* диагностика прогона (tools/e2e-iphone-wi.mjs), у покупателя не задана */ }

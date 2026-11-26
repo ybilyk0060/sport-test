@@ -375,11 +375,6 @@ button, .btn, .opt, .glass-btn, .pill-link, a.btn, [data-act] { -webkit-user-sel
 .hud-title b { font-size: 14px; font-weight: 800; }
 .hud-actions .glass-btn[data-act=skip-ex] { min-height: 34px; padding: 0 12px; font-size: 13px; border-radius: 999px; background: rgba(255,255,255,.92); color: var(--ink); box-shadow: 0 4px 12px rgba(0,0,0,.2); }
 .hud-top { align-items: center; }
-.gauge { width: min(44vw, 24dvh); margin: auto auto 0; }
-.gauge .num { font-size: min(17vw, 10dvh); }
-.gauge .of { font-size: 15px; }
-.gauge circle { stroke-width: 14; }
-.hud .left { font-size: 20px; padding: 4px 14px; margin-top: 6px; }
 .sheet.show { top: 0; max-height: none; border-radius: 0; padding-top: calc(76px + var(--safe-t, 0px)); gap: 10px; }
 .sheet.show .panda { flex: 1 1 auto; min-height: 0; height: auto; max-height: none; width: calc(100% + 2 * var(--pad)); margin: 0 calc(-1 * var(--pad)); border-radius: 0; object-fit: cover; object-position: center 42%; aspect-ratio: auto; }
 .sheet.show .demo { flex: 1 1 auto; }

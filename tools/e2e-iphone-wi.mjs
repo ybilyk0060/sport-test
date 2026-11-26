@@ -9,6 +9,7 @@ import { execFileSync } from 'child_process';
 import { fileURLToPath } from 'url';
 import { connect } from './wi.mjs';
 
+const OBSERVE = process.argv.includes('--observe'); // только смотрим: человек всё нажимает сам, страницу не перезагружаем
 const UDID = process.env.IPHONE_UDID || '00008130-0011095C3A04001C';
 const URL0 = process.argv.find((a) => a.startsWith('http')) || 'https://kids-test.com/?lang=en&code=KTQA25X9';
 const OUT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'e2e-runs', 'iphone-wi-' + new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19));
@@ -49,7 +50,7 @@ const STATE = `
   return { step: st.step || '', quizIndex: st.quizIndex, qtitle: txt('.qtitle'), stage: !!(hud && hud.innerHTML.trim()),
     framing: vis('.frame-card'), frameMsg: txt('.frame-card [data-el=msg]'), intro: vis('.sheet [data-act=go]'), introTitle: txt('.sheet h2'),
     run: vis('.gauge'), num: txt('.gauge [data-el=num]'), left: txt('[data-el=left]'), hint: txt('.hud [data-el=hint]'), title: txt('.hud-top'),
-    paywall: vis('#price-top'), report: !!q('.rep-head'), cam: v ? v.videoWidth + 'x' + v.videoHeight + ' ' + ((v.srcObject && v.srcObject.getVideoTracks()[0] || {}).label || '') : '', err: vis('[data-act=retry]') ? txt('.hud') .slice(0, 200) : '',
+    paywall: vis('#price-top'), report: !!q('.rep-head'), aud: window.__audioState ? window.__audioState() : 'none', sess: navigator.audioSession ? navigator.audioSession.type + '/' + navigator.audioSession.state : '-', cam: v ? v.videoWidth + 'x' + v.videoHeight + ' ' + ((v.srcObject && v.srcObject.getVideoTracks()[0] || {}).label || '') : '', err: vis('[data-act=retry]') ? txt('.hud') .slice(0, 200) : '',
     audio: E.audio, longtasks: E.longtasks, errors: E.errors || [] };`;
 
 // Поза во время упражнений: компактные точки (кисти, плечи, щиколотки, нос) — для разбора счёта (window.__poseTap в stage.js)
@@ -61,13 +62,14 @@ const click = (css) => run(`const e = document.querySelector(${JSON.stringify(cs
 const setVal = (css, v) => run(`const e = document.querySelector(${JSON.stringify(css)}); if (!e) return false; e.value = ${JSON.stringify(v)}; e.dispatchEvent(new Event('input', { bubbles: true })); return true;`);
 
 note('start', { url: URL0 });
-await run(`try { localStorage.clear(); localStorage.setItem('sporttest.consent', 'necessary'); } catch (e) {} location.href = ${JSON.stringify(URL0)}; return 1;`);
+if (!OBSERVE) await run(`try { localStorage.clear(); localStorage.setItem('sporttest.consent', 'necessary'); } catch (e) {} location.href = ${JSON.stringify(URL0)}; return 1;`);
 await wait(4000);
 c.close(); c = await connect('kids-test.com');
 await ev(INIT);
 note('waiting', { msg: 'ЖДУ касания «Start the test» на телефоне' });
 shot('landing');
-let paywallDone = false, payWaitFrom = 0;
+let paywallDone = false, payWaitFrom = 0, audLogged = '', soundChecked = false;
+const SOUNDCHECK = process.argv.includes('--soundcheck');
 let last = '', lastHud = '', since = Date.now(), introSince = 0, a0 = 0, l0 = 0, e0 = 0, lastPeriodic = 0, camLogged = '', prepClicked = 0;
 const steps = {};
 for (;;) {
@@ -77,6 +79,8 @@ for (;;) {
   for (const a of s.audio.slice(a0)) note('voice', a); a0 = s.audio.length;
   for (const ms of s.longtasks.slice(l0)) note('freeze', { ms }); l0 = s.longtasks.length;
   for (const m of s.errors.slice(e0)) note('page_error', { msg: m }); e0 = s.errors.length;
+  const audKey = `${String(s.aud).split('@')[0]}|${s.sess}`;
+  if (audKey !== audLogged) { audLogged = audKey; note('audio', { ctx: s.aud, session: s.sess }); }
   if (s.cam && s.cam !== camLogged) { camLogged = s.cam; note('camera', { info: s.cam }); }
   const key = s.report ? 'report' : s.paywall ? 'paywall' : s.err ? 'camera_error' : s.run ? `run:${s.title}` : s.intro ? `intro:${s.introTitle}` : s.framing ? 'framing' : s.stage ? 'stage' : `${s.step}${s.step === 'quiz' ? ':' + s.quizIndex : ''}`;
   if (key !== last) {
@@ -90,7 +94,10 @@ for (;;) {
     if (Date.now() - lastPeriodic > 2500) { lastPeriodic = Date.now(); shot('run'); }
   }
   if (s.framing && Date.now() - lastPeriodic > 3000) { lastPeriodic = Date.now(); note('framing', { msg: s.frameMsg }); shot('framing'); }
+  if (OBSERVE) { if (s.run && /2\/|Move 2/.test(s.title || '')) { note('observe_stop'); break; } continue; }
   try {
+    if (SOUNDCHECK && s.step === 'quiz' && !soundChecked) { soundChecked = true; await run("window.__say && window.__say('balance_howto'); return 1;"); await wait(1500); note('soundcheck', { at: 'анкета, до камеры', ctx: await run("return window.__audioState ? window.__audioState() : 'none'") }); }
+    if (SOUNDCHECK && s.intro) { note('soundcheck', { at: 'вступление после камеры', ctx: s.aud, session: s.sess }); await wait(8000); note('soundcheck_end', { ctx: await run("return window.__audioState ? window.__audioState() : 'none'") }); break; }
     if (process.env.E2E_DRY && s.step === 'landing') { await wait(800); await click('[data-act=start]'); }
     else if (process.env.E2E_DRY && s.step === 'prep') { note('dry_stop', { steps }); break; }
     else if (s.step === 'quiz' && !s.stage) {

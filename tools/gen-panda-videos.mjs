@@ -17,6 +17,11 @@ const COMMON = 'Use the panda character and the gym from the reference image: th
   + 'The panda wears a plain white t-shirt with no logo, letters or print, and the poster on the wall is a plain picture without any logo or text. '
   + 'Static camera, no camera movement, no cuts. The panda faces the camera directly (front view), the whole body from head to feet visible in every frame, centred. '
   + 'No text, no captions, no music, no other characters.';
+const COMMON_GREEN = 'Use the panda character from the reference image: the same cartoon panda, same style and lighting on the panda. '
+  + 'The panda wears a plain white t-shirt with no logo, letters or print, and dark blue shorts. '
+  + 'BACKGROUND: a perfectly uniform, flat, evenly lit pure chroma-key green (#00B140) filling the whole frame behind and under the panda: no room, no floor, no mat, no objects, no shadows, no gradients, no reflections. Nothing on the panda is green. '
+  + 'Static camera, no camera movement, no cuts. The panda faces the camera directly (front view), the whole body from head to feet visible in every frame, centred. '
+  + 'No text, no captions, no music, no other characters.';
 const CLIPS = {
   balance: 'The panda puts its paws on its hips, lifts its left foot off the floor and bends the left leg backward (knee pointing down, foot behind), and stands steadily on the right leg for about four seconds without touching the floor. Then it puts the foot down and does the same on the left leg, lifting the right foot backward, for about three seconds.',
   side_jumps: 'On the floor directly in front of the panda lies one short straight strip of bright orange tape, pointing straight toward the camera, between the panda and the phone, so it divides the floor into a left side and a right side. The panda stands on the left side of the tape, feet together, knees slightly bent, arms bent at the elbows. It hops sideways with BOTH feet together, clearly lifting both feet off the floor at the same time, over the tape and lands on the right side; then immediately hops back over the tape to the left side the same way. It repeats this side-to-side hop over the tape eight times, quickly and rhythmically, landing softly each time with feet together. The camera sees each hop clearly: the feet leave the floor together and cross the orange tape.',
@@ -26,13 +31,14 @@ const CLIPS = {
   bend: 'The panda stands with its feet together and knees straight, slowly bends forward from the hips and reaches its paws down to touch its toes, holds for two seconds, then slowly stands back up straight. It does this twice, keeping the knees straight the whole time.',
 };
 // --vertical: вертикальные ролики 9:16 для показа на весь экран (Юрий 26.11) → assets/video/<key>-v<n>.mp4
-const VERT = process.argv.includes('--vertical');
+const GREEN = process.argv.includes('--green'); // панда на ровном зелёном фоне — фон вырезается на телефоне (панда поверх камеры, Юрий 26.11)
+const VERT = process.argv.includes('--vertical') || GREEN;
 const ARGS = process.argv.slice(2).filter((a) => !a.startsWith('--'));
 const keys = ARGS.length ? ARGS : VERT ? ['balance', 'high_knees', 'bend', 'jumping_jack', 'shoulder_taps'] : ['balance', 'side_jumps', 'bend'];
 fs.mkdirSync('assets/video', { recursive: true });
 for (const key of keys) {
   // Делаем 2 ролика, если их ещё нет; если есть — ещё 2 новых попытки только для ключей, переданных аргументом (переснять)
-  const pre = VERT ? `${key}-v` : `${key}-`;
+  const pre = GREEN ? `${key}-g` : VERT ? `${key}-v` : `${key}-`;
   const have = fs.readdirSync('assets/video').map((f) => (f.match(new RegExp(`^${pre}(\\d+)\\.mp4$`)) || [])[1]).filter(Boolean).map(Number);
   const start = have.length ? Math.max(...have) + 1 : 1;
   const redo = ARGS.includes(key);
@@ -42,7 +48,9 @@ for (const key of keys) {
     const out = `assets/video/${pre}${n}.mp4`;
     console.log(`генерирую ${key}, попытка ${n}…`);
     try {
-      const r = await omniVideo({ images: [REF], prompt: `${COMMON}${VERT ? ' Vertical 9:16 frame: the panda fills most of the frame height.' : ''} ${CLIPS[key]}`, duration: '8s', aspect: VERT ? '9:16' : '16:9' });
+      const base = GREEN ? COMMON_GREEN : COMMON;
+      const clip = GREEN ? CLIPS[key].replace(/The phone stands on the floor in front of the panda\. /, '').replace(/ The camera is low, at floor level[^.]*\./, ' The camera is low, near the floor, in front of the panda.') : CLIPS[key];
+      const r = await omniVideo({ images: [REF], prompt: `${base}${VERT ? ' Vertical 9:16 frame: the panda fills most of the frame height.' : ''} ${clip}`, duration: '8s', aspect: VERT ? '9:16' : '16:9' });
       const raw = `/tmp/${key}-${n}.raw.mp4`, silent = `/tmp/${key}-${n}.mp4`;
       fs.writeFileSync(raw, r.video);
       stripAudio(ff, raw, silent);

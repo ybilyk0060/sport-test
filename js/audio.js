@@ -23,7 +23,8 @@ export function unlockAudio() {
       // Прогон 26.11: на iPhone голос первого упражнения не был слышен. Контекст iOS уходит в «interrupted» (уведомление,
       // включение камеры) и сам не возвращается — будим его при каждом изменении состояния и перед каждой фразой.
       ctx.onstatechange = () => { audioStatus.ctx = ctx.state; if (ctx.state !== 'running' && ctx.state !== 'closed') ctx.resume().catch(() => {}); };
-      window.__audioState = () => (ctx ? ctx.state : 'none');
+      window.__audioState = () => (ctx ? `${ctx.state}@${ctx.currentTime.toFixed(1)}` : 'none'); // диагностика прогона на iPhone (tools/e2e-iphone-wi.mjs)
+      window.__say = (n) => say(n);
     }
     if (ctx.state !== 'running') ctx.resume().catch(() => {});
     const b = ctx.createBuffer(1, 1, 22050); const s = ctx.createBufferSource(); s.buffer = b; s.connect(ctx.destination); s.start(0);
