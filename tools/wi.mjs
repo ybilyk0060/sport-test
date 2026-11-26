@@ -15,7 +15,7 @@ export async function connect(match = 'kids-test.com', port = 9222) {
     else if (m.method === 'Target.dispatchMessageFromTarget') onReply(JSON.parse(m.params.message));
     else onReply(m);
   };
-  await new Promise((r) => setTimeout(r, 400));
+  for (let i = 0; i < 30 && !target; i++) await new Promise((r) => setTimeout(r, 100)); // iOS присылает Target.targetCreated не сразу
   const send = (method, params = {}) => new Promise((resolve, reject) => {
     const n = ++id;
     const t = setTimeout(() => { pending.delete(n); reject(new Error(`timeout ${method}`)); }, 15000);

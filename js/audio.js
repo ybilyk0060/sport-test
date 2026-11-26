@@ -15,14 +15,23 @@ export const audioStatus = { state: 'idle', loaded: 0 };
 
 export function unlockAudio() {
   try {
-    if (!ctx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) { audioStatus.state = 'unsupported'; return; } ctx = new AC(); }
-    if (ctx.state === 'suspended') ctx.resume();
-    // iOS 17+: голос звучит и при беззвучном режиме телефона (иначе Web Audio молчит при выключенном звонке)
-    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch { /* старый iOS */ }
+    // iOS 17+: голос звучит и при беззвучном режиме телефона (иначе Web Audio молчит при выключенном звонке). Ставим до создания контекста.
+    try { if (navigator.audioSession && navigator.audioSession.type !== 'playback') navigator.audioSession.type = 'playback'; } catch { /* старый iOS */ }
+    if (!ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext; if (!AC) { audioStatus.state = 'unsupported'; return; }
+      ctx = new AC();
+      // Прогон 26.11: на iPhone голос первого упражнения не был слышен. Контекст iOS уходит в «interrupted» (уведомление,
+      // включение камеры) и сам не возвращается — будим его при каждом изменении состояния и перед каждой фразой.
+      ctx.onstatechange = () => { audioStatus.ctx = ctx.state; if (ctx.state !== 'running' && ctx.state !== 'closed') ctx.resume().catch(() => {}); };
+      window.__audioState = () => (ctx ? ctx.state : 'none');
+    }
+    if (ctx.state !== 'running') ctx.resume().catch(() => {});
     const b = ctx.createBuffer(1, 1, 22050); const s = ctx.createBufferSource(); s.buffer = b; s.connect(ctx.destination); s.start(0);
     audioStatus.state = 'unlocked';
   } catch { audioStatus.state = 'error'; }
 }
+const wake = async () => { if (ctx && ctx.state !== 'running' && ctx.state !== 'closed') { try { await ctx.resume(); } catch { /* без жеста iOS может отказать */ } } };
+document.addEventListener('visibilitychange', () => { if (!document.hidden) wake(); });
 
 async function loadClip(name) {
   if (!ctx || buffers.has(name)) return buffers.get(name);
@@ -49,6 +58,7 @@ export async function say(name, { interrupt = true } = {}) {
   if (epoch !== queueId) return;
   if (current && interrupt) { try { current.stop(); } catch { /* уже остановлен */ } current = null; }
   if (current && !interrupt) return;
+  await wake();
   const src = ctx.createBufferSource(); src.buffer = buf; src.connect(ctx.destination);
   src.onended = () => { if (current === src) current = null; };
   current = src; src.start(0);
@@ -63,9 +73,11 @@ export async function sayQueue(names, gapMs = 250) {
     const buf = await loadClip(name);
     if (!buf || id !== queueId) continue;
     if (current) { try { current.stop(); } catch { /* уже остановлен */ } }
+    await wake();
     const src = ctx.createBufferSource(); src.buffer = buf; src.connect(ctx.destination);
     current = src;
-    await new Promise((res) => { src.onended = () => { if (current === src) current = null; res(); }; src.start(0); });
+    // onended не приходит, если iOS приостановил звук — не ждём дольше длины клипа (иначе экран ждёт конца инструкции вечно)
+    await new Promise((res) => { const t = setTimeout(res, buf.duration * 1000 + 1500); src.onended = () => { clearTimeout(t); if (current === src) current = null; res(); }; src.start(0); });
     await new Promise((res) => setTimeout(res, gapMs));
   }
 }

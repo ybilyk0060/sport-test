@@ -55,7 +55,7 @@ const STATE = `
 // Поза во время упражнений: компактные точки (кисти, плечи, щиколотки, нос) — для разбора счёта (window.__poseTap в stage.js)
 const POSETAP = `if (!window.__poseBuf) { window.__poseBuf = []; window.__poseTap = (key, lm) => { if (!lm) { window.__poseBuf.push([key, Date.now()]); return; } const f = (i) => [Math.round(lm[i].x * 1000) / 1000, Math.round(lm[i].y * 1000) / 1000, Math.round((lm[i].visibility ?? 1) * 100) / 100]; window.__poseBuf.push([key, Date.now(), f(0), f(11), f(12), f(15), f(16), f(23), f(24), f(27), f(28)]); }; }`;
 let c = await connect('kids-test.com');
-const ev = async (expr) => { try { return await c.evaluate(expr); } catch (e) { if (/ws|timeout|closed/i.test(String(e))) { c = await connect('kids-test.com'); return c.evaluate(expr); } throw e; } };
+const ev = async (expr) => { try { return await c.evaluate(expr); } catch (e) { if (/ws|timeout|closed|domain/i.test(String(e))) { c = await connect('kids-test.com'); return c.evaluate(expr); } throw e; } };
 const run = (body) => ev(`(() => { ${body} })()`);
 const click = (css) => run(`const e = document.querySelector(${JSON.stringify(css)}); if (!e) return false; e.click(); return true;`);
 const setVal = (css, v) => run(`const e = document.querySelector(${JSON.stringify(css)}); if (!e) return false; e.value = ${JSON.stringify(v)}; e.dispatchEvent(new Event('input', { bubbles: true })); return true;`);

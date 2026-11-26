@@ -73,7 +73,7 @@ const switchBtnHtml = () => `<button class="glass-btn icon" data-act="switch-cam
 function topBar(label, { switchBtn = true, skip = false } = {}) {
   // Надписи в углах читаются с 2–3 м (Юрий 26.11): номер упражнения мелко, название крупно, плотный тёмный фон
   const [small, big] = label && label.includes(' · ') ? label.split(' · ') : [null, label];
-  return `<div class="hud-top">${label ? `<span class="glass-pill hud-title">${small ? `<small>${esc(small)}</small>` : ''}<b>${esc(big)}</b></span>` : '<span></span>'}<span class="hud-actions">${skip ? `<button class="glass-btn" data-act="skip-ex">${esc(T.cam.skipEx)}</button>` : ''}${switchBtn ? switchBtnHtml() : ''}</span></div>`;
+  return `<div class="hud-top">${label ? `<span class="glass-pill hud-title">${small ? `<small>${esc((small.match(/\d+/g) || []).slice(0, 2).join('/') || small)}</small> · ` : ''}<b>${esc(big)}</b></span>` : '<span></span>'}<span class="hud-actions">${skip ? `<button class="glass-btn" data-act="skip-ex">${esc(T.cam.skipEx)}</button>` : ''}${switchBtn ? switchBtnHtml() : ''}</span></div>`;
 }
 
 async function switchCamera() {
@@ -179,16 +179,18 @@ function introSheet(p, i, n, btnHtml) {
   const ex = CONFIG.exercises[p.key], tx = T.ex[p.key];
   const note = ex.wall ? T.cam.wallNote : ex.floor === 'any' ? T.cam.floorAnyNote : ex.floor === 'side' ? T.cam.floorSideNote : ex.floor ? T.cam.floorFrontNote : ex.facing === 'side' ? T.cam.sideNote : T.cam.frontNote;
   const checks = (EX_QUALITY[p.key] || []).map((q) => T.result.qualities[q].name.toLowerCase()).join(', ');
-  return `<div class="sheet"><div class="tags"><span class="tag">${esc(exOf(i, n))}</span>${checks ? `<span class="tag checks">${esc(T.cam.checks(checks))}</span>` : ''}</div><h2>${esc(p.timed ? T.cam.forSec(tx.name, p.capSec) : tx.task(p.target))}</h2>
+  return `<div class="sheet show"><div class="tags"><span class="tag">${esc(exOf(i, n))}</span>${checks ? `<span class="tag checks">${esc(T.cam.checks(checks))}</span>` : ''}</div><h2>${esc(p.timed ? T.cam.forSec(tx.name, p.capSec) : tx.task(p.target))}</h2>
     ${ex.localVideo ? `<video class="panda" playsinline muted loop autoplay preload="auto" poster="${ex.localPoster}" src="${videoSrc(ex.localVideo)}"></video>` : ex.demo ? demoSvg(ex.demo) : ex.video ? `<video class="panda" playsinline muted loop autoplay preload="auto" poster="${CONFIG.mediaBase + ex.poster}" src="${videoSrc(CONFIG.mediaBase + ex.video)}"></video>` : (ex.art || '')}
     <p>${esc(tx.how)}</p>${tx.pandaNote ? `<p class="small" style="opacity:.8">${esc(tx.pandaNote)}</p>` : ''}<p class="note">↻ ${esc(note)}</p>${btnHtml}</div>`;
 }
 
 // Короткое видео с пандой и голос студии перед упражнением.
 // Дальше — поднятой рукой (держать 1,5 с), как во всех приложениях Kidsney, или кнопкой. Подходить к телефону не нужно.
+let inFrame = false; // последний кадр вступления: голова и стопы видны
 const HAND_R = 34, HAND_C = 2 * Math.PI * HAND_R;
 function intro(p, i, n) {
   return new Promise((resolve) => {
+    inFrame = false;
     const handHtml = `<div class="raise wait"><svg viewBox="0 0 80 80" aria-hidden="true"><circle class="r-bg" cx="40" cy="40" r="${HAND_R}"/><circle class="r-fg" data-el="ring" cx="40" cy="40" r="${HAND_R}" stroke-dasharray="${HAND_C}" stroke-dashoffset="${HAND_C}"/><text x="40" y="52" text-anchor="middle" font-size="34">✋</text></svg><span>${esc(T.cam.raiseHand)}</span></div>`;
     hud.innerHTML = introSheet(p, i, n, `${handHtml}<button class="btn" data-act="go">${esc(T.cam.go)}</button><button class="btn ghost" data-act="skip-ex">${esc(T.cam.skipEx)}</button>`);
     const ex = CONFIG.exercises[p.key];
@@ -197,7 +199,7 @@ function intro(p, i, n) {
     // Поднятая рука запускает упражнение только после инструкции (прогон 26.11: рука срабатывала на 4-й секунде 17-секундной инструкции,
     // ребёнок не слышал, что делать). Кнопка «Поехали» работает сразу. Без звука (iOS не разрешил) рука включается сразу же.
     let handArmed = false;
-    const armHand = () => { if (handArmed || ended) return; handArmed = true; const rz = $('.raise', hud); if (rz) rz.classList.remove('wait'); clearTimeout(remindTimer); remindTimer = setTimeout(remind, 7000); };
+    const armHand = () => { if (handArmed || ended) return; handArmed = true; const rz = $('.raise', hud); if (rz) rz.classList.remove('wait'); clearTimeout(remindTimer); remind(); };
     sayQueue([...(i > 0 ? [i === n - 1 ? 'intro_last' : 'intro_next'] : ['cue_great']), ...(ex.floor ? ['ui_phone_tip'] : []), exists(ex.intro) ? ex.intro : ex.introFallback]).then(armHand, armHand);
     setTimeout(armHand, 30000); // страховка, если голос завис
     const pv = $('video.panda', hud); if (pv) { pv.play().catch(() => {}); pv.onerror = () => { pv.style.display = 'none'; }; } // нет сети до видео — остаются текст и голос
@@ -219,6 +221,7 @@ function intro(p, i, n) {
     if (stopLoop) { stopLoop(); stopLoop = null; }
     stopLoop = frameLoop(video, (lm) => {
       drawSkeleton(lm || false);
+      inFrame = framingCheck(lm).ok;
       if (!handArmed) return;
       const r = gesture.frame(lm, performance.now());
       ring.style.strokeDashoffset = String(HAND_C * (1 - r.progress));
@@ -272,6 +275,9 @@ async function liveExercise(p, i, n) {
   const how = await intro(p, i, n);
   if (!alive) return null;
   if (how === 'skip') { const r = skipped(p); track('exercise_done', { key: p.key, skipped: true }); return r; }
+  // Прогон 26.11: рука поднята вплотную к телефону — и баланс начал отсчёт, когда в кадре было одно лицо.
+  // Стоя: перед отсчётом снова ждём тело целиком в кадре (на полу голова/стопы не обязаны быть видны).
+  if (!inFrame && !CONFIG.exercises[p.key].floor) { await framing(); if (!alive) return null; }
   await countdown();
   if (!alive) return null;
   return new Promise((resolve) => {
