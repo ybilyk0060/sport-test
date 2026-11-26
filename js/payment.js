@@ -12,6 +12,8 @@
 //   3) поменять CONFIG.paymentProvider.
 
 import { CONFIG } from './config.js?v=eb4804e-mwxu3ali';
+import { track } from './store.js?v=eb4804e-mwxu3ali';
+import { adContext } from './analytics.js?v=eb4804e-mwxu3ali';
 
 const testProvider = {
   name: 'test',
@@ -75,7 +77,9 @@ const wayforpayProvider = {
 // Доступ открывается только после вебхука Paddle на сервер (sport-test-paddle → sport_test_orders.status='paid'),
 // а не по событию в браузере. CONFIG.paddleCheckout: { env: 'sandbox' | 'production', token, prices: { USD: { price, discount }, EUR: {...} } }.
 let paddleReady = null;
+let paddleHandler = null; // обработчик текущего окна оплаты: при повторном «Оплатить» — новый заказ, новый обработчик
 export function loadPaddle(onEvent) {
+  if (onEvent) paddleHandler = onEvent;
   if (paddleReady) return paddleReady;
   const C = CONFIG.paddleCheckout;
   paddleReady = new Promise((resolve, reject) => {
@@ -83,7 +87,7 @@ export function loadPaddle(onEvent) {
     s.onload = () => {
       try {
         if (C.env === 'sandbox') window.Paddle.Environment.set('sandbox');
-        window.Paddle.Initialize({ token: C.token, eventCallback: (e) => onEvent && onEvent(e) });
+        window.Paddle.Initialize({ token: C.token, eventCallback: (e) => paddleHandler && paddleHandler(e) });
         resolve(window.Paddle);
       } catch (e) { reject(e); }
     };
@@ -91,6 +95,9 @@ export function loadPaddle(onEvent) {
     document.head.appendChild(s);
   });
   return paddleReady;
+}
+async function sha256(s) {
+  try { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, '0')).join(''); } catch { return ''; }
 }
 // Страна покупателя для окна Paddle (чтобы не спрашивать отдельным шагом): из языка браузера (en-US → US) или часового пояса
 function country() {
@@ -118,13 +125,23 @@ const paddleProvider = {
     const C = CONFIG.paddleCheckout, pr = C && C.prices[currency];
     if (!pr || !pr.price) throw new Error('no paddle price for ' + currency);
     const done = new URL(returnUrl); done.searchParams.set('pay', 'check'); done.searchParams.set('order', orderId);
-    const P = await loadPaddle((e) => { if (e && e.name === 'checkout.completed') setTimeout(() => { location.href = done.toString(); }, 300); });
+    let seenLoaded = false;
+    const P = await loadPaddle((e) => {
+      const n = e && e.name;
+      // Что происходит в окне Paddle (аналитика воронки): открылось, закрыли без оплаты, ошибка оплаты
+      if (n === 'checkout.loaded' && !seenLoaded) { seenLoaded = true; track('checkout_open', { provider: 'paddle', order: orderId }); }
+      if (n === 'checkout.closed') track('checkout_closed', { provider: 'paddle', order: orderId });
+      if (n === 'checkout.payment.failed' || n === 'checkout.error') track('checkout_failed', { provider: 'paddle', order: orderId, reason: n, error: String((e.error && (e.error.code || e.error.type)) || (e.data && e.data.payment && e.data.payment.method_details && e.data.payment.method_details.type) || '').slice(0, 60) });
+      if (n === 'checkout.completed') setTimeout(() => { location.href = done.toString(); }, 300);
+    });
+    const em = email ? await sha256(email.trim().toLowerCase()) : '';
     P.Checkout.open({
       items: [{ priceId: pr.price, quantity: 1 }],
       // ?code=КОД — промокод Paddle применяется сам (проверочная покупка, партнёрские коды); иначе скидка первого платежа, пока идёт таймер
       ...(promoCode() ? { discountCode: promoCode() } : discount && pr.discount ? { discountId: pr.discount } : {}),
       ...(email ? { customer: { email, ...(country() ? { address: { countryCode: country() } } : {}) } } : {}),
-      customData: { order_ref: orderId },
+      // order_ref — связь с заказом; остальное — для покупки в Meta с сервера (Conversions API), email только в виде хеша
+      customData: { order_ref: orderId, ...adContext(), ...(em ? { em } : {}), ...(country() ? { country: country() } : {}) },
       settings: { displayMode: 'overlay', variant: 'one-page', theme: 'light', locale: lang || 'en', allowLogout: false, successUrl: done.toString() },
     });
   },

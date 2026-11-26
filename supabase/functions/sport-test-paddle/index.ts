@@ -4,8 +4,12 @@
 //   transaction.completed  → заказ custom_data.order_ref = оплачен (sport_test_orders), подписка продлевается на период
 //   subscription.canceled  → подписка помечается отменённой
 //   subscription.updated   → статус/дата следующего списания
+//   + первая оплата подписки → Purchase и Subscribe в Meta через Conversions API (если задан META_CAPI_TOKEN):
+//     event_id purchase-{order_ref} / subscribe-{order_ref} совпадает с браузерным пикселем → Meta считает покупку один раз.
+//     Продления и оплаты на 0 (промокод 100%) не шлём; при META_TEST_EVENT_CODE всё уходит в «Тестовые события».
+//     UK и ЕС: только если покупатель согласился на cookie (custom_data.consent = 'all').
 // verify_jwt=false (вызывает Paddle). Ответ всегда быстрый: 200 при успехе, 400 при плохой подписи.
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
@@ -25,6 +29,50 @@ function verify(sigHeader: string | null, raw: string): boolean {
 
 const money = (minor: unknown) => (minor == null ? null : Number(minor) / 100);
 
+// --- Meta Conversions API ---
+const PIXEL = Deno.env.get("META_PIXEL_ID") || "1607393024387662";
+const CAPI_TOKEN = Deno.env.get("META_CAPI_TOKEN") || "";
+const CAPI_TEST = Deno.env.get("META_TEST_EVENT_CODE") || "";
+const CONSENT_COUNTRIES = new Set(["GB", "UK", "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "IS", "LI", "NO", "CH"]);
+const sha = (s: string) => createHash("sha256").update(s.trim().toLowerCase()).digest("hex");
+const str = (v: unknown, n = 400) => (typeof v === "string" ? v.slice(0, n) : "");
+
+async function sendCapi(d: Record<string, any>, orderRef: string, value: number, currency: string) {
+  if (!CAPI_TOKEN) return "no token";
+  const c = d.custom_data || {};
+  const country = str(c.country, 2).toUpperCase();
+  if (CONSENT_COUNTRIES.has(country) && c.consent !== "all") return "no consent";
+  if (!(value > 0) && !CAPI_TEST) return "zero amount";
+  const user_data: Record<string, unknown> = {};
+  if (/^[a-f0-9]{64}$/.test(str(c.em))) user_data.em = [c.em];
+  if (/^[A-Z]{2}$/.test(country)) user_data.country = [sha(country)];
+  if (str(c.fbc)) user_data.fbc = str(c.fbc);
+  if (str(c.fbp)) user_data.fbp = str(c.fbp);
+  if (str(c.ua)) user_data.client_user_agent = str(c.ua);
+  if (d.customer_id) user_data.external_id = [sha(String(d.customer_id))];
+  const base = {
+    event_time: Math.floor(Date.now() / 1000), action_source: "website",
+    event_source_url: str(c.url) || "https://kids-test.com/", user_data,
+  };
+  const custom = { value: value > 0 ? value : 0.01, currency: currency || "USD", order_id: orderRef };
+  const body: Record<string, unknown> = {
+    data: [
+      { ...base, event_name: "Purchase", event_id: `purchase-${orderRef}`, custom_data: custom },
+      { ...base, event_name: "Subscribe", event_id: `subscribe-${orderRef}`, custom_data: { ...custom, predicted_ltv: custom.value } },
+    ],
+  };
+  if (CAPI_TEST) body.test_event_code = CAPI_TEST;
+  const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 4000);
+  try {
+    const r = await fetch(`https://graph.facebook.com/v24.0/${PIXEL}/events?access_token=${encodeURIComponent(CAPI_TOKEN)}`, {
+      method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body), signal: ctl.signal,
+    });
+    const txt = (await r.text()).slice(0, 300);
+    if (!r.ok) console.error("capi", r.status, txt);
+    return `${r.status} ${txt}`;
+  } catch (e) { console.error("capi", String(e)); return "error " + String(e).slice(0, 100); } finally { clearTimeout(t); }
+}
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") return new Response("ok");
   const raw = await req.text();
@@ -43,6 +91,14 @@ Deno.serve(async (req) => {
         const row = { status: "paid", paid_at: new Date().toISOString(), amount: total ?? 0, currency: cur, mode: ENV, provider: "paddle", provider_txn: d.id, provider_sub: subId, provider_payload: { id: d.id, status: d.status, origin: d.origin } };
         if (o) await db.from("sport_test_orders").update(row).eq("order_ref", orderRef).neq("status", "paid");
         else await db.from("sport_test_orders").insert({ order_ref: orderRef, sid: orderRef.split("-")[1] || "", ...row });
+        // Покупка в Meta (Conversions API): только на transaction.completed первой оплаты, один раз на заказ
+        if (type === "transaction.completed" && d.origin !== "subscription_recurring") {
+          const { data: done } = await db.from("sport_test_orders").select("provider_payload").eq("order_ref", orderRef).maybeSingle();
+          if (!done?.provider_payload?.capi) {
+            const capi = await sendCapi(d, orderRef, total ?? 0, cur);
+            await db.from("sport_test_orders").update({ provider_payload: { id: d.id, status: d.status, origin: d.origin, capi, src: { utm_source: str(d.custom_data?.utm_source, 100), utm_campaign: str(d.custom_data?.utm_campaign, 200), utm_content: str(d.custom_data?.utm_content, 200), utm_term: str(d.custom_data?.utm_term, 200), country: str(d.custom_data?.country, 2), consent: str(d.custom_data?.consent, 12) } } }).eq("order_ref", orderRef);
+          }
+        }
         // id подписки может прийти позже первого «paid» (transaction.paid → transaction.completed): дописываем всегда
         if (subId) { await db.from("sport_test_orders").update({ provider_sub: subId }).eq("order_ref", orderRef); await db.from("sport_test_subscriptions").update({ provider_sub: subId }).eq("order_ref", orderRef); }
       }

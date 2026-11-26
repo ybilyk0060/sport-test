@@ -1,5 +1,7 @@
-// Аналитика воронки: Meta Pixel (+ по желанию PostHog). Включается ТОЛЬКО после согласия на cookie (баннер внизу).
-// Без согласия события остаются только на устройстве (store.track). Видео, точки тела и ответы о ребёнке наружу не уходят:
+// Аналитика воронки: Meta Pixel + PostHog.
+// Meta Pixel и записи сессий PostHog — ТОЛЬКО после согласия на cookie (баннер внизу).
+// До согласия и после отказа PostHog считает шаги воронки без cookie (cookieless_mode 'always', Юрий 26.11):
+// ничего не пишется в браузер, человек анонимен и не склеивается между визитами, записей сессий нет. Видео, точки тела и ответы о ребёнке наружу не уходят:
 // в события идут только имя шага, номер вопроса, ключ упражнения, сумма и валюта.
 
 import { CONFIG } from './config.js?v=eb4804e-mwxu3ali';
@@ -8,13 +10,14 @@ import { T } from './i18n/index.js?v=eb4804e-mwxu3ali';
 const KEY = 'sporttest.consent';
 let consent = null;
 try { consent = localStorage.getItem(KEY); } catch { /* нет доступа */ }
-let ready = false;
+let phMode = null; // null | 'full' (согласие) | 'cookieless' (нет согласия)
+let pixelOn = false;
 
 // Шаги воронки, которые уходят наружу (остальные события — только на устройстве)
 const FUNNEL = new Set(['open', 'camera_blocked_shown', 'open_in_chrome_click', 'open_in_safari_click', 'fallback_start', 'quiz_start', 'quiz_answer', 'prep_shown', 'camera_granted', 'camera_denied', 'test_start', 'exercise_done', 'test_done',
-  'result_shown', 'paywall_shown', 'offer_timer_end', 'pay_click', 'paid', 'pay_cancelled', 'report_shown', 'workout_start', 'workout_done', 'sub_cancelled', 'gift_code', 'app_link']);
+  'result_shown', 'paywall_shown', 'offer_timer_end', 'pay_click', 'checkout_open', 'checkout_closed', 'checkout_failed', 'paid', 'pay_cancelled', 'report_shown', 'workout_start', 'workout_done', 'sub_cancelled', 'gift_code', 'app_link']);
 // Только безопасные поля
-const SAFE = ['order', 'fps', 'ms', 'q', 'step', 'reason', 'confirm', 'via', 'n', 'key', 'skipped', 'amount', 'currency', 'discount', 'mode', 'summary', 'plan', 'test', 'app', 'id', 'lang', 'kind', 'via', 'ok', 'browser', 'platform', 'inApp'];
+const SAFE = ['order', 'fps', 'ms', 'q', 'step', 'reason', 'confirm', 'via', 'n', 'key', 'skipped', 'amount', 'currency', 'discount', 'mode', 'summary', 'plan', 'test', 'app', 'id', 'lang', 'kind', 'via', 'ok', 'browser', 'platform', 'inApp', 'provider', 'utm', 'ref', 'choice', 'done', 'target', 'error', 'regular'];
 const clean = (p) => Object.fromEntries(Object.entries(p || {}).filter(([k, v]) => SAFE.includes(k) && v !== undefined && v !== null));
 
 function loadPixel(id) {
@@ -25,38 +28,72 @@ function loadPixel(id) {
   window.fbq('track', 'PageView');
 }
 const stripUrl = (u) => { try { const x = new URL(u, location.href); for (const k of ['sub', 's', 'order', 'orderReference']) x.searchParams.delete(k); return x.toString(); } catch { return u; } };
-function loadPosthog(key, host) {
+function loadPosthog(key, host, full) {
   /* eslint-disable */
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
   /* eslint-enable */
   // Тепловые карты и записи сессий (Юрий 25.11) — только после согласия. Поля ввода маскируются; экран камеры в запись не попадает:
   // запись ставится на паузу на время камеры (recording.pause/resume из stage.js), а сам экран помечен ph-no-capture.
-  window.posthog.init(key, {
-    api_host: host, autocapture: true, capture_pageview: true, capture_pageleave: true, enable_heatmaps: true,
-    disable_session_recording: false, persistence: 'localStorage', ip: false, mask_all_text: false,
-    session_recording: { maskAllInputs: true, blockClass: 'ph-no-capture', blockSelector: 'video, canvas, .stage', maskCapturedNetworkRequestFn: (r) => ({ ...r, name: stripUrl(r.name) }) },
+  const base = {
+    api_host: host, autocapture: true, capture_pageview: true, capture_pageleave: true, enable_heatmaps: true, ip: false, mask_all_text: false,
     // ссылка доступа к подписке (?sub=) и перенос ответов (?s=) не уходят в аналитику
     sanitize_properties: (props) => { for (const k of ['$current_url', '$referrer', '$initial_current_url', '$prev_pageview_pathname']) if (typeof props[k] === 'string') props[k] = stripUrl(props[k]); return props; },
+  };
+  window.posthog.init(key, full ? {
+    ...base, persistence: 'localStorage', disable_session_recording: false,
+    session_recording: { maskAllInputs: true, blockClass: 'ph-no-capture', blockSelector: 'video, canvas, .stage', maskCapturedNetworkRequestFn: (r) => ({ ...r, name: stripUrl(r.name) }) },
+  } : {
+    // Без согласия: без cookie и localStorage, без записей сессий (нужен «Cookieless server hash mode» в настройках проекта PostHog)
+    ...base, cookieless_mode: 'always', persistence: 'memory', disable_session_recording: true,
   });
-  window.posthog.register({ app: 'sport-test', lang: T.meta.lang });
+  window.posthog.register({ app: 'sport-test', lang: T.meta.lang, consent: full ? 'all' : (consent || 'none') });
 }
 
+// PostHog запускается один раз за загрузку страницы: с согласием — полный, без — без cookie.
+// Если человек нажал «Accept» посреди визита, до конца визита PostHog остаётся без cookie (пиксель включается сразу).
 function start() {
-  if (ready || consent !== 'all') return;
-  ready = true;
-  if (CONFIG.analytics.metaPixelId) loadPixel(CONFIG.analytics.metaPixelId);
-  if (CONFIG.analytics.posthogKey) loadPosthog(CONFIG.analytics.posthogKey, CONFIG.analytics.posthogHost);
+  if (!phMode && CONFIG.analytics.posthogKey) {
+    phMode = consent === 'all' ? 'full' : 'cookieless';
+    loadPosthog(CONFIG.analytics.posthogKey, CONFIG.analytics.posthogHost, phMode === 'full');
+  }
+  if (!pixelOn && consent === 'all' && CONFIG.analytics.metaPixelId) { pixelOn = true; loadPixel(CONFIG.analytics.metaPixelId); }
+}
+
+// Метки для сервера (покупка в Meta через Conversions API): клик из рекламы, браузер, UTM, согласие.
+// Уходят в заказ Paddle (customData), оттуда — в вебхук. fbclid берём из адреса первого захода (sessionStorage).
+const AD = 'sporttest.ad';
+try {
+  const q = new URLSearchParams(location.search);
+  if (q.get('fbclid') || q.get('utm_source')) {
+    const ad = { ts: Date.now() };
+    for (const k of ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) if (q.get(k)) ad[k] = q.get(k).slice(0, 200);
+    sessionStorage.setItem(AD, JSON.stringify(ad));
+  }
+} catch { /* нет доступа */ }
+const cookie = (n) => { try { const m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')); return m ? decodeURIComponent(m[1]) : ''; } catch { return ''; } };
+export function adContext() {
+  let ad = {};
+  try { ad = JSON.parse(sessionStorage.getItem(AD) || '{}') || {}; } catch { /* нет */ }
+  const out = { consent: consent || 'none', url: location.origin + location.pathname, ua: navigator.userAgent.slice(0, 400) };
+  for (const k of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) if (ad[k]) out[k] = ad[k];
+  // Метки Meta — только с согласием (UK/ЕС); без него сервер всё равно получит факт покупки, но без привязки к клику
+  if (consent === 'all') {
+    const fbc = cookie('_fbc') || (ad.fbclid ? `fb.1.${ad.ts}.${ad.fbclid}` : '');
+    if (fbc) out.fbc = fbc;
+    if (cookie('_fbp')) out.fbp = cookie('_fbp');
+  }
+  return out;
 }
 
 // Пауза записи сессии, пока открыта камера (видео и изображение ребёнка никуда не уходят)
 export const recording = {
   pause() { try { window.posthog && window.posthog.stopSessionRecording && window.posthog.stopSessionRecording(); } catch { /* нет */ } },
-  resume() { try { ready && window.posthog && window.posthog.startSessionRecording && window.posthog.startSessionRecording(); } catch { /* нет */ } },
+  resume() { try { phMode === 'full' && window.posthog && window.posthog.startSessionRecording && window.posthog.startSessionRecording(); } catch { /* нет */ } },
 };
 
 // Вызывается из store.track для каждого события. В PostHog — все события (воронка по каждому шагу), в Meta — только шаги воронки.
 export function send(name, props = {}) {
-  if (!ready) return;
+  if (!phMode && !pixelOn) return;
   const p = clean(props);
   try {
     if (window.fbq && FUNNEL.has(name)) {
@@ -67,9 +104,10 @@ export function send(name, props = {}) {
       if (name === 'paywall_shown') window.fbq('track', 'InitiateCheckout', { value: p.amount, currency: p.currency });
       if (name === 'pay_click') window.fbq('track', 'AddPaymentInfo', { value: p.amount, currency: p.currency });
       // Покупка уходит в Meta только настоящая: тестовая оплата рекламу не обучает
-      if (name === 'paid' && !p.test) {
+      let promo = false; try { promo = !!sessionStorage.getItem('sporttest.code'); } catch { /* нет */ }
+      if (name === 'paid' && !p.test && !promo) { // оплата по промокоду (проверка 100%) рекламу не обучает
         window.fbq('track', 'Purchase', { value: p.amount, currency: p.currency }, p.order ? { eventID: `purchase-${p.order}` } : undefined); // eventID — для склейки с Conversions API
-        window.fbq('track', 'Subscribe', { value: p.amount, currency: p.currency, predicted_ltv: p.amount });
+        window.fbq('track', 'Subscribe', { value: p.amount, currency: p.currency, predicted_ltv: p.amount }, p.order ? { eventID: `subscribe-${p.order}` } : undefined);
       }
       window.fbq('trackCustom', `st_${name}`, p);
     }
@@ -80,7 +118,8 @@ export function send(name, props = {}) {
 // Баннер согласия (ЕС, Великобритания и остальные — одинаково)
 export function initConsent() {
   if (!CONFIG.analytics.metaPixelId && !CONFIG.analytics.posthogKey) return; // нечего включать — баннер не нужен
-  if (consent) { start(); return; }
+  start(); // PostHog без cookie считает и тех, кто баннер не тронул
+  if (consent) return;
   const C = T.consent;
   const el = document.createElement('div');
   el.className = 'consent';
@@ -90,6 +129,7 @@ export function initConsent() {
     consent = b.dataset.c;
     try { localStorage.setItem(KEY, consent); } catch { /* нет доступа */ }
     el.remove();
+    send('consent_choice', { choice: consent });
     start();
   });
   document.body.appendChild(el);
