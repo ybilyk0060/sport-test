@@ -27,5 +27,10 @@ for (const e of cat) {
     phrases: Object.keys(e.spec.phrases || {}),
   };
 }
+// Зелёная панда из Студії (поля каталога media.greenVideo / media.greenBox, согласовано 26.11) — для любого упражнения сайта
+const green = {};
+for (const e of cat) if (e.status === 'published' && e.media && e.media.greenVideo) green[e.key] = { video: e.media.greenVideo, box: e.media.greenBox || null };
+fs.writeFileSync('js/engine/green-studio.js', `// Сгенерировано tools/import-studio.mjs: ролики панды на зелёном фоне из каталога Студії. Не править руками.\nexport const GREEN_STUDIO = ${JSON.stringify(green, null, 1)};\n`);
+console.log('зелёных роликов в каталоге', Object.keys(green).length);
 fs.writeFileSync('js/engine/specs-studio.js', `// Сгенерировано tools/import-studio.mjs из каталога Студії вправ (${new Date().toISOString().slice(0, 10)}). Не править руками.\n// Опубликованные упражнения, которых нет среди своих спек сайта: программа подписчика (js/program.js).\nexport const STUDIO = ${JSON.stringify(out, null, 1)};\n`);
 console.log('добавлено', Object.keys(out).length, Object.keys(out).join(', '));

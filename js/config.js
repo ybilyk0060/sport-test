@@ -1,5 +1,6 @@
 import { STUDIO } from './engine/specs-studio.js';
 import { GREEN } from './green-boxes.js';
+import { GREEN_STUDIO } from './engine/green-studio.js';
 // ЕДИНЫЕ НАСТРОЙКИ. Всё, что владелец может захотеть поменять без программиста, — здесь.
 
 export const CONFIG = {
@@ -225,3 +226,5 @@ for (const [k, e] of Object.entries(STUDIO)) {
 }
 // Зелёная панда для упражнений программы (tools/green-boxes.mjs), если у упражнения ещё нет выбранного вручную ролика
 for (const [k, g] of Object.entries(GREEN)) if (CONFIG.exercises[k] && !CONFIG.exercises[k].gVideo) Object.assign(CONFIG.exercises[k], { gVideo: g.video, gBox: g.box });
+// Зелёная панда из каталога Студії (когда появится): только где сайт не выбрал ролик сам
+for (const [k, g] of Object.entries(GREEN_STUDIO)) if (CONFIG.exercises[k] && !CONFIG.exercises[k].gVideo) Object.assign(CONFIG.exercises[k], { gVideo: g.video, gBox: g.box || null });
