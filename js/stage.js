@@ -215,7 +215,9 @@ function intro(p, i, n) {
     const pv = $('video.panda', hud); if (pv) { pv.play().catch(() => {}); pv.onerror = () => { pv.style.display = 'none'; }; } // нет сети до видео — остаются текст и голос
     const ring = $('[data-el=ring]', hud);
     // Стоя — поднятая рука (1,5 с); в упоре лёжа — удержание упора 2 с
-    const gesture = ex.floor ? createPlankHold() : createRaiseHand();
+    // В упоре лёжа старт по самому упору (2 с); поднятая рука — запасной вариант (Юрий 26.11)
+    const plank = ex.floor ? createPlankHold() : null, hand = createRaiseHand();
+    const gesture = { frame: (lm, ts) => { const a = hand.frame(lm, ts); if (!plank) return a; const b = plank.frame(lm, ts); return a.fired || b.fired ? { progress: 1, fired: true } : b.progress >= a.progress ? b : a; } };
     // Голос «Підніми руку»: после инструкции, потом напоминания (как в Kidsney: 20 с, затем каждые 15 с, не больше 3 раз)
     let reminders = 0;
     const remind = () => { if (ended || ex.floor) return; say('ui_raise_hand', { interrupt: false }); if (++reminders < 3) remindTimer = setTimeout(remind, 15000); };

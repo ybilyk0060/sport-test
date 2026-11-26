@@ -291,6 +291,7 @@ export default {
       ['Do you see the camera video?', () => 'No. Video is processed on your phone and never uploaded.'],
     ],
     fine: (first, regular, days) => `By tapping “Subscribe”, you agree to a subscription: first payment ${first} for ${days} days, then ${regular} every ${days} days until you cancel. Cancel anytime in “My subscription”; access stays until the end of the paid period. Prices include all applicable taxes.`,
+    emailPh: 'Your email for the report link',
     emailLabel: 'Email — we’ll send the terms and a link to open the program on any device',
     emailBad: 'Enter your email so we can send the terms and access link.',
     restore: 'Already subscribed? Restore access',

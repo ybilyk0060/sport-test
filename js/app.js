@@ -48,10 +48,11 @@ const cleanUrl = () => { try { history.replaceState(null, '', location.pathname 
 // ---------- 1. Первый экран ----------
 function landing() {
   setState({ step: 'landing' });
-  screen(`<div class="hero"><div class="hero-art">${ART.hero}</div><h1>${esc(T.landing.title)}</h1><p class="promise">${esc(T.landing.promise)}</p></div>
+  // Выбор языка вверху: внизу его закрывала панель Safari (прогон 26.11)
+  const langs = Object.keys(LOCALES).length > 1 ? `<div class="langs top">${Object.entries({ en: 'English', de: 'Deutsch', uk: 'Українська' }).filter(([k]) => LOCALES[k] && (k === LANG || !(CONFIG.linkOnlyLanguages || []).includes(k))).map(([k, v]) => `<a href="?lang=${k}" class="${k === LANG ? 'on' : ''}">${v}</a>`).join('')}</div>` : '';
+  screen(`${langs}<div class="hero"><div class="hero-art">${ART.hero}</div><h1>${esc(T.landing.title)}</h1><p class="promise">${esc(T.landing.promise)}</p></div>
     <ul class="points">${T.landing.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul><div class="trust-box"><span class="tb-ic" aria-hidden="true">🏅</span><span>${esc(T.landing.trustShort)}</span></div><div class="grow"></div>
     <button class="btn" data-act="start">${esc(T.landing.cta)}</button><p class="small muted center land-note">${esc(T.landing.note)} ${esc(T.result.shortNote)}</p><p class="small muted center land-note">${esc(T.landing.trustNote)}</p>
-    ${Object.keys(LOCALES).length > 1 ? `<div class="langs">${Object.entries({ en: 'English', de: 'Deutsch', uk: 'Українська' }).filter(([k]) => LOCALES[k] && (k === LANG || !(CONFIG.linkOnlyLanguages || []).includes(k))).map(([k, v]) => `<a href="?lang=${k}" class="${k === LANG ? 'on' : ''}">${v}</a>`).join('')}</div>` : ''}
     ${subapi.subOn() ? `<button class="link center" data-act="restore">${esc(T.paywall.restore)}</button>` : ''}
     ${legalLinks()}`, {
     restore: async () => {
@@ -225,7 +226,7 @@ function sportsTeaser(profile) {
   return `<div class="teaser"><h3>${esc(P.sportsTitle)}</h3><p class="small muted">${esc(P.sportsLead)}</p>
     ${sports.map((x, i) => `<div class="lock-card"><span class="lock-n">${i + 1}</span><div><b>${esc(P.match(i + 1))}</b><small>${esc(P.basedOn(why(x)))}</small></div><span class="lock-ic" aria-hidden="true">🔒</span></div>`).join('')}</div>`;
 }
-function paywallCard(note = '', profile = null) {
+function paywallCard(note = '', profile = null, part = 'all') {
   const P = T.paywall, R = T.result;
   const renewAt = Date.now() + SUB.periodDays * DAY;
   const focus = T.program.focus[state.quiz.likes] || T.program.focus.none;
@@ -235,16 +236,19 @@ function paywallCard(note = '', profile = null) {
       <div class="pc-row"><div><b>${esc(P.firstLabel(SUB.periodDays))}</b><small>${esc(P.perDay(money(Math.round((first / SUB.periodDays) * 100) / 100)))}</small></div>
       <div class="pc-price">${on ? `<s>${esc(money(PRICE.regular))}</s>` : ''}<b>${esc(money(first))}</b></div></div>
       <p class="renew">${esc(P.renew(money(PRICE.regular), SUB.periodDays, fmtDate(renewAt)))}</p>
-      ${id ? `<label class="email-field"><span class="small">${esc(P.emailLabel)}</span><input class="field" type="email" inputmode="email" autocomplete="email" data-el="email" value="${esc(state.email || '')}" maxlength="120" placeholder="name@example.com"></label>` : ''}
+      ${id ? `<label class="email-field"><span class="small">${esc(P.emailLabel)}</span><input class="field" type="email" inputmode="email" autocomplete="email" data-el="email" value="${esc(state.email || '')}" maxlength="120" placeholder="${esc(P.emailPh || 'name@example.com')}"></label>` : ''}
       ${needWithdrawal() ? `<label class="check small"><input type="checkbox" data-el="withdrawal"><span>${esc(P.withdrawal)}${P.withdrawalLink ? ` <a href="${P.withdrawalLink.href}" target="_blank" rel="noopener">${esc(P.withdrawalLink.text)}</a>` : ''}</span></label>` : ''}
       <button class="btn" data-act="pay">${esc(P.cta(money(first)))}</button>
       <p class="trust small center">🔒 ${esc(P.trust)}</p>
       <p class="small center testmode" hidden style="color:#b45309;font-weight:600">${esc(P.testMode)}</p></div>`;
-  return `<div class="paywall" id="paywall"><h2>${esc(P.title)}</h2>${note ? `<p class="err">${esc(note)}</p>` : ''}
+  // Первый экран после теста (Юрий 26.11): закрытые виды спорта и цена с кнопкой оплаты без прокрутки; подробности ниже
+  if (part === 'head') return `<div class="paywall pw-head" id="paywall">${note ? `<p class="err">${esc(note)}</p>` : ''}${sportsTeaser(profile)}${priceBox('price-top')}</div>`;
+  const tail = part === 'tail';
+  return `<div class="paywall${tail ? ' pw-tail' : ''}"${tail ? '' : ' id="paywall"'}>${tail ? '' : `<h2>${esc(P.title)}</h2>${note ? `<p class="err">${esc(note)}</p>` : ''}
     <p>${esc(P.lead())}</p>
-    ${sportsTeaser(profile)}
+    ${sportsTeaser(profile)}`}
     <div class="focus-box"><small>${esc(P.focusTitle)}</small><b>${esc(focus)}</b></div>
-    ${priceBox('price-top')}
+    ${tail ? '' : priceBox('price-top')}
     <h3>${esc(P.inside)}</h3><ul class="checks-list">${[...P.insideItems, ...(appAccess() === 'live' ? [T.apps.includedItem] : [])].map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
     <div class="price-mini"><div><b>${esc(money(first))}</b>${on ? ` <s>${esc(money(PRICE.regular))}</s>` : ''}<small>${esc(P.firstLabel(SUB.periodDays))}</small></div><button class="btn" data-act="to-top">${esc(P.unlock)}</button></div>
     <p class="fine">${esc(P.fine(money(first), money(PRICE.regular), SUB.periodDays))}</p>
@@ -285,13 +289,20 @@ function result(note = '') {
   } else {
     offerDeadline(true); // таймер скидки до первой цены на странице — иначе плашка сверху показала бы полную цену
     const s = headline(profile);
-    body = `<span class="badge">${esc(R.badge)}</span><h1 class="rtitle">${esc(R.title)}</h1><p class="summary">${esc(R.summary[profile.summary])}</p>
-      ${s ? `<div class="strong"><small>${esc(profile.qualities[s].level >= 3 ? R.strongest : R.strongestBest)}</small><b>${esc(R.qualities[s].name)}</b><span>${esc(R.qualities[s].d)}</span><span><b style="font-size:16px">${esc(R.levels[profile.qualities[s].level])}</b></span></div>` : ''}
-      <p class="small muted">${esc(R.shortNote)}</p>
-      ${dismissed ? '' : `<button class="price-chip" data-act="to-top"><b>${esc(money(firstPrice()))}</b><span>${esc(T.paywall.unlock)}</span><i aria-hidden="true">↓</i></button>`}
+    const lvl = s ? profile.qualities[s].level : 0;
+    body = dismissed
+      ? `<span class="badge">${esc(R.badge)}</span><h1 class="rtitle">${esc(R.title)}</h1><p class="summary">${esc(R.summary[profile.summary])}</p>
+      ${s ? `<div class="strong"><small>${esc(lvl >= 3 ? R.strongest : R.strongestBest)}</small><b>${esc(R.qualities[s].name)}</b><span>${esc(R.qualities[s].d)}</span><span><b style="font-size:16px">${esc(R.levels[lvl])}</b></span></div>` : ''}
       <h2 class="sec-title">${esc(R.profile)}</h2>
       <div class="locked"><div class="locked-list">${qualitiesOf(state.results).filter((q) => q !== s).map(qRowLocked).join('')}</div></div>
-      ${dismissed ? `<div class="sticky-pay"><button class="btn" data-act="pay">${esc(T.paywall.cta(money(firstPrice())))}</button></div><p class="renew">${esc(T.paywall.renew(money(PRICE.regular), SUB.periodDays, fmtDate(Date.now() + SUB.periodDays * DAY)))}</p><p class="terms">${esc(T.paywall.terms)}</p>${exitOffer()}` : paywallCard(note, profile)}
+      <div class="sticky-pay"><button class="btn" data-act="pay">${esc(T.paywall.cta(money(firstPrice())))}</button></div><p class="renew">${esc(T.paywall.renew(money(PRICE.regular), SUB.periodDays, fmtDate(Date.now() + SUB.periodDays * DAY)))}</p><p class="terms">${esc(T.paywall.terms)}</p>${exitOffer()}`
+      : `<h1 class="rtitle compact">${esc(R.title)}</h1>
+      ${s ? `<p class="best-line"><span>${esc(lvl >= 3 ? R.strongest : R.strongestBest)}:</span> <b>${esc(R.qualities[s].name)}</b> · ${esc(R.levels[lvl])}</p>` : ''}
+      ${paywallCard(note, profile, 'head')}
+      <h2 class="sec-title">${esc(R.profile)}</h2><p class="small muted">${esc(R.summary[profile.summary])} ${esc(R.shortNote)}</p>
+      <div class="locked"><div class="locked-list">${qualitiesOf(state.results).filter((q) => q !== s).map(qRowLocked).join('')}</div></div>
+      ${paywallCard(note, profile, 'tail')}`;
+    body += `
       <button class="link center" data-act="again">${esc(R.again)}</button>`;
   }
   screen(body, {

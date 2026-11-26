@@ -290,6 +290,7 @@ export default {
       ['Sehen Sie das Kameravideo?', () => 'Nein. Das Video wird auf dem Handy verarbeitet und nirgendwohin gesendet.'],
     ],
     fine: (first, regular, days) => `Mit Tippen auf „Zahlungspflichtig abonnieren“ schließen Sie ein Abo ab: erste Zahlung ${first} für ${days} Tage, danach ${regular} alle ${days} Tage bis zur Kündigung. Jederzeit kündbar über „Verträge hier kündigen“; der Zugang bleibt bis zum Ende des bezahlten Zeitraums. Preise inkl. MwSt.`,
+    emailPh: 'Ihre E-Mail für den Zugangslink',
     emailLabel: 'E-Mail — wir senden die Abo-Bedingungen und einen Link für jedes Gerät',
     emailBad: 'Bitte E-Mail angeben, damit wir Bedingungen und Zugang senden können.',
     restore: 'Schon abonniert? Zugang wiederherstellen',
