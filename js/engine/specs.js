@@ -5,6 +5,9 @@
 // cross_crawl, glute_bridge, side_bend, side_leg_raise, superman_lifts, tuck_jump @1 — из каталога (25.11, третий заход: помечены в Студії для sport_test). toe_touch и windmill ещё в статусе testing — не берём.
 // crunches — из каталога Студії (25.11, заготовка нормативов).
 // Не править руками без повторной проверки tests/engine.test.mjs.
+// 26.11 (прогон 8, Юрий: «ребёнок не может так глубоко», «касался, но не все разы»): приседания — колено в нижней точке ≤ 125° (было 115),
+// глубина таза ≥ 0,14 ноги (было 0,2); бег на месте — колено ≥ −0,62 бедра (было −0,5): засчитывается обычный бег;
+// касания плеч — локоть ≤ 118° (было 105). Для young — на ступень мягче.
 // 26.11 (Юрий: «смягчить, но не сильно»): jumping_jack — ноги внизу ≤ 0,9 корпуса (было 0,7), старт ≤ 1,1 (было 0,95). Проверено на записях прогонов 5 и 7.
 export const SPEC_MD5 = {
  "squats": "094396b23e4dbc84449d4a135b11a998",
@@ -93,8 +96,8 @@ export const SPECS = {
      {
       "m": "knee",
       "max": {
-       "standard": 115,
-       "young": 122
+       "standard": 125,
+       "young": 130
       }
      }
     ]
@@ -144,8 +147,8 @@ export const SPECS = {
     "scope": "rep",
     "check": "peak",
     "min": {
-     "standard": 0.2,
-     "young": 0.15
+     "standard": 0.14,
+     "young": 0.11
     },
     "consequence": "reject",
     "hint": "sit_lower"
@@ -526,8 +529,8 @@ export const SPECS = {
      {
       "m": "knee_h",
       "min": {
-       "young": -0.62,
-       "standard": -0.5
+       "young": -0.7,
+       "standard": -0.62
       }
      }
     ]
@@ -537,8 +540,8 @@ export const SPECS = {
      {
       "m": "knee_h",
       "max": {
-       "young": -0.74,
-       "standard": -0.68
+       "young": -0.8,
+       "standard": -0.74
       }
      }
     ]
@@ -548,8 +551,8 @@ export const SPECS = {
      {
       "m": "other_h",
       "max": {
-       "young": -0.64,
-       "standard": -0.6
+       "young": -0.74,
+       "standard": -0.7
       }
      }
     ]
@@ -910,8 +913,8 @@ export const SPECS = {
      {
       "m": "elbow",
       "max": {
-       "young": 115,
-       "standard": 105
+       "young": 125,
+       "standard": 118
       }
      }
     ]
@@ -921,8 +924,8 @@ export const SPECS = {
      {
       "m": "elbow",
       "min": {
-       "young": 140,
-       "standard": 145
+       "young": 135,
+       "standard": 140
       }
      }
     ]
@@ -932,8 +935,8 @@ export const SPECS = {
      {
       "m": "other_elbow",
       "min": {
-       "young": 135,
-       "standard": 140
+       "young": 130,
+       "standard": 135
       }
      }
     ]

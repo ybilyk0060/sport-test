@@ -282,13 +282,13 @@ function runHud(p, i, n, isSeconds) {
   const ring = $('[data-el=ring]', hud), left = $('[data-el=left]', hud);
   return {
     num: $('[data-el=num]', hud), hint: $('[data-el=hint]', hud), bar: $('[data-el=bar]', hud),
-    timeLeft(sec) { if (!timed) return; ring.style.strokeDashoffset = String(RING_C * (1 - sec / p.capSec)); left.textContent = sec > 0 ? T.cam.left(Math.ceil(sec), true) : T.cam.done; },
+    timeLeft(sec) { if (!timed) return; ring.style.strokeDashoffset = String(RING_C * (1 - sec / p.capSec)); left.textContent = sec > 0 ? T.cam.left(Math.ceil(sec), true) : `✓ ${T.cam.done}`; left.classList.toggle('ok', sec <= 0); },
     set(c) {
       if (timed) return;
       if (bend) { ring.style.strokeDashoffset = String(RING_C * (1 - c / 4)); return; }
       const rest = Math.max(0, p.target - c);
       ring.style.strokeDashoffset = String(RING_C * (1 - rest / p.target));
-      left.textContent = rest > 0 ? T.cam.left(rest, isSeconds) : T.cam.done;
+      left.textContent = rest > 0 ? T.cam.left(rest, isSeconds) : `✓ ${T.cam.done}`; left.classList.toggle('ok', rest <= 0);
       ring.classList.remove('hit'); void ring.getBoundingClientRect(); ring.classList.add('hit');
     },
   };
@@ -305,7 +305,7 @@ async function liveExercise(p, i, n) {
   await countdown();
   if (!alive) return null;
   return new Promise((resolve) => {
-    let ui, hintTimer = 0, lostSince = null, lostSaidAt = 0, kneelSince = null, kneeling = false, kneelSaid = 0;
+    let ui, hintTimer = 0, lostSince = null, lostSaidAt = 0, kneelSince = null, kneeling = false, kneelSaid = 0, kneelN = 0;
     const run = createRun({
       key: p.key, target: p.target, capSec: p.capSec, ageGroup: state.quiz.age || CONFIG.defaultAge, timed: !!p.timed,
       aspect: video.videoWidth && video.videoHeight ? video.videoWidth / video.videoHeight : null,
@@ -319,7 +319,7 @@ async function liveExercise(p, i, n) {
           clearTimeout(hintTimer);
           track('exercise_done', { key: p.key, done: r.done, target: r.target, reason: r.reason, sec: r.elapsedSec, fps: poseStatus.fps, skipped: !!r.skipped });
           drawSkeleton(null);
-          if (!r.skipped) { hud.innerHTML = `<div class="big-center"><div class="t" style="font-size:40px">${esc(T.cam.done)}</div></div>`; await sleep(900); }
+          if (!r.skipped) { hud.innerHTML = `<div class="big-center"><div class="done-big" aria-hidden="true">✓</div><div class="t" style="font-size:36px">${esc(T.cam.done)}</div></div>`; await sleep(900); }
           resolve(r);
         },
       },
@@ -340,7 +340,7 @@ async function liveExercise(p, i, n) {
         const k = kneesDown(lm), now = performance.now();
         if (k) { kneelSince = kneelSince ?? now; } else kneelSince = null;
         kneeling = kneelSince != null && now - kneelSince > 400;
-        if (kneeling) { ui.hint.textContent = T.cam.kneesUp; if (now - kneelSaid > 6000) { kneelSaid = now; say('hint_no_knees_on_floor', { interrupt: false }); } }
+        if (kneeling) { ui.hint.textContent = T.cam.kneesUp; if (now - kneelSaid > 5000) { kneelSaid = now; kneelN++; say(kneelN % 2 ? 'hint_no_knees_on_floor' : 'hint_keep_body_straight', { interrupt: false }); } }
         else if (ui.hint.textContent === T.cam.kneesUp) ui.hint.textContent = '';
       }
       run.frame(kneeling ? null : lm);
