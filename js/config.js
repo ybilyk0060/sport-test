@@ -187,7 +187,7 @@ export const CONFIG = {
     side_leg_raise: { spec: 'side_leg_raise', facing: 'front', goal: 'reps', video: 'eotd/side_leg_raise-v1-430f7a58.mp4', poster: 'eotd/side_leg_raise-v1-430f7a58.jpg', intro: 'side_leg_raise_howto', coach: 'side_leg_raise_coach_' },
     superman_lifts: { spec: 'superman_lifts', facing: 'side', floor: 'side', goal: 'reps', video: 'eotd/superman_lifts-v1-b262f6cf.mp4', poster: 'eotd/superman_lifts-v1-b262f6cf.jpg', intro: 'superman_lifts_howto', coach: 'superman_lifts_coach_' },
     tuck_jump: { spec: 'tuck_jump', facing: 'front', goal: 'reps', video: 'eotd/tuck_jump-v1-f8b42018.mp4', poster: 'eotd/tuck_jump-v1-f8b42018.jpg', intro: 'tuck_jump_howto', coach: 'tuck_jump_coach_' },
-    shoulder_taps: { spec: 'shoulder_taps_front', facing: 'front', floor: true, goal: 'reps', video: 'eotd/shoulder_taps-v1-e37b6726.mp4', poster: 'eotd/shoulder_taps-v1-e37b6726.jpg', intro: 'shoulder_taps_head_howto', introFallback: 'shoulder_taps_front_howto', coach: 'shoulder_taps_coach_' },
+    shoulder_taps: { spec: 'shoulder_taps_front', facing: 'front', floor: true, goal: 'reps', video: 'eotd/shoulder_taps-v1-e37b6726.mp4', poster: 'eotd/shoulder_taps-v1-e37b6726.jpg', intro: 'shoulder_taps_front_howto', introFallback: 'name_shoulder_taps', coach: 'shoulder_taps_coach_' },
   },
 
   // --- Уровни профиля ---
