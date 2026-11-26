@@ -172,11 +172,12 @@ export const CONFIG = {
   // spec — ключ в js/engine/specs.js; intro — клип-инструкция; coach — префикс клипов похвалы (каждый 5-й повтор).
   // maxEngineAge — потолок калибровки: у «нахилів» студии пороги взрослого эталона (для 8+ нужен наклон ниже горизонтали),
   //   поэтому до решения владельца считаем всем по детским порогам (наклон до горизонтали).
+  // gVideo — панда на зелёном фоне поверх живой камеры (Юрий 26.11, выбраны лучшие попытки); vVideo — запасной вертикальный ролик
   // vVideo — вертикальная панда 9:16 на весь экран во время показа (снято 26.11, выбраны лучшие попытки; bend-v1 отбракован: логотип на футболке)
   exercises: {
-    jumping_jack: { vVideo: 'assets/video/jumping_jack-v1.mp4', vPoster: 'assets/video/jumping_jack-v1.jpg', spec: 'jumping_jack', facing: 'front', goal: 'reps', video: 'eotd/jumping_jack-v2-d26a07ed.mp4', poster: 'eotd/jumping_jack-v2-d26a07ed.jpg', intro: 'howto_jumping_jack', coach: 'jumping_jack_coach_' },
+    jumping_jack: { gVideo: 'assets/video/jumping_jack-g2.mp4', vVideo: 'assets/video/jumping_jack-v1.mp4', vPoster: 'assets/video/jumping_jack-v1.jpg', spec: 'jumping_jack', facing: 'front', goal: 'reps', video: 'eotd/jumping_jack-v2-d26a07ed.mp4', poster: 'eotd/jumping_jack-v2-d26a07ed.jpg', intro: 'howto_jumping_jack', coach: 'jumping_jack_coach_' },
     squats: { spec: 'squats', facing: 'side', goal: 'reps', video: 'studio/squats-v3-15c52172.mp4', poster: 'studio/squats-v3-6adec835.jpg', intro: 'howto_squats' },
-    high_knees: { vVideo: 'assets/video/high_knees-v1.mp4', vPoster: 'assets/video/high_knees-v1.jpg', spec: 'high_knees', facing: 'side', goal: 'seconds', maxEngineAge: 7, video: 'studio/high_knees-v1-79235890.mp4', poster: 'studio/high_knees-v1-05fc6289.jpg', intro: 'howto_high_knees' },
+    high_knees: { gVideo: 'assets/video/high_knees-g2.mp4', vVideo: 'assets/video/high_knees-v1.mp4', vPoster: 'assets/video/high_knees-v1.jpg', spec: 'high_knees', facing: 'side', goal: 'seconds', maxEngineAge: 7, video: 'studio/high_knees-v1-79235890.mp4', poster: 'studio/high_knees-v1-05fc6289.jpg', intro: 'howto_high_knees' },
     good_morning: { spec: 'good_morning', facing: 'side', goal: 'reps', video: 'eotd/good_morning-v1-91b13db9.mp4', poster: 'eotd/good_morning-v1-91b13db9.jpg', intro: 'good_morning_full_howto', introFallback: 'good_morning_howto', coach: 'good_morning_coach_', maxEngineAge: 7 },
     arm_circles: { spec: 'arm_circles', facing: 'front', goal: 'reps', video: 'eotd/arm_circles-v2-197d83dd.mp4', poster: 'eotd/arm_circles-v2-197d83dd.jpg', intro: 'howto_arm_circles', coach: 'arm_circles_coach_' },
     quadruped_arm_circles: { spec: 'quadruped_arm_circles', facing: 'side', floor: 'side', goal: 'reps', video: 'eotd/quadruped_arm_circles-v1-46cfeb76.mp4', poster: 'eotd/quadruped_arm_circles-v1-46cfeb76.jpg', intro: 'quadruped_arm_circles_howto', coach: 'quadruped_arm_circles_coach_' },
@@ -184,11 +185,11 @@ export const CONFIG = {
     // Віджимання: считаются и боком (спека студии pushups@4), и лицом (своя pushups_front) — берётся больший счёт
     pushups: { spec: 'pushups', altSpec: 'pushups_front', facing: 'any', floor: 'any', goal: 'reps', video: 'studio/pushups-v4-d83d1e9c.mp4', poster: 'studio/pushups-v4-e414f5bc.jpg', intro: 'howto_pushups' },
     // Баланс на одной ноге: своя логика сайта (js/balance.js), без видео панды — рисунок. В тест войдёт после утверждения протокола и норм.
-    balance_r: { vVideo: 'assets/video/balance-v1.mp4', vPoster: 'assets/video/balance-v1.jpg', custom: 'balance', leg: 'right', facing: 'front', goal: 'seconds', demo: 'balance', localVideo: 'assets/video/balance-2.mp4', localPoster: 'assets/video/balance-2.jpg', intro: 'balance_howto' },
-    balance_l: { vVideo: 'assets/video/balance-v1.mp4', vPoster: 'assets/video/balance-v1.jpg', custom: 'balance', leg: 'left', facing: 'front', goal: 'seconds', demo: 'balance', localVideo: 'assets/video/balance-2.mp4', localPoster: 'assets/video/balance-2.jpg', intro: 'balance_left' },
+    balance_r: { gVideo: 'assets/video/balance-g1.mp4', vVideo: 'assets/video/balance-v1.mp4', vPoster: 'assets/video/balance-v1.jpg', custom: 'balance', leg: 'right', facing: 'front', goal: 'seconds', demo: 'balance', localVideo: 'assets/video/balance-2.mp4', localPoster: 'assets/video/balance-2.jpg', intro: 'balance_howto' },
+    balance_l: { gVideo: 'assets/video/balance-g1.mp4', vVideo: 'assets/video/balance-v1.mp4', vPoster: 'assets/video/balance-v1.jpg', custom: 'balance', leg: 'left', facing: 'front', goal: 'seconds', demo: 'balance', localVideo: 'assets/video/balance-2.mp4', localPoster: 'assets/video/balance-2.jpg', intro: 'balance_left' },
     side_jumps_1: { custom: 'sidejump', facing: 'front', goal: 'reps', demo: 'side_jumps', localVideo: 'assets/video/side_jumps-clean.mp4', localPoster: 'assets/video/side_jumps-clean.jpg', intro: 'side_jumps_howto' },
     side_jumps_2: { custom: 'sidejump', facing: 'front', goal: 'reps', demo: 'side_jumps', localVideo: 'assets/video/side_jumps-clean.mp4', localPoster: 'assets/video/side_jumps-clean.jpg', intro: 'side_jumps_again' },
-    bend: { vVideo: 'assets/video/bend-v2.mp4', vPoster: 'assets/video/bend-v2.jpg', custom: 'bend', facing: 'front', goal: 'reps', demo: 'bend', localVideo: 'assets/video/bend-2.mp4', localPoster: 'assets/video/bend-2.jpg', intro: 'bend_howto' },
+    bend: { gVideo: 'assets/video/bend-g1.mp4', vVideo: 'assets/video/bend-v2.mp4', vPoster: 'assets/video/bend-v2.jpg', custom: 'bend', facing: 'front', goal: 'reps', demo: 'bend', localVideo: 'assets/video/bend-2.mp4', localPoster: 'assets/video/bend-2.jpg', intro: 'bend_howto' },
     // Подъёмы корпуса (спека crunches из Студії): заготовка норматива «за 30 с» — capSec задаётся в плане теста
     crunches: { spec: 'crunches', facing: 'side', floor: 'side', goal: 'reps', video: 'studio/crunches-v3-2ac7586d.mp4', poster: 'studio/crunches-v3-f7f280fe.jpg', intro: 'howto_crunches' },
     // Новые из Студії (25.11, помечены для sport_test): пока в пуле программы подписчика, в тест не входят
@@ -198,7 +199,7 @@ export const CONFIG = {
     side_leg_raise: { spec: 'side_leg_raise', facing: 'front', goal: 'reps', video: 'eotd/side_leg_raise-v1-430f7a58.mp4', poster: 'eotd/side_leg_raise-v1-430f7a58.jpg', intro: 'side_leg_raise_howto', coach: 'side_leg_raise_coach_' },
     superman_lifts: { spec: 'superman_lifts', facing: 'side', floor: 'side', goal: 'reps', video: 'eotd/superman_lifts-v1-b262f6cf.mp4', poster: 'eotd/superman_lifts-v1-b262f6cf.jpg', intro: 'superman_lifts_howto', coach: 'superman_lifts_coach_' },
     tuck_jump: { spec: 'tuck_jump', facing: 'front', goal: 'reps', video: 'eotd/tuck_jump-v1-f8b42018.mp4', poster: 'eotd/tuck_jump-v1-f8b42018.jpg', intro: 'tuck_jump_howto', coach: 'tuck_jump_coach_' },
-    shoulder_taps: { vVideo: 'assets/video/shoulder_taps-v2.mp4', vPoster: 'assets/video/shoulder_taps-v2.jpg', spec: 'shoulder_taps_front', facing: 'front', floor: true, goal: 'reps', video: 'eotd/shoulder_taps-v1-e37b6726.mp4', poster: 'eotd/shoulder_taps-v1-e37b6726.jpg', intro: 'shoulder_taps_front_howto', introFallback: 'name_shoulder_taps', coach: 'shoulder_taps_coach_' },
+    shoulder_taps: { gVideo: 'assets/video/shoulder_taps-g2.mp4', vVideo: 'assets/video/shoulder_taps-v2.mp4', vPoster: 'assets/video/shoulder_taps-v2.jpg', spec: 'shoulder_taps_front', facing: 'front', floor: true, goal: 'reps', video: 'eotd/shoulder_taps-v1-e37b6726.mp4', poster: 'eotd/shoulder_taps-v1-e37b6726.jpg', intro: 'shoulder_taps_front_howto', introFallback: 'name_shoulder_taps', coach: 'shoulder_taps_coach_' },
   },
 
   // --- Уровни профиля ---

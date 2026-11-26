@@ -401,3 +401,5 @@ button, .btn, .opt, .glass-btn, .pill-link, a.btn, [data-act] { -webkit-user-sel
 .over-bottom .btn { min-height: 50px; }
 .over-bottom .btn.ghost { min-height: 34px; font-size: 14px; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.6); background: none; box-shadow: none; }
 .over-bottom .raise { color: var(--ink); }
+.panda-key { inset: auto; left: 0; right: 0; top: calc(64px + var(--safe-t, 0px)); bottom: calc(196px + var(--safe-b, 0px)); width: 100%; height: auto; }
+.panda-key { height: calc(100% - 260px - var(--safe-t, 0px) - var(--safe-b, 0px)); bottom: auto; }
