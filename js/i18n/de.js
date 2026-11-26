@@ -204,6 +204,7 @@ export default {
       low: 'Noch in Entwicklung: ein guter Moment für mehr tägliche Bewegung.',
       none: 'Zu wenig Daten: Die meisten Übungen wurden übersprungen. Bitte den Test wiederholen.',
     },
+    strongestBest: 'Bestes Ergebnis im Test',
     strongest: 'Größte Stärke',
     profile: 'Profil nach Fähigkeiten',
     levels: { 3: 'Stärke', 2: 'Gut, mit Luft nach oben', 1: 'Entwicklungsbereich', 0: 'Nicht gemessen' },

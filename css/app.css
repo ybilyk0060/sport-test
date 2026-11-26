@@ -356,3 +356,15 @@ details.sec > * + * { margin-top: 10px; }
 /* Блок доверия на первом экране */
 .trust-box { display: flex; gap: 10px; align-items: center; background: #fff; border-radius: 14px; padding: 10px 12px; box-shadow: inset 0 0 0 1.5px var(--line); font-size: 14px; line-height: 1.35; font-weight: 600; }
 .trust-box .tb-ic { font-size: 22px; flex: none; }
+
+/* 26.11 прогон на iPhone: читаемые надписи в углах экрана камеры, крупная панда, кнопки без выделения текста */
+button, .btn, .opt, .glass-btn, .pill-link, a.btn, [data-act] { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
+.hud-title { display: grid; gap: 2px; background: rgba(14, 14, 24, .86); border-color: rgba(255, 255, 255, .22); padding: 9px 16px 10px; max-width: 64vw; }
+.hud-title small { font-size: 13px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; opacity: .8; }
+.hud-title b { font-size: 20px; font-weight: 800; line-height: 1.15; }
+.hud-actions .glass-btn[data-act=skip-ex] { background: rgba(255, 255, 255, .94); color: var(--ink); border-color: transparent; white-space: nowrap; font-size: 15px; min-height: 44px; padding: 0 16px; }
+.sheet .panda { width: 100%; max-width: 100%; height: 44dvh; max-height: none; aspect-ratio: auto; object-fit: cover; object-position: center 45%; border-radius: 18px; }
+@media (max-height: 700px) { .sheet .panda { height: 36dvh; max-height: none; } }
+.raise.wait { opacity: .45; }
+.sheet { max-height: calc(100dvh - 76px - var(--safe-t, 0px)); }
+@media (max-height: 700px) { .sheet .panda { height: 31dvh; } .sheet .note { display: none; } }

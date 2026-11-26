@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 import { connect } from './wi.mjs';
 
 const UDID = process.env.IPHONE_UDID || '00008130-0011095C3A04001C';
-const URL0 = process.argv.find((a) => a.startsWith('http')) || 'https://kids-test.com/?lang=en';
+const URL0 = process.argv.find((a) => a.startsWith('http')) || 'https://kids-test.com/?lang=en&code=KTQA25X9';
 const OUT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'e2e-runs', 'iphone-wi-' + new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19));
 fs.mkdirSync(OUT, { recursive: true });
 const T0 = Date.now();
@@ -49,9 +49,11 @@ const STATE = `
   return { step: st.step || '', quizIndex: st.quizIndex, qtitle: txt('.qtitle'), stage: !!(hud && hud.innerHTML.trim()),
     framing: vis('.frame-card'), frameMsg: txt('.frame-card [data-el=msg]'), intro: vis('.sheet [data-act=go]'), introTitle: txt('.sheet h2'),
     run: vis('.gauge'), num: txt('.gauge [data-el=num]'), left: txt('[data-el=left]'), hint: txt('.hud [data-el=hint]'), title: txt('.hud-top'),
-    paywall: vis('#price-top'), cam: v ? v.videoWidth + 'x' + v.videoHeight + ' ' + ((v.srcObject && v.srcObject.getVideoTracks()[0] || {}).label || '') : '', err: vis('[data-act=retry]') ? txt('.hud') .slice(0, 200) : '',
+    paywall: vis('#price-top'), report: !!q('.rep-head'), cam: v ? v.videoWidth + 'x' + v.videoHeight + ' ' + ((v.srcObject && v.srcObject.getVideoTracks()[0] || {}).label || '') : '', err: vis('[data-act=retry]') ? txt('.hud') .slice(0, 200) : '',
     audio: E.audio, longtasks: E.longtasks, errors: E.errors || [] };`;
 
+// Поза во время упражнений: компактные точки (кисти, плечи, щиколотки, нос) — для разбора счёта (window.__poseTap в stage.js)
+const POSETAP = `if (!window.__poseBuf) { window.__poseBuf = []; window.__poseTap = (key, lm) => { if (!lm) { window.__poseBuf.push([key, Date.now()]); return; } const f = (i) => [Math.round(lm[i].x * 1000) / 1000, Math.round(lm[i].y * 1000) / 1000, Math.round((lm[i].visibility ?? 1) * 100) / 100]; window.__poseBuf.push([key, Date.now(), f(0), f(11), f(12), f(15), f(16), f(23), f(24), f(27), f(28)]); }; }`;
 let c = await connect('kids-test.com');
 const ev = async (expr) => { try { return await c.evaluate(expr); } catch (e) { if (/ws|timeout|closed/i.test(String(e))) { c = await connect('kids-test.com'); return c.evaluate(expr); } throw e; } };
 const run = (body) => ev(`(() => { ${body} })()`);
@@ -65,17 +67,18 @@ c.close(); c = await connect('kids-test.com');
 await ev(INIT);
 note('waiting', { msg: 'ЖДУ касания «Start the test» на телефоне' });
 shot('landing');
+let paywallDone = false, payWaitFrom = 0;
 let last = '', lastHud = '', since = Date.now(), introSince = 0, a0 = 0, l0 = 0, e0 = 0, lastPeriodic = 0, camLogged = '', prepClicked = 0;
 const steps = {};
 for (;;) {
   await wait(300);
   let s;
-  try { await ev(INIT); s = await run(STATE); } catch (e) { note('eval_error', { msg: String(e).slice(0, 160) }); await wait(1000); continue; }
+  try { await ev(INIT); await ev(POSETAP); const pb = await run('const b = window.__poseBuf || []; window.__poseBuf = []; return b;'); if (pb && pb.length) fs.appendFileSync(path.join(OUT, 'pose.jsonl'), pb.map((x) => JSON.stringify(x)).join('\n') + '\n'); s = await run(STATE); } catch (e) { note('eval_error', { msg: String(e).slice(0, 160) }); await wait(1000); continue; }
   for (const a of s.audio.slice(a0)) note('voice', a); a0 = s.audio.length;
   for (const ms of s.longtasks.slice(l0)) note('freeze', { ms }); l0 = s.longtasks.length;
   for (const m of s.errors.slice(e0)) note('page_error', { msg: m }); e0 = s.errors.length;
   if (s.cam && s.cam !== camLogged) { camLogged = s.cam; note('camera', { info: s.cam }); }
-  const key = s.paywall ? 'paywall' : s.err ? 'camera_error' : s.run ? `run:${s.title}` : s.intro ? `intro:${s.introTitle}` : s.framing ? 'framing' : s.stage ? 'stage' : `${s.step}${s.step === 'quiz' ? ':' + s.quizIndex : ''}`;
+  const key = s.report ? 'report' : s.paywall ? 'paywall' : s.err ? 'camera_error' : s.run ? `run:${s.title}` : s.intro ? `intro:${s.introTitle}` : s.framing ? 'framing' : s.stage ? 'stage' : `${s.step}${s.step === 'quiz' ? ':' + s.quizIndex : ''}`;
   if (key !== last) {
     if (last) { steps[last] = +((Date.now() - since) / 1000).toFixed(1); note('step_end', { step: last, sec: steps[last] }); }
     last = key; since = Date.now(); introSince = s.intro ? Date.now() : 0;
@@ -97,13 +100,26 @@ for (;;) {
       await wait(1500); prepClicked = Date.now();
       note('action', { what: 'нажал «включить камеру»' }); await click('[data-act=cam]'); await wait(2000);
     } else if (s.intro && introSince && Date.now() - introSince > 30000) { note('action', { what: 'рука не распознана за 30 с — нажал «Старт»' }); introSince = Date.now(); await click('.sheet [data-act=go]'); }
-    else if (s.paywall) {
+    else if (s.paywall && !paywallDone) {
+      paywallDone = true;
       await wait(2500);
-      note('paywall', { msg: 'пейвол: снимаю страницу целиком' });
+      note('paywall', { msg: 'пейвол: снимаю страницу целиком, затем жду оплату человеком' });
       const h = await run('return document.documentElement.scrollHeight'), vh = await run('return window.innerHeight');
       for (let y = 0, i = 0; y < h && i < 12; y += vh * 0.85, i++) { await run(`window.scrollTo(0, ${Math.round(y)}); return 1;`); await wait(600); shot(`paywall-${i}`); }
       await run('window.scrollTo(0, 0); return 1;');
-      note('done', { total_sec: sec(), steps });
+      payWaitFrom = Date.now();
+    } else if (paywallDone && !s.report && Date.now() - lastPeriodic > 4000) {
+      lastPeriodic = Date.now(); shot('checkout');
+      if (Date.now() - payWaitFrom > 15 * 60000) { note('pay_timeout'); break; }
+    } else if (s.report) {
+      await wait(2500);
+      note('report', { msg: 'оплата прошла, отчёт открыт' });
+      await run("document.querySelectorAll('details.sec').forEach((d) => { d.open = true; }); return 1;");
+      await wait(800);
+      const h = await run('return document.documentElement.scrollHeight'), vh = await run('return window.innerHeight');
+      for (let y = 0, i = 0; y < h && i < 20; y += vh * 0.85, i++) { await run(`window.scrollTo(0, ${Math.round(y)}); return 1;`); await wait(600); shot(`report-${i}`); }
+      await run('window.scrollTo(0, 0); return 1;');
+      note('done', { total_sec: sec(), steps, sub: await run("const st = JSON.parse(localStorage.getItem('sporttest.v1.state') || '{}'); return st.sub ? { status: st.sub.status, paidUntil: st.sub.paidUntil, token: !!st.subToken, orderId: st.orderId } : null;") });
       break;
     }
   } catch (e) { note('action_error', { step: key, msg: String(e).slice(0, 160) }); }

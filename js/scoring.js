@@ -276,7 +276,9 @@ export function recommendSports(profile, quiz) {
     const lvl = profile.qualities[q].level;
     if (lvl >= 2) {
       const t = {};
-      for (const [s, w] of Object.entries(QUALITY_RULES[q])) t[s] = (w * (lvl - 1)) / 2;
+      // Главная сила из отчёта весит в 1,5 раза больше (Юрий 26.11): «сильная сторона: равновесие» должна вести к видам спорта, где она нужна
+      const k = q === profile.strongest ? 1.5 : 1;
+      for (const [s, w] of Object.entries(QUALITY_RULES[q])) t[s] = (k * w * (lvl - 1)) / 2;
       add(t, `q.${q}`);
     }
   }

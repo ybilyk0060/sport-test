@@ -71,7 +71,9 @@ const drawSkeleton = drawFrame;
 const SWITCH_ICON = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h2.5l1.6-2.2h7.8L17.5 8H20a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><path d="M9.2 12.6a3 3 0 0 1 5.3-1.4M14.8 14.4a3 3 0 0 1-5.3 1.4"/><path d="M14.6 9.6v1.8h-1.8M9.4 17.4v-1.8h1.8"/></svg>';
 const switchBtnHtml = () => `<button class="glass-btn icon" data-act="switch-cam" aria-label="${esc(T.cam.switch)}">${SWITCH_ICON}</button>`;
 function topBar(label, { switchBtn = true, skip = false } = {}) {
-  return `<div class="hud-top">${label ? `<span class="glass-pill">${esc(label)}</span>` : '<span></span>'}<span class="hud-actions">${skip ? `<button class="glass-btn" data-act="skip-ex">${esc(T.cam.skipEx)}</button>` : ''}${switchBtn ? switchBtnHtml() : ''}</span></div>`;
+  // Надписи в углах читаются с 2–3 м (Юрий 26.11): номер упражнения мелко, название крупно, плотный тёмный фон
+  const [small, big] = label && label.includes(' · ') ? label.split(' · ') : [null, label];
+  return `<div class="hud-top">${label ? `<span class="glass-pill hud-title">${small ? `<small>${esc(small)}</small>` : ''}<b>${esc(big)}</b></span>` : '<span></span>'}<span class="hud-actions">${skip ? `<button class="glass-btn" data-act="skip-ex">${esc(T.cam.skipEx)}</button>` : ''}${switchBtn ? switchBtnHtml() : ''}</span></div>`;
 }
 
 async function switchCamera() {
@@ -81,9 +83,26 @@ async function switchCamera() {
 }
 
 // ---------- Запуск с живой камерой ----------
+// Видео панды скачиваем заранее (с экрана подготовки) и показываем из памяти: прогон 26.11 — на первом упражнении
+// вместо панды 10 с был тёмный прямоугольник, файл не успел загрузиться.
+const videoBlobs = new Map();
+const videoSrc = (url) => videoBlobs.get(url) || url;
+export function prefetchVideos() {
+  for (const p of plan()) {
+    const ex = CONFIG.exercises[p.key]; if (!ex) continue;
+    const url = ex.localVideo || (ex.video ? CONFIG.mediaBase + ex.video : null);
+    const poster = ex.localPoster || (ex.poster ? CONFIG.mediaBase + ex.poster : null);
+    if (poster) { const im = new Image(); im.src = poster; }
+    if (!url || videoBlobs.has(url)) continue;
+    videoBlobs.set(url, url);
+    fetch(url).then((r) => (r.ok ? r.blob() : null)).then((b) => { if (b && b.size) videoBlobs.set(url, URL.createObjectURL(b)); }).catch(() => {});
+  }
+}
+
 export async function startStage({ done, exit, list = null, mode = 'live' }) {
   onDone = done; onExit = exit; customList = list;
   unlockAudio();
+  prefetchVideos();
   mount();
   hud.innerHTML = `<div class="big-center"><div><div class="spinner"></div><p class="t" style="margin-top:16px">${esc(T.cam.requesting)}</p><p style="margin-top:8px;opacity:.85">${esc(T.cam.allowHint)}</p></div></div>`;
   track('camera_request', { facing, mode });
@@ -161,7 +180,7 @@ function introSheet(p, i, n, btnHtml) {
   const note = ex.wall ? T.cam.wallNote : ex.floor === 'any' ? T.cam.floorAnyNote : ex.floor === 'side' ? T.cam.floorSideNote : ex.floor ? T.cam.floorFrontNote : ex.facing === 'side' ? T.cam.sideNote : T.cam.frontNote;
   const checks = (EX_QUALITY[p.key] || []).map((q) => T.result.qualities[q].name.toLowerCase()).join(', ');
   return `<div class="sheet"><div class="tags"><span class="tag">${esc(exOf(i, n))}</span>${checks ? `<span class="tag checks">${esc(T.cam.checks(checks))}</span>` : ''}</div><h2>${esc(p.timed ? T.cam.forSec(tx.name, p.capSec) : tx.task(p.target))}</h2>
-    ${ex.localVideo ? `<video class="panda" playsinline muted loop autoplay preload="auto" poster="${ex.localPoster}" src="${ex.localVideo}"></video>` : ex.demo ? demoSvg(ex.demo) : ex.video ? `<video class="panda" playsinline muted loop autoplay preload="auto" poster="${CONFIG.mediaBase + ex.poster}" src="${CONFIG.mediaBase + ex.video}"></video>` : (ex.art || '')}
+    ${ex.localVideo ? `<video class="panda" playsinline muted loop autoplay preload="auto" poster="${ex.localPoster}" src="${videoSrc(ex.localVideo)}"></video>` : ex.demo ? demoSvg(ex.demo) : ex.video ? `<video class="panda" playsinline muted loop autoplay preload="auto" poster="${CONFIG.mediaBase + ex.poster}" src="${videoSrc(CONFIG.mediaBase + ex.video)}"></video>` : (ex.art || '')}
     <p>${esc(tx.how)}</p>${tx.pandaNote ? `<p class="small" style="opacity:.8">${esc(tx.pandaNote)}</p>` : ''}<p class="note">↻ ${esc(note)}</p>${btnHtml}</div>`;
 }
 
@@ -170,19 +189,24 @@ function introSheet(p, i, n, btnHtml) {
 const HAND_R = 34, HAND_C = 2 * Math.PI * HAND_R;
 function intro(p, i, n) {
   return new Promise((resolve) => {
-    const handHtml = `<div class="raise"><svg viewBox="0 0 80 80" aria-hidden="true"><circle class="r-bg" cx="40" cy="40" r="${HAND_R}"/><circle class="r-fg" data-el="ring" cx="40" cy="40" r="${HAND_R}" stroke-dasharray="${HAND_C}" stroke-dashoffset="${HAND_C}"/><text x="40" y="52" text-anchor="middle" font-size="34">✋</text></svg><span>${esc(T.cam.raiseHand)}</span></div>`;
+    const handHtml = `<div class="raise wait"><svg viewBox="0 0 80 80" aria-hidden="true"><circle class="r-bg" cx="40" cy="40" r="${HAND_R}"/><circle class="r-fg" data-el="ring" cx="40" cy="40" r="${HAND_R}" stroke-dasharray="${HAND_C}" stroke-dashoffset="${HAND_C}"/><text x="40" y="52" text-anchor="middle" font-size="34">✋</text></svg><span>${esc(T.cam.raiseHand)}</span></div>`;
     hud.innerHTML = introSheet(p, i, n, `${handHtml}<button class="btn" data-act="go">${esc(T.cam.go)}</button><button class="btn ghost" data-act="skip-ex">${esc(T.cam.skipEx)}</button>`);
     const ex = CONFIG.exercises[p.key];
     preloadClips([...Object.keys(T.hints).map((h) => 'hint_' + h), ...Object.keys(T.hints), ...(ex.coach ? [1, 2].map((n) => ex.coach + n) : []), 'ui_raise_hand']);
     // «Далі!» / «Останнє!», для вправи на підлозі — «Телефон на підлогу!», затем полная инструкция (пока её нет — короткий клип студии)
-    sayQueue([...(i > 0 ? [i === n - 1 ? 'intro_last' : 'intro_next'] : ['cue_great']), ...(ex.floor ? ['ui_phone_tip'] : []), exists(ex.intro) ? ex.intro : ex.introFallback]);
+    // Поднятая рука запускает упражнение только после инструкции (прогон 26.11: рука срабатывала на 4-й секунде 17-секундной инструкции,
+    // ребёнок не слышал, что делать). Кнопка «Поехали» работает сразу. Без звука (iOS не разрешил) рука включается сразу же.
+    let handArmed = false;
+    const armHand = () => { if (handArmed || ended) return; handArmed = true; const rz = $('.raise', hud); if (rz) rz.classList.remove('wait'); clearTimeout(remindTimer); remindTimer = setTimeout(remind, 7000); };
+    sayQueue([...(i > 0 ? [i === n - 1 ? 'intro_last' : 'intro_next'] : ['cue_great']), ...(ex.floor ? ['ui_phone_tip'] : []), exists(ex.intro) ? ex.intro : ex.introFallback]).then(armHand, armHand);
+    setTimeout(armHand, 30000); // страховка, если голос завис
     const pv = $('video.panda', hud); if (pv) { pv.play().catch(() => {}); pv.onerror = () => { pv.style.display = 'none'; }; } // нет сети до видео — остаются текст и голос
     const ring = $('[data-el=ring]', hud);
     const gesture = createRaiseHand();
     // Голос «Підніми руку»: после инструкции, потом напоминания (как в Kidsney: 20 с, затем каждые 15 с, не больше 3 раз)
     let reminders = 0;
     const remind = () => { if (ended) return; say('ui_raise_hand', { interrupt: false }); if (++reminders < 3) remindTimer = setTimeout(remind, 15000); };
-    let remindTimer = setTimeout(remind, 7000);
+    let remindTimer = 0;
     let ended = false;
     const end = (v, how) => {
       if (ended) return; ended = true; clearTimeout(remindTimer);
@@ -195,6 +219,7 @@ function intro(p, i, n) {
     if (stopLoop) { stopLoop(); stopLoop = null; }
     stopLoop = frameLoop(video, (lm) => {
       drawSkeleton(lm || false);
+      if (!handArmed) return;
       const r = gesture.frame(lm, performance.now());
       ring.style.strokeDashoffset = String(HAND_C * (1 - r.progress));
       ring.parentNode.parentNode.classList.toggle('on', r.progress > 0);
@@ -278,6 +303,7 @@ async function liveExercise(p, i, n) {
       if (!lm) { lostSince = lostSince ?? performance.now(); if (performance.now() - lostSince > 1500 && !ui.hint.textContent) ui.hint.textContent = T.cam.lost; }
       else if (lostSince) { lostSince = null; if (ui.hint.textContent === T.cam.lost) ui.hint.textContent = ''; }
       run.frame(lm);
+      if (window.__poseTap) try { window.__poseTap(p.key, lm); } catch { /* диагностика прогона (tools/e2e-iphone-wi.mjs), у покупателя не задана */ }
     });
   });
 }

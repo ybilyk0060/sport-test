@@ -8,7 +8,7 @@ import { state, setState, resetState, track, importHandoff, store } from './stor
 import { detectEnv } from './env.js?v=ab82e8f-mwxi0ers';
 import { prefetchPose } from './pose.js?v=ab82e8f-mwxi0ers';
 import { unlockAudio } from './audio.js?v=ab82e8f-mwxi0ers';
-import { startStage, startFallback, toast } from './stage.js?v=ab82e8f-mwxi0ers';
+import { startStage, startFallback, toast, prefetchVideos } from './stage.js?v=ab82e8f-mwxi0ers';
 import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=ab82e8f-mwxi0ers';
 import { payment, newOrderId, loadPaddle } from './payment.js?v=ab82e8f-mwxi0ers';
 import { ART } from './art.js?v=ab82e8f-mwxi0ers';
@@ -139,6 +139,7 @@ function bodyStep(i, q) {
 function prep() {
   setState({ step: 'prep' });
   prefetchPose();
+  prefetchVideos();
   const P = T.prep;
   screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button><div class="progress"><i style="width:100%"></i></div></div><h1 class="qtitle">${esc(P.title)}</h1>
     <div class="cards">${P.cards.map((c, i) => `<div class="pcard">${ART.prep[i]}<div><b>${esc(c.t)}</b><span>${esc(c.d)}</span></div></div>`).join('')}</div>
@@ -210,7 +211,16 @@ function sportsTeaser(profile) {
   if (!profile) return '';
   const P = T.paywall, R = T.result;
   const { sports } = buildReport(state.results, state.quiz);
-  const why = (x) => { const qs = x.reasons.filter((k) => k.startsWith('q.')).slice(0, 2).map((k) => R.qualities[k.slice(2)].name); return qs.length ? qs.join(' + ') : P.basedInterests; };
+  // Причины: сначала главная сила, затем более высокий уровень; «симметрия» одна — не причина (звучит слабо), тогда — интересы ребёнка
+  const lvl = (k) => (profile.qualities[k] ? profile.qualities[k].level : 0) + (k === profile.strongest ? 10 : 0);
+  const why = (x) => {
+    let qs = x.reasons.filter((k) => k.startsWith('q.')).map((k) => k.slice(2)).sort((a, b) => lvl(b) - lvl(a));
+    if (qs.length > 1) qs = qs.filter((k) => k !== 'symmetry');
+    qs = qs.filter((k) => k !== 'symmetry').slice(0, 2);
+    const names = qs.map((k) => R.qualities[k].name);
+    if (names.length < 2 && x.reasons.some((k) => k.startsWith('likes.'))) names.push(P.basedInterests); // выбор во многом по интересам — так и пишем
+    return names.length ? names.join(' + ') : P.basedInterests;
+  };
   return `<div class="teaser"><h3>${esc(P.sportsTitle)}</h3><p class="small muted">${esc(P.sportsLead)}</p>
     ${sports.map((x, i) => `<div class="lock-card"><span class="lock-n">${i + 1}</span><div><b>${esc(P.match(i + 1))}</b><small>${esc(P.basedOn(why(x)))}</small></div><span class="lock-ic" aria-hidden="true">🔒</span></div>`).join('')}</div>`;
 }
@@ -265,7 +275,7 @@ function result(note = '') {
   } else {
     const s = profile.strongest;
     body = `<span class="badge">${esc(R.badge)}</span><h1 class="rtitle">${esc(R.title)}</h1><p class="summary">${esc(R.summary[profile.summary])}</p>
-      ${s ? `<div class="strong"><small>${esc(R.strongest)}</small><b>${esc(R.qualities[s].name)}</b><span>${esc(R.qualities[s].d)}</span><span><b style="font-size:16px">${esc(R.levels[profile.qualities[s].level])}</b></span></div>` : ''}
+      ${s ? `<div class="strong"><small>${esc(profile.qualities[s].level >= 3 ? R.strongest : R.strongestBest)}</small><b>${esc(R.qualities[s].name)}</b><span>${esc(R.qualities[s].d)}</span><span><b style="font-size:16px">${esc(R.levels[profile.qualities[s].level])}</b></span></div>` : ''}
       <p class="small muted">${esc(R.shortNote)}</p>
       <h2 class="sec-title">${esc(R.profile)}</h2>
       <div class="locked"><div class="locked-list">${qualitiesOf(state.results).filter((q) => q !== s).map(qRowLocked).join('')}</div></div>
@@ -394,7 +404,7 @@ function fullReport(justPaid = false) {
   const bars = qualitiesOf(state.results).map((q) => { const d = profile.qualities[q]; return `<div class="mini"><span>${esc(R.qualities[q].name)}</span><span class="dots l${d.level}"><i></i><i></i><i></i></span><em class="lvl l${d.level}">${esc(R.levels[d.level])}</em></div>`; }).join('');
   const tip = homePlan.tips[0];
   screen(`${justPaid ? `<p class="tip">${esc(P.paidOk)}</p>` : ''}
-    <div class="rep-head">${s ? `<small>${esc(R.strongest)}</small><h1>${esc(R.qualities[s].name)}</h1>` : `<h1>${esc(R.title)}</h1>`}<p>${esc(R.summary[profile.summary])}</p>${bars}</div>
+    <div class="rep-head">${s ? `<small>${esc(profile.qualities[s].level >= 3 ? R.strongest : R.strongestBest)}</small><h1>${esc(R.qualities[s].name)}</h1>` : `<h1>${esc(R.title)}</h1>`}<p>${esc(R.summary[profile.summary])}</p>${bars}</div>
     ${pb.card}
     ${growthBlock(profile)}
     ${appsBlock()}

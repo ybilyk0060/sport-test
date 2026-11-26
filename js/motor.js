@@ -88,30 +88,31 @@ export function createSideJumpRun(opts) {
 // ---------- Наклон вперёд стоя ----------
 // Ребёнок лицом к камере. Уровень — где кисти относительно колена и щиколотки: t = (кисть − колено) / (щиколотка − колено) по вертикали.
 //   1 — наклонился, кисти выше колена; 2 — до середины голени; 3 — до щиколотки (кончики пальцев ниже запястья); 4 — ниже щиколотки / ладони на полу.
-// Спецификация v3: «угол в колене < 165° = попытка не засчитана». Лицом к камере сгиб колена уходит в глубину кадра, поэтому
-// кроме угла (ловит колени, ушедшие в стороны) проверяем, что таз не опустился (при прямых ногах в наклоне он на месте).
-// Уровень засчитывается, если удержан HOLD_MS. Колени должны быть прямыми: таз не опускается ниже KNEE_DROP от роста стоя
-// (при прямых ногах в наклоне таз остаётся на месте). Попытка — от наклона до выпрямления; берём лучшую из ATTEMPTS.
-export const BEND = { L1: -0.6, L2: 0.45, L3: 0.85, L4: 1.0, KNEE_DEG: 165, HOLD_MS: 1000, KNEE_DROP: 0.88, ATTEMPTS: 2, START_T: -0.3, UP_T: -0.6 };
+// Спецификация v3: «угол в колене < 165° = попытка не засчитана». Прогон на iPhone 26.11: лицом к камере в наклоне корпус закрывает таз,
+// модель ставит таз ниже — и прямые ноги считались согнутыми (0 из 4). Поэтому колени судим по голени: при сгибе лицом к камере
+// колено уходит вперёд и вниз, и голень в кадре укорачивается (таз для этого не нужен). Угол в колене — только при уверенно видимом тазе
+// и с запасом (SIDE_DEG ловит колени, ушедшие в стороны). Уровень засчитывается, если удержан HOLD_MS.
+// Попытка — от наклона до выпрямления (выпрямление должно длиться UP_MS, чтобы мигание точек кистей не закрывало попытку); лучшая из ATTEMPTS.
+export const BEND = { L1: -0.6, L2: 0.45, L3: 0.85, L4: 1.0, SHIN_KEEP: 0.85, SIDE_DEG: 150, HOLD_MS: 1000, UP_MS: 500, ATTEMPTS: 2, START_T: -0.3, UP_T: -0.6 };
 export function bendLevel(t) { return t >= BEND.L4 ? 4 : t >= BEND.L3 ? 3 : t >= BEND.L2 ? 2 : t >= BEND.L1 ? 1 : 0; }
 const angle = (a, b, c) => { const v1 = Math.atan2(a.y - b.y, a.x - b.x), v2 = Math.atan2(c.y - b.y, c.x - b.x); let d = Math.abs(v1 - v2) * 180 / Math.PI; return d > 180 ? 360 - d : d; };
 export function createBendRun(opts) {
   const { on } = opts;
-  let best = 0, attempts = 0, bentKnees = 0, legLen0 = null, inBend = false, cand = 0, candSince = null, attemptBest = 0, kneeWarnAt = -1e9;
+  let best = 0, attempts = 0, bentKnees = 0, shin0 = null, inBend = false, cand = 0, candSince = null, attemptBest = 0, kneeWarnAt = -1e9, upSince = null;
   return baseRun(opts, {
     frame(lm, now) {
       if (!lm || lm.length < 29) return null;
       const lk = lm[25], rk = lm[26], la = lm[27], ra = lm[28], lw = lm[15], rw = lm[16], lh = lm[23], rh = lm[24];
-      if (![lk, rk, la, ra, lh, rh].every((p) => visible(p, 0.4))) return null;
-      const knee = mid(lk, rk), ank = mid(la, ra), hip = mid(lh, rh);
+      if (![lk, rk, la, ra].every((p) => visible(p, 0.4))) return null;
+      const knee = mid(lk, rk), ank = mid(la, ra);
       const shin = ank.y - knee.y; if (!(shin > 0.02)) return null;
-      const legLen = ank.y - hip.y;
       const wy = Math.max(visible(lw, 0.3) ? lw.y : -1, visible(rw, 0.3) ? rw.y : -1);
       if (wy < 0) return null;
       const t = (wy - knee.y) / shin;
-      if (legLen0 == null || (!inBend && legLen > legLen0)) legLen0 = Math.max(legLen0 || 0, legLen); // рост ног стоя
-      const kneesOk = legLen >= BEND.KNEE_DROP * legLen0 && angle(lh, lk, la) >= BEND.KNEE_DEG && angle(rh, rk, ra) >= BEND.KNEE_DEG;
-      if (!inBend && t >= BEND.START_T) { inBend = true; attemptBest = 0; }
+      if (!inBend) shin0 = Math.max(shin0 || 0, shin); // голень стоя
+      const hipsSeen = visible(lh, 0.7) && visible(rh, 0.7);
+      const kneesOk = shin >= BEND.SHIN_KEEP * shin0 && (!hipsSeen || (angle(lh, lk, la) >= BEND.SIDE_DEG && angle(rh, rk, ra) >= BEND.SIDE_DEG));
+      if (!inBend && t >= BEND.START_T) { inBend = true; attemptBest = 0; upSince = null; }
       if (inBend) {
         if (!kneesOk) { cand = 0; candSince = null; if (now - kneeWarnAt > 3000) { kneeWarnAt = now; bentKnees++; on.hint && on.hint('bend_knees_straight'); } }
         else {
@@ -119,7 +120,8 @@ export function createBendRun(opts) {
           if (lv !== cand) { cand = lv; candSince = now; }
           if (cand > attemptBest && now - candSince >= BEND.HOLD_MS) { attemptBest = cand; if (attemptBest > best) { best = attemptBest; on.count && on.count(best); } }
         }
-        if (t < BEND.UP_T) { inBend = false; attempts++; if (attempts >= BEND.ATTEMPTS || best >= 4) return 'complete'; }
+        if (t < BEND.UP_T) { upSince = upSince ?? now; if (now - upSince >= BEND.UP_MS) { inBend = false; attempts++; if (attempts >= BEND.ATTEMPTS || best >= 4) return 'complete'; } }
+        else upSince = null;
       }
       return null;
     },

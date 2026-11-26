@@ -205,6 +205,7 @@ export default {
       low: 'Still developing: a great time to add more daily movement.',
       none: 'Not enough data: most moves were skipped. Try the test again.',
     },
+    strongestBest: 'Best result in the test',
     strongest: 'Top strength',
     profile: 'Profile by quality',
     levels: { 3: 'Strength', 2: 'Good, room to grow', 1: 'Growth area', 0: 'Not measured' },
