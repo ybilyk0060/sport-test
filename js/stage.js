@@ -189,6 +189,7 @@ function introSheet(p, i, n, btnHtml) {
 // Дальше — поднятой рукой (держать 1,5 с), как во всех приложениях Kidsney, или кнопкой. Подходить к телефону не нужно.
 let inFrame = false; // последний кадр вступления: голова и стопы видны
 const HAND_R = 34, HAND_C = 2 * Math.PI * HAND_R;
+const BIG_R = 84, BIG_C = 2 * Math.PI * BIG_R;
 function intro(p, i, n) {
   return new Promise((resolve) => {
     inFrame = false;
@@ -197,10 +198,10 @@ function intro(p, i, n) {
     // Есть ролик на зелёном фоне — панда во весь экран поверх живой камеры (Юрий 26.11), иначе карточка с роликом
     let stopKey = null;
     if (ex.gVideo) {
-      hud.innerHTML = `${topBar(`${exOf(i, n)} · ${exName(p.key)}`, { switchBtn: false })}<canvas class="panda-key" aria-hidden="true"></canvas><video class="pk-src" playsinline muted loop autoplay preload="auto" src="${videoSrc(ex.gVideo)}"></video>
+      hud.innerHTML = `${topBar(`${exOf(i, n)} · ${exName(p.key)}`, { switchBtn: false })}<canvas class="panda-key" aria-hidden="true"></canvas><div class="big-ring" hidden aria-hidden="true"><svg viewBox="0 0 200 200"><circle class="br-bg" cx="100" cy="100" r="${BIG_R}"/><circle class="br-fg" data-el="bigring" cx="100" cy="100" r="${BIG_R}" stroke-dasharray="${BIG_C}" stroke-dashoffset="${BIG_C}"/></svg><span>${ex.floor ? '🙌' : '✋'}</span></div><video class="pk-src" playsinline muted loop autoplay preload="auto" src="${videoSrc(ex.gVideo)}"></video>
         <div class="over-bottom">${handHtml}<button class="btn" data-act="go">${esc(T.cam.go)}</button><button class="btn ghost" data-act="skip-ex">${esc(T.cam.skipEx)}</button></div>`;
       const sv = $('video.pk-src', hud); sv.play().catch(() => {});
-      stopKey = greenOverlay($('canvas.panda-key', hud), sv);
+      stopKey = greenOverlay($('canvas.panda-key', hud), sv, ex.gBox);
       if (!stopKey) { sv.classList.add('plain'); } // нет WebGL — ролик как есть
     } else hud.innerHTML = introSheet(p, i, n, `${handHtml}<button class="btn" data-act="go">${esc(T.cam.go)}</button><button class="btn ghost" data-act="skip-ex">${esc(T.cam.skipEx)}</button>`);
     preloadClips([...Object.keys(T.hints).map((h) => 'hint_' + h), ...Object.keys(T.hints), ...(ex.coach ? [1, 2].map((n) => ex.coach + n) : []), 'ui_raise_hand']);
@@ -235,6 +236,9 @@ function intro(p, i, n) {
       const r = gesture.frame(lm, performance.now());
       ring.style.strokeDashoffset = String(HAND_C * (1 - r.progress));
       ring.parentNode.parentNode.classList.toggle('on', r.progress > 0);
+      // Большое кольцо посередине: человек в 2–3 м видит, что жест распознан и заполняется — держать до конца (Юрий 26.11)
+      const big = $('.big-ring', hud);
+      if (big) { big.hidden = !(r.progress > 0); $('[data-el=bigring]', big).style.strokeDashoffset = String(BIG_C * (1 - r.progress)); }
       if (r.fired) end('go', 'hand');
     });
   });

@@ -219,7 +219,7 @@ function sportsTeaser(profile) {
     if (qs.length > 1) qs = qs.filter((k) => k !== 'symmetry');
     qs = qs.filter((k) => k !== 'symmetry').slice(0, 2);
     const names = qs.map((k) => R.qualities[k].name);
-    if (names.length < 2 && x.reasons.some((k) => k.startsWith('likes.'))) names.push(P.basedInterests); // выбор во многом по интересам — так и пишем
+    if (x.reasons.some((k) => k.startsWith('likes.'))) { names.splice(1); names.push(P.basedInterests); } // выбор во многом по интересам — так и пишем
     return names.length ? names.join(' + ') : P.basedInterests;
   };
   return `<div class="teaser"><h3>${esc(P.sportsTitle)}</h3><p class="small muted">${esc(P.sportsLead)}</p>
@@ -252,6 +252,15 @@ function paywallCard(note = '', profile = null) {
     <button class="btn ghost" data-act="not-now">${esc(P.notNow)}</button></div>`;
 }
 
+// Заголовок «лучшее в тесте» = качество с самым высоким уровнем (прогон 26.11: сверху «равновесие: хорошо», а ниже у
+// «держит темп» — «сила»). При равном уровне — главная сила из scoring (там выносливость не берётся первой).
+function headline(profile) {
+  const s0 = profile.strongest, q = profile.qualities;
+  const lv = (k) => (q[k] ? q[k].level : 0), sc = (k) => (q[k] && q[k].score) || 0;
+  const top = Object.keys(q).filter((k) => k !== 'symmetry' && lv(k) > 0).sort((a, b) => lv(b) - lv(a) || sc(b) - sc(a))[0];
+  return !s0 || (top && lv(top) > lv(s0)) ? top || s0 : s0;
+}
+
 function result(note = '') {
   if (!state.results) return landing();
   if (subActive()) return fullReport();
@@ -274,10 +283,12 @@ function result(note = '') {
     body = `<span class="badge">${esc(R.badge)}</span><h1 class="rtitle">${esc(R.title)}</h1><p class="summary">${esc(T.paywall.hardLead)}</p>
       <div class="locked"><div class="locked-list">${QUALITIES.slice(0, 3).map(qRowLocked).join('')}</div></div>${paywallCard(note, profile)}`;
   } else {
-    const s = profile.strongest;
+    offerDeadline(true); // таймер скидки до первой цены на странице — иначе плашка сверху показала бы полную цену
+    const s = headline(profile);
     body = `<span class="badge">${esc(R.badge)}</span><h1 class="rtitle">${esc(R.title)}</h1><p class="summary">${esc(R.summary[profile.summary])}</p>
       ${s ? `<div class="strong"><small>${esc(profile.qualities[s].level >= 3 ? R.strongest : R.strongestBest)}</small><b>${esc(R.qualities[s].name)}</b><span>${esc(R.qualities[s].d)}</span><span><b style="font-size:16px">${esc(R.levels[profile.qualities[s].level])}</b></span></div>` : ''}
       <p class="small muted">${esc(R.shortNote)}</p>
+      ${dismissed ? '' : `<button class="price-chip" data-act="to-top"><b>${esc(money(firstPrice()))}</b><span>${esc(T.paywall.unlock)}</span><i aria-hidden="true">↓</i></button>`}
       <h2 class="sec-title">${esc(R.profile)}</h2>
       <div class="locked"><div class="locked-list">${qualitiesOf(state.results).filter((q) => q !== s).map(qRowLocked).join('')}</div></div>
       ${dismissed ? `<div class="sticky-pay"><button class="btn" data-act="pay">${esc(T.paywall.cta(money(firstPrice())))}</button></div><p class="renew">${esc(T.paywall.renew(money(PRICE.regular), SUB.periodDays, fmtDate(Date.now() + SUB.periodDays * DAY)))}</p><p class="terms">${esc(T.paywall.terms)}</p>${exitOffer()}` : paywallCard(note, profile)}
@@ -402,7 +413,7 @@ function fullReport(justPaid = false) {
   const program = buildProgram(profile, state.quiz, state.results, { month: currentMonth(state.sub, state.workouts, Date.now(), SUB.periodDays), history: state.workouts || [] });
   const R = T.result, P = T.report;
   const pb = programBlock(program);
-  const s = profile.strongest;
+  const s = headline(profile);
   const bars = qualitiesOf(state.results).map((q) => { const d = profile.qualities[q]; return `<div class="mini"><span>${esc(R.qualities[q].name)}</span><span class="dots l${d.level}"><i></i><i></i><i></i></span><em class="lvl l${d.level}">${esc(R.levels[d.level])}</em></div>`; }).join('');
   const tip = homePlan.tips[0];
   screen(`${justPaid ? `<p class="tip">${esc(P.paidOk)}</p>` : ''}
@@ -421,7 +432,9 @@ function fullReport(justPaid = false) {
     <details class="sec"><summary>${esc(P.cardTitle)}</summary><canvas class="sharecard" width="1080" height="1350"></canvas>
       <button class="btn" data-act="share">${esc(P.share)}</button><button class="btn line" data-act="download">${esc(P.download)}</button></details>
     <details class="sec small-sec"><summary>${esc(T.report.howTitle)}</summary><p class="small muted">${esc(T.report.howMeasured)} ${esc(T.landing.disclaimer)}${state.quiz && state.quiz.build ? ` ${esc(T.report.bodyNote)}` : ''}</p></details>
-    <div class="foot-links"><span class="small muted">${esc(subLine())}</span><button class="link" data-act="manage">${esc(T.sub.manage)}</button><button class="link" data-act="again">${esc(R.again)}</button></div>${legalLinks()}`, {
+    <button class="link center" data-act="again">${esc(R.again)}</button>${legalLinks()}
+    <!-- Подписка в самом низу, спокойно (Юрий 26.11), но читаемо и в одно нажатие: в DE кнопка отмены обязана быть доступной (§312k BGB), в США — простая отмена -->
+    <div class="sub-foot"><span>${esc(subLine())}</span><button class="link" data-act="manage">${esc(T.sub.manage)}</button></div>`, {
     share: async () => {
       track('card_share');
       const blob = await new Promise((r) => cv.toBlob(r, 'image/png'));

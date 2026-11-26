@@ -13,7 +13,7 @@ void main(){
   gl_FragColor = vec4(col * a, a);
 }`;
 
-export function greenOverlay(canvas, video) {
+export function greenOverlay(canvas, video, box = null) {
   const gl = canvas.getContext('webgl', { premultipliedAlpha: true, alpha: true });
   if (!gl) return null;
   const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
@@ -36,11 +36,14 @@ export function greenOverlay(canvas, video) {
     gl.viewport(0, 0, w, h); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     if (video.readyState >= 2 && video.videoWidth) {
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
-      // Вписываем ролик по высоте экрана (панда во весь рост), по центру
-      const va = video.videoWidth / video.videoHeight, ca = w / h;
-      // Чуть крупнее кадра (поля вокруг панды в ролике ~10 %), по центру — панда почти во весь экран (Юрий 26.11)
-      const Z = 1.12, bw = (va < ca ? va / ca : 1) * Z, bh = (va < ca ? 1 : ca / va) * Z;
-      gl.uniform4f(boxU, (1 - bw) / 2, (1 - bh) / 2, bw, bh);
+      // Вписываем не весь кадр, а саму панду (box из CONFIG.exercises[].gBox): во всех упражнениях она одинаково крупная (Юрий 26.11)
+      const [x0, y0, x1, y1] = box || [0, 0, 1, 1];
+      const vw = video.videoWidth, vh = video.videoHeight, m = 0.02;
+      const cw = (x1 - x0) * vw, ch = (y1 - y0) * vh;
+      const sc = Math.min((w * (1 - 2 * m)) / cw, (h * (1 - 2 * m)) / ch);
+      const tw = (vw * sc) / w, th = (vh * sc) / h; // весь кадр ролика в долях холста
+      const ox = 0.5 - ((x0 + x1) / 2) * tw, oy = 0.5 - ((y0 + y1) / 2) * th;
+      gl.uniform4f(boxU, ox, oy, tw, th);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
     raf = requestAnimationFrame(draw);
