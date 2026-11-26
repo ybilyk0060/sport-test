@@ -235,7 +235,16 @@ Deno.serve(async (req) => {
     if (b.action === "cancel" || b.action === "resume") {
       const patch = b.action === "cancel" ? { status: "cancelled", cancelled_at: new Date().toISOString() } : { status: "active", cancelled_at: null };
       // Подписка Paddle: отмена с конца оплаченного периода / снятие запланированной отмены — у Paddle, иначе списания продолжатся
-      if (!sub.provider_sub && sub.order_ref) { const { data: o } = await db.from("sport_test_orders").select("provider_sub").eq("order_ref", sub.order_ref).maybeSingle(); if (o?.provider_sub) sub.provider_sub = o.provider_sub; }
+      if (!sub.provider_sub && sub.order_ref) {
+        const { data: o } = await db.from("sport_test_orders").select("provider, provider_sub, provider_txn").eq("order_ref", sub.order_ref).maybeSingle();
+        if (o?.provider_sub) sub.provider_sub = o.provider_sub;
+        // Прогон 26.11: вебхук не записал id подписки Paddle (заказ стал «paid» раньше, чем пришёл id) — берём его из транзакции
+        else if (o?.provider === "paddle" && o.provider_txn) {
+          try { const t = await paddle(`/transactions/${o.provider_txn}`, "GET"); if (t?.data?.subscription_id) sub.provider_sub = t.data.subscription_id; } catch (e) { console.error("paddle txn", String(e)); }
+        }
+        if (sub.provider_sub) { await db.from("sport_test_subscriptions").update({ provider_sub: sub.provider_sub }).eq("id", sub.id); await db.from("sport_test_orders").update({ provider_sub: sub.provider_sub }).eq("order_ref", sub.order_ref); }
+        else if (o?.provider === "paddle") return json({ error: "provider" }, 502); // не отменяем «на словах», пока у Paddle идут списания
+      }
       if (sub.provider_sub) {
         try {
           if (b.action === "cancel") await paddle(`/subscriptions/${sub.provider_sub}/cancel`, "POST", { effective_from: "next_billing_period" });

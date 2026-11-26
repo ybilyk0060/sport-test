@@ -38,7 +38,8 @@ export function greenOverlay(canvas, video) {
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
       // Вписываем ролик по высоте экрана (панда во весь рост), по центру
       const va = video.videoWidth / video.videoHeight, ca = w / h;
-      const bw = va < ca ? va / ca : 1, bh = va < ca ? 1 : ca / va;
+      // Чуть крупнее кадра (поля вокруг панды в ролике ~10 %), по центру — панда почти во весь экран (Юрий 26.11)
+      const Z = 1.12, bw = (va < ca ? va / ca : 1) * Z, bh = (va < ca ? 1 : ca / va) * Z;
       gl.uniform4f(boxU, (1 - bw) / 2, (1 - bh) / 2, bw, bh);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }

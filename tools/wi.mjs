@@ -2,7 +2,8 @@
 // Нужен для прогона с настоящей камерой: в режиме автоматизации (safaridriver) Safari подставляет заглушку камеры.
 export async function connect(match = 'kids-test.com', port = 9222) {
   const tabs = await (await fetch(`http://127.0.0.1:${port}/json`)).json();
-  const tab = tabs.find((t) => (t.url || '').includes(match));
+  // Несколько вкладок сайта: берём последнюю открытую (старые фоновые вкладки не отвечают)
+  const tab = tabs.filter((t) => (t.url || '').includes(match)).pop();
   if (!tab) throw new Error(`нет вкладки ${match}: откройте её в Safari на iPhone`);
   const ws = new WebSocket(tab.webSocketDebuggerUrl);
   await new Promise((ok, bad) => { ws.onopen = ok; ws.onerror = () => bad(new Error('ws')); });

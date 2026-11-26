@@ -8,7 +8,7 @@ import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=96d9
 import { preloadPose, poseStatus } from './pose.js?v=96d96ab-mwxqemy6';
 import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=96d96ab-mwxqemy6';
 import { framingCheck, frameLoop, createRun } from './session.js?v=96d96ab-mwxqemy6';
-import { createRaiseHand } from './gesture.js?v=96d96ab-mwxqemy6';
+import { createRaiseHand, createPlankHold } from './gesture.js?v=96d96ab-mwxqemy6';
 import { recording } from './analytics.js?v=96d96ab-mwxqemy6';
 import { demoSvg } from './demos.js?v=96d96ab-mwxqemy6';
 import { EX_QUALITY } from './scoring.js?v=96d96ab-mwxqemy6';
@@ -192,7 +192,7 @@ const HAND_R = 34, HAND_C = 2 * Math.PI * HAND_R;
 function intro(p, i, n) {
   return new Promise((resolve) => {
     inFrame = false;
-    const handHtml = `<div class="raise wait"><svg viewBox="0 0 80 80" aria-hidden="true"><circle class="r-bg" cx="40" cy="40" r="${HAND_R}"/><circle class="r-fg" data-el="ring" cx="40" cy="40" r="${HAND_R}" stroke-dasharray="${HAND_C}" stroke-dashoffset="${HAND_C}"/><text x="40" y="52" text-anchor="middle" font-size="34">✋</text></svg><span>${esc(T.cam.raiseHand)}</span></div>`;
+    const handHtml = `<div class="raise"><svg viewBox="0 0 80 80" aria-hidden="true"><circle class="r-bg" cx="40" cy="40" r="${HAND_R}"/><circle class="r-fg" data-el="ring" cx="40" cy="40" r="${HAND_R}" stroke-dasharray="${HAND_C}" stroke-dashoffset="${HAND_C}"/><text x="40" y="52" text-anchor="middle" font-size="34">${CONFIG.exercises[p.key].floor ? '🙌' : '✋'}</text></svg><span>${esc(CONFIG.exercises[p.key].floor ? T.cam.plankReady : T.cam.raiseHand)}</span></div>`;
     const ex = CONFIG.exercises[p.key];
     // Есть ролик на зелёном фоне — панда во весь экран поверх живой камеры (Юрий 26.11), иначе карточка с роликом
     let stopKey = null;
@@ -213,10 +213,11 @@ function intro(p, i, n) {
     setTimeout(armHand, 30000); // страховка, если голос завис
     const pv = $('video.panda', hud); if (pv) { pv.play().catch(() => {}); pv.onerror = () => { pv.style.display = 'none'; }; } // нет сети до видео — остаются текст и голос
     const ring = $('[data-el=ring]', hud);
-    const gesture = createRaiseHand();
+    // Стоя — поднятая рука (1,5 с); в упоре лёжа — удержание упора 2 с
+    const gesture = ex.floor ? createPlankHold() : createRaiseHand();
     // Голос «Підніми руку»: после инструкции, потом напоминания (как в Kidsney: 20 с, затем каждые 15 с, не больше 3 раз)
     let reminders = 0;
-    const remind = () => { if (ended) return; say('ui_raise_hand', { interrupt: false }); if (++reminders < 3) remindTimer = setTimeout(remind, 15000); };
+    const remind = () => { if (ended || ex.floor) return; say('ui_raise_hand', { interrupt: false }); if (++reminders < 3) remindTimer = setTimeout(remind, 15000); };
     let remindTimer = 0;
     let ended = false;
     const end = (v, how) => {
@@ -231,7 +232,6 @@ function intro(p, i, n) {
     stopLoop = frameLoop(video, (lm) => {
       drawSkeleton(lm || false);
       inFrame = framingCheck(lm).ok;
-      if (!handArmed) return;
       const r = gesture.frame(lm, performance.now());
       ring.style.strokeDashoffset = String(HAND_C * (1 - r.progress));
       ring.parentNode.parentNode.classList.toggle('on', r.progress > 0);

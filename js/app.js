@@ -173,7 +173,8 @@ const qRowLocked = (q) => `<div class="qrow" aria-hidden="true"><div class="top"
 
 function factLines(results) {
   const F = T.result.facts;
-  return results.map((r) => (r.skipped ? F.skipped(T.ex[r.key].name) : F[r.key](r.done, r.target, Math.round(r.elapsedSec))));
+  // На время (target 999): «21 за 20 с», без «из 999» (прогон 26.11)
+  return results.map((r) => (r.skipped ? F.skipped(T.ex[r.key].name) : r.target >= 999 ? F.timed(T.ex[r.key].name, r.done, Math.round(r.capSec || r.elapsedSec)) : F[r.key](r.done, r.target, Math.round(r.elapsedSec))));
 }
 
 // Согласие на немедленный доступ (право отказа) — только ЕС/UK (аудит 25.11): по часовому поясу или немецкой версии

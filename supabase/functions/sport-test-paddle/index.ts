@@ -43,6 +43,8 @@ Deno.serve(async (req) => {
         const row = { status: "paid", paid_at: new Date().toISOString(), amount: total ?? 0, currency: cur, mode: ENV, provider: "paddle", provider_txn: d.id, provider_sub: subId, provider_payload: { id: d.id, status: d.status, origin: d.origin } };
         if (o) await db.from("sport_test_orders").update(row).eq("order_ref", orderRef).neq("status", "paid");
         else await db.from("sport_test_orders").insert({ order_ref: orderRef, sid: orderRef.split("-")[1] || "", ...row });
+        // id подписки может прийти позже первого «paid» (transaction.paid → transaction.completed): дописываем всегда
+        if (subId) { await db.from("sport_test_orders").update({ provider_sub: subId }).eq("order_ref", orderRef); await db.from("sport_test_subscriptions").update({ provider_sub: subId }).eq("order_ref", orderRef); }
       }
       // Продление (не первая оплата): подписка по provider_sub продлевается на период
       if (subId && d.origin === "subscription_recurring") {
@@ -54,7 +56,7 @@ Deno.serve(async (req) => {
     } else if (type === "subscription.updated" || type === "subscription.created" || type === "subscription.activated") {
       // Запомнить связь заказа и подписки Paddle, дату следующего списания
       const orderRef = String(d.custom_data?.order_ref || "");
-      if (orderRef) await db.from("sport_test_subscriptions").update({ provider_sub: d.id }).eq("order_ref", orderRef);
+      if (orderRef) { await db.from("sport_test_subscriptions").update({ provider_sub: d.id }).eq("order_ref", orderRef); await db.from("sport_test_orders").update({ provider_sub: d.id }).eq("order_ref", orderRef); }
       if (d.scheduled_change?.action === "cancel") await db.from("sport_test_subscriptions").update({ status: "cancelled", cancelled_at: new Date().toISOString() }).eq("provider_sub", d.id);
       else if (d.status === "active" && d.current_billing_period?.ends_at) await db.from("sport_test_subscriptions").update({ paid_until: d.current_billing_period.ends_at }).eq("provider_sub", d.id);
     }

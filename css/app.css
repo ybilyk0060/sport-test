@@ -403,3 +403,10 @@ button, .btn, .opt, .glass-btn, .pill-link, a.btn, [data-act] { -webkit-user-sel
 .over-bottom .raise { color: var(--ink); }
 .panda-key { inset: auto; left: 0; right: 0; top: calc(64px + var(--safe-t, 0px)); bottom: calc(196px + var(--safe-b, 0px)); width: 100%; height: auto; }
 .panda-key { height: calc(100% - 260px - var(--safe-t, 0px) - var(--safe-b, 0px)); bottom: auto; }
+
+/* Панда почти во весь экран: компактный низ */
+.panda-key { top: calc(52px + var(--safe-t, 0px)); height: calc(100% - 200px - var(--safe-t, 0px) - var(--safe-b, 0px)); }
+.over-bottom { gap: 6px; }
+.over-bottom .raise { padding: 6px 10px; font-size: 14px; }
+.over-bottom .raise svg { width: 44px; height: 44px; }
+.over-bottom .btn { min-height: 46px; font-size: 17px; }

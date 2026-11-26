@@ -3,12 +3,12 @@ import { createSideJumpRun, createBendRun, bendLevel } from '../js/motor.js';
 let fail = 0; const check = (n, ok, got) => { console.log(`${ok ? 'OK  ' : 'FAIL'} ${n}${got !== undefined ? ': ' + JSON.stringify(got) : ''}`); if (!ok) fail++; };
 
 // Стоя лицом к камере: плечи 0.30, таз 0.55 (корпус 0.25), колени 0.75, щиколотки 0.95. dx — сдвиг всего тела.
-function stand({ dx = 0, wristY = 0.55, hipDrop = 0, kneeDrop = 0, vis = 0.95, hipVis } = {}) {
+function stand({ dx = 0, wristY = 0.55, hipDrop = 0, kneeDrop = 0, ankleUp = 0, vis = 0.95, hipVis } = {}) {
   const p = Array.from({ length: 33 }, () => ({ x: 0.5, y: 0.5, visibility: vis }));
   const P = (x, y) => ({ x: x + dx, y, visibility: vis });
   p[11] = P(0.45, 0.30 + hipDrop); p[12] = P(0.55, 0.30 + hipDrop); p[23] = P(0.47, 0.55 + hipDrop); p[24] = P(0.53, 0.55 + hipDrop);
   p[25] = P(0.47, 0.75 + kneeDrop); p[26] = P(0.53, 0.75 + kneeDrop);
-  if (hipVis != null) { p[23].visibility = hipVis; p[24].visibility = hipVis; } p[27] = P(0.47, 0.95); p[28] = P(0.53, 0.95);
+  if (hipVis != null) { p[23].visibility = hipVis; p[24].visibility = hipVis; } p[27] = P(0.47, 0.95 - ankleUp); p[28] = P(0.53, 0.95 - ankleUp);
   p[15] = P(0.44, wristY); p[16] = P(0.56, wristY);
   return p;
 }
@@ -49,4 +49,7 @@ check('таз закрыт корпусом, ноги прямые — засч�
 r = sim(createBendRun, [[1500, () => stand()], [600, () => stand({ wristY: wristAt(0.6) })], [200, () => stand()], [2000, () => stand({ wristY: wristAt(0.9) })], [1000, () => stand()], [2500, () => stand({ wristY: wristAt(0.5) })], [1000, () => stand()]], { target: 4, capSec: 30 });
 check('мигание точек не закрывает попытку — 3', r.res.done === 3, r.res);
 
+// Прогон 26.11 №2: кисти у стоп — модель подняла «щиколотки» на 0,1, ноги прямые; касание 0,5 с — засчитано 3+
+r = sim(createBendRun, [[1500, () => stand()], [500, () => stand({ wristY: wristAt(0.95), ankleUp: 0.1 })], [1000, () => stand()], [500, () => stand({ wristY: wristAt(1.05), ankleUp: 0.1 })], [1000, () => stand()]], { target: 4, capSec: 30 });
+check('кисти у стоп путают щиколотки, касание 0,5 с — засчитано', r.res.done >= 3 && r.res.metrics.bentKnees === 0, r.res);
 console.log(fail ? `\n${fail} FAILED` : '\nALL OK'); process.exit(fail ? 1 : 0);

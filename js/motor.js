@@ -88,30 +88,33 @@ export function createSideJumpRun(opts) {
 // ---------- Наклон вперёд стоя ----------
 // Ребёнок лицом к камере. Уровень — где кисти относительно колена и щиколотки: t = (кисть − колено) / (щиколотка − колено) по вертикали.
 //   1 — наклонился, кисти выше колена; 2 — до середины голени; 3 — до щиколотки (кончики пальцев ниже запястья); 4 — ниже щиколотки / ладони на полу.
-// Спецификация v3: «угол в колене < 165° = попытка не засчитана». Прогон на iPhone 26.11: лицом к камере в наклоне корпус закрывает таз,
-// модель ставит таз ниже — и прямые ноги считались согнутыми (0 из 4). Поэтому колени судим по голени: при сгибе лицом к камере
-// колено уходит вперёд и вниз, и голень в кадре укорачивается (таз для этого не нужен). Угол в колене — только при уверенно видимом тазе
-// и с запасом (SIDE_DEG ловит колени, ушедшие в стороны). Уровень засчитывается, если удержан HOLD_MS.
-// Попытка — от наклона до выпрямления (выпрямление должно длиться UP_MS, чтобы мигание точек кистей не закрывало попытку); лучшая из ATTEMPTS.
-export const BEND = { L1: -0.6, L2: 0.45, L3: 0.85, L4: 1.0, SHIN_KEEP: 0.85, SIDE_DEG: 150, HOLD_MS: 1000, UP_MS: 500, ATTEMPTS: 2, START_T: -0.3, UP_T: -0.6 };
+// Прогоны на iPhone 26.11 (запись позы): (1) корпус закрывает таз — его нельзя брать для проверки коленей;
+// (2) когда кисти у стоп, модель путает кисти и щиколотки — «щиколотки» прыгают вверх на 10 % кадра, голень «укорачивается»,
+// и прямые ноги считались согнутыми, а уровень считался от неверной голени. Поэтому колени и щиколотки запоминаем СТОЯ
+// (во время наклона они не двигаются), уровень меряем от них, а согнутые колени ловим по опусканию колена ниже стоячего
+// (колено при сгибе лицом к камере уходит вниз). Ребёнок касается и сразу встаёт: удержание HOLD_MS 0,4 с (было 1 с — не засчитывалось).
+export const BEND = { L1: -0.6, L2: 0.45, L3: 0.85, L4: 1.0, KNEE_DROP: 0.25, HOLD_MS: 400, UP_MS: 500, ATTEMPTS: 2, START_T: -0.3, UP_T: -0.6 };
 export function bendLevel(t) { return t >= BEND.L4 ? 4 : t >= BEND.L3 ? 3 : t >= BEND.L2 ? 2 : t >= BEND.L1 ? 1 : 0; }
-const angle = (a, b, c) => { const v1 = Math.atan2(a.y - b.y, a.x - b.x), v2 = Math.atan2(c.y - b.y, c.x - b.x); let d = Math.abs(v1 - v2) * 180 / Math.PI; return d > 180 ? 360 - d : d; };
 export function createBendRun(opts) {
   const { on } = opts;
-  let best = 0, attempts = 0, bentKnees = 0, shin0 = null, inBend = false, cand = 0, candSince = null, attemptBest = 0, kneeWarnAt = -1e9, upSince = null;
+  let best = 0, attempts = 0, bentKnees = 0, ref = null, inBend = false, cand = 0, candSince = null, attemptBest = 0, kneeWarnAt = -1e9, upSince = null;
   return baseRun(opts, {
     frame(lm, now) {
       if (!lm || lm.length < 29) return null;
-      const lk = lm[25], rk = lm[26], la = lm[27], ra = lm[28], lw = lm[15], rw = lm[16], lh = lm[23], rh = lm[24];
-      if (![lk, rk, la, ra].every((p) => visible(p, 0.4))) return null;
-      const knee = mid(lk, rk), ank = mid(la, ra);
-      const shin = ank.y - knee.y; if (!(shin > 0.02)) return null;
+      const lk = lm[25], rk = lm[26], la = lm[27], ra = lm[28], lw = lm[15], rw = lm[16];
       const wy = Math.max(visible(lw, 0.3) ? lw.y : -1, visible(rw, 0.3) ? rw.y : -1);
-      if (wy < 0) return null;
-      const t = (wy - knee.y) / shin;
-      if (!inBend) shin0 = Math.max(shin0 || 0, shin); // голень стоя
-      const hipsSeen = visible(lh, 0.7) && visible(rh, 0.7);
-      const kneesOk = shin >= BEND.SHIN_KEEP * shin0 && (!hipsSeen || (angle(lh, lk, la) >= BEND.SIDE_DEG && angle(rh, rk, ra) >= BEND.SIDE_DEG));
+      if (!inBend) {
+        // стоя: запоминаем колени и щиколотки (сглаживаем)
+        if (![lk, rk, la, ra].every((p) => visible(p, 0.4))) return null;
+        const k = mid(lk, rk).y, a = mid(la, ra).y;
+        if (!(a - k > 0.02)) return null;
+        ref = ref ? { k: ref.k * 0.8 + k * 0.2, a: ref.a * 0.8 + a * 0.2 } : { k, a };
+      }
+      if (!ref || wy < 0) return null;
+      const shin = ref.a - ref.k;
+      const t = (wy - ref.k) / shin;
+      const kneeY = visible(lk, 0.4) && visible(rk, 0.4) ? mid(lk, rk).y : ref.k;
+      const kneesOk = kneeY - ref.k < BEND.KNEE_DROP * shin;
       if (!inBend && t >= BEND.START_T) { inBend = true; attemptBest = 0; upSince = null; }
       if (inBend) {
         if (!kneesOk) { cand = 0; candSince = null; if (now - kneeWarnAt > 3000) { kneeWarnAt = now; bentKnees++; on.hint && on.hint('bend_knees_straight'); } }
