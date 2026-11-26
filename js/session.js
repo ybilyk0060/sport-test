@@ -2,12 +2,12 @@
 // Из каждого упражнения берём не только счёт: темп, ритм, глубину, симметрию, устойчивость.
 // Сохраняются только итоговые числа. Кадры и точки тела не сохраняются и не отправляются.
 
-import { createBalanceRun } from './balance.js?v=c9d6ecb-mwxs4jx1';
-import { createSideJumpRun, createBendRun } from './motor.js?v=c9d6ecb-mwxs4jx1';
-import { SpecEngine, ExerciseAnalyzer, PoseSmoother, calibrationForAge } from './engine/kidsney-engine.js?v=c9d6ecb-mwxs4jx1';
-import { SPECS } from './engine/specs.js?v=c9d6ecb-mwxs4jx1';
-import { CONFIG } from './config.js?v=c9d6ecb-mwxs4jx1';
-import { detectPose } from './pose.js?v=c9d6ecb-mwxs4jx1';
+import { createBalanceRun } from './balance.js?v=a4f0f26-mwxt1a4c';
+import { createSideJumpRun, createBendRun } from './motor.js?v=a4f0f26-mwxt1a4c';
+import { SpecEngine, ExerciseAnalyzer, PoseSmoother, calibrationForAge } from './engine/kidsney-engine.js?v=a4f0f26-mwxt1a4c';
+import { SPECS } from './engine/specs.js?v=a4f0f26-mwxt1a4c';
+import { CONFIG } from './config.js?v=a4f0f26-mwxt1a4c';
+import { detectPose } from './pose.js?v=a4f0f26-mwxt1a4c';
 
 const VIS = 0.5;
 const seen = (p) => p && p.visibility >= VIS && p.x > 0 && p.x < 1 && p.y > 0 && p.y < 1;

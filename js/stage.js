@@ -1,18 +1,18 @@
 // Экран камеры: разрешение → проверка кадра → 4 упражнения. И запасной путь: разбор записи.
 
-import { T } from './i18n/index.js?v=c9d6ecb-mwxs4jx1';
-import { CONFIG } from './config.js?v=c9d6ecb-mwxs4jx1';
-import { state, setState, track, exportHandoff } from './store.js?v=c9d6ecb-mwxs4jx1';
-import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=c9d6ecb-mwxs4jx1';
-import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=c9d6ecb-mwxs4jx1';
-import { preloadPose, poseStatus } from './pose.js?v=c9d6ecb-mwxs4jx1';
-import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=c9d6ecb-mwxs4jx1';
-import { framingCheck, frameLoop, createRun } from './session.js?v=c9d6ecb-mwxs4jx1';
-import { createRaiseHand, createPlankHold } from './gesture.js?v=c9d6ecb-mwxs4jx1';
-import { recording } from './analytics.js?v=c9d6ecb-mwxs4jx1';
-import { demoSvg } from './demos.js?v=c9d6ecb-mwxs4jx1';
-import { EX_QUALITY } from './scoring.js?v=c9d6ecb-mwxs4jx1';
-import { greenOverlay } from './greenkey.js?v=c9d6ecb-mwxs4jx1';
+import { T } from './i18n/index.js?v=a4f0f26-mwxt1a4c';
+import { CONFIG } from './config.js?v=a4f0f26-mwxt1a4c';
+import { state, setState, track, exportHandoff } from './store.js?v=a4f0f26-mwxt1a4c';
+import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=a4f0f26-mwxt1a4c';
+import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=a4f0f26-mwxt1a4c';
+import { preloadPose, poseStatus } from './pose.js?v=a4f0f26-mwxt1a4c';
+import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=a4f0f26-mwxt1a4c';
+import { framingCheck, frameLoop, createRun } from './session.js?v=a4f0f26-mwxt1a4c';
+import { createRaiseHand, createPlankHold } from './gesture.js?v=a4f0f26-mwxt1a4c';
+import { recording } from './analytics.js?v=a4f0f26-mwxt1a4c';
+import { demoSvg } from './demos.js?v=a4f0f26-mwxt1a4c';
+import { EX_QUALITY } from './scoring.js?v=a4f0f26-mwxt1a4c';
+import { greenOverlay } from './greenkey.js?v=a4f0f26-mwxt1a4c';
 
 const env = detectEnv();
 const $ = (sel, root = document) => root.querySelector(sel);

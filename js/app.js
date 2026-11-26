@@ -1,22 +1,22 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
-import { T } from './i18n/index.js?v=c9d6ecb-mwxs4jx1';
-import { CONFIG } from './config.js?v=c9d6ecb-mwxs4jx1';
-import { money, PRICE, CUR, fmtDate, } from './locale.js?v=c9d6ecb-mwxs4jx1';
-import { LANG, LOCALES } from './i18n/index.js?v=c9d6ecb-mwxs4jx1';
-import { state, setState, resetState, track, importHandoff, store } from './store.js?v=c9d6ecb-mwxs4jx1';
-import { detectEnv } from './env.js?v=c9d6ecb-mwxs4jx1';
-import { prefetchPose } from './pose.js?v=c9d6ecb-mwxs4jx1';
-import { unlockAudio } from './audio.js?v=c9d6ecb-mwxs4jx1';
-import { startStage, startFallback, toast, prefetchVideos } from './stage.js?v=c9d6ecb-mwxs4jx1';
-import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=c9d6ecb-mwxs4jx1';
-import { payment, newOrderId, loadPaddle } from './payment.js?v=c9d6ecb-mwxs4jx1';
-import { ART } from './art.js?v=c9d6ecb-mwxs4jx1';
-import { initDebug } from './debug.js?v=c9d6ecb-mwxs4jx1';
-import { initConsent } from './analytics.js?v=c9d6ecb-mwxs4jx1';
-import * as subapi from './subapi.js?v=c9d6ecb-mwxs4jx1';
-import { drawShareCard } from './sharecard.js?v=c9d6ecb-mwxs4jx1';
-import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=c9d6ecb-mwxs4jx1';
+import { T } from './i18n/index.js?v=a4f0f26-mwxt1a4c';
+import { CONFIG } from './config.js?v=a4f0f26-mwxt1a4c';
+import { money, PRICE, CUR, fmtDate, } from './locale.js?v=a4f0f26-mwxt1a4c';
+import { LANG, LOCALES } from './i18n/index.js?v=a4f0f26-mwxt1a4c';
+import { state, setState, resetState, track, importHandoff, store } from './store.js?v=a4f0f26-mwxt1a4c';
+import { detectEnv } from './env.js?v=a4f0f26-mwxt1a4c';
+import { prefetchPose } from './pose.js?v=a4f0f26-mwxt1a4c';
+import { unlockAudio } from './audio.js?v=a4f0f26-mwxt1a4c';
+import { startStage, startFallback, toast, prefetchVideos } from './stage.js?v=a4f0f26-mwxt1a4c';
+import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=a4f0f26-mwxt1a4c';
+import { payment, newOrderId, loadPaddle } from './payment.js?v=a4f0f26-mwxt1a4c';
+import { ART } from './art.js?v=a4f0f26-mwxt1a4c';
+import { initDebug } from './debug.js?v=a4f0f26-mwxt1a4c';
+import { initConsent } from './analytics.js?v=a4f0f26-mwxt1a4c';
+import * as subapi from './subapi.js?v=a4f0f26-mwxt1a4c';
+import { drawShareCard } from './sharecard.js?v=a4f0f26-mwxt1a4c';
+import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=a4f0f26-mwxt1a4c';
 
 const env = detectEnv();
 const app = document.getElementById('app');
