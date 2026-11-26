@@ -96,7 +96,7 @@ Deno.serve(async (req) => {
           const { data: done } = await db.from("sport_test_orders").select("provider_payload").eq("order_ref", orderRef).maybeSingle();
           if (!done?.provider_payload?.capi) {
             const capi = await sendCapi(d, orderRef, total ?? 0, cur);
-            await db.from("sport_test_orders").update({ provider_payload: { id: d.id, status: d.status, origin: d.origin, capi, src: { utm_source: str(d.custom_data?.utm_source, 100), utm_campaign: str(d.custom_data?.utm_campaign, 200), utm_content: str(d.custom_data?.utm_content, 200), utm_term: str(d.custom_data?.utm_term, 200), country: str(d.custom_data?.country, 2), consent: str(d.custom_data?.consent, 12) } } }).eq("order_ref", orderRef);
+            await db.from("sport_test_orders").update({ provider_payload: { id: d.id, status: d.status, origin: d.origin, capi, src: { utm_source: str(d.custom_data?.utm_source, 100), utm_campaign: str(d.custom_data?.utm_campaign, 200), utm_content: str(d.custom_data?.utm_content, 200), utm_term: str(d.custom_data?.utm_term, 200), country: str(d.custom_data?.country, 2), consent: str(d.custom_data?.consent, 12), keys: Object.keys(d.custom_data || {}).join(","), fbc: !!d.custom_data?.fbc, em: !!d.custom_data?.em } } }).eq("order_ref", orderRef);
           }
         }
         // id подписки может прийти позже первого «paid» (transaction.paid → transaction.completed): дописываем всегда

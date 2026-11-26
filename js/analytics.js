@@ -51,9 +51,14 @@ function loadPosthog(key, host, full) {
 
 // PostHog запускается один раз за загрузку страницы: с согласием — полный, без — без cookie.
 // Если человек нажал «Accept» посреди визита, до конца визита PostHog остаётся без cookie (пиксель включается сразу).
+const PHC = 'sporttest.phc';
+function cookielessVisit() { try { return Date.now() - Number(localStorage.getItem(PHC) || 0) < 3 * 3600 * 1000; } catch { return false; } }
 function start() {
   if (!phMode && CONFIG.analytics.posthogKey) {
-    phMode = consent === 'all' ? 'full' : 'cookieless';
+    // Визит начался без согласия → до конца визита (3 ч) PostHog без cookie: тот же анонимный id и после возврата из Paddle,
+    // иначе воронка «оплатить → оплачено» рвётся на двух разных людей. С согласием полный режим включится со следующего визита.
+    phMode = consent === 'all' && !cookielessVisit() ? 'full' : 'cookieless';
+    if (phMode === 'cookieless' && !cookielessVisit()) { try { localStorage.setItem(PHC, String(Date.now())); } catch { /* нет */ } }
     loadPosthog(CONFIG.analytics.posthogKey, CONFIG.analytics.posthogHost, phMode === 'full');
   }
   if (!pixelOn && consent === 'all' && CONFIG.analytics.metaPixelId) { pixelOn = true; loadPixel(CONFIG.analytics.metaPixelId); }
@@ -61,30 +66,22 @@ function start() {
 
 // Метки для сервера (покупка в Meta через Conversions API): клик из рекламы, браузер, UTM, согласие.
 // Уходят в заказ Paddle (customData), оттуда — в вебхук. fbclid берём из адреса первого захода (sessionStorage).
-// 26.11: на iPhone Safari sessionStorage оказался пуст к моменту оплаты (метки не дошли до заказа), поэтому метки
-// дублируются в localStorage на сутки и при оплате дочитываются из адреса, если он ещё с метками.
 const AD = 'sporttest.ad';
-const AD_KEYS = ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
-const adFromUrl = () => {
-  try {
-    const q = new URLSearchParams(location.search);
-    if (!q.get('fbclid') && !q.get('utm_source')) return null;
+try {
+  const q = new URLSearchParams(location.search);
+  if (q.get('fbclid') || q.get('utm_source')) {
     const ad = { ts: Date.now() };
-    for (const k of AD_KEYS) if (q.get(k)) ad[k] = q.get(k).slice(0, 200);
-    return ad;
-  } catch { return null; }
-};
-const firstAd = adFromUrl();
-if (firstAd) { for (const st of ['sessionStorage', 'localStorage']) { try { window[st].setItem(AD, JSON.stringify(firstAd)); } catch { /* нет доступа */ } } }
-const readAd = () => {
-  for (const st of ['sessionStorage', 'localStorage']) {
-    try { const a = JSON.parse(window[st].getItem(AD) || 'null'); if (a && a.ts && Date.now() - a.ts < 86400000) return a; } catch { /* нет */ }
+    for (const k of ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) if (q.get(k)) ad[k] = q.get(k).slice(0, 200);
+    try { sessionStorage.setItem(AD, JSON.stringify(ad)); } catch { /* нет */ }
+    try { localStorage.setItem(AD, JSON.stringify(ad)); } catch { /* нет */ }
   }
-  return firstAd || adFromUrl() || {};
-};
+} catch { /* нет доступа */ }
 const cookie = (n) => { try { const m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')); return m ? decodeURIComponent(m[1]) : ''; } catch { return ''; } };
 export function adContext() {
-  const ad = readAd();
+  let ad = {};
+  try { ad = JSON.parse(sessionStorage.getItem(AD) || '{}') || {}; } catch { /* нет */ }
+  if (!ad.ts) { try { const l = JSON.parse(localStorage.getItem(AD) || '{}') || {}; if (l.ts && Date.now() - l.ts < 7 * 86400000) ad = l; } catch { /* нет */ } }
+  if (!ad.ts) { try { const q = new URLSearchParams(location.search); for (const k of ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) if (q.get(k)) { ad[k] = q.get(k).slice(0, 200); ad.ts = ad.ts || Date.now(); } } catch { /* нет */ } }
   const out = { consent: consent || 'none', url: location.origin + location.pathname, ua: navigator.userAgent.slice(0, 400) };
   for (const k of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) if (ad[k]) out[k] = ad[k];
   // Метки Meta — только с согласием (UK/ЕС); без него сервер всё равно получит факт покупки, но без привязки к клику
@@ -140,6 +137,7 @@ export function initConsent() {
     consent = b.dataset.c;
     try { localStorage.setItem(KEY, consent); } catch { /* нет доступа */ }
     el.remove();
+    try { window.posthog && window.posthog.register && window.posthog.register({ consent }); } catch { /* нет */ }
     send('consent_choice', { choice: consent });
     start();
   });
