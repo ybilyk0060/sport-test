@@ -1,4 +1,4 @@
-// Сгенерировано tools/fetch-voice.mjs из манифеста Студії вправ (2026-11-25T16:21:58.786Z). Голос Achird, языки en/de/uk. Не править руками.
+// Сгенерировано tools/fetch-voice.mjs из манифеста Студії вправ (2026-11-26T11:48:47.782Z). Голос Achird, языки en/de/uk. Не править руками.
 export const VOICE_FILES = {
  "en": {
   "ui_raise_hand": "en/ui_raise_hand.m4a",
@@ -295,7 +295,7 @@ export const VOICE_FILES = {
   "side_bend_howto": "de/side_bend_howto.wav",
   "side_bend_not_reached": "de/side_bend_not_reached.wav",
   "side_bend_face_wrong": "de/side_bend_face_wrong.wav",
-  "side_bend_coach_1": "de/side_bend_coach_1.wav",
+  "side_bend_coach_1": "de/custom/side_bend_coach_1.wav",
   "side_bend_coach_2": "de/side_bend_coach_2.wav",
   "side_bend_coach_3": "de/side_bend_coach_3.wav",
   "side_bend_coach_4": "de/side_bend_coach_4.wav",
