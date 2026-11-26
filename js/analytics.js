@@ -51,9 +51,14 @@ function loadPosthog(key, host, full) {
 
 // PostHog запускается один раз за загрузку страницы: с согласием — полный, без — без cookie.
 // Если человек нажал «Accept» посреди визита, до конца визита PostHog остаётся без cookie (пиксель включается сразу).
+const PHC = 'sporttest.phc';
+function cookielessVisit() { try { return Date.now() - Number(localStorage.getItem(PHC) || 0) < 3 * 3600 * 1000; } catch { return false; } }
 function start() {
   if (!phMode && CONFIG.analytics.posthogKey) {
-    phMode = consent === 'all' ? 'full' : 'cookieless';
+    // Визит начался без согласия → до конца визита (3 ч) PostHog без cookie: тот же анонимный id и после возврата из Paddle,
+    // иначе воронка «оплатить → оплачено» рвётся на двух разных людей. С согласием полный режим включится со следующего визита.
+    phMode = consent === 'all' && !cookielessVisit() ? 'full' : 'cookieless';
+    if (phMode === 'cookieless' && !cookielessVisit()) { try { localStorage.setItem(PHC, String(Date.now())); } catch { /* нет */ } }
     loadPosthog(CONFIG.analytics.posthogKey, CONFIG.analytics.posthogHost, phMode === 'full');
   }
   if (!pixelOn && consent === 'all' && CONFIG.analytics.metaPixelId) { pixelOn = true; loadPixel(CONFIG.analytics.metaPixelId); }
@@ -67,13 +72,16 @@ try {
   if (q.get('fbclid') || q.get('utm_source')) {
     const ad = { ts: Date.now() };
     for (const k of ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) if (q.get(k)) ad[k] = q.get(k).slice(0, 200);
-    sessionStorage.setItem(AD, JSON.stringify(ad));
+    try { sessionStorage.setItem(AD, JSON.stringify(ad)); } catch { /* нет */ }
+    try { localStorage.setItem(AD, JSON.stringify(ad)); } catch { /* нет */ }
   }
 } catch { /* нет доступа */ }
 const cookie = (n) => { try { const m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')); return m ? decodeURIComponent(m[1]) : ''; } catch { return ''; } };
 export function adContext() {
   let ad = {};
   try { ad = JSON.parse(sessionStorage.getItem(AD) || '{}') || {}; } catch { /* нет */ }
+  if (!ad.ts) { try { const l = JSON.parse(localStorage.getItem(AD) || '{}') || {}; if (l.ts && Date.now() - l.ts < 7 * 86400000) ad = l; } catch { /* нет */ } }
+  if (!ad.ts) { try { const q = new URLSearchParams(location.search); for (const k of ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) if (q.get(k)) { ad[k] = q.get(k).slice(0, 200); ad.ts = ad.ts || Date.now(); } } catch { /* нет */ } }
   const out = { consent: consent || 'none', url: location.origin + location.pathname, ua: navigator.userAgent.slice(0, 400) };
   for (const k of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) if (ad[k]) out[k] = ad[k];
   // Метки Meta — только с согласием (UK/ЕС); без него сервер всё равно получит факт покупки, но без привязки к клику
