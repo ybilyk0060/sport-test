@@ -253,6 +253,10 @@ details.sec > * + * { margin-top: 10px; }
 .hud-top { padding-left: 58px; }
 .sheet .tag.checks { background: #e9f6ef; color: #17603f; margin-left: 6px; }
 .apps-block { display: grid; gap: 10px; }
+.apps-soon-card { background: #eef6f0; border-radius: 20px; padding: 16px; box-shadow: inset 0 0 0 2px #9fd0b0; }
+.apps-soon-card .sec-title { margin: 0; }
+.apps-soon-card .sec-title::before { content: "📱 "; }
+.apps-soon-card .app-card { background: #fff; }
 .legal-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; font-size: 13px; } .legal-links a { color: var(--muted); }
 .email-field { display: grid; gap: 6px; } .email-field .field { width: 100%; }
 

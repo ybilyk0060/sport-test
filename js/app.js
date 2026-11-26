@@ -366,7 +366,7 @@ function storeLinks(k, a) {
 function appsBlock() {
   const A = T.apps, mode = appAccess();
   if (mode === 'off') return '';
-  if (mode === 'soon') return `<p class="apps-soon small">📱 ${esc(A.soonShort)}</p>`;
+  // 'soon': раньше была одна серая строка — после оплаты её не замечали (Юрий 26.11). Теперь заметная карточка с тремя приложениями.
   const live = mode === 'live';
   const lead = live ? (state.email ? A.liveLead(state.email) : A.liveLeadNoEmail) : A.soonLead;
   const cards = appsByAge().map(({ k, a, fits }) => {
@@ -374,7 +374,7 @@ function appsBlock() {
     const soon = live && !(a.ios.live && a.android.live) ? `<span class="small muted">${esc(A.soon([!a.ios.live && A.ios, !a.android.live && A.android].filter(Boolean).join(' / ')))}</span>` : '';
     return `<div class="app-card"><div><b>${esc(A[k].name)}</b>${fits ? `<span class="tag-ok">${esc(A.forAge)}</span>` : ''}</div><span class="small muted">${esc(A[k].d)}</span>${links ? `<div class="row-links">${links}</div>` : ''}${soon}</div>`;
   }).join('');
-  return `<div class="apps-block"><h2 class="sec-title">${esc(live ? A.liveTitle : A.soonTitle)}</h2><p class="small muted">${esc(lead)}</p>${cards}</div>`;
+  return `<div class="apps-block${live ? '' : ' apps-soon-card'}"><h2 class="sec-title">${esc(live ? A.liveTitle : A.soonTitle)}</h2><p class="small muted">${esc(lead)}</p>${cards}</div>`;
 }
 // Зоны роста: у каждой конкретное упражнение; когда приложения в подписке — кнопка «тренировать в приложении»
 function growthBlock(profile) {
@@ -436,9 +436,9 @@ function fullReport(justPaid = false) {
     <section class="sports-open"><h2 class="sec-title">${esc(P.sportsTitle)}</h2>
       ${sports.map((x, i) => `<div class="sport-row"><span class="n">${i + 1}</span><div><b>${esc(P.sports[x.sport].name)}</b><span class="small muted">${esc(P.sports[x.sport].ex)}</span><span class="conf c-${x.confidence}">${esc(P.confidence[x.confidence])}</span><span class="small">${x.reasons.slice(0, 2).map((r) => esc(P.reasons[r] || r)).join(' · ')}</span></div></div>`).join('')}
       <p class="small muted">${esc(P.sportsNote)}</p>${tip ? `<p class="tip">${esc(P[tip])}</p>` : ''}</section>
+    ${appsBlock()}
     ${pb.card}
     ${growthBlock(profile)}
-    ${appsBlock()}
     ${pb.plan}
     <details class="sec"><summary>${esc(P.resultsTitle)}</summary><ul class="facts">${factLines(state.results).map((f) => `<li>${esc(f)}</li>`).join('')}</ul><p class="small muted">${esc(R.shortNote)}</p></details>
 
