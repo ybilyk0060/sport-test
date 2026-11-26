@@ -9,12 +9,12 @@ export default {
     title: 'Entdecken Sie die Stärken Ihres Kindes in 3 Minuten',
     promise: 'Ein kurzer Test vor der Handykamera zeigt die Stärken Ihres Kindes und welche Sportarten am besten zu ihm passen.',
     cta: 'Test starten',
-    points: ['8 kurze Fragen', '4–5 kurze Übungen: Gleichgewicht, Laufen auf der Stelle, Rumpfbeuge, Hampelmann und Schultertippen im Stütz', 'Das Video bleibt auf Ihrem Handy und wird nicht hochgeladen'],
+    points: ['8 kurze Fragen', '4–5 kurze Übungen: Gleichgewicht, Laufen auf der Stelle, Kniebeugen, Hampelmann und Schultertippen im Stütz', 'Das Video bleibt auf Ihrem Handy und wird nicht hochgeladen'],
     note: 'Sie brauchen ein Handy mit Kamera und etwa 2 × 2 m freie Fläche.',
     disclaimer: 'Ein spielerischer Bewegungstest, keine medizinische Untersuchung und kein offizieller Test. Er sagt keinen sportlichen Erfolg voraus, sondern zeigt, wo Ihr Kind heute stark ist.',
-    trustShort: 'Einige Übungen sind an EUROFIT (Europarat) und den Deutschen Motorik-Test (DMT 6–18) angelehnt.',
+    trustShort: 'Der Einbeinstand ist an EUROFIT angelehnt, den Fitnesstest des Europarats für Kinder und Jugendliche.',
     trustNote: 'Für die Handykamera zu Hause angepasst, die Ergebnisse sind eine Orientierung, keine Labormessung.',
-    trust: 'Einige Übungen sind an etablierte Fitnesstests für Kinder angelehnt: EUROFIT (Europarat) und den Deutschen Motorik-Test (DMT 6–18). Für die Handykamera zu Hause angepasst, die Ergebnisse sind eine Orientierung, keine Labormessung.',
+    trust: 'Der Einbeinstand ist an EUROFIT (Europarat) angelehnt, einen etablierten Fitnesstest für Kinder und Jugendliche. Für die Handykamera zu Hause angepasst, die Ergebnisse sind eine Orientierung, keine Labormessung.',
   },
 
   quiz: {
@@ -60,6 +60,7 @@ export default {
     watch: 'Schau, wie der Panda es macht',
     go: 'Verstanden, los geht’s',
     plankReady: 'In den Stütz gehen und 2 Sekunden halten — es geht ohne Tippen los',
+    kneesUp: 'Knie hoch — Körper gerade!',
     raiseHand: 'Hand heben und halten — es geht ohne Tippen los',
     sideNote: 'Seitlich zur Kamera stellen',
     frontNote: 'Mit dem Gesicht zur Kamera stellen',
@@ -192,7 +193,7 @@ export default {
     failed: 'Die Aufnahme konnte nicht ausgewertet werden. Bitte kürzer und bei besserem Licht neu aufnehmen.',
   },
 
-  calc: { title: 'Ergebnis wird berechnet', steps: ['Wiederholungen und Zeit zählen', 'Tempo, Beweglichkeit und Symmetrie prüfen', 'Bewegungsprofil erstellen'] },
+  calc: { title: 'Ergebnis wird berechnet', steps: ['Wiederholungen und Zeit zählen', 'Tempo, Beinkraft und Symmetrie prüfen', 'Bewegungsprofil erstellen'] },
 
   result: {
     badge: 'Vorläufiges Ergebnis',
@@ -247,7 +248,7 @@ export default {
       skipped: (name) => `${name}: übersprungen`,
     },
     lockedTitle: 'Im vollständigen Bericht',
-    lockedItems: ['Vollständiges Profil: Gleichgewicht, Schnelligkeit, Beweglichkeit, Koordination', 'Drei Sportarten für den Start — und warum', 'Trainingsprogramm für zu Hause nach den Interessen Ihres Kindes', 'Karte zum Teilen mit Familie und Freunden'],
+    lockedItems: ['Vollständiges Profil: Gleichgewicht, Schnelligkeit, Beinkraft, Koordination', 'Drei Sportarten für den Start — und warum', 'Trainingsprogramm für zu Hause nach den Interessen Ihres Kindes', 'Karte zum Teilen mit Familie und Freunden'],
     again: 'Test wiederholen',
   },
 
@@ -265,7 +266,7 @@ export default {
     leadNoWeak: 'Auf Basis des Tests und der Interessen Ihres Kindes haben wir ein 4-Wochen-Programm erstellt.',
     inside: 'Im Abo enthalten',
     insideItems: [
-      'Vollständiger Bericht: Gleichgewicht, Schnelligkeit und Gewandtheit, Beweglichkeit, Koordination und Rhythmus — und drei Sportarten mit Begründung',
+      'Vollständiger Bericht: Gleichgewicht, Schnelligkeit und Gewandtheit, Beinkraft, Koordination und Rhythmus — und drei Sportarten mit Begründung',
       'Training zu Hause 3× pro Woche, 7–10 Minuten — passend zu den Interessen Ihres Kindes',
       'Die Kamera zählt Wiederholungen, eine Trainerstimme leitet an — wie im Test',
       'Die Belastung steigt jede Woche ein wenig, ausgehend von den eigenen Ergebnissen',
@@ -388,7 +389,7 @@ export default {
   report: {
     confidence: { high: 'Starke Übereinstimmung: durch die Testergebnisse gestützt', medium: 'Gute Übereinstimmung: teilweise durch den Test gestützt', low: 'Mögliche Übereinstimmung: vor allem nach Ihren Antworten' },
     howTitle: 'Wie wir gemessen haben',
-    howMeasured: 'So haben wir gemessen: Der Einbeinstand ist an EUROFIT angelehnt, die Rumpfbeuge an den Deutschen Motorik-Test. Laufen auf der Stelle und Hampelmann zeigen Schnelligkeit, Koordination und Rhythmus; wir vergleichen sie mit anderen Kindern, die unseren Test gemacht haben.',
+    howMeasured: 'So haben wir gemessen: Der Einbeinstand ist an EUROFIT angelehnt; Kniebeugen zeigen die Beinkraft. Laufen auf der Stelle und Hampelmann zeigen Schnelligkeit, Koordination und Rhythmus; wir vergleichen sie mit anderen Kindern, die unseren Test gemacht haben.',
     bodyNote: 'Größe und Gewicht nutzen wir nur, um gelenkschonende Sportarten zu bevorzugen. Grundlage sind die internationalen BMI-Grenzwerte für Kinder (IOTF, Cole et al., BMJ 2000). Die Angaben bleiben auf Ihrem Gerät.',
     title: 'Vollständiger Bericht',
     paidOk: 'Danke! Ihr Abo ist aktiv.',

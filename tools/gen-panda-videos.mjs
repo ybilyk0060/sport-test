@@ -15,12 +15,12 @@ if (!fs.existsSync(REF)) throw new Error('нет референса панды (
 
 const COMMON = 'Use the panda character and the gym from the reference image: the same cartoon panda, same room, same lighting and style. '
   + 'The panda wears a plain white t-shirt with no logo, letters or print, and the poster on the wall is a plain picture without any logo or text. '
-  + 'Static camera, no camera movement, no cuts. The panda faces the camera directly (front view), the whole body from head to feet visible in every frame, centred. '
+  + 'Static camera, no camera movement, no cuts. The panda faces the camera directly (front view) unless the action says SIDE VIEW, the whole body from head to feet visible in every frame, centred. '
   + 'No text, no captions, no music, no other characters.';
 const COMMON_GREEN = 'Use the panda character from the reference image: the same cartoon panda, same style and lighting on the panda. '
   + 'The panda wears a plain white t-shirt with no logo, letters or print, and dark blue shorts. '
   + 'BACKGROUND: a perfectly uniform, flat, evenly lit pure chroma-key green (#00B140) filling the whole frame behind and under the panda: no room, no floor, no mat, no objects, no shadows, no gradients, no reflections. Nothing on the panda is green. '
-  + 'Static camera, no camera movement, no cuts. The panda faces the camera directly (front view), the whole body from head to feet visible in every frame, centred. '
+  + 'Static camera, no camera movement, no cuts. The panda faces the camera directly (front view) unless the action says SIDE VIEW, the whole body from head to feet visible in every frame, centred. '
   + 'No text, no captions, no music, no other characters.';
 const CLIPS = {
   balance: 'The panda puts its paws on its hips, lifts its left foot off the floor and bends the left leg backward (knee pointing down, foot behind), and stands steadily on the right leg for about four seconds without touching the floor. Then it puts the foot down and does the same on the left leg, lifting the right foot backward, for about three seconds.',
@@ -28,6 +28,7 @@ const CLIPS = {
   high_knees: 'The panda runs in place quickly, lifting its knees high to hip height one after another, arms pumping, for the whole clip. It stays on the same spot facing the camera.',
   jumping_jack: 'The panda does jumping jacks: it jumps the feet wide apart while raising both arms straight up overhead, then jumps the feet back together while lowering the arms to its sides. It repeats this rhythmically about eight times, the arms clearly going all the way up and down each time.',
   shoulder_taps: 'The phone stands on the floor in front of the panda. The panda gets into a high plank facing the camera: hands on the floor under its shoulders, body straight from head to heels, head toward the camera. Keeping the hips still, it lifts one paw and taps the opposite shoulder, puts it back, then taps with the other paw, alternating about eight times. The camera is low, at floor level, so the panda\'s head, shoulders and arms are large and clearly visible.',
+  squats: 'SIDE VIEW: the panda stands sideways to the camera (its left side toward the camera, facing the left edge of the frame), feet hip-width apart. It does slow, deep squats: pushes the hips back and down until the thighs are parallel to the floor, arms stretched forward for balance, back straight, then stands up tall. About six squats, clearly visible from the side, the whole body from head to feet in frame.',
   bend: 'The panda stands with its feet together and knees straight, slowly bends forward from the hips and reaches its paws down to touch its toes, holds for two seconds, then slowly stands back up straight. It does this twice, keeping the knees straight the whole time.',
 };
 // --vertical: вертикальные ролики 9:16 для показа на весь экран (Юрий 26.11) → assets/video/<key>-v<n>.mp4

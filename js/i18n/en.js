@@ -10,12 +10,12 @@ export default {
     title: 'Discover your child’s strengths in 3 minutes',
     promise: 'A quick test in front of your phone’s camera shows your child’s strengths and which sports suit them best.',
     cta: 'Start the test',
-    points: ['8 quick questions', '4–5 short exercises: balance, running in place, a forward bend, jumping jacks and plank shoulder taps', 'Video stays on your phone — nothing is uploaded'],
+    points: ['8 quick questions', '4–5 short exercises: balance, running in place, squats, jumping jacks and plank shoulder taps', 'Video stays on your phone — nothing is uploaded'],
     note: 'You’ll need a phone with a camera and about 6×6 ft (2×2 m) of clear space.',
     disclaimer: 'A playful movement test, not a medical assessment and not an official test. It doesn’t predict sporting success. It shows where your child is strong today.',
-    trustShort: 'Some exercises are adapted from EUROFIT (Council of Europe) and the German Motor Test (DMT 6–18).',
+    trustShort: 'One-leg balance is adapted from EUROFIT, the Council of Europe youth fitness test.',
     trustNote: 'Adapted for a phone camera at home, so results are a guide, not a lab measurement.',
-    trust: 'Some exercises are adapted from established youth fitness test batteries: EUROFIT (Council of Europe) and the German Motor Test (DMT 6–18). Adapted for a phone camera at home, so results are a guide, not a lab measurement.',
+    trust: 'The one-leg balance test is adapted from EUROFIT (Council of Europe), an established youth fitness test battery. Adapted for a phone camera at home, so results are a guide, not a lab measurement.',
   },
 
   quiz: {
@@ -61,6 +61,7 @@ export default {
     watch: 'Watch how the panda does it',
     go: 'Got it, let’s go',
     plankReady: 'Get into the plank and hold it for 2 seconds — we’ll start, no tap needed',
+    kneesUp: 'Knees off the floor — straight body!',
     raiseHand: 'Raise your hand and hold it — we’ll start, no tap needed',
     sideNote: 'Stand sideways to the camera',
     frontNote: 'Face the camera',
@@ -193,7 +194,7 @@ export default {
     failed: 'Couldn’t analyze the recording. Try again — shorter and in better light.',
   },
 
-  calc: { title: 'Calculating results', steps: ['Counting reps and time', 'Checking pace, flexibility and symmetry', 'Building the movement profile'] },
+  calc: { title: 'Calculating results', steps: ['Counting reps and time', 'Checking pace, leg strength and symmetry', 'Building the movement profile'] },
 
   result: {
     badge: 'Preliminary result',
@@ -248,7 +249,7 @@ export default {
       skipped: (name) => `${name}: skipped`,
     },
     lockedTitle: 'In the full report',
-    lockedItems: ['Your child’s full profile: balance, speed, flexibility, coordination', 'Three sports to start with, and why', 'A home training program built around your child’s interests', 'A card to share with family and friends'],
+    lockedItems: ['Your child’s full profile: balance, speed, leg strength, coordination', 'Three sports to start with, and why', 'A home training program built around your child’s interests', 'A card to share with family and friends'],
     again: 'Take the test again',
   },
 
@@ -266,7 +267,7 @@ export default {
     leadNoWeak: 'Based on the test and what your child enjoys, we built a 4-week program.',
     inside: 'What’s included',
     insideItems: [
-      'Full report: balance, speed and agility, flexibility, coordination and rhythm — and three sports with reasons',
+      'Full report: balance, speed and agility, leg strength, coordination and rhythm — and three sports with reasons',
       'Home training 3 times a week, 7–10 minutes — built around your child’s interests',
       'The camera counts reps and a coach voice guides — just like in the test',
       'The workload grows a little every week, based on your child’s own results',
@@ -389,7 +390,7 @@ export default {
   report: {
     confidence: { high: 'Strong match: backed by the test results', medium: 'Good match: partly backed by the test', low: 'Possible match: based mostly on your answers' },
     howTitle: 'How we measured',
-    howMeasured: 'How we measured: one-leg balance is adapted from EUROFIT, the forward bend from the German Motor Test. Running in place and jumping jacks show speed, coordination and rhythm; we compare them with other children who took our test.',
+    howMeasured: 'How we measured: one-leg balance is adapted from EUROFIT; squats show leg strength. Running in place and jumping jacks show speed, coordination and rhythm; we compare them with other children who took our test.',
     bodyNote: 'Height and weight only help us favor joint-friendly sports. We use the international child BMI cut-offs (IOTF, Cole et al., BMJ 2000). Your data stays on your device.',
     title: 'Full report',
     paidOk: 'Thank you! You’re subscribed.',

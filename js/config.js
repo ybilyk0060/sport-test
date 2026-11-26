@@ -95,7 +95,7 @@ export const CONFIG = {
   // Тем, кто закрыл пейвол без оплаты: карточка бесплатного приложения с пробным периодом. Включать после релиза.
   appsExitOffer: false,
   // Упражнение для зоны роста (есть и в программе, и в Kidsney Studio)
-  growthExercise: { balance: 'balance_r', speed: 'high_knees', flex: 'bend', coordination: 'jumping_jack', endurance: 'high_knees', arms: 'wall_french_press', legs: 'squats', core: 'crunches', symmetry: 'cross_crawl' },
+  growthExercise: { balance: 'balance_r', speed: 'high_knees', flex: 'good_morning', coordination: 'jumping_jack', endurance: 'high_knees', arms: 'wall_french_press', legs: 'squats', core: 'crunches', symmetry: 'cross_crawl' },
 
   // --- Набор упражнений по возрасту ---
   // 5 основных вправ студии: зірочка (обличчям) → присідання, біг на місці, нахили (боком) → торкання плечей (обличчям, на підлозі).
@@ -105,6 +105,7 @@ export const CONFIG = {
   // Тест до оплаты — только оценка (спецификация v3, Юрий 25.11): телефон стоит на месте, всё лицом к камере.
   // timed: true — считаем повторы за capSec секунд (target не ограничивает). norms — пороги «A / B» в js/scoring.js (NORMS).
   // program — упражнения программы после оплаты (прежний состав теста).
+  // 26.11 (вечер, 2) Юрий: наклон к носкам заменён приседаниями на время (боком к камере): наклон ненадёжно распознавался с фронтальной камеры
   // 26.11 (вечер) Юрий: касания плеч в упоре лёжа лицом к камере снова в тесте — последним (телефон на пол), кроме 3–5 лет
   // 26.11 Юрий: до оплаты 4 упражнения стоя (касания плеч ушли в программу); вместо прыжков через полоску — бег на месте с высокими коленями 15 с (быстрота ног; код прыжков остаётся)
   ageGroups: {
@@ -112,7 +113,7 @@ export const CONFIG = {
       { key: 'balance_r', target: 10, capSec: 25 },
       { key: 'balance_l', target: 10, capSec: 25 },
       { key: 'high_knees', target: 15, capSec: 22 },
-      { key: 'bend', target: 4, capSec: 30 },
+      { key: 'squats', target: 999, capSec: 15, timed: true },
       { key: 'jumping_jack', target: 999, capSec: 15, timed: true },
     ], program: [
       { key: 'jumping_jack', target: 5, capSec: 20 },
@@ -124,7 +125,7 @@ export const CONFIG = {
       { key: 'balance_r', target: 15, capSec: 30 },
       { key: 'balance_l', target: 15, capSec: 30 },
       { key: 'high_knees', target: 15, capSec: 22 },
-      { key: 'bend', target: 4, capSec: 30 },
+      { key: 'squats', target: 999, capSec: 20, timed: true },
       { key: 'jumping_jack', target: 999, capSec: 20, timed: true },
       { key: 'shoulder_taps', target: 999, capSec: 20, timed: true },
     ], program: [
@@ -139,7 +140,7 @@ export const CONFIG = {
       { key: 'balance_r', target: 15, capSec: 30 },
       { key: 'balance_l', target: 15, capSec: 30 },
       { key: 'high_knees', target: 15, capSec: 22 },
-      { key: 'bend', target: 4, capSec: 30 },
+      { key: 'squats', target: 999, capSec: 20, timed: true },
       { key: 'jumping_jack', target: 999, capSec: 20, timed: true },
       { key: 'shoulder_taps', target: 999, capSec: 20, timed: true },
     ], program: [
@@ -154,7 +155,7 @@ export const CONFIG = {
       { key: 'balance_r', target: 15, capSec: 30 },
       { key: 'balance_l', target: 15, capSec: 30 },
       { key: 'high_knees', target: 15, capSec: 22 },
-      { key: 'bend', target: 4, capSec: 30 },
+      { key: 'squats', target: 999, capSec: 20, timed: true },
       { key: 'jumping_jack', target: 999, capSec: 20, timed: true },
       { key: 'shoulder_taps', target: 999, capSec: 20, timed: true },
     ], program: [

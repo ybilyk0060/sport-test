@@ -14,7 +14,7 @@ export const EX_QUALITY = { jumping_jack: ['coordination', 'symmetry'], squats: 
   // Оценочный тест v3
   balance_r: ['balance', 'symmetry'], balance_l: ['balance', 'symmetry'], side_jumps_1: ['speed'], side_jumps_2: ['speed'], bend: ['flex'] };
 export function qualitiesOf(results) {
-  if (isV3(results)) { const set = new Set(['balance', 'speed', 'flex', 'coordination', 'endurance', 'arms', 'symmetry']); const have = new Set((results || []).filter((r) => !r.skipped).map((r) => r.key)); if (!have.has('shoulder_taps')) set.delete('arms'); if (!have.has('side_jumps_1') && !have.has('side_jumps_2') && !have.has('high_knees')) set.delete('speed'); if (!have.has('jumping_jack')) { set.delete('coordination'); set.delete('endurance'); } return QUALITIES.filter((q) => set.has(q)); } const set = new Set((results || []).flatMap((r) => EX_QUALITY[r.key] || [])); return QUALITIES.filter((q) => set.has(q)); }
+  if (isV3(results)) { const set = new Set(['balance', 'speed', 'flex', 'legs', 'coordination', 'endurance', 'arms', 'symmetry']); const have = new Set((results || []).filter((r) => !r.skipped).map((r) => r.key)); if (!have.has('bend')) set.delete('flex'); if (!have.has('squats')) set.delete('legs'); if (!have.has('shoulder_taps')) set.delete('arms'); if (!have.has('side_jumps_1') && !have.has('side_jumps_2') && !have.has('high_knees')) set.delete('speed'); if (!have.has('jumping_jack')) { set.delete('coordination'); set.delete('endurance'); } return QUALITIES.filter((q) => set.has(q)); } const set = new Set((results || []).flatMap((r) => EX_QUALITY[r.key] || [])); return QUALITIES.filter((q) => set.has(q)); }
 
 // --- Показатели (каждый 0..1 или null, если не измерен) ---
 // Рабочие пороги (не нормы):
@@ -90,10 +90,11 @@ export function levelOf(score) {
 // Ниже A — «зона роста», A…B — «есть запас», от B — «сильная сторона». Рабочие оценки, не нормы; пока одинаково для мальчиков и девочек.
 // После ~300 тестов на группу «возраст × пол» заменить на P25 / P75 собственных данных.
 export const NORMS = {
-  '3-5': { balance: [6, 15], knees: [14, 24], speed: [6, 12], flex: [2, 4], coordination: [5, 12], arms: null },
-  '6-8': { balance: [15, 26], knees: [20, 32], speed: [18, 28], flex: [3, 4], coordination: [12, 20], arms: [8, 16] },
-  '9-11': { balance: [20, 30], knees: [26, 38], speed: [25, 35], flex: [3, 4], coordination: [15, 24], arms: [12, 22] },
-  '12-15': { balance: [24, 30], knees: [30, 42], speed: [30, 40], flex: [3, 4], coordination: [18, 28], arms: [16, 28] },
+  // legs — приседания за время (15 с для 3–5, иначе 20 с), рабочие пороги до данных
+  '3-5': { balance: [6, 15], knees: [14, 24], speed: [6, 12], flex: [2, 4], coordination: [5, 12], arms: null, legs: [5, 9] },
+  '6-8': { balance: [15, 26], knees: [20, 32], speed: [18, 28], flex: [3, 4], coordination: [12, 20], arms: [8, 16], legs: [9, 14] },
+  '9-11': { balance: [20, 30], knees: [26, 38], speed: [25, 35], flex: [3, 4], coordination: [15, 24], arms: [12, 22], legs: [11, 16] },
+  '12-15': { balance: [24, 30], knees: [30, 42], speed: [30, 40], flex: [3, 4], coordination: [18, 28], arms: [16, 28], legs: [13, 18] },
 };
 export const V3 = { SWAY_STRONG: 0.05, RHYTHM_CV_MAX: 0.5, SLOW_OK: 1.1, SLOW_MID: 1.3 }; // SWAY_STRONG — раскачка таза, ниже которой 9+ получают «сильную сторону» в балансе (временно, до медианы по данным)
 const V3_KEYS = ['balance_r', 'balance_l', 'side_jumps_1', 'side_jumps_2', 'bend'];
@@ -137,6 +138,14 @@ export function buildProfileV3(results, ageGroup) {
   if (sj.length) { const avg = sj.reduce((a, r) => a + r.done, 0) / sj.length; q.speed = graded(avg, N.speed); metr.sideJumps = Math.round(avg * 10) / 10; }
   // 3. Гибкость: уровень наклона 1–4
   if (by.bend) { q.flex = graded(by.bend.done, N.flex, 4); metr.bendLevel = by.bend.done; }
+  // 3'. Сила ног — приседания на время (26.11 вместо наклона); неглубокие повторы снижают уровень
+  const sq = by.squats;
+  if (sq && sq.timed !== false && N.legs) {
+    let g = graded(sq.done, N.legs);
+    const tries = sq.done + (sq.metrics.shallow || 0);
+    if (tries >= 4 && sq.done / tries < 0.7) g = down(g);
+    q.legs = g; metr.squats = sq.done;
+  }
   // 4. Координация и ритм: повторы jumping jack за время; неровный ритм — на уровень ниже. Выносливость — держит ли темп до конца.
   const jj = by.jumping_jack;
   if (jj) {

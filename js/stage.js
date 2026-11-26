@@ -187,6 +187,15 @@ function introSheet(p, i, n, btnHtml) {
 
 // Короткое видео с пандой и голос студии перед упражнением.
 // Дальше — поднятой рукой (держать 1,5 с), как во всех приложениях Kidsney, или кнопкой. Подходить к телефону не нужно.
+// Колени на полу в упоре лёжа (камера на полу перед ребёнком): колени видны и почти на уровне ладоней
+function kneesDown(lm) {
+  const lk = lm[25], rk = lm[26], lw = lm[15], rw = lm[16];
+  if (!lk || !rk || !lw || !rw) return false;
+  const vk = [lk, rk].filter((p) => (p.visibility ?? 0) >= 0.5);
+  if (!vk.length) return false;
+  const floor = Math.max(lw.y, rw.y), knee = Math.max(...vk.map((p) => p.y));
+  return floor - knee < 0.07;
+}
 let inFrame = false; // последний кадр вступления: голова и стопы видны
 const HAND_R = 34, HAND_C = 2 * Math.PI * HAND_R;
 const BIG_R = 84, BIG_C = 2 * Math.PI * BIG_R;
@@ -296,7 +305,7 @@ async function liveExercise(p, i, n) {
   await countdown();
   if (!alive) return null;
   return new Promise((resolve) => {
-    let ui, hintTimer = 0, lostSince = null, lostSaidAt = 0;
+    let ui, hintTimer = 0, lostSince = null, lostSaidAt = 0, kneelSince = null, kneeling = false, kneelSaid = 0;
     const run = createRun({
       key: p.key, target: p.target, capSec: p.capSec, ageGroup: state.quiz.age || CONFIG.defaultAge, timed: !!p.timed,
       aspect: video.videoWidth && video.videoHeight ? video.videoWidth / video.videoHeight : null,
@@ -325,7 +334,16 @@ async function liveExercise(p, i, n) {
       const seen = lm && (CONFIG.exercises[p.key].floor || framingCheck(lm).ok);
       if (!seen) { lostSince = lostSince ?? performance.now(); if (performance.now() - lostSince > 1500 && !ui.hint.textContent) { ui.hint.textContent = T.cam.lost; if (performance.now() - lostSaidAt > 6000) { lostSaidAt = performance.now(); say('ui_steps_back', { interrupt: false }); } } }
       else if (lostSince) { lostSince = null; if (ui.hint.textContent === T.cam.lost) ui.hint.textContent = ''; }
-      run.frame(lm);
+      // Касания плеч: колени на полу не засчитываем (Юрий 26.11). Камера у пола спереди: при упоре на коленях колени
+      // в кадре на уровне ладоней (пол), на носках — заметно выше (прогоны 5 и 6: разница 0,15 против 0,01–0,05 кадра).
+      if (p.key === 'shoulder_taps' && lm) {
+        const k = kneesDown(lm), now = performance.now();
+        if (k) { kneelSince = kneelSince ?? now; } else kneelSince = null;
+        kneeling = kneelSince != null && now - kneelSince > 400;
+        if (kneeling) { ui.hint.textContent = T.cam.kneesUp; if (now - kneelSaid > 6000) { kneelSaid = now; say('hint_no_knees_on_floor', { interrupt: false }); } }
+        else if (ui.hint.textContent === T.cam.kneesUp) ui.hint.textContent = '';
+      }
+      run.frame(kneeling ? null : lm);
       if (window.__poseTap) try { window.__poseTap(p.key, lm); } catch { /* диагностика прогона (tools/e2e-iphone-wi.mjs), у покупателя не задана */ }
     });
   });

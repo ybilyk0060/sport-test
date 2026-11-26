@@ -98,17 +98,17 @@ function nurtureMail(kind: "d3" | "d7" | "retest", lang: string, link: string) {
     en: {
       d3: { subject: "How are the first workouts going?", text: `Three days with the program. If you haven’t started yet, today is a good day: a workout takes 7–10 minutes, and the camera counts the reps.\n\nOpen the next workout:\n${link}` },
       d7: { subject: "Week 1 is behind you", text: `Even two or three short workouts a week add up. In a month, the repeat test will show what has changed.\n\nNext workout:\n${link}${appsLine("en")}` },
-      retest: { subject: "Time for the repeat test: let’s compare", text: `A month has passed since the last test. Take it again (3 minutes), and we’ll show what has changed in balance, speed, flexibility and coordination.\n\nTake the repeat test:\n${link}` },
+      retest: { subject: "Time for the repeat test: let’s compare", text: `A month has passed since the last test. Take it again (3 minutes), and we’ll show what has changed in balance, speed, leg strength and coordination.\n\nTake the repeat test:\n${link}` },
     },
     de: {
       d3: { subject: "Wie laufen die ersten Trainings?", text: `Drei Tage mit dem Programm. Falls Sie noch nicht angefangen haben: Heute ist ein guter Tag. Ein Training dauert 7–10 Minuten, die Kamera zählt die Wiederholungen.\n\nZum nächsten Training:\n${link}` },
       d7: { subject: "Die erste Woche ist geschafft", text: `Schon zwei, drei kurze Trainings pro Woche machen einen Unterschied. In einem Monat zeigt der Wiederholungstest, was sich verändert hat.\n\nZum nächsten Training:\n${link}${appsLine("de")}` },
-      retest: { subject: "Zeit für den Wiederholungstest", text: `Seit dem letzten Test ist ein Monat vergangen. Machen Sie ihn noch einmal (3 Minuten) – wir zeigen Ihnen, was sich bei Gleichgewicht, Schnelligkeit, Beweglichkeit und Koordination getan hat.\n\nZum Wiederholungstest:\n${link}` },
+      retest: { subject: "Zeit für den Wiederholungstest", text: `Seit dem letzten Test ist ein Monat vergangen. Machen Sie ihn noch einmal (3 Minuten) – wir zeigen Ihnen, was sich bei Gleichgewicht, Schnelligkeit, Beinkraft und Koordination getan hat.\n\nZum Wiederholungstest:\n${link}` },
     },
     uk: {
       d3: { subject: "Як минають перші тренування?", text: `Три дні з програмою. Якщо ще не почали, сьогодні гарний день: тренування триває 7–10 хвилин, камера сама рахує повтори.\n\nНаступне тренування:\n${link}` },
       d7: { subject: "Перший тиждень позаду", text: `Навіть два-три короткі тренування на тиждень дають результат. За місяць повторний тест покаже, що змінилося.\n\nНаступне тренування:\n${link}${appsLine("uk")}` },
-      retest: { subject: "Час для повторного тесту", text: `Від останнього тесту минув місяць. Пройдіть його ще раз (3 хвилини), і ми покажемо, що змінилося в рівновазі, швидкості, гнучкості й координації.\n\nПройти повторний тест:\n${link}` },
+      retest: { subject: "Час для повторного тесту", text: `Від останнього тесту минув місяць. Пройдіть його ще раз (3 хвилини), і ми покажемо, що змінилося в рівновазі, швидкості, силі ніг і координації.\n\nПройти повторний тест:\n${link}` },
     },
   } as const;
   const m = M[L][kind];
