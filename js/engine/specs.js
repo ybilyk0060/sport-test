@@ -5,6 +5,7 @@
 // cross_crawl, glute_bridge, side_bend, side_leg_raise, superman_lifts, tuck_jump @1 — из каталога (25.11, третий заход: помечены в Студії для sport_test). toe_touch и windmill ещё в статусе testing — не берём.
 // crunches — из каталога Студії (25.11, заготовка нормативов).
 // Не править руками без повторной проверки tests/engine.test.mjs.
+// 26.11 (Юрий: «смягчить, но не сильно»): jumping_jack — ноги внизу ≤ 0,9 корпуса (было 0,7), старт ≤ 1,1 (было 0,95). Проверено на записях прогонов 5 и 7.
 export const SPEC_MD5 = {
  "squats": "094396b23e4dbc84449d4a135b11a998",
  "plank": "b254da6d588d8b8c55f684ac04b01e7d",
@@ -659,7 +660,7 @@ export const SPECS = {
      },
      {
       "m": "feet",
-      "max": 0.95
+      "max": 1.1
      }
     ]
    },
@@ -745,7 +746,7 @@ export const SPECS = {
    {
     "m": "feet",
     "id": "feet_together",
-    "max": 0.7,
+    "max": 0.9,
     "check": "min",
     "scope": "rep",
     "consequence": "reject"
