@@ -1,0 +1,115 @@
+// Сквозной прогон живого сайта на iPhone в ОБЫЧНОМ Safari с настоящей камерой.
+// Управление через Веб-инспектор (ios_webkit_debug_proxy + tools/wi.mjs): JS-клики и чтение состояния страницы,
+// скриншоты экрана телефона через devicectl. (В режиме safaridriver Safari подставляет заглушку камеры, поэтому так.)
+// Человек: одно касание «Start the test» (iOS включает звук страницы только от настоящего касания), «Разрешить» камеру, упражнения.
+// Запуск: ios_webkit_debug_proxy -c <UDID>:9222 &  затем  node tools/e2e-iphone-wi.mjs [url]
+import fs from 'fs';
+import path from 'path';
+import { execFileSync } from 'child_process';
+import { fileURLToPath } from 'url';
+import { connect } from './wi.mjs';
+
+const UDID = process.env.IPHONE_UDID || '00008130-0011095C3A04001C';
+const URL0 = process.argv.find((a) => a.startsWith('http')) || 'https://kids-test.com/?lang=en';
+const OUT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'e2e-runs', 'iphone-wi-' + new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19));
+fs.mkdirSync(OUT, { recursive: true });
+const T0 = Date.now();
+const sec = () => +((Date.now() - T0) / 1000).toFixed(1);
+const note = (type, data = {}) => { const e = { t: sec(), type, ...data }; fs.appendFileSync(path.join(OUT, 'log.jsonl'), JSON.stringify(e) + '\n'); console.log(`[${e.t}s] ${type}`, JSON.stringify(data)); };
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+const ANSWERS = { age: '12-15', sex: 'boy', now: 'section', likes: 'team', temper: 'active', goal: 'health', screen: 'mid' };
+const IDS = ['age', 'sex', 'body', 'now', 'likes', 'temper', 'goal', 'screen'];
+const BODY = { cm: '158', kg: '47' };
+let shotN = 0;
+function shot(name) {
+  const f = `${String(++shotN).padStart(3, '0')}-${name.replace(/[^a-z0-9-]+/gi, '_').slice(0, 40)}.png`;
+  try { execFileSync('xcrun', ['devicectl', 'device', 'capture', 'screenshot', '--device', UDID, '--destination', path.join(OUT, f)], { stdio: 'ignore', timeout: 20000 }); } catch (e) { note('shot_error', { msg: String(e).slice(0, 80) }); }
+  return f;
+}
+const INIT = `if (!window.__e2e) {
+  window.__e2e = { audio: [], longtasks: [] };
+  const urlOf = new WeakMap(), bufUrl = new WeakMap();
+  const of = window.fetch;
+  window.fetch = async (...a) => { const r = await of(...a); const u = String(a[0] && a[0].url ? a[0].url : a[0]);
+    if (/\\/assets\\/audio\\//.test(u)) { const ab0 = r.arrayBuffer.bind(r); r.arrayBuffer = () => ab0().then((ab) => { urlOf.set(ab, u); return ab; }); } return r; };
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (AC) {
+    const dec = AC.prototype.decodeAudioData;
+    AC.prototype.decodeAudioData = function (ab, ok, bad) { const u = urlOf.get(ab); const p = dec.call(this, ab, (b) => { if (u) bufUrl.set(b, u); ok && ok(b); }, bad); if (p && p.then) p.then((b) => { if (u) bufUrl.set(b, u); }).catch(() => {}); return p; };
+    const st = AudioBufferSourceNode.prototype.start;
+    AudioBufferSourceNode.prototype.start = function (...a) { if (this.buffer && this.buffer.duration > 0.05) window.__e2e.audio.push({ clip: (bufUrl.get(this.buffer) || '?').split('/assets/audio/')[1] || '?', dur: Math.round(this.buffer.duration * 10) / 10 }); return st.apply(this, a); };
+  }
+  try { new PerformanceObserver((l) => { for (const e of l.getEntries()) if (e.duration > 300) window.__e2e.longtasks.push(Math.round(e.duration)); }).observe({ type: 'longtask', buffered: true }); } catch (e) {}
+  window.addEventListener('error', (e) => window.__e2e.errors = [...(window.__e2e.errors || []), String(e.message).slice(0, 200)]);
+}`;
+const STATE = `
+  let st = {}; try { st = JSON.parse(localStorage.getItem('sporttest.v1.state') || '{}'); } catch (e) {}
+  const q = (s) => document.querySelector(s), vis = (s) => { const e = q(s); return !!(e && e.offsetParent !== null); }, txt = (s) => (q(s) ? q(s).textContent.trim() : '');
+  const hud = q('.hud'), v = q('video'), E = window.__e2e || { audio: [], longtasks: [], errors: [] };
+  return { step: st.step || '', quizIndex: st.quizIndex, qtitle: txt('.qtitle'), stage: !!(hud && hud.innerHTML.trim()),
+    framing: vis('.frame-card'), frameMsg: txt('.frame-card [data-el=msg]'), intro: vis('.sheet [data-act=go]'), introTitle: txt('.sheet h2'),
+    run: vis('.gauge'), num: txt('.gauge [data-el=num]'), left: txt('[data-el=left]'), hint: txt('.hud [data-el=hint]'), title: txt('.hud-top'),
+    paywall: vis('#price-top'), cam: v ? v.videoWidth + 'x' + v.videoHeight + ' ' + ((v.srcObject && v.srcObject.getVideoTracks()[0] || {}).label || '') : '', err: vis('[data-act=retry]') ? txt('.hud') .slice(0, 200) : '',
+    audio: E.audio, longtasks: E.longtasks, errors: E.errors || [] };`;
+
+let c = await connect('kids-test.com');
+const ev = async (expr) => { try { return await c.evaluate(expr); } catch (e) { if (/ws|timeout|closed/i.test(String(e))) { c = await connect('kids-test.com'); return c.evaluate(expr); } throw e; } };
+const run = (body) => ev(`(() => { ${body} })()`);
+const click = (css) => run(`const e = document.querySelector(${JSON.stringify(css)}); if (!e) return false; e.click(); return true;`);
+const setVal = (css, v) => run(`const e = document.querySelector(${JSON.stringify(css)}); if (!e) return false; e.value = ${JSON.stringify(v)}; e.dispatchEvent(new Event('input', { bubbles: true })); return true;`);
+
+note('start', { url: URL0 });
+await run(`try { localStorage.clear(); localStorage.setItem('sporttest.consent', 'necessary'); } catch (e) {} location.href = ${JSON.stringify(URL0)}; return 1;`);
+await wait(4000);
+c.close(); c = await connect('kids-test.com');
+await ev(INIT);
+note('waiting', { msg: 'ЖДУ касания «Start the test» на телефоне' });
+shot('landing');
+let last = '', lastHud = '', since = Date.now(), introSince = 0, a0 = 0, l0 = 0, e0 = 0, lastPeriodic = 0, camLogged = '', prepClicked = 0;
+const steps = {};
+for (;;) {
+  await wait(300);
+  let s;
+  try { await ev(INIT); s = await run(STATE); } catch (e) { note('eval_error', { msg: String(e).slice(0, 160) }); await wait(1000); continue; }
+  for (const a of s.audio.slice(a0)) note('voice', a); a0 = s.audio.length;
+  for (const ms of s.longtasks.slice(l0)) note('freeze', { ms }); l0 = s.longtasks.length;
+  for (const m of s.errors.slice(e0)) note('page_error', { msg: m }); e0 = s.errors.length;
+  if (s.cam && s.cam !== camLogged) { camLogged = s.cam; note('camera', { info: s.cam }); }
+  const key = s.paywall ? 'paywall' : s.err ? 'camera_error' : s.run ? `run:${s.title}` : s.intro ? `intro:${s.introTitle}` : s.framing ? 'framing' : s.stage ? 'stage' : `${s.step}${s.step === 'quiz' ? ':' + s.quizIndex : ''}`;
+  if (key !== last) {
+    if (last) { steps[last] = +((Date.now() - since) / 1000).toFixed(1); note('step_end', { step: last, sec: steps[last] }); }
+    last = key; since = Date.now(); introSince = s.intro ? Date.now() : 0;
+    note('screen', { step: key, title: s.qtitle || s.introTitle || s.title, err: s.err || undefined, shot: shot(key) });
+  }
+  if (s.run) {
+    const h = `${s.num}|${s.left}|${s.hint}`;
+    if (h !== lastHud) { lastHud = h; note('hud', { ex: s.title, num: s.num, left: s.left, hint: s.hint }); }
+    if (Date.now() - lastPeriodic > 2500) { lastPeriodic = Date.now(); shot('run'); }
+  }
+  if (s.framing && Date.now() - lastPeriodic > 3000) { lastPeriodic = Date.now(); note('framing', { msg: s.frameMsg }); shot('framing'); }
+  try {
+    if (process.env.E2E_DRY && s.step === 'landing') { await wait(800); await click('[data-act=start]'); }
+    else if (process.env.E2E_DRY && s.step === 'prep') { note('dry_stop', { steps }); break; }
+    else if (s.step === 'quiz' && !s.stage) {
+      if (await run('return !!document.querySelector("[data-el=cm]")')) { await wait(600); await setVal('[data-el=cm]', BODY.cm); await setVal('[data-el=kg]', BODY.kg); await wait(500); await click('[data-act=next]'); await wait(500); }
+      else { const v = ANSWERS[IDS[s.quizIndex]]; await wait(900); if (v) await click(`[data-act=pick][data-v="${v}"]`); await wait(500); }
+    } else if (s.step === 'prep' && !s.stage && Date.now() - prepClicked > 8000) {
+      await wait(1500); prepClicked = Date.now();
+      note('action', { what: 'нажал «включить камеру»' }); await click('[data-act=cam]'); await wait(2000);
+    } else if (s.intro && introSince && Date.now() - introSince > 30000) { note('action', { what: 'рука не распознана за 30 с — нажал «Старт»' }); introSince = Date.now(); await click('.sheet [data-act=go]'); }
+    else if (s.paywall) {
+      await wait(2500);
+      note('paywall', { msg: 'пейвол: снимаю страницу целиком' });
+      const h = await run('return document.documentElement.scrollHeight'), vh = await run('return window.innerHeight');
+      for (let y = 0, i = 0; y < h && i < 12; y += vh * 0.85, i++) { await run(`window.scrollTo(0, ${Math.round(y)}); return 1;`); await wait(600); shot(`paywall-${i}`); }
+      await run('window.scrollTo(0, 0); return 1;');
+      note('done', { total_sec: sec(), steps });
+      break;
+    }
+  } catch (e) { note('action_error', { step: key, msg: String(e).slice(0, 160) }); }
+  if (sec() > 1800) { note('timeout'); break; }
+}
+fs.writeFileSync(path.join(OUT, 'summary.json'), JSON.stringify({ url: URL0, total_sec: sec(), steps }, null, 2));
+c.close();
+console.log('OUT', OUT);
+process.exit(0);
