@@ -61,19 +61,30 @@ function start() {
 
 // Метки для сервера (покупка в Meta через Conversions API): клик из рекламы, браузер, UTM, согласие.
 // Уходят в заказ Paddle (customData), оттуда — в вебхук. fbclid берём из адреса первого захода (sessionStorage).
+// 26.11: на iPhone Safari sessionStorage оказался пуст к моменту оплаты (метки не дошли до заказа), поэтому метки
+// дублируются в localStorage на сутки и при оплате дочитываются из адреса, если он ещё с метками.
 const AD = 'sporttest.ad';
-try {
-  const q = new URLSearchParams(location.search);
-  if (q.get('fbclid') || q.get('utm_source')) {
+const AD_KEYS = ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+const adFromUrl = () => {
+  try {
+    const q = new URLSearchParams(location.search);
+    if (!q.get('fbclid') && !q.get('utm_source')) return null;
     const ad = { ts: Date.now() };
-    for (const k of ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) if (q.get(k)) ad[k] = q.get(k).slice(0, 200);
-    sessionStorage.setItem(AD, JSON.stringify(ad));
+    for (const k of AD_KEYS) if (q.get(k)) ad[k] = q.get(k).slice(0, 200);
+    return ad;
+  } catch { return null; }
+};
+const firstAd = adFromUrl();
+if (firstAd) { for (const st of ['sessionStorage', 'localStorage']) { try { window[st].setItem(AD, JSON.stringify(firstAd)); } catch { /* нет доступа */ } } }
+const readAd = () => {
+  for (const st of ['sessionStorage', 'localStorage']) {
+    try { const a = JSON.parse(window[st].getItem(AD) || 'null'); if (a && a.ts && Date.now() - a.ts < 86400000) return a; } catch { /* нет */ }
   }
-} catch { /* нет доступа */ }
+  return firstAd || adFromUrl() || {};
+};
 const cookie = (n) => { try { const m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')); return m ? decodeURIComponent(m[1]) : ''; } catch { return ''; } };
 export function adContext() {
-  let ad = {};
-  try { ad = JSON.parse(sessionStorage.getItem(AD) || '{}') || {}; } catch { /* нет */ }
+  const ad = readAd();
   const out = { consent: consent || 'none', url: location.origin + location.pathname, ua: navigator.userAgent.slice(0, 400) };
   for (const k of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) if (ad[k]) out[k] = ad[k];
   // Метки Meta — только с согласием (UK/ЕС); без него сервер всё равно получит факт покупки, но без привязки к клику
