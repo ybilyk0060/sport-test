@@ -371,6 +371,7 @@ export default {
     liveLead: (email) => `Sign in with ${email} and premium stays unlocked while your subscription is active. The plan continues in the app, with day 1 today.`,
     liveLeadNoEmail: 'Sign in with the email you paid with, and premium stays unlocked while your subscription is active.',
     soonTitle: 'Coming soon: our apps, included',
+    soonShort: 'Coming soon: premium in our apps Kidsney, Kidsney Zoo and Chill Move — included in your subscription. We’ll email you.',
     soonLead: 'Premium in Kidsney, Kidsney Zoo and Chill Move will become part of your subscription at no extra cost. You’ll sign in with your email, and we’ll let you know as soon as it’s ready.',
     planReady: 'Your 4-week plan is ready. Day 1 is today.',
     growthTitle: 'What to work on',
@@ -386,6 +387,7 @@ export default {
 
   report: {
     confidence: { high: 'Strong match: backed by the test results', medium: 'Good match: partly backed by the test', low: 'Possible match: based mostly on your answers' },
+    howTitle: 'How we measured',
     howMeasured: 'How we measured: one-leg balance is adapted from EUROFIT, the forward bend from the German Motor Test. Running in place and jumping jacks show speed, coordination and rhythm; we compare them with other children who took our test.',
     bodyNote: 'Height and weight only help us favor joint-friendly sports. We use the international child BMI cut-offs (IOTF, Cole et al., BMJ 2000). Your data stays on your device.',
     title: 'Full report',

@@ -370,6 +370,7 @@ export default {
     liveLead: (email) => `Melden Sie sich mit ${email} an – Premium bleibt freigeschaltet, solange Ihr Abo aktiv ist. Der Plan geht in der App weiter, Tag 1 ist heute.`,
     liveLeadNoEmail: 'Melden Sie sich mit der E-Mail-Adresse an, mit der Sie bezahlt haben – Premium bleibt freigeschaltet, solange Ihr Abo aktiv ist.',
     soonTitle: 'Bald: unsere Apps inklusive',
+    soonShort: 'Bald: Premium in unseren Apps Kidsney, Kidsney Zoo und Chill Move – inklusive in Ihrem Abo. Wir schreiben Ihnen.',
     soonLead: 'Premium in Kidsney, Kidsney Zoo und Chill Move wird ohne Aufpreis Teil Ihres Abos. Sie melden sich dann mit Ihrer E-Mail-Adresse an – wir geben Bescheid, sobald es so weit ist.',
     planReady: 'Ihr 4-Wochen-Plan steht. Tag 1 ist heute.',
     growthTitle: 'Woran Sie arbeiten können',
@@ -385,6 +386,7 @@ export default {
 
   report: {
     confidence: { high: 'Starke Übereinstimmung: durch die Testergebnisse gestützt', medium: 'Gute Übereinstimmung: teilweise durch den Test gestützt', low: 'Mögliche Übereinstimmung: vor allem nach Ihren Antworten' },
+    howTitle: 'Wie wir gemessen haben',
     howMeasured: 'So haben wir gemessen: Der Einbeinstand ist an EUROFIT angelehnt, die Rumpfbeuge an den Deutschen Motorik-Test. Laufen auf der Stelle und Hampelmann zeigen Schnelligkeit, Koordination und Rhythmus; wir vergleichen sie mit anderen Kindern, die unseren Test gemacht haben.',
     bodyNote: 'Größe und Gewicht nutzen wir nur, um gelenkschonende Sportarten zu bevorzugen. Grundlage sind die internationalen BMI-Grenzwerte für Kinder (IOTF, Cole et al., BMJ 2000). Die Angaben bleiben auf Ihrem Gerät.',
     title: 'Vollständiger Bericht',

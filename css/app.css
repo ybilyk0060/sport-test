@@ -410,3 +410,8 @@ button, .btn, .opt, .glass-btn, .pill-link, a.btn, [data-act] { -webkit-user-sel
 .over-bottom .raise { padding: 6px 10px; font-size: 14px; }
 .over-bottom .raise svg { width: 44px; height: 44px; }
 .over-bottom .btn { min-height: 46px; font-size: 17px; }
+
+/* Страница после оплаты: виды спорта открыты сразу, приложения одной строкой */
+.sports-open { display: grid; gap: 10px; }
+.apps-soon { background: #f4efe6; border-radius: 14px; padding: 10px 14px; color: var(--muted); }
+.small-sec summary { font-size: 15px; }

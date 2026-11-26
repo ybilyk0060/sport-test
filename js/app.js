@@ -344,6 +344,7 @@ function storeLinks(k, a) {
 function appsBlock() {
   const A = T.apps, mode = appAccess();
   if (mode === 'off') return '';
+  if (mode === 'soon') return `<p class="apps-soon small">📱 ${esc(A.soonShort)}</p>`;
   const live = mode === 'live';
   const lead = live ? (state.email ? A.liveLead(state.email) : A.liveLeadNoEmail) : A.soonLead;
   const cards = appsByAge().map(({ k, a, fits }) => {
@@ -406,18 +407,20 @@ function fullReport(justPaid = false) {
   const tip = homePlan.tips[0];
   screen(`${justPaid ? `<p class="tip">${esc(P.paidOk)}</p>` : ''}
     <div class="rep-head">${s ? `<small>${esc(profile.qualities[s].level >= 3 ? R.strongest : R.strongestBest)}</small><h1>${esc(R.qualities[s].name)}</h1>` : `<h1>${esc(R.title)}</h1>`}<p>${esc(R.summary[profile.summary])}</p>${bars}</div>
+    <!-- Порядок после оплаты (Юрий 26.11: не перегружать): то, за что заплатили (3 вида спорта) — сразу и открыто;
+         затем одна следующая тренировка; подробности (недели программы, числа, карточка, методика) свёрнуты. -->
+    <section class="sports-open"><h2 class="sec-title">${esc(P.sportsTitle)}</h2>
+      ${sports.map((x, i) => `<div class="sport-row"><span class="n">${i + 1}</span><div><b>${esc(P.sports[x.sport].name)}</b><span class="small muted">${esc(P.sports[x.sport].ex)}</span><span class="conf c-${x.confidence}">${esc(P.confidence[x.confidence])}</span><span class="small">${x.reasons.slice(0, 2).map((r) => esc(P.reasons[r] || r)).join(' · ')}</span></div></div>`).join('')}
+      <p class="small muted">${esc(P.sportsNote)}</p>${tip ? `<p class="tip">${esc(P[tip])}</p>` : ''}</section>
     ${pb.card}
     ${growthBlock(profile)}
     ${appsBlock()}
-    <details class="sec"><summary>${esc(P.sportsTitle)}</summary>
-      ${sports.map((x, i) => `<div class="sport-row"><span class="n">${i + 1}</span><div><b>${esc(P.sports[x.sport].name)}</b><span class="small muted">${esc(P.sports[x.sport].ex)}</span><span class="conf c-${x.confidence}">${esc(P.confidence[x.confidence])}</span><span class="small">${x.reasons.map((r) => esc(P.reasons[r] || r)).join(' · ')}</span></div></div>`).join('')}
-      <p class="small muted">${esc(P.sportsNote)}</p>${tip ? `<p class="tip">${esc(P[tip])}</p>` : ''}</details>
     ${pb.plan}
     <details class="sec"><summary>${esc(P.resultsTitle)}</summary><ul class="facts">${factLines(state.results).map((f) => `<li>${esc(f)}</li>`).join('')}</ul><p class="small muted">${esc(R.shortNote)}</p></details>
 
     <details class="sec"><summary>${esc(P.cardTitle)}</summary><canvas class="sharecard" width="1080" height="1350"></canvas>
       <button class="btn" data-act="share">${esc(P.share)}</button><button class="btn line" data-act="download">${esc(P.download)}</button></details>
-    <p class="small muted">${esc(T.report.howMeasured)} ${esc(T.landing.disclaimer)}${state.quiz && state.quiz.build ? ` ${esc(T.report.bodyNote)}` : ''}</p>
+    <details class="sec small-sec"><summary>${esc(T.report.howTitle)}</summary><p class="small muted">${esc(T.report.howMeasured)} ${esc(T.landing.disclaimer)}${state.quiz && state.quiz.build ? ` ${esc(T.report.bodyNote)}` : ''}</p></details>
     <div class="foot-links"><span class="small muted">${esc(subLine())}</span><button class="link" data-act="manage">${esc(T.sub.manage)}</button><button class="link" data-act="again">${esc(R.again)}</button></div>${legalLinks()}`, {
     share: async () => {
       track('card_share');
