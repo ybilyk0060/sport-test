@@ -104,8 +104,11 @@ for (;;) {
       if (await run('return !!document.querySelector("[data-el=cm]")')) { await wait(600); await setVal('[data-el=cm]', BODY.cm); await setVal('[data-el=kg]', BODY.kg); await wait(500); await click('[data-act=next]'); await wait(500); }
       else { const v = ANSWERS[IDS[s.quizIndex]]; await wait(900); if (v) await click(`[data-act=pick][data-v="${v}"]`); await wait(500); }
     } else if (s.step === 'prep' && !s.stage && Date.now() - prepClicked > 8000) {
-      await wait(1500); prepClicked = Date.now();
-      note('action', { what: 'нажал «включить камеру»' }); await click('[data-act=cam]'); await wait(2000);
+      // 26.11: камеру включает человек своим касанием. Если включить её кликом из кода (не жест пользователя), iOS глушит
+      // голос страницы на всё упражнение; руками в Safari звук есть (проверено Юрием). Без касания ждём; AUTO_CAM=1 — по-старому.
+      prepClicked = Date.now();
+      if (process.env.AUTO_CAM) { await wait(1500); note('action', { what: 'нажал «включить камеру» кодом (звук может пропасть)' }); await click('[data-act=cam]'); await wait(2000); }
+      else note('waiting', { msg: 'ЖДУ касания «включить камеру» на телефоне' });
     } else if (s.intro && introSince && Date.now() - introSince > 30000) { note('action', { what: 'рука не распознана за 30 с — нажал «Старт»' }); introSince = Date.now(); await click('.sheet [data-act=go]'); }
     else if (s.paywall && !paywallDone) {
       paywallDone = true;

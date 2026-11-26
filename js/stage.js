@@ -12,6 +12,7 @@ import { createRaiseHand } from './gesture.js?v=bc3acf8-mwxp73fq';
 import { recording } from './analytics.js?v=bc3acf8-mwxp73fq';
 import { demoSvg } from './demos.js?v=bc3acf8-mwxp73fq';
 import { EX_QUALITY } from './scoring.js?v=bc3acf8-mwxp73fq';
+import { greenOverlay } from './greenkey.js?v=bc3acf8-mwxp73fq';
 
 const env = detectEnv();
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -90,7 +91,7 @@ const videoSrc = (url) => videoBlobs.get(url) || url;
 export function prefetchVideos() {
   for (const p of plan()) {
     const ex = CONFIG.exercises[p.key]; if (!ex) continue;
-    const url = ex.vVideo || ex.localVideo || (ex.video ? CONFIG.mediaBase + ex.video : null);
+    const url = ex.gVideo || ex.vVideo || ex.localVideo || (ex.video ? CONFIG.mediaBase + ex.video : null);
     const poster = ex.vPoster || ex.localPoster || (ex.poster ? CONFIG.mediaBase + ex.poster : null);
     if (poster) { const im = new Image(); im.src = poster; }
     if (!url || videoBlobs.has(url)) continue;
@@ -192,8 +193,16 @@ function intro(p, i, n) {
   return new Promise((resolve) => {
     inFrame = false;
     const handHtml = `<div class="raise wait"><svg viewBox="0 0 80 80" aria-hidden="true"><circle class="r-bg" cx="40" cy="40" r="${HAND_R}"/><circle class="r-fg" data-el="ring" cx="40" cy="40" r="${HAND_R}" stroke-dasharray="${HAND_C}" stroke-dashoffset="${HAND_C}"/><text x="40" y="52" text-anchor="middle" font-size="34">✋</text></svg><span>${esc(T.cam.raiseHand)}</span></div>`;
-    hud.innerHTML = introSheet(p, i, n, `${handHtml}<button class="btn" data-act="go">${esc(T.cam.go)}</button><button class="btn ghost" data-act="skip-ex">${esc(T.cam.skipEx)}</button>`);
     const ex = CONFIG.exercises[p.key];
+    // Есть ролик на зелёном фоне — панда во весь экран поверх живой камеры (Юрий 26.11), иначе карточка с роликом
+    let stopKey = null;
+    if (ex.gVideo) {
+      hud.innerHTML = `${topBar(`${exOf(i, n)} · ${exName(p.key)}`, { switchBtn: false })}<canvas class="panda-key" aria-hidden="true"></canvas><video class="pk-src" playsinline muted loop autoplay preload="auto" src="${videoSrc(ex.gVideo)}"></video>
+        <div class="over-bottom">${handHtml}<button class="btn" data-act="go">${esc(T.cam.go)}</button><button class="btn ghost" data-act="skip-ex">${esc(T.cam.skipEx)}</button></div>`;
+      const sv = $('video.pk-src', hud); sv.play().catch(() => {});
+      stopKey = greenOverlay($('canvas.panda-key', hud), sv);
+      if (!stopKey) { sv.classList.add('plain'); } // нет WebGL — ролик как есть
+    } else hud.innerHTML = introSheet(p, i, n, `${handHtml}<button class="btn" data-act="go">${esc(T.cam.go)}</button><button class="btn ghost" data-act="skip-ex">${esc(T.cam.skipEx)}</button>`);
     preloadClips([...Object.keys(T.hints).map((h) => 'hint_' + h), ...Object.keys(T.hints), ...(ex.coach ? [1, 2].map((n) => ex.coach + n) : []), 'ui_raise_hand']);
     // «Далі!» / «Останнє!», для вправи на підлозі — «Телефон на підлогу!», затем полная инструкция (пока её нет — короткий клип студии)
     // Поднятая рука запускает упражнение только после инструкции (прогон 26.11: рука срабатывала на 4-й секунде 17-секундной инструкции,
@@ -211,7 +220,7 @@ function intro(p, i, n) {
     let remindTimer = 0;
     let ended = false;
     const end = (v, how) => {
-      if (ended) return; ended = true; clearTimeout(remindTimer);
+      if (ended) return; ended = true; clearTimeout(remindTimer); if (stopKey) stopKey();
       if (stopLoop) { stopLoop(); stopLoop = null; }
       track('exercise_go', { key: p.key, how });
       resolve(v);

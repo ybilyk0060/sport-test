@@ -391,3 +391,13 @@ button, .btn, .opt, .glass-btn, .pill-link, a.btn, [data-act] { -webkit-user-sel
 .sheet.show .panda.vert { object-position: center 30%; background: #f3ece2; }
 .sheet.show .panda.vert { object-fit: contain; object-position: center; background: #ece4d8; }
 .sheet.show > p:not(.note):not(.small) { display: none; }
+
+/* Панда поверх камеры (зелёный фон вырезан в js/greenkey.js) */
+.panda-key { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.pk-src { position: absolute; width: 2px; height: 2px; opacity: 0; pointer-events: none; }
+.pk-src.plain { inset: 0; width: 100%; height: 100%; opacity: 1; object-fit: contain; }
+.over-bottom { margin-top: auto; display: grid; gap: 8px; position: relative; }
+.over-bottom .raise { background: rgba(255, 255, 255, .9); }
+.over-bottom .btn { min-height: 50px; }
+.over-bottom .btn.ghost { min-height: 34px; font-size: 14px; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.6); background: none; box-shadow: none; }
+.over-bottom .raise { color: var(--ink); }
