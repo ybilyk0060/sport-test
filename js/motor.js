@@ -93,16 +93,21 @@ export function createSideJumpRun(opts) {
 // и прямые ноги считались согнутыми, а уровень считался от неверной голени. Поэтому колени и щиколотки запоминаем СТОЯ
 // (во время наклона они не двигаются), уровень меряем от них, а согнутые колени ловим по опусканию колена ниже стоячего
 // (колено при сгибе лицом к камере уходит вниз). Ребёнок касается и сразу встаёт: удержание HOLD_MS 0,4 с (было 1 с — не засчитывалось).
-export const BEND = { L1: -0.6, L2: 0.45, L3: 0.85, L4: 1.0, KNEE_DROP: 0.25, HOLD_MS: 400, UP_MS: 500, ATTEMPTS: 2, START_T: -0.3, UP_T: -0.6 };
+// Прогон №5: наклон до середины голени длился 0,35 с, и при переходе с уровня на уровень таймер удержания сбрасывался —
+// ни один уровень не засчитался. Теперь каждый уровень держит своё время (кисть ниже порога непрерывно HOLD_MS 0,3 с),
+// и меряем по кончикам пальцев (точки 19/20), а не по запястью: «достал до носков» — это пальцы.
+export const BEND = { L1: -0.6, L2: 0.45, L3: 0.85, L4: 1.0, KNEE_DROP: 0.25, HOLD_MS: 300, UP_MS: 500, ATTEMPTS: 2, START_T: -0.3, UP_T: -0.6 };
 export function bendLevel(t) { return t >= BEND.L4 ? 4 : t >= BEND.L3 ? 3 : t >= BEND.L2 ? 2 : t >= BEND.L1 ? 1 : 0; }
 export function createBendRun(opts) {
   const { on } = opts;
-  let best = 0, attempts = 0, bentKnees = 0, ref = null, inBend = false, cand = 0, candSince = null, attemptBest = 0, kneeWarnAt = -1e9, upSince = null;
+  let best = 0, attempts = 0, bentKnees = 0, ref = null, inBend = false, attemptBest = 0, kneeWarnAt = -1e9, upSince = null;
+  const since = [null, null, null, null, null]; // с какого момента кисть непрерывно ниже порога уровня 1..4
   return baseRun(opts, {
     frame(lm, now) {
       if (!lm || lm.length < 29) return null;
-      const lk = lm[25], rk = lm[26], la = lm[27], ra = lm[28], lw = lm[15], rw = lm[16];
-      const wy = Math.max(visible(lw, 0.3) ? lw.y : -1, visible(rw, 0.3) ? rw.y : -1);
+      const lk = lm[25], rk = lm[26], la = lm[27], ra = lm[28], lw = lm[15], rw = lm[16], li = lm[19], ri = lm[20];
+      const tip = (f, w) => (visible(f, 0.3) ? f.y : visible(w, 0.3) ? w.y : -1);
+      const wy = Math.max(tip(li, lw), tip(ri, rw));
       if (!inBend) {
         // стоя: запоминаем колени и щиколотки (сглаживаем)
         if (![lk, rk, la, ra].every((p) => visible(p, 0.4))) return null;
@@ -115,13 +120,15 @@ export function createBendRun(opts) {
       const t = (wy - ref.k) / shin;
       const kneeY = visible(lk, 0.4) && visible(rk, 0.4) ? mid(lk, rk).y : ref.k;
       const kneesOk = kneeY - ref.k < BEND.KNEE_DROP * shin;
-      if (!inBend && t >= BEND.START_T) { inBend = true; attemptBest = 0; upSince = null; }
+      if (!inBend && t >= BEND.START_T) { inBend = true; attemptBest = 0; upSince = null; since.fill(null); }
       if (inBend) {
-        if (!kneesOk) { cand = 0; candSince = null; if (now - kneeWarnAt > 3000) { kneeWarnAt = now; bentKnees++; on.hint && on.hint('bend_knees_straight'); } }
+        if (!kneesOk) { since.fill(null); if (now - kneeWarnAt > 3000) { kneeWarnAt = now; bentKnees++; on.hint && on.hint('bend_knees_straight'); } }
         else {
           const lv = bendLevel(t);
-          if (lv !== cand) { cand = lv; candSince = now; }
-          if (cand > attemptBest && now - candSince >= BEND.HOLD_MS) { attemptBest = cand; if (attemptBest > best) { best = attemptBest; on.count && on.count(best); } }
+          for (let l = 1; l <= 4; l++) {
+            if (lv >= l) { since[l] = since[l] ?? now; if (l > attemptBest && now - since[l] >= BEND.HOLD_MS) { attemptBest = l; if (l > best) { best = l; on.count && on.count(best); } } }
+            else since[l] = null;
+          }
         }
         if (t < BEND.UP_T) { upSince = upSince ?? now; if (now - upSince >= BEND.UP_MS) { inBend = false; attempts++; if (attempts >= BEND.ATTEMPTS || best >= 4) return 'complete'; } }
         else upSince = null;

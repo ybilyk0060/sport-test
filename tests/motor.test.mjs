@@ -9,7 +9,7 @@ function stand({ dx = 0, wristY = 0.55, hipDrop = 0, kneeDrop = 0, ankleUp = 0, 
   p[11] = P(0.45, 0.30 + hipDrop); p[12] = P(0.55, 0.30 + hipDrop); p[23] = P(0.47, 0.55 + hipDrop); p[24] = P(0.53, 0.55 + hipDrop);
   p[25] = P(0.47, 0.75 + kneeDrop); p[26] = P(0.53, 0.75 + kneeDrop);
   if (hipVis != null) { p[23].visibility = hipVis; p[24].visibility = hipVis; } p[27] = P(0.47, 0.95 - ankleUp); p[28] = P(0.53, 0.95 - ankleUp);
-  p[15] = P(0.44, wristY); p[16] = P(0.56, wristY);
+  p[15] = P(0.44, wristY); p[16] = P(0.56, wristY); p[19] = P(0.44, wristY); p[20] = P(0.56, wristY);
   return p;
 }
 function sim(make, frames, opts) {
@@ -37,7 +37,7 @@ const wristAt = (t) => 0.75 + t * 0.2; // t → y кисти
 r = sim(createBendRun, [[1500, () => stand()], [2500, () => stand({ wristY: wristAt(0.6) })], [1000, () => stand()], [2500, () => stand({ wristY: wristAt(1.1) })], [1000, () => stand()]], { target: 4, capSec: 30 });
 check('лучшая из 2 попыток — 4', r.res.done === 4 && r.res.reason === 'complete', r.res);
 // Коснулся пальцев на миг (0,5 с) — не засчитано; держал 2 с середину голени
-r = sim(createBendRun, [[1500, () => stand()], [500, () => stand({ wristY: wristAt(0.8) })], [2000, () => stand({ wristY: wristAt(0.5) })], [1000, () => stand()], [2000, () => stand({ wristY: wristAt(0.5) })], [1000, () => stand()]], { target: 4, capSec: 30 });
+r = sim(createBendRun, [[1500, () => stand()], [200, () => stand({ wristY: wristAt(0.9) })], [2000, () => stand({ wristY: wristAt(0.5) })], [1000, () => stand()], [2000, () => stand({ wristY: wristAt(0.5) })], [1000, () => stand()]], { target: 4, capSec: 30 });
 check('мгновенное касание не считается — 2', r.res.done === 2, r.res);
 // Согнул колени лицом к камере: колени ушли вниз-вперёд (голень в кадре короче на 30 %), дотянулся до пола — не засчитано, подсказка
 r = sim(createBendRun, [[1500, () => stand()], [2500, () => stand({ wristY: 0.95 + 0.06, kneeDrop: 0.06, hipDrop: 0.08 })], [1000, () => stand()], [2500, () => stand({ wristY: wristAt(0.3) })], [1000, () => stand()]], { target: 4, capSec: 30 });
@@ -52,4 +52,8 @@ check('мигание точек не закрывает попытку — 3', 
 // Прогон 26.11 №2: кисти у стоп — модель подняла «щиколотки» на 0,1, ноги прямые; касание 0,5 с — засчитано 3+
 r = sim(createBendRun, [[1500, () => stand()], [500, () => stand({ wristY: wristAt(0.95), ankleUp: 0.1 })], [1000, () => stand()], [500, () => stand({ wristY: wristAt(1.05), ankleUp: 0.1 })], [1000, () => stand()]], { target: 4, capSec: 30 });
 check('кисти у стоп путают щиколотки, касание 0,5 с — засчитано', r.res.done >= 3 && r.res.metrics.bentKnees === 0, r.res);
+// Прогон №5 (реальные числа): колено 0,605, щиколотка 0,762; кисть плавно вниз до 0,725 и сразу вверх, внизу ~0,4 с — засчитан уровень 2
+const dip = (t0) => (t) => { const x = (t - t0) / 1000; const y = x < 0 ? 0.457 : x < 0.6 ? 0.457 + (0.725 - 0.457) * (x / 0.6) : x < 1.0 ? 0.725 : x < 1.6 ? 0.725 - (0.725 - 0.457) * ((x - 1.0) / 0.6) : 0.457; const p = stand({ wristY: y }); p[25].y = p[26].y = 0.605; p[27].y = p[28].y = 0.762; p[19].y = p[20].y = y; return p; };
+r = sim(createBendRun, [[1500, (t) => dip(1e9)(t)], [2200, dip(1533)], [1500, (t) => dip(1e9)(t)], [2200, dip(5266)], [1500, (t) => dip(1e9)(t)]], { target: 4, capSec: 30 });
+check('быстрый наклон до середины голени (0,4 с внизу) — уровень 2', r.res.done === 2, r.res);
 console.log(fail ? `\n${fail} FAILED` : '\nALL OK'); process.exit(fail ? 1 : 0);
