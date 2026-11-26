@@ -50,7 +50,7 @@ const PHRASES = [
   { key: 'hint_body_too_upright', style: 'hint', text: { de: 'Leg dich flach hin.' } },
   { key: 'jumping_jack_howto', style: 'howto', text: { de: 'Stell dich vor die Kamera und mach Hampelmänner: Beine weit auseinander, Arme hoch. So zählt es!' } },
   { key: 'quadruped_arm_circles_coach_1', style: 'celebrate', text: { de: 'Super gekreist!' } },
-  { key: 'side_bend_coach_1', style: 'celebrate', text: { de: 'Tolle Seitbeuge!' } },
+  { key: 'side_bend_coach_1', style: 'celebrate', text: { de: 'Super zur Seite gebeugt!' } },
   { key: 'side_leg_raise_coach_1', style: 'celebrate', text: { de: 'Super, Bein schön hoch!' } },
 ];
 

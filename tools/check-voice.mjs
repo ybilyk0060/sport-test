@@ -8,6 +8,8 @@ const KID = '/Volumes/KidsneyDrive/dev/kidsney';
 const { generateJson } = await import(`${KID}/scripts/pipeline/lib/gemini.mjs`);
 const { VOICE_FILES } = await import('../js/voice-map.js');
 const langs = process.argv[2] ? [process.argv[2]] : ['en', 'de'];
+// Только эти ключи (через запятую), отчёт тогда в docs/voice-check-keys.md: node tools/check-voice.mjs en good_morning_face_wrong,...
+const ONLY = process.argv[3] ? new Set(process.argv[3].split(',')) : null;
 const NAMES = { en: 'American English', de: 'German (Germany/Austria)' };
 const SCHEMA = { type: 'OBJECT', properties: {
   transcript: { type: 'STRING' },
@@ -21,6 +23,7 @@ let bad = 0;
 for (const lang of langs) {
   out.push(`## ${lang.toUpperCase()}`, '', '| Ключ | Расшифровка | Замечания |', '| --- | --- | --- |');
   for (const [key, rel] of Object.entries(VOICE_FILES[lang] || {})) {
+    if (ONLY && !ONLY.has(key)) continue;
     const file = `assets/audio/${rel}`;
     if (!fs.existsSync(file)) { out.push(`| ${key} | — | файл не найден |`); bad++; continue; }
     try {
@@ -37,5 +40,6 @@ for (const lang of langs) {
   out.push('');
 }
 fs.mkdirSync('docs', { recursive: true });
-fs.writeFileSync('docs/voice-check.md', out.join('\n'));
-console.log(`\nготово: docs/voice-check.md, замечаний ${bad}`);
+const REPORT = ONLY ? 'docs/voice-check-keys.md' : 'docs/voice-check.md';
+fs.writeFileSync(REPORT, out.join('\n'));
+console.log(`\nготово: ${REPORT}, замечаний ${bad}`);
