@@ -105,6 +105,7 @@ export const CONFIG = {
   // Тест до оплаты — только оценка (спецификация v3, Юрий 25.11): телефон стоит на месте, всё лицом к камере.
   // timed: true — считаем повторы за capSec секунд (target не ограничивает). norms — пороги «A / B» в js/scoring.js (NORMS).
   // program — упражнения программы после оплаты (прежний состав теста).
+  // 26.11 (вечер) Юрий: касания плеч в упоре лёжа лицом к камере снова в тесте — последним (телефон на пол), кроме 3–5 лет
   // 26.11 Юрий: до оплаты 4 упражнения стоя (касания плеч ушли в программу); вместо прыжков через полоску — бег на месте с высокими коленями 15 с (быстрота ног; код прыжков остаётся)
   ageGroups: {
     '3-5': { engineAge: 4, plan: [
@@ -125,6 +126,7 @@ export const CONFIG = {
       { key: 'high_knees', target: 15, capSec: 22 },
       { key: 'bend', target: 4, capSec: 30 },
       { key: 'jumping_jack', target: 999, capSec: 20, timed: true },
+      { key: 'shoulder_taps', target: 999, capSec: 20, timed: true },
     ], program: [
       { key: 'jumping_jack', target: 8, capSec: 25 },
       { key: 'arm_circles', target: 6, capSec: 25 },
@@ -139,6 +141,7 @@ export const CONFIG = {
       { key: 'high_knees', target: 15, capSec: 22 },
       { key: 'bend', target: 4, capSec: 30 },
       { key: 'jumping_jack', target: 999, capSec: 20, timed: true },
+      { key: 'shoulder_taps', target: 999, capSec: 20, timed: true },
     ], program: [
       { key: 'jumping_jack', target: 10, capSec: 25 },
       { key: 'arm_circles', target: 8, capSec: 25 },
@@ -153,6 +156,7 @@ export const CONFIG = {
       { key: 'high_knees', target: 15, capSec: 22 },
       { key: 'bend', target: 4, capSec: 30 },
       { key: 'jumping_jack', target: 999, capSec: 20, timed: true },
+      { key: 'shoulder_taps', target: 999, capSec: 20, timed: true },
     ], program: [
       { key: 'jumping_jack', target: 15, capSec: 30 },
       { key: 'arm_circles', target: 10, capSec: 25 },
