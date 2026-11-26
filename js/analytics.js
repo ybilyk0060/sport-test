@@ -137,6 +137,7 @@ export function initConsent() {
     consent = b.dataset.c;
     try { localStorage.setItem(KEY, consent); } catch { /* нет доступа */ }
     el.remove();
+    try { window.posthog && window.posthog.register && window.posthog.register({ consent }); } catch { /* нет */ }
     send('consent_choice', { choice: consent });
     start();
   });
