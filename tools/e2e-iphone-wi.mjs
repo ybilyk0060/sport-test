@@ -55,7 +55,7 @@ const STATE = `
 
 // Поза во время упражнений: компактные точки (кисти, плечи, щиколотки, нос) — для разбора счёта (window.__poseTap в stage.js)
 const POSETAP = `if (!window.__poseBuf) { window.__poseBuf = []; window.__poseTap = (key, lm) => { if (!lm) { window.__poseBuf.push([key, Date.now()]); return; } const f = (i) => [Math.round(lm[i].x * 1000) / 1000, Math.round(lm[i].y * 1000) / 1000, Math.round((lm[i].visibility ?? 1) * 100) / 100]; window.__poseBuf.push([key, Date.now(), f(0), f(11), f(12), f(15), f(16), f(23), f(24), f(27), f(28), f(25), f(26), f(13), f(14)]); }; }`;
-let c = await connect('kids-test.com');
+let c; for (let k = 0; ; k++) { try { c = await connect('kids-test.com'); break; } catch (e) { if (k > 200) throw e; if (k % 10 === 0) console.log('жду вкладку kids-test.com в Safari…'); await new Promise((r) => setTimeout(r, 3000)); } }
 const ev = async (expr) => { try { return await c.evaluate(expr); } catch (e) { if (/ws|timeout|closed|domain/i.test(String(e))) { c = await connect('kids-test.com'); return c.evaluate(expr); } throw e; } };
 const run = (body) => ev(`(() => { ${body} })()`);
 const click = (css) => run(`const e = document.querySelector(${JSON.stringify(css)}); if (!e) return false; e.click(); return true;`);
@@ -63,7 +63,7 @@ const setVal = (css, v) => run(`const e = document.querySelector(${JSON.stringif
 
 note('start', { url: URL0 });
 for (let k = 0; k < 5; k++) { try { await ev('1'); break; } catch (e) { note('connect_retry', { msg: String(e).slice(0, 80) }); await wait(2000); try { c.close(); } catch {} c = await connect('kids-test.com'); } }
-if (!OBSERVE) await run(`try { localStorage.clear(); localStorage.setItem('sporttest.consent', 'necessary'); } catch (e) {} location.href = ${JSON.stringify(URL0)}; return 1;`);
+if (!OBSERVE) await run(`try { localStorage.clear(); ${process.env.ASK_CONSENT ? '' : "localStorage.setItem('sporttest.consent', 'necessary');"} } catch (e) {} location.href = ${JSON.stringify(URL0)}; return 1;`);
 await wait(4000);
 c.close(); c = await connect('kids-test.com');
 await ev(INIT);

@@ -125,9 +125,20 @@ const paddleProvider = {
     const C = CONFIG.paddleCheckout, pr = C && C.prices[currency];
     if (!pr || !pr.price) throw new Error('no paddle price for ' + currency);
     const done = new URL(returnUrl); done.searchParams.set('pay', 'check'); done.searchParams.set('order', orderId);
-    let seenLoaded = false;
+    let seenLoaded = false, codeFallback = false;
+    const code = promoCode(), intro = discount && pr.discount ? { discountId: pr.discount } : {};
     const P = await loadPaddle((e) => {
       const n = e && e.name;
+      // Код из ссылки не принят (исчерпан, истёк, опечатка): Paddle тогда открывает окно по полной цене. Покупателю обещана
+      // цена первого месяца со страницы, поэтому закрываем окно и открываем заново с обычной скидкой первого платежа.
+      if (n === 'checkout.loaded' && code && !codeFallback && !(e.data && e.data.discount)) {
+        codeFallback = true; seenLoaded = true;
+        track('checkout_code_rejected', { provider: 'paddle', order: orderId });
+        try { sessionStorage.removeItem('sporttest.code'); } catch { /* нет доступа */ }
+        P.Checkout.close();
+        setTimeout(() => P.Checkout.open(opts(intro)), 400);
+        return;
+      }
       // Что происходит в окне Paddle (аналитика воронки): открылось, закрыли без оплаты, ошибка оплаты
       if (n === 'checkout.loaded' && !seenLoaded) { seenLoaded = true; track('checkout_open', { provider: 'paddle', order: orderId }); }
       if (n === 'checkout.closed') track('checkout_closed', { provider: 'paddle', order: orderId });
@@ -135,15 +146,16 @@ const paddleProvider = {
       if (n === 'checkout.completed') setTimeout(() => { location.href = done.toString(); }, 300);
     });
     const em = email ? await sha256(email.trim().toLowerCase()) : '';
-    P.Checkout.open({
+    const opts = (disc) => ({
       items: [{ priceId: pr.price, quantity: 1 }],
       // ?code=КОД — промокод Paddle применяется сам (проверочная покупка, партнёрские коды); иначе скидка первого платежа, пока идёт таймер
-      ...(promoCode() ? { discountCode: promoCode() } : discount && pr.discount ? { discountId: pr.discount } : {}),
+      ...disc,
       ...(email ? { customer: { email, ...(country() ? { address: { countryCode: country() } } : {}) } } : {}),
       // order_ref — связь с заказом; остальное — для покупки в Meta с сервера (Conversions API), email только в виде хеша
       customData: { order_ref: orderId, ...adContext(), ...(em ? { em } : {}), ...(country() ? { country: country() } : {}) },
       settings: { displayMode: 'overlay', variant: 'one-page', theme: 'light', locale: lang || 'en', allowLogout: false, successUrl: done.toString() },
     });
+    P.Checkout.open(opts(code ? { discountCode: code } : intro));
   },
   readReturn: wayforpayProvider.readReturn,
   // Ждём вебхук Paddle (обычно секунды): сервер отвечает, оплачен ли заказ
