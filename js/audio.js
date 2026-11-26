@@ -2,8 +2,8 @@
 // Какие клипы есть — js/voice-map.js (генерирует tools/fetch-voice.mjs из манифеста Студії вправ).
 // Звук разблокируется первым нажатием пользователя (требование iOS).
 
-import { VOICE_FILES } from './voice-map.js?v=f0635bb-mwxhtvi9';
-import { LANG } from './i18n/index.js?v=f0635bb-mwxhtvi9';
+import { VOICE_FILES } from './voice-map.js?v=ab82e8f-mwxi0ers';
+import { LANG } from './i18n/index.js?v=ab82e8f-mwxi0ers';
 
 const CLIPS = VOICE_FILES[LANG] || VOICE_FILES.en;
 
