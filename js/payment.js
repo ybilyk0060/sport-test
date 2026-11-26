@@ -11,7 +11,7 @@
 //   2) подтверждение оплаты брать из серверного callback провайдера, а не из адреса возврата;
 //   3) поменять CONFIG.paymentProvider.
 
-import { CONFIG } from './config.js?v=1b46f03-mwwowj7q';
+import { CONFIG } from './config.js?v=223eb56-mwxf1p5z';
 
 const testProvider = {
   name: 'test',
@@ -101,6 +101,15 @@ function country() {
     return map[tz] || null;
   } catch { return null; }
 }
+// Промокод из ссылки (?code=KTQA25X9) запоминается на время визита: при оплате адрес уже может быть очищен
+function promoCode() {
+  try {
+    const c = new URLSearchParams(location.search).get('code');
+    if (c && /^[A-Za-z0-9_-]{3,32}$/.test(c)) sessionStorage.setItem('sporttest.code', c.toUpperCase());
+    return sessionStorage.getItem('sporttest.code');
+  } catch { return null; }
+}
+promoCode();
 const paddleProvider = {
   name: 'paddle',
   get isTest() { return !CONFIG.paddleCheckout || CONFIG.paddleCheckout.env !== 'production'; },
@@ -112,8 +121,8 @@ const paddleProvider = {
     const P = await loadPaddle((e) => { if (e && e.name === 'checkout.completed') setTimeout(() => { location.href = done.toString(); }, 300); });
     P.Checkout.open({
       items: [{ priceId: pr.price, quantity: 1 }],
-      // ?promo=1 — окно без автоматической скидки, чтобы ввести промокод Paddle (проверочная покупка, партнёрские коды)
-      ...(discount && pr.discount && !/[?&]promo=1/.test(location.search) ? { discountId: pr.discount } : {}),
+      // ?code=КОД — промокод Paddle применяется сам (проверочная покупка, партнёрские коды); иначе скидка первого платежа, пока идёт таймер
+      ...(promoCode() ? { discountCode: promoCode() } : discount && pr.discount ? { discountId: pr.discount } : {}),
       ...(email ? { customer: { email, ...(country() ? { address: { countryCode: country() } } : {}) } } : {}),
       customData: { order_ref: orderId },
       settings: { displayMode: 'overlay', variant: 'one-page', theme: 'light', locale: lang || 'en', allowLogout: false, successUrl: done.toString() },

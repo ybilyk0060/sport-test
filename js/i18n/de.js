@@ -1,12 +1,12 @@
 // Deutsch — Deutschland und Österreich. Gleiche Schlüssel wie uk.js / en.js.
 
 export default {
-  meta: { title: 'Der 5-Minuten-Test, der die Stärken Ihres Kindes zeigt', lang: 'de' },
+  meta: { title: 'Der 3-Minuten-Test, der die Stärken Ihres Kindes zeigt', lang: 'de' },
 
   common: { pricing: 'Preise', offer: 'AGB', refund: 'Rückerstattung', contacts: 'Impressum', next: 'Weiter', back: 'Zurück', skip: 'Überspringen', retry: 'Erneut versuchen', close: 'Schließen', privacy: 'Datenschutzerklärung' },
 
   landing: {
-    title: 'Entdecken Sie die Stärken Ihres Kindes in 5 Minuten',
+    title: 'Entdecken Sie die Stärken Ihres Kindes in 3 Minuten',
     promise: 'Ein kurzer Test vor der Handykamera zeigt die Stärken Ihres Kindes und welcher Sport am besten passt.',
     cta: 'Test starten',
     points: ['8 kurze Fragen', '4 kurze Übungen: Gleichgewicht, Laufen auf der Stelle, Rumpfbeuge und Hampelmann', 'Das Video wird auf dem Handy verarbeitet und nirgendwohin gesendet'],
@@ -452,7 +452,7 @@ export default {
     },
   },
 
-  card: { title: 'Bewegungsprofil', sub: 'vorläufiges Ergebnis', strongest: 'Größte Stärke', foot: 'Der 5-Minuten-Stärkentest für Kinder' },
+  card: { title: 'Bewegungsprofil', sub: 'vorläufiges Ergebnis', strongest: 'Größte Stärke', foot: 'Der 3-Minuten-Stärkentest für Kinder' },
 
   payTest: {
     banner: 'TESTMODUS',

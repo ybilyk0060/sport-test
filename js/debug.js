@@ -1,12 +1,12 @@
 // Страница ?debug=1: что определилось на этом телефоне. Владелец присылает её снимок.
 // Подписи здесь служебные (для владельца), поэтому не в файле переводов.
 
-import { detectEnv } from './env.js?v=1b46f03-mwwowj7q';
-import { camStatus, openCamera, queryPermission } from './camera.js?v=1b46f03-mwwowj7q';
-import { poseStatus, preloadPose, detectPose } from './pose.js?v=1b46f03-mwwowj7q';
-import { audioStatus } from './audio.js?v=1b46f03-mwwowj7q';
-import { CONFIG } from './config.js?v=1b46f03-mwwowj7q';
-import { state, store } from './store.js?v=1b46f03-mwwowj7q';
+import { detectEnv } from './env.js?v=223eb56-mwxf1p5z';
+import { camStatus, openCamera, queryPermission } from './camera.js?v=223eb56-mwxf1p5z';
+import { poseStatus, preloadPose, detectPose } from './pose.js?v=223eb56-mwxf1p5z';
+import { audioStatus } from './audio.js?v=223eb56-mwxf1p5z';
+import { CONFIG } from './config.js?v=223eb56-mwxf1p5z';
+import { state, store } from './store.js?v=223eb56-mwxf1p5z';
 
 export function initDebug({ paywallMode, restart, toast }) {
   if (new URLSearchParams(location.search).get('debug') !== '1') return;

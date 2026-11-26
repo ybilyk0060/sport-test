@@ -2,12 +2,12 @@
 // Owner rules: price and payment only on the result screen; nothing medical. Owner 25.11 after audit: «strengths», not «talents»; not a medical assessment.
 
 export default {
-  meta: { title: 'A 5-minute test that shows your child’s strengths', lang: 'en' },
+  meta: { title: 'A 3-minute test that shows your child’s strengths', lang: 'en' },
 
   common: { pricing: 'Pricing', offer: 'Terms', refund: 'Refunds', contacts: 'Contacts', next: 'Next', back: 'Back', skip: 'Skip', retry: 'Try again', close: 'Close', privacy: 'Privacy policy' },
 
   landing: {
-    title: 'Discover your child’s strengths in 5 minutes',
+    title: 'Discover your child’s strengths in 3 minutes',
     promise: 'A short test in front of your phone camera shows your child’s strengths and which sport suits them best.',
     cta: 'Start the test',
     points: ['8 quick questions', '4 short exercises: balance, running in place, a forward bend and jumping jacks', 'Video is processed on your phone and never uploaded'],
@@ -453,7 +453,7 @@ export default {
     },
   },
 
-  card: { title: 'Movement profile', sub: 'preliminary result', strongest: 'Top strength', foot: 'The 5-minute kids’ strengths test' },
+  card: { title: 'Movement profile', sub: 'preliminary result', strongest: 'Top strength', foot: 'The 3-minute kids’ strengths test' },
 
   payTest: {
     banner: 'TEST MODE',
