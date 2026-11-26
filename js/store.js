@@ -2,9 +2,9 @@
 // Чтобы подключить сервер: реализовать те же методы в новом адаптере и выбрать его в CONFIG.storage.
 // Сохраняем: ответы квиза, баллы, состояние подписки и выполненные тренировки, события пути. Видео и точки тела — никогда.
 
-import { CONFIG } from './config.js?v=21c8231-mwy217m6';
-import { detectEnv } from './env.js?v=21c8231-mwy217m6';
-import { send } from './analytics.js?v=21c8231-mwy217m6';
+import { CONFIG } from './config.js?v=05af9ac-mwy2vrzd';
+import { detectEnv } from './env.js?v=05af9ac-mwy2vrzd';
+import { send } from './analytics.js?v=05af9ac-mwy2vrzd';
 
 const NS = 'sporttest.v1.';
 const mem = {};

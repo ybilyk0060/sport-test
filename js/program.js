@@ -5,8 +5,8 @@
 // Плюс одно упражнение на самое слабое качество из теста. Дозировка — от собственного результата ребёнка
 // в тесте и растёт каждую неделю на небольшой шаг. Во 2-й и 3-й тренировках недели — по новому упражнению из Студії.
 
-import { CONFIG } from './config.js?v=21c8231-mwy217m6';
-import { QUALITIES } from './scoring.js?v=21c8231-mwy217m6';
+import { CONFIG } from './config.js?v=05af9ac-mwy2vrzd';
+import { QUALITIES } from './scoring.js?v=05af9ac-mwy2vrzd';
 
 export const WEEKS = 4;
 export const PER_WEEK = 3;
