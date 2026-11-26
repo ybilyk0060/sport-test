@@ -86,10 +86,16 @@ export const CONFIG = {
     zoo: { ages: [3, 5], ios: { url: 'https://apps.apple.com/app/id6835778169', live: false }, android: { url: 'https://play.google.com/store/apps/details?id=tech.kidsney.zoo', live: true } },
     chillmove: { ages: [6, 15], ios: { url: 'https://apps.apple.com/app/id6835860395', live: false }, android: { url: 'https://play.google.com/store/apps/details?id=com.chillmove.app', live: false } },
   },
-  // Подарок подписчику: месяц бесплатно в этих приложениях по промокоду.
-  // Коды настоящие только из стора: App Store Offer Codes (подписки zoo_monthly / family_monthly) и промокоды Google Play.
-  // Пока пулов кодов и сервера выдачи нет — 'test': показывается тестовый код с пометкой, в приложении он не сработает.
-  promoMode: 'test',
+  // Доступ подписчика к приложениям (Юрий 26.11): без промокодов, один аккаунт. Человек входит в приложение по email,
+  // с которым оплатил, и премиум открыт, пока подписка активна (сервер: supabase/functions/sport-test-access).
+  // 'off'  — про приложения ничего не показываем.
+  // 'soon' — до релиза: только после оплаты, в отчёте «скоро войдёт в подписку, сообщим на email». На пейволе не обещаем.
+  // 'live' — когда вход по email есть в приложениях: строка на пейволе, блок с ссылками и «тренировать в приложении» в отчёте.
+  appAccess: 'soon',
+  // Тем, кто закрыл пейвол без оплаты: карточка бесплатного приложения с пробным периодом. Включать после релиза.
+  appsExitOffer: false,
+  // Упражнение для зоны роста (есть и в программе, и в Kidsney Studio)
+  growthExercise: { balance: 'balance_r', speed: 'high_knees', flex: 'bend', coordination: 'jumping_jack', endurance: 'high_knees', arms: 'wall_french_press', legs: 'squats', core: 'crunches', symmetry: 'cross_crawl' },
 
   // --- Набор упражнений по возрасту ---
   // 5 основных вправ студии: зірочка (обличчям) → присідання, біг на місці, нахили (боком) → торкання плечей (обличчям, на підлозі).

@@ -31,6 +31,8 @@ const BREVO = Deno.env.get("BREVO_API_KEY");
 const FROM = Deno.env.get("SPORT_TEST_MAIL_FROM") || "support@kids-test.com";
 const PERIOD_DAYS = 30;
 const CRON_SECRET = Deno.env.get("SPORT_TEST_CRON_SECRET");
+// Приложения в подписке (как CONFIG.appAccess на сайте): 'off' | 'soon' | 'live'. До релиза — 'soon'.
+const APP_ACCESS = Deno.env.get("SPORT_TEST_APP_ACCESS") || "soon";
 
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type", "Access-Control-Allow-Methods": "POST, OPTIONS" };
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...cors, "Content-Type": "application/json" } });
@@ -79,12 +81,45 @@ let lastMailError = "";
 const LOC: Record<string, string> = { en: "en-US", de: "de-DE", uk: "uk-UA" };
 const money = (n: number, cur: string, lang = "en") => new Intl.NumberFormat(LOC[lang] || "en-US", { style: "currency", currency: cur || "USD", minimumFractionDigits: Number.isInteger(n) ? 0 : 2 }).format(n);
 const fmtDate = (d: unknown, lang = "en") => new Intl.DateTimeFormat(LOC[lang] || "en-US", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(String(d)));
+// Строка про приложения в письмах
+function appsLine(lang: string) {
+  if (APP_ACCESS === "live") return lang === "uk" ? "\n\nУ підписку входить преміум у Kidsney, Kidsney Zoo і Chill Move. Встановіть застосунок і увійдіть з цим email."
+    : lang === "de" ? "\n\nIhr Abo enthält Premium in Kidsney, Kidsney Zoo und Chill Move. Installieren Sie die App und melden Sie sich mit dieser E-Mail-Adresse an."
+    : "\n\nYour subscription includes premium in Kidsney, Kidsney Zoo and Chill Move. Install the app and sign in with this email.";
+  if (APP_ACCESS === "soon") return lang === "uk" ? "\n\nСкоро: преміум у наших застосунках Kidsney, Kidsney Zoo і Chill Move стане частиною вашої підписки, нічого докуповувати не доведеться. Ми напишемо, щойно все буде готово."
+    : lang === "de" ? "\n\nBald: Premium in unseren Apps Kidsney, Kidsney Zoo und Chill Move wird ohne Aufpreis Teil Ihres Abos. Wir geben Bescheid, sobald es so weit ist."
+    : "\n\nComing soon: premium in our apps Kidsney, Kidsney Zoo and Chill Move will become part of your subscription at no extra cost. We’ll let you know as soon as it’s ready.";
+  return "";
+}
+// Цепочка после оплаты: день 3, день 7, затем раз в 30 дней приглашение на повторный тест
+function nurtureMail(kind: "d3" | "d7" | "retest", lang: string, link: string) {
+  const L = lang === "uk" || lang === "de" ? lang : "en";
+  const M = {
+    en: {
+      d3: { subject: "How are the first workouts going?", text: `Three days with the program. If you haven’t started yet, today is a good day: a workout takes 7–10 minutes, and the camera counts the reps.\n\nOpen the next workout:\n${link}` },
+      d7: { subject: "Week 1 is behind you", text: `Even two or three short workouts a week add up. In a month, the repeat test will show what has changed.\n\nNext workout:\n${link}${appsLine("en")}` },
+      retest: { subject: "Time for the repeat test: let’s compare", text: `A month has passed since the last test. Take it again (3 minutes), and we’ll show what has changed in balance, speed, flexibility and coordination.\n\nTake the repeat test:\n${link}` },
+    },
+    de: {
+      d3: { subject: "Wie laufen die ersten Trainings?", text: `Drei Tage mit dem Programm. Falls Sie noch nicht angefangen haben: Heute ist ein guter Tag. Ein Training dauert 7–10 Minuten, die Kamera zählt die Wiederholungen.\n\nZum nächsten Training:\n${link}` },
+      d7: { subject: "Die erste Woche ist geschafft", text: `Schon zwei, drei kurze Trainings pro Woche machen einen Unterschied. In einem Monat zeigt der Wiederholungstest, was sich verändert hat.\n\nZum nächsten Training:\n${link}${appsLine("de")}` },
+      retest: { subject: "Zeit für den Wiederholungstest", text: `Seit dem letzten Test ist ein Monat vergangen. Machen Sie ihn noch einmal (3 Minuten) – wir zeigen Ihnen, was sich bei Gleichgewicht, Schnelligkeit, Beweglichkeit und Koordination getan hat.\n\nZum Wiederholungstest:\n${link}` },
+    },
+    uk: {
+      d3: { subject: "Як минають перші тренування?", text: `Три дні з програмою. Якщо ще не почали, сьогодні гарний день: тренування триває 7–10 хвилин, камера сама рахує повтори.\n\nНаступне тренування:\n${link}` },
+      d7: { subject: "Перший тиждень позаду", text: `Навіть два-три короткі тренування на тиждень дають результат. За місяць повторний тест покаже, що змінилося.\n\nНаступне тренування:\n${link}${appsLine("uk")}` },
+      retest: { subject: "Час для повторного тесту", text: `Від останнього тесту минув місяць. Пройдіть його ще раз (3 хвилини), і ми покажемо, що змінилося в рівновазі, швидкості, гнучкості й координації.\n\nПройти повторний тест:\n${link}` },
+    },
+  } as const;
+  const m = M[L][kind];
+  return { subject: m.subject, text: `${m.text}\n\n${L === "de" ? "Fragen" : L === "uk" ? "Питання" : "Questions"}: ${FROM}` };
+}
 function termsMail(lang: string, s: Record<string, unknown>, link: string) {
   const first = money(Number(s.first_amount), String(s.currency), lang), regular = money(Number(s.regular_amount), String(s.currency), lang);
   const until = fmtDate(s.paid_until, lang);
-  if (lang === "uk") return { subject: "Підписку оформлено — тест сильних сторін дитини", text: `Дякуємо! Підписку оформлено.\n\nПерший платіж: ${first} за ${PERIOD_DAYS} днів.\nДалі: ${regular} кожні ${PERIOD_DAYS} днів, перше продовження ${until}, доки ви не скасуєте.\n\nВідкрити програму й керувати підпискою (скасування в 2 дотики) з будь-якого пристрою:\n${link}\n\nПитання: ${FROM}` };
-  if (lang === "de") return { subject: "Abo abgeschlossen — Stärkentest für Kinder", text: `Danke! Ihr Abo ist aktiv.\n\nErste Zahlung: ${first} für ${PERIOD_DAYS} Tage.\nDanach ${regular} alle ${PERIOD_DAYS} Tage, erstmals am ${until}, bis Sie kündigen.\n\nProgramm öffnen und Abo verwalten (Kündigung mit zwei Klicks) – auf jedem Gerät:\n${link}\n\nFragen: ${FROM}` };
-  return { subject: "You’re subscribed — kids’ strengths test", text: `Thank you! Your subscription is active.\n\nFirst payment: ${first} for ${PERIOD_DAYS} days.\nThen ${regular} every ${PERIOD_DAYS} days, starting ${until}, until you cancel.\n\nOpen your child’s program and manage your subscription (cancel in two taps) on any device:\n${link}\n\nQuestions: ${FROM}` };
+  if (lang === "uk") return { subject: "Підписку оформлено — тест сильних сторін дитини", text: `Дякуємо! Підписку оформлено.\n\nПерший платіж: ${first} за ${PERIOD_DAYS} днів.\nДалі: ${regular} кожні ${PERIOD_DAYS} днів, перше продовження ${until}, доки ви не скасуєте.\n\nВідкрити програму й керувати підпискою (скасування в 2 дотики) з будь-якого пристрою:\n${link}${appsLine("uk")}\n\nПитання: ${FROM}` };
+  if (lang === "de") return { subject: "Abo abgeschlossen — Stärkentest für Kinder", text: `Danke! Ihr Abo ist aktiv.\n\nErste Zahlung: ${first} für ${PERIOD_DAYS} Tage.\nDanach ${regular} alle ${PERIOD_DAYS} Tage, erstmals am ${until}, bis Sie kündigen.\n\nProgramm öffnen und Abo verwalten (Kündigung mit zwei Klicks) – auf jedem Gerät:\n${link}${appsLine("de")}\n\nFragen: ${FROM}` };
+  return { subject: "You’re subscribed — kids’ strengths test", text: `Thank you! Your subscription is active.\n\nFirst payment: ${first} for ${PERIOD_DAYS} days.\nThen ${regular} every ${PERIOD_DAYS} days, starting ${until}, until you cancel.\n\nOpen your child’s program and manage your subscription (cancel in two taps) on any device:\n${link}${appsLine("en")}\n\nQuestions: ${FROM}` };
 }
 
 Deno.serve(async (req) => {
@@ -153,7 +188,26 @@ Deno.serve(async (req) => {
           : { subject: `Your subscription renews in 3 days: ${price}`, text: `On ${date} your subscription renews for ${price} for another ${PERIOD_DAYS} days.\n\nIf you don't want to continue, cancel in one tap:\n${link}\n\nQuestions: ${FROM}` };
         if (await mail(s.email, m.subject, m.text)) { await db.from("sport_test_subscriptions").update({ reminded_for: s.paid_until }).eq("id", s.id); sent++; }
       }
-      return json({ ok: true, sent });
+      // Цепочка: день 3 и 7 (onboard_step 1, 2), повторный тест раз в 30 дней. Пропущенные шаги не досылаем: только самый свежий.
+      const now = Date.now();
+      const { data: act } = await db.from("sport_test_subscriptions").select("*").eq("status", "active").gt("paid_until", new Date(now).toISOString())
+        .lte("started_at", new Date(now - 3 * 86400000).toISOString()).not("site", "is", null).limit(500);
+      let nurtured = 0;
+      for (const s of act || []) {
+        const age = (now - Date.parse(String(s.started_at))) / 86400000;
+        const step = Number(s.onboard_step || 0);
+        const due = age >= 7 ? 2 : age >= 3 ? 1 : 0;
+        const retestDue = age >= 28 && (!s.retest_mailed_at || now - Date.parse(String(s.retest_mailed_at)) >= 28 * 86400000);
+        const kind = retestDue ? "retest" : due > step && age < 10 ? (due === 2 ? "d7" : "d3") : null;
+        if (!kind) { if (due > step) await db.from("sport_test_subscriptions").update({ onboard_step: due }).eq("id", s.id); continue; }
+        const token = await issueToken(s.id);
+        const m = nurtureMail(kind, String(s.lang), `${s.site}?sub=${token}`);
+        if (await mail(s.email, m.subject, m.text)) {
+          await db.from("sport_test_subscriptions").update(kind === "retest" ? { retest_mailed_at: new Date(now).toISOString(), onboard_step: Math.max(step, due) } : { onboard_step: due }).eq("id", s.id);
+          nurtured++;
+        }
+      }
+      return json({ ok: true, sent, nurtured });
     }
 
     if (b.action === "restore") {

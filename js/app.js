@@ -234,7 +234,7 @@ function paywallCard(note = '', profile = null) {
     ${sportsTeaser(profile)}
     <div class="focus-box"><small>${esc(P.focusTitle)}</small><b>${esc(focus)}</b></div>
     ${priceBox('price-top')}
-    <h3>${esc(P.inside)}</h3><ul class="checks-list">${P.insideItems.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+    <h3>${esc(P.inside)}</h3><ul class="checks-list">${[...P.insideItems, ...(appAccess() === 'live' ? [T.apps.includedItem] : [])].map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
     <div class="price-mini"><div><b>${esc(money(first))}</b>${on ? ` <s>${esc(money(PRICE.regular))}</s>` : ''}<small>${esc(P.firstLabel(SUB.periodDays))}</small></div><button class="btn" data-act="to-top">${esc(P.unlock)}</button></div>
     <p class="fine">${esc(P.fine(money(first), money(PRICE.regular), SUB.periodDays))}</p>
     ${legalLinks()}
@@ -269,7 +269,7 @@ function result(note = '') {
       <p class="small muted">${esc(R.shortNote)}</p>
       <h2 class="sec-title">${esc(R.profile)}</h2>
       <div class="locked"><div class="locked-list">${qualitiesOf(state.results).filter((q) => q !== s).map(qRowLocked).join('')}</div></div>
-      ${dismissed ? `<div class="sticky-pay"><button class="btn" data-act="pay">${esc(T.paywall.cta(money(firstPrice())))}</button></div><p class="renew">${esc(T.paywall.renew(money(PRICE.regular), SUB.periodDays, fmtDate(Date.now() + SUB.periodDays * DAY)))}</p><p class="terms">${esc(T.paywall.terms)}</p>` : paywallCard(note, profile)}
+      ${dismissed ? `<div class="sticky-pay"><button class="btn" data-act="pay">${esc(T.paywall.cta(money(firstPrice())))}</button></div><p class="renew">${esc(T.paywall.renew(money(PRICE.regular), SUB.periodDays, fmtDate(Date.now() + SUB.periodDays * DAY)))}</p><p class="terms">${esc(T.paywall.terms)}</p>${exitOffer()}` : paywallCard(note, profile)}
       <button class="link center" data-act="again">${esc(R.again)}</button>`;
   }
   screen(body, {
@@ -292,6 +292,7 @@ function result(note = '') {
         .catch(() => { track('pay_error', { provider: payment.name }); toast(T.paywall.payError); });
     },
     'to-top': () => { const el = app.querySelector('#price-top'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); track('paywall_to_top'); },
+    app: (a) => track('app_link', { app: a.dataset.app, where: 'exit_offer' }),
     'not-now': () => { setState({ paywallDismissed: true }); track('paywall_dismissed', { mode: paywallMode }); result(); },
     again: () => { resetState(); track('restart'); landing(); },
   });
@@ -318,27 +319,48 @@ function subLine() {
   return sub.status === 'active' ? S.nextCharge(fmtDate(sub.paidUntil), money(PRICE.regular)) : S.cancelledUntil(fmtDate(sub.paidUntil));
 }
 
-// Наши приложения: по возрасту ребёнка первым идёт подходящее. Подписчику — код на месяц.
-function giftCode(app) {
-  const codes = state.giftCodes || {};
-  if (!codes[app]) { codes[app] = `TEST-${app.toUpperCase().slice(0, 3)}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`; setState({ giftCodes: codes }); }
-  return codes[app];
+// Наши приложения (CONFIG.appAccess). Без промокодов: вход в приложение по email оплаты, премиум открыт, пока подписка активна.
+const appAccess = () => (['off', 'soon', 'live'].includes(CONFIG.appAccess) ? CONFIG.appAccess : 'off');
+const childAge = () => parseInt(state.quiz && state.quiz.age, 10) || 7;
+function appsByAge() {
+  const age = childAge(), fits = (a) => age >= a.ages[0] && age <= a.ages[1];
+  return Object.entries(CONFIG.apps).map(([k, a]) => ({ k, a, fits: fits(a) })).sort((x, y) => y.fits - x.fits);
+}
+function storeLinks(k, a) {
+  const A = T.apps;
+  return [a.ios.live && `<a class="pill-link" href="${esc(a.ios.url)}" target="_blank" rel="noopener" data-act="app" data-app="${k}">${esc(A.ios)}</a>`, a.android.live && `<a class="pill-link" href="${esc(a.android.url)}" target="_blank" rel="noopener" data-act="app" data-app="${k}">${esc(A.android)}</a>`].filter(Boolean).join('');
 }
 function appsBlock() {
-  const A = T.apps, age = parseInt(state.quiz.age, 10) || 7;
-  const fits = (a) => age >= a.ages[0] && age <= a.ages[1];
-  const order = Object.entries(CONFIG.apps).sort(([, a], [, b]) => fits(b) - fits(a));
-  const codes = state.giftCodes || {};
-  return `<p class="small muted">${esc(A.giftLead)}</p>
-    ${order.map(([k, a]) => {
-    const links = [a.ios.live && `<a class="pill-link" href="${esc(a.ios.url)}" target="_blank" rel="noopener" data-act="app" data-app="${k}">${esc(A.ios)}</a>`, a.android.live && `<a class="pill-link" href="${esc(a.android.url)}" target="_blank" rel="noopener" data-act="app" data-app="${k}">${esc(A.android)}</a>`].filter(Boolean).join('');
-    const code = codes[k];
-    return `<div class="app-card"><div><b>${esc(A[k].name)}</b>${fits(a) ? `<span class="tag-ok">${esc(A.forAge)}</span>` : ''}</div><span class="small muted">${esc(A[k].d)}</span>
-      ${links ? `<div class="row-links">${links}</div>` : ''}${a.ios.live && a.android.live ? '' : `<span class="small muted">${esc(A.soon([!a.ios.live && A.ios, !a.android.live && A.android].filter(Boolean).join(' і ')))}</span>`}
-      ${code ? `<div class="code-box"><small>${esc(A.giftCode)}</small><b>${esc(code)}</b><button class="link" data-act="copy-code" data-code="${esc(code)}">${esc(A.copy)}</button>
-        <span class="small">${esc(A.giftHowIos)}</span><span class="small">${esc(A.giftHowAndroid)}</span>${CONFIG.promoMode === 'test' ? `<span class="small" style="color:#b45309;font-weight:600">${esc(A.giftTest)}</span>` : ''}</div>`
-        : `<button class="btn line" data-act="gift" data-app="${k}">${esc(A.giftGet(A[k].name))}</button>`}</div>`;
-  }).join('')}`;
+  const A = T.apps, mode = appAccess();
+  if (mode === 'off') return '';
+  const live = mode === 'live';
+  const lead = live ? (state.email ? A.liveLead(state.email) : A.liveLeadNoEmail) : A.soonLead;
+  const cards = appsByAge().map(({ k, a, fits }) => {
+    const links = live ? storeLinks(k, a) : '';
+    const soon = live && !(a.ios.live && a.android.live) ? `<span class="small muted">${esc(A.soon([!a.ios.live && A.ios, !a.android.live && A.android].filter(Boolean).join(' / ')))}</span>` : '';
+    return `<div class="app-card"><div><b>${esc(A[k].name)}</b>${fits ? `<span class="tag-ok">${esc(A.forAge)}</span>` : ''}</div><span class="small muted">${esc(A[k].d)}</span>${links ? `<div class="row-links">${links}</div>` : ''}${soon}</div>`;
+  }).join('');
+  return `<div class="apps-block"><h2 class="sec-title">${esc(live ? A.liveTitle : A.soonTitle)}</h2><p class="small muted">${esc(lead)}</p>${cards}</div>`;
+}
+// Зоны роста: у каждой конкретное упражнение; когда приложения в подписке — кнопка «тренировать в приложении»
+function growthBlock(profile) {
+  const A = T.apps, R = T.result;
+  const weak = qualitiesOf(state.results).filter((q) => q !== 'symmetry' && profile.qualities[q].level === 1).slice(0, 3);
+  if (!weak.length) return '';
+  const best = appsByAge()[0];
+  const link = appAccess() === 'live' && best && (best.a.ios.live || best.a.android.live)
+    ? (/iphone|ipad|ipod/i.test(navigator.userAgent) && best.a.ios.live ? best.a.ios.url : best.a.android.live ? best.a.android.url : best.a.ios.url) : '';
+  return `<div class="growth"><h2 class="sec-title">${esc(A.growthTitle)}</h2>${weak.map((q) => {
+    const ex = CONFIG.growthExercise[q], name = q === 'balance' ? A.oneLeg : ex && T.ex[ex] ? T.ex[ex].name : '';
+    return `<div class="growth-row"><div><b>${esc(R.qualities[q].name)}</b>${name ? `<span class="small muted">${esc(A.practice(name))}</span>` : ''}</div>${link ? `<a class="pill-link" href="${esc(link)}" target="_blank" rel="noopener" data-act="train-app" data-q="${q}">${esc(A.trainInApp)}</a>` : ''}</div>`;
+  }).join('')}</div>`;
+}
+// Закрыли пейвол без оплаты: бесплатное приложение с пробным периодом (CONFIG.appsExitOffer, после релиза)
+function exitOffer() {
+  if (!CONFIG.appsExitOffer) return '';
+  const best = appsByAge().find((x) => x.fits && (x.a.ios.live || x.a.android.live));
+  if (!best) return '';
+  return `<div class="app-card exit-offer"><b>${esc(T.apps.exitTitle)}</b><span class="small muted">${esc(T.apps.exitLead(T.apps[best.k].name))}</span><div class="row-links">${storeLinks(best.k, best.a)}</div></div>`;
 }
 
 function programBlock(program) {
@@ -350,7 +372,7 @@ function programBlock(program) {
   const unit = (key) => (CONFIG.exercises[key].goal === 'seconds' ? T.report.unitSec : T.report.unitReps);
   const list = (w) => w.items.map((it) => `${esc(T.report.planEx[it.key])} — ${it.target} ${esc(unit(it.key))}`).join('<br>');
   const card = next
-    ? `<div class="next-w"><div class="nw-top"><small>${esc(G.today)} · ${esc(G.month(program.month))} · ${esc(G.workout(next.week, next.day))}</small><small>${esc(G.progress(doneN, total))}</small></div>
+    ? `<div class="next-w">${doneN === 0 ? `<b class="plan-ready">${esc(T.apps.planReady)}</b>` : ''}<div class="nw-top"><small>${esc(G.today)} · ${esc(G.month(program.month))} · ${esc(G.workout(next.week, next.day))}</small><small>${esc(G.progress(doneN, total))}</small></div>
         <div class="prog-bar"><i style="width:${Math.round((doneN / total) * 100)}%"></i></div>
         <div class="small">${list(next)}</div><button class="btn" data-act="workout">${esc(G.start)}</button></div>`
     : `<div class="next-w"><b>${esc(G.allDone)}</b><button class="btn" data-act="retest">${esc(G.retest)}</button></div>`;
@@ -374,7 +396,8 @@ function fullReport(justPaid = false) {
   screen(`${justPaid ? `<p class="tip">${esc(P.paidOk)}</p>` : ''}
     <div class="rep-head">${s ? `<small>${esc(R.strongest)}</small><h1>${esc(R.qualities[s].name)}</h1>` : `<h1>${esc(R.title)}</h1>`}<p>${esc(R.summary[profile.summary])}</p>${bars}</div>
     ${pb.card}
-    <div class="apps-block"><h2 class="sec-title">${esc(T.apps.giftTitle)}</h2>${appsBlock()}</div>
+    ${growthBlock(profile)}
+    ${appsBlock()}
     <details class="sec"><summary>${esc(P.sportsTitle)}</summary>
       ${sports.map((x, i) => `<div class="sport-row"><span class="n">${i + 1}</span><div><b>${esc(P.sports[x.sport].name)}</b><span class="small muted">${esc(P.sports[x.sport].ex)}</span><span class="conf c-${x.confidence}">${esc(P.confidence[x.confidence])}</span><span class="small">${x.reasons.map((r) => esc(P.reasons[r] || r)).join(' · ')}</span></div></div>`).join('')}
       <p class="small muted">${esc(P.sportsNote)}</p>${tip ? `<p class="tip">${esc(P[tip])}</p>` : ''}</details>
@@ -396,9 +419,8 @@ function fullReport(justPaid = false) {
     manage: () => manageSub(),
     workout: () => startWorkout(program),
     retest: () => retest(),
-    app: (a) => track('app_link', { app: a.dataset.app }),
-    gift: (a) => { giftCode(a.dataset.app); track('gift_code', { app: a.dataset.app, mode: CONFIG.promoMode }); const y = window.scrollY; fullReport(); window.scrollTo(0, y); },
-    'copy-code': async (a) => { try { await navigator.clipboard.writeText(a.dataset.code); } catch { /* нет доступа к буферу */ } toast(T.apps.copied); },
+    app: (a) => track('app_link', { app: a.dataset.app, where: 'report' }),
+    'train-app': (a) => track('app_train', { quality: a.dataset.q }),
     again: () => retest(),
   });
   const cv = app.querySelector('canvas.sharecard');
