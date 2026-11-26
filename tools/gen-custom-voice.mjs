@@ -44,6 +44,14 @@ const PHRASES = [
     uk: 'Стань боком до камери, ноги рівні, руки біля плечей. Нахиляйся вперед від стегон з рівною спиною, ніби кланяєшся, і повертайся назад. Камера зарахує, коли ти робиш саме так.',
     en: 'Stand sideways to the camera, legs straight, hands by your shoulders. Bend forward from your hips with a straight back, like a bow, then come back up. The camera counts when you do it just like this.',
     de: 'Stell dich seitlich zur Kamera, Beine gerade, Hände an den Schultern. Beug dich mit geradem Rücken aus der Hüfte nach vorn wie bei einer Verbeugung und richte dich wieder auf. Die Kamera zählt, wenn du es genau so machst.' } },
+  // Исправления по машинной проверке голоса (docs/voice-check.md, 26.11): только язык с ошибкой, остальные остаются из Студии
+  { key: 'good_morning_face_wrong', style: 'hint', text: { en: 'Turn sideways to the camera.' } },
+  { key: 'tuck_jump_face_wrong', style: 'hint', text: { en: 'Turn to face the camera!' } },
+  { key: 'hint_body_too_upright', style: 'hint', text: { de: 'Leg dich flach hin.' } },
+  { key: 'jumping_jack_howto', style: 'howto', text: { de: 'Stell dich vor die Kamera und mach Hampelmänner: Beine weit auseinander, Arme hoch. So zählt es!' } },
+  { key: 'quadruped_arm_circles_coach_1', style: 'celebrate', text: { de: 'Super gekreist!' } },
+  { key: 'side_bend_coach_1', style: 'celebrate', text: { de: 'Tolle Seitbeuge!' } },
+  { key: 'side_leg_raise_coach_1', style: 'celebrate', text: { de: 'Super, Bein schön hoch!' } },
 ];
 
 const auth = bearerFromServiceAccount(process.env);
@@ -51,6 +59,7 @@ let ffmpeg = null;
 try { ffmpeg = createRequire(`${KID}/package.json`)('ffmpeg-static'); } catch { /* без нормализации громкости */ }
 for (const ph of PHRASES) {
   for (const loc of ['uk', 'en', 'de']) {
+    if (!ph.text[loc]) continue;
     const out = `assets/audio/${loc}/custom/${ph.key}.wav`;
     if (fs.existsSync(out) || fs.existsSync(out.replace(/\.wav$/, '.m4a'))) { console.log('уже есть', out); continue; }
     fs.mkdirSync(`assets/audio/${loc}/custom`, { recursive: true });
