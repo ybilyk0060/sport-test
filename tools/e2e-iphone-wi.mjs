@@ -95,7 +95,7 @@ for (;;) {
     if (Date.now() - lastPeriodic > 2500) { lastPeriodic = Date.now(); shot('run'); }
   }
   if (s.framing && Date.now() - lastPeriodic > 3000) { lastPeriodic = Date.now(); note('framing', { msg: s.frameMsg }); shot('framing'); }
-  if (OBSERVE) { if (s.run && /2\/|Move 2/.test(s.title || '')) { note('observe_stop'); break; } continue; }
+  if (OBSERVE) { if (sec() > 600) break; continue; }
   try {
     if (SOUNDCHECK && s.step === 'quiz' && !soundChecked) { soundChecked = true; await run("window.__say && window.__say('balance_howto'); return 1;"); await wait(1500); note('soundcheck', { at: 'анкета, до камеры', ctx: await run("return window.__audioState ? window.__audioState() : 'none'") }); }
     if (SOUNDCHECK && s.intro) { note('soundcheck', { at: 'вступление после камеры', ctx: s.aud, session: s.sess }); await wait(8000); note('soundcheck_end', { ctx: await run("return window.__audioState ? window.__audioState() : 'none'") }); break; }

@@ -404,11 +404,13 @@ function programBlock(program) {
   const doneIds = new Set(done.map((x) => x.id));
   const doneN = program.workouts.filter((w) => doneIds.has(w.id)).length;
   const unit = (key) => (CONFIG.exercises[key].goal === 'seconds' ? T.report.unitSec : T.report.unitReps);
-  const list = (w) => w.items.map((it) => `${esc(T.report.planEx[it.key])} — ${it.target} ${esc(unit(it.key))}`).join('<br>');
+  // Упражнения тренировки строками: значок, название, число крупно (Юрий 26.11: «сделать красивее»)
+  const IC = { jumping_jack: '⭐', arm_circles: '🔄', squats: '🦵', high_knees: '🏃', good_morning: '🙇', pushups: '💪', wall_french_press: '🧱', quadruped_arm_circles: '🐾', crunches: '🔥', glute_bridge: '🌉', side_bend: '↔️', side_leg_raise: '🦶', superman_lifts: '🦸', tuck_jump: '🐸', cross_crawl: '✖️', shoulder_taps: '👋' };
+  const list = (w) => `<div class="ex-list">${w.items.map((it) => `<div class="ex-row"><span class="ex-ic" aria-hidden="true">${IC[it.key] || '•'}</span><span class="ex-n">${esc(T.report.planEx[it.key] || (T.ex[it.key] && T.ex[it.key].name) || it.key)}</span><span class="ex-c"><b>${it.target}</b> ${esc(unit(it.key))}</span></div>`).join('')}</div>`;
   const card = next
     ? `<div class="next-w">${doneN === 0 ? `<b class="plan-ready">${esc(T.apps.planReady)}</b>` : ''}<div class="nw-top"><small>${esc(G.today)} · ${esc(G.month(program.month))} · ${esc(G.workout(next.week, next.day))}</small><small>${esc(G.progress(doneN, total))}</small></div>
         <div class="prog-bar"><i style="width:${Math.round((doneN / total) * 100)}%"></i></div>
-        <div class="small">${list(next)}</div><button class="btn" data-act="workout">${esc(G.start)}</button></div>`
+        ${list(next)}<button class="btn" data-act="workout">${esc(G.start)}</button></div>`
     : `<div class="next-w"><b>${esc(G.allDone)}</b><button class="btn" data-act="retest">${esc(G.retest)}</button></div>`;
   const plan = `<details class="sec"><summary>${esc(G.title)} · ${esc(G.month(program.month))}</summary><p class="small muted">${esc(G.lead(G.focus[program.focus]))}</p><p class="small muted">${esc(String(state.quiz && state.quiz.age).startsWith('3') ? G.who34 : G.who)}</p>${[1, 2, 3, 4].map((wk) => `<div class="plan-week"><b>${esc(G.week(wk))}</b>${program.workouts.filter((w) => w.week === wk).map((w) => `<div class="plan-s"><b>${esc(T.report.session(w.day))}${doneIds.has(w.id) ? ` · ✓ ${esc(G.done)}` : ''}</b>${list(w)}</div>`).join('')}</div>`).join('')}</details>`;
   return { card, plan };
@@ -542,7 +544,12 @@ function boot() {
     return;
   }
   // Освежаем статус подписки с сервера (отмена с другого устройства)
-  if (state.subToken && subapi.subOn()) subapi.status(state.subToken).then((r) => setState({ sub: { ...state.sub, ...subapi.fromServer(r.sub) } })).catch(() => {});
+  // Статус подписки с сервера (отмена на другом устройстве / из письма): если изменился, перерисовать отчёт — иначе внизу оставалось «следующее списание»
+  if (state.subToken && subapi.subOn()) subapi.status(state.subToken).then((r) => {
+    const before = JSON.stringify([state.sub && state.sub.status, state.sub && state.sub.paidUntil]);
+    setState({ sub: { ...state.sub, ...subapi.fromServer(r.sub) } });
+    if (before !== JSON.stringify([state.sub.status, state.sub.paidUntil]) && state.step === 'report') { const y = window.scrollY; fullReport(); window.scrollTo(0, y); }
+  }).catch(() => {});
   if (params.get('s')) {
     const ok = importHandoff(params.get('s'));
     cleanUrl();

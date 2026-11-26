@@ -468,3 +468,11 @@ button, .btn, .opt, .glass-btn, .pill-link, a.btn, [data-act] { -webkit-user-sel
 .hud .left.ok { background: #22a06b; color: #fff; font-size: 28px; padding: 8px 22px; box-shadow: 0 6px 20px rgba(34,160,107,.45); }
 
 .done-big { width: 132px; height: 132px; margin: 0 auto 12px; border-radius: 50%; background: #22a06b; color: #fff; font-size: 84px; font-weight: 800; line-height: 132px; text-align: center; box-shadow: 0 10px 30px rgba(34,160,107,.5); animation: pop .3s; }
+
+/* Тренировка: упражнения строками с числом справа */
+.ex-list { display: grid; gap: 6px; }
+.ex-row { display: flex; align-items: center; gap: 10px; background: #f8f4ec; border-radius: 12px; padding: 8px 12px; }
+.ex-ic { font-size: 20px; width: 26px; text-align: center; }
+.ex-n { flex: 1; font-weight: 600; font-size: 15px; }
+.ex-c { color: var(--muted); font-size: 13px; white-space: nowrap; } .ex-c b { color: var(--accent); font-size: 18px; font-weight: 800; }
+.plan-s .ex-list { margin-top: 6px; }
