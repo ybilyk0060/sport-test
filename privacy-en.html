@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>Privacy policy — the 3-minute kids’ strengths test</title>
-<link rel="stylesheet" href="css/app.css?v=7045787-mwxg9ktg">
-<link rel="stylesheet" href="legal.css?v=7045787-mwxg9ktg">
+<link rel="stylesheet" href="css/app.css?v=06eab8d-mwxgd5ih">
+<link rel="stylesheet" href="legal.css?v=06eab8d-mwxgd5ih">
 <style>.doc h2{font-size:19px;margin-top:10px}.doc ul{margin:0;padding-left:20px;display:grid;gap:6px}.doc p,.doc li{font-size:15px}</style>
 </head>
 <body>
@@ -23,7 +23,7 @@
     <li><b>Body points and images.</b> Movements are recognized in the browser on your phone. No frames or body coordinates leave the phone.</li>
     <li><b>Backup recordings.</b> If you record a video with the regular camera, it is analyzed on your phone and never uploaded.</li>
     <li><b>Your child’s name, photos or health data.</b> We don’t ask for them.</li>
-    <li><b>Card details.</b> No card is entered on this site. Payment happens on the payment provider’s page.</li>
+    <li><b>Card details.</b> You enter your card only in Paddle’s secure checkout window; we never see it.</li>
   </ul>
 
   <h2>What we keep</h2>
@@ -35,10 +35,10 @@
     <li>Subscription state (start date, paid until, cancelled or not) and completed program workouts.</li>
     <li><b>The email you enter at payment</b> — to send the subscription terms, an access link for any device and to handle cancellation. Email, subscription state, answers and test totals are stored on our server (Supabase) and not shared. Ask us to delete them at the address below.</li>
   </ul>
-  <p>Answers and results are stored <b>only on your phone</b>, in the browser’s storage.</p>
+  <p>Without a subscription, answers and results stay <b>only on your phone</b>, in the browser’s storage.</p>
 
   <h2>Cookies, Meta Pixel and analytics</h2>
-  <p>Only if you tap “Accept” in the cookie banner do we turn on the Meta Pixel (Meta Platforms Ireland Ltd.) to measure ads and, possibly, an analytics service. Only step names (for example “payment opened”), amount and currency are sent. Answers about your child, exercise results, video and body points are never sent. If you choose “Only necessary”, nothing third-party is loaded. To change your choice, use “Delete my data” below.</p>
+  <p>Only if you tap “Accept” in the cookie banner do we turn on the Meta Pixel (Meta Platforms Ireland Ltd.) to measure ads, and our analytics service (PostHog). Only step names (for example “payment opened”), amount and currency are sent. Answers about your child, exercise results, video and body points are never sent. If you choose “Only necessary”, nothing third-party is loaded. To change your choice, use “Delete my data” below.</p>
   <p>With the same consent, our analytics service (PostHog, EU servers) records clicks, scrolling and session replays of the website so we can see where the test is hard to use. Text fields are masked, answer buttons in the questionnaire are excluded, and the camera screen is never recorded: recording pauses while the camera is on.</p>
 
   <h2>How to delete data</h2>
@@ -46,6 +46,12 @@
   <button class="btn line" id="wipe">Delete my data</button>
   <p class="small muted" id="done" hidden>Data deleted.</p>
 
+  <h2>Service providers</h2>
+  <p>Paddle.com (payments, Merchant of Record), Supabase (subscription data, servers in Frankfurt, EU), Brevo (subscription emails, EU), PostHog (analytics, EU servers, only with your consent), Meta Platforms Ireland Ltd. (ad measurement, only with your consent).</p>
+  <h2>Legal basis and how long we keep data</h2>
+  <p>We process your email and subscription data to perform the contract (GDPR Art. 6(1)(b)), and analytics and ad measurement only with your consent (Art. 6(1)(a)), which you can withdraw at any time. Subscription data is kept while the subscription is active and for up to 12 months after it ends, unless the law requires longer (for example, tax records kept by Paddle).</p>
+  <h2>Your rights</h2>
+  <p>You can ask us for access to, correction or deletion of your data, restriction of processing, data portability, and you can object to processing. You also have the right to complain to a data protection authority in your country.</p>
   <h2>Children</h2>
   <p>An adult takes the test together with the child. The child does not enter any data about themselves.</p>
 
@@ -53,9 +59,9 @@
   <p>Data controller: <span data-s="name"></span>. Questions about data: <span data-s="email"></span>.</p>
 </main>
 <script type="module">
-import { store } from './js/store.js?v=7045787-mwxg9ktg';
+import { store } from './js/store.js?v=06eab8d-mwxgd5ih';
 document.getElementById('wipe').onclick = () => { store.clearAll(); try { localStorage.removeItem('sporttest.consent'); localStorage.removeItem('sporttest.v1.offer'); } catch {} document.getElementById('done').hidden = false; };
 </script>
-<script type="module" src="js/legal.js?v=7045787-mwxg9ktg"></script>
+<script type="module" src="js/legal.js?v=06eab8d-mwxgd5ih"></script>
 </body>
 </html>

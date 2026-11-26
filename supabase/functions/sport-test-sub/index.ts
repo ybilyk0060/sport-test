@@ -75,13 +75,16 @@ async function mail(to: string, subject: string, text: string) {
 }
 let lastMailError = "";
 
-const money = (n: number, cur: string) => (cur === "UAH" ? `${n} грн` : cur === "EUR" ? `${n} €` : `$${n}`);
+// Цена и дата так, как их пишут носители: $14.99 / 14,99 € / 629 грн; «December 26, 2026» / «26. Dezember 2026»
+const LOC: Record<string, string> = { en: "en-US", de: "de-DE", uk: "uk-UA" };
+const money = (n: number, cur: string, lang = "en") => new Intl.NumberFormat(LOC[lang] || "en-US", { style: "currency", currency: cur || "USD", minimumFractionDigits: Number.isInteger(n) ? 0 : 2 }).format(n);
+const fmtDate = (d: unknown, lang = "en") => new Intl.DateTimeFormat(LOC[lang] || "en-US", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(String(d)));
 function termsMail(lang: string, s: Record<string, unknown>, link: string) {
-  const first = money(Number(s.first_amount), String(s.currency)), regular = money(Number(s.regular_amount), String(s.currency));
-  const until = new Date(String(s.paid_until)).toISOString().slice(0, 10);
+  const first = money(Number(s.first_amount), String(s.currency), lang), regular = money(Number(s.regular_amount), String(s.currency), lang);
+  const until = fmtDate(s.paid_until, lang);
   if (lang === "uk") return { subject: "Підписку оформлено — тест сильних сторін дитини", text: `Дякуємо! Підписку оформлено.\n\nПерший платіж: ${first} за ${PERIOD_DAYS} днів.\nДалі: ${regular} кожні ${PERIOD_DAYS} днів, перше продовження ${until}, доки ви не скасуєте.\n\nВідкрити програму й керувати підпискою (скасування в 2 дотики) з будь-якого пристрою:\n${link}\n\nПитання: ${FROM}` };
-  if (lang === "de") return { subject: "Abo abgeschlossen — Stärkentest für Kinder", text: `Danke! Ihr Abo ist aktiv.\n\nErste Zahlung: ${first} für ${PERIOD_DAYS} Tage.\nDanach: ${regular} alle ${PERIOD_DAYS} Tage, erste Verlängerung am ${until}, bis Sie kündigen.\n\nProgramm öffnen und Abo verwalten (Kündigung mit 2 Klicks) auf jedem Gerät:\n${link}\n\nFragen: ${FROM}` };
-  return { subject: "You’re subscribed — kids’ strengths test", text: `Thank you! Your subscription is active.\n\nFirst payment: ${first} for ${PERIOD_DAYS} days.\nThen: ${regular} every ${PERIOD_DAYS} days, first renewal on ${until}, until you cancel.\n\nOpen the program and manage your subscription (cancel in 2 taps) on any device:\n${link}\n\nQuestions: ${FROM}` };
+  if (lang === "de") return { subject: "Abo abgeschlossen — Stärkentest für Kinder", text: `Danke! Ihr Abo ist aktiv.\n\nErste Zahlung: ${first} für ${PERIOD_DAYS} Tage.\nDanach ${regular} alle ${PERIOD_DAYS} Tage, erstmals am ${until}, bis Sie kündigen.\n\nProgramm öffnen und Abo verwalten (Kündigung mit zwei Klicks) – auf jedem Gerät:\n${link}\n\nFragen: ${FROM}` };
+  return { subject: "You’re subscribed — kids’ strengths test", text: `Thank you! Your subscription is active.\n\nFirst payment: ${first} for ${PERIOD_DAYS} days.\nThen ${regular} every ${PERIOD_DAYS} days, starting ${until}, until you cancel.\n\nOpen your child’s program and manage your subscription (cancel in two taps) on any device:\n${link}\n\nQuestions: ${FROM}` };
 }
 
 Deno.serve(async (req) => {
@@ -141,8 +144,8 @@ Deno.serve(async (req) => {
         if (s.reminded_for === s.paid_until || !s.site) continue;
         const token = await issueToken(s.id);
         const link = `${s.site}?sub=${token}`;
-        const price = money(Number(s.regular_amount), String(s.currency));
-        const date = new Date(String(s.paid_until)).toISOString().slice(0, 10);
+        const price = money(Number(s.regular_amount), String(s.currency), String(s.lang));
+        const date = fmtDate(s.paid_until, String(s.lang));
         const m = s.lang === "uk"
           ? { subject: `Через 3 дні продовження підписки: ${price}`, text: `${date} підписка продовжиться за ${price} на наступні ${PERIOD_DAYS} днів.\n\nЯкщо не хочете продовжувати — скасуйте в один дотик:\n${link}\n\nПитання: ${FROM}` }
           : s.lang === "de"
