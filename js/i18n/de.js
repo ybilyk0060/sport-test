@@ -12,6 +12,8 @@ export default {
     points: ['8 kurze Fragen', '4 kurze Übungen: Gleichgewicht, Laufen auf der Stelle, Rumpfbeuge und Hampelmann', 'Das Video wird auf dem Handy verarbeitet und nirgendwohin gesendet'],
     note: 'Sie brauchen ein Handy mit Kamera und 2×2 m freien Platz.',
     disclaimer: 'Ein spielerischer Bewegungstest, keine medizinische Untersuchung und kein offizieller Test. Er sagt keinen sportlichen Erfolg voraus, sondern zeigt, wo Ihr Kind heute stark ist.',
+    trustShort: 'Einige Übungen sind an EUROFIT (Europarat) und den Deutschen Motorik-Test (DMT 6–18) angelehnt.',
+    trustNote: 'Für die Handykamera zu Hause angepasst, die Ergebnisse sind eine Orientierung, keine Labormessung.',
     trust: 'Einige Übungen sind an etablierte Fitnesstests für Kinder angelehnt: EUROFIT (Europarat) und den Deutschen Motorik-Test (DMT 6–18). Für die Handykamera zu Hause angepasst, die Ergebnisse sind eine Orientierung, keine Labormessung.',
   },
 

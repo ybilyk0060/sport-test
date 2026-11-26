@@ -1,7 +1,7 @@
 // Распознавание позы в браузере: @mediapipe/tasks-vision, Pose Landmarker (lite).
 // Модель и wasm лежат на нашем адресе (vendor/mediapipe). Кадры обрабатываются на устройстве и никуда не уходят.
 
-import { CONFIG } from './config.js?v=223eb56-mwxf1p5z';
+import { CONFIG } from './config.js?v=747f322-mwxfyx5j';
 
 export const poseStatus = { state: 'idle', delegate: null, error: null, loadMs: null, fps: 0, frames: 0 };
 let landmarker = null;

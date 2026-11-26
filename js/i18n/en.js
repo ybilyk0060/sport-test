@@ -13,6 +13,8 @@ export default {
     points: ['8 quick questions', '4 short exercises: balance, running in place, a forward bend and jumping jacks', 'Video is processed on your phone and never uploaded'],
     note: 'You’ll need a phone with a camera and a clear 2×2 m (6×6 ft) space.',
     disclaimer: 'A playful movement test, not a medical assessment and not an official test. It doesn’t predict sporting success. It shows where your child is strong today.',
+    trustShort: 'Some exercises are adapted from EUROFIT (Council of Europe) and the German Motor Test (DMT 6–18).',
+    trustNote: 'Adapted for a phone camera at home, so results are a guide, not a lab measurement.',
     trust: 'Some exercises are adapted from established youth fitness test batteries: EUROFIT (Council of Europe) and the German Motor Test (DMT 6–18). Adapted for a phone camera at home, so results are a guide, not a lab measurement.',
   },
 

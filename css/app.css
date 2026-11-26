@@ -350,3 +350,6 @@ details.sec > * + * { margin-top: 10px; }
 /* Уверенность в направлении спорта (отчёт после оплаты) */
 .conf { display: inline-block; margin: 4px 0 2px; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 700; }
 .conf.c-high { background: #e3f5ea; color: #17603f; } .conf.c-medium { background: #fff1dc; color: #8a5300; } .conf.c-low { background: #eef0f3; color: #4b5563; }
+/* Блок доверия на первом экране */
+.trust-box { display: flex; gap: 10px; align-items: center; background: #fff; border-radius: 14px; padding: 10px 12px; box-shadow: inset 0 0 0 1.5px var(--line); font-size: 14px; line-height: 1.35; font-weight: 600; }
+.trust-box .tb-ic { font-size: 22px; flex: none; }

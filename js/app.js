@@ -1,22 +1,22 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
-import { T } from './i18n/index.js?v=223eb56-mwxf1p5z';
-import { CONFIG } from './config.js?v=223eb56-mwxf1p5z';
-import { money, PRICE, CUR, fmtDate, } from './locale.js?v=223eb56-mwxf1p5z';
-import { LANG, LOCALES } from './i18n/index.js?v=223eb56-mwxf1p5z';
-import { state, setState, resetState, track, importHandoff, store } from './store.js?v=223eb56-mwxf1p5z';
-import { detectEnv } from './env.js?v=223eb56-mwxf1p5z';
-import { prefetchPose } from './pose.js?v=223eb56-mwxf1p5z';
-import { unlockAudio } from './audio.js?v=223eb56-mwxf1p5z';
-import { startStage, startFallback, toast } from './stage.js?v=223eb56-mwxf1p5z';
-import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=223eb56-mwxf1p5z';
-import { payment, newOrderId, loadPaddle } from './payment.js?v=223eb56-mwxf1p5z';
-import { ART } from './art.js?v=223eb56-mwxf1p5z';
-import { initDebug } from './debug.js?v=223eb56-mwxf1p5z';
-import { initConsent } from './analytics.js?v=223eb56-mwxf1p5z';
-import * as subapi from './subapi.js?v=223eb56-mwxf1p5z';
-import { drawShareCard } from './sharecard.js?v=223eb56-mwxf1p5z';
-import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=223eb56-mwxf1p5z';
+import { T } from './i18n/index.js?v=747f322-mwxfyx5j';
+import { CONFIG } from './config.js?v=747f322-mwxfyx5j';
+import { money, PRICE, CUR, fmtDate, } from './locale.js?v=747f322-mwxfyx5j';
+import { LANG, LOCALES } from './i18n/index.js?v=747f322-mwxfyx5j';
+import { state, setState, resetState, track, importHandoff, store } from './store.js?v=747f322-mwxfyx5j';
+import { detectEnv } from './env.js?v=747f322-mwxfyx5j';
+import { prefetchPose } from './pose.js?v=747f322-mwxfyx5j';
+import { unlockAudio } from './audio.js?v=747f322-mwxfyx5j';
+import { startStage, startFallback, toast } from './stage.js?v=747f322-mwxfyx5j';
+import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=747f322-mwxfyx5j';
+import { payment, newOrderId, loadPaddle } from './payment.js?v=747f322-mwxfyx5j';
+import { ART } from './art.js?v=747f322-mwxfyx5j';
+import { initDebug } from './debug.js?v=747f322-mwxfyx5j';
+import { initConsent } from './analytics.js?v=747f322-mwxfyx5j';
+import * as subapi from './subapi.js?v=747f322-mwxfyx5j';
+import { drawShareCard } from './sharecard.js?v=747f322-mwxfyx5j';
+import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=747f322-mwxfyx5j';
 
 const env = detectEnv();
 const app = document.getElementById('app');
@@ -49,8 +49,8 @@ const cleanUrl = () => { try { history.replaceState(null, '', location.pathname 
 function landing() {
   setState({ step: 'landing' });
   screen(`<div class="hero"><div class="hero-art">${ART.hero}</div><h1>${esc(T.landing.title)}</h1><p class="promise">${esc(T.landing.promise)}</p></div>
-    <ul class="points">${T.landing.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul><div class="grow"></div>
-    <button class="btn" data-act="start">${esc(T.landing.cta)}</button><p class="small muted center land-note">${esc(T.landing.note)} ${esc(T.result.shortNote)}</p><p class="small muted center land-note">${esc(T.landing.trust)}</p>
+    <ul class="points">${T.landing.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul><div class="trust-box"><span class="tb-ic" aria-hidden="true">🏅</span><span>${esc(T.landing.trustShort)}</span></div><div class="grow"></div>
+    <button class="btn" data-act="start">${esc(T.landing.cta)}</button><p class="small muted center land-note">${esc(T.landing.note)} ${esc(T.result.shortNote)}</p><p class="small muted center land-note">${esc(T.landing.trustNote)}</p>
     ${Object.keys(LOCALES).length > 1 ? `<div class="langs">${Object.entries({ en: 'English', de: 'Deutsch', uk: 'Українська' }).filter(([k]) => LOCALES[k] && (k === LANG || !(CONFIG.linkOnlyLanguages || []).includes(k))).map(([k, v]) => `<a href="?lang=${k}" class="${k === LANG ? 'on' : ''}">${v}</a>`).join('')}</div>` : ''}
     ${subapi.subOn() ? `<button class="link center" data-act="restore">${esc(T.paywall.restore)}</button>` : ''}
     ${legalLinks()}`, {
