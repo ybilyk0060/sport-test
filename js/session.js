@@ -6,6 +6,7 @@ import { createBalanceRun } from './balance.js?v=eb4804e-mwxu3ali';
 import { createSideJumpRun, createBendRun } from './motor.js?v=eb4804e-mwxu3ali';
 import { SpecEngine, ExerciseAnalyzer, PoseSmoother, calibrationForAge } from './engine/kidsney-engine.js?v=eb4804e-mwxu3ali';
 import { SPECS } from './engine/specs.js?v=eb4804e-mwxu3ali';
+import { STUDIO } from './engine/specs-studio.js';
 import { CONFIG } from './config.js?v=eb4804e-mwxu3ali';
 import { detectPose } from './pose.js?v=eb4804e-mwxu3ali';
 
@@ -54,7 +55,7 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
   if (ex.custom === 'balance') return createBalanceRun({ key, target, capSec, clock, on, leg: ex.leg });
   if (ex.custom === 'sidejump') return createSideJumpRun({ key, target, capSec, clock, on });
   if (ex.custom === 'bend') return createBendRun({ key, target, capSec, clock, on });
-  const spec = SPECS[ex.spec || key];
+  const spec = SPECS[ex.spec || key] || (STUDIO[key] && STUDIO[key].spec);
   const isSeconds = spec.goal === 'seconds';
   const engine = new SpecEngine(spec);
   const an = new ExerciseAnalyzer(engine, isSeconds ? 0 : target, spec.gates?.minVisibility ?? 0.5, isSeconds ? target : 0);

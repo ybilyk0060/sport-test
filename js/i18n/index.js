@@ -4,6 +4,7 @@ import en from './en.js?v=eb4804e-mwxu3ali';
 import de from './de.js?v=eb4804e-mwxu3ali';
 import uk from './uk.js?v=eb4804e-mwxu3ali';
 import { CONFIG } from '../config.js?v=eb4804e-mwxu3ali';
+import { STUDIO } from '../engine/specs-studio.js';
 
 const ALL = { en, de, uk };
 // Только включённые в CONFIG.languages; первый в списке — язык по умолчанию
@@ -26,3 +27,15 @@ function pick() {
 }
 export const LANG = pick();
 export const T = LOCALES[LANG] || ALL.en;
+
+// Упражнения Студії без своих текстов сайта: название, задание и инструкция из каталога
+const TASK = {
+  en: (name, n, sec) => `${name} — ${n} ${sec ? 'seconds' : 'times'}`,
+  de: (name, n, sec) => `${name} — ${sec ? `${n} Sekunden` : `${n}-mal`}`,
+  uk: (name, n, sec) => `${name} — ${n} ${sec ? 'секунд' : 'разів'}`,
+};
+for (const [k, e] of Object.entries(STUDIO)) {
+  const tx = e.texts[LANG] || e.texts.en, sec = e.goal === 'seconds';
+  if (!T.ex[k]) T.ex[k] = { name: tx.name, task: (n) => (TASK[LANG] || TASK.en)(tx.name, n, sec), how: (tx.instructions && tx.instructions.length ? tx.instructions.join(' ') : tx.description) };
+  if (T.report && T.report.planEx && !T.report.planEx[k]) T.report.planEx[k] = tx.name;
+}

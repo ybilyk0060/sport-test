@@ -34,8 +34,20 @@ const CLIPS = {
 // --vertical: вертикальные ролики 9:16 для показа на весь экран (Юрий 26.11) → assets/video/<key>-v<n>.mp4
 const GREEN = process.argv.includes('--green'); // панда на ровном зелёном фоне — фон вырезается на телефоне (панда поверх камеры, Юрий 26.11)
 const VERT = process.argv.includes('--vertical') || GREEN;
+// --program: все упражнения программы подписчика без зелёного ролика (Юрий 26.11). Описание движения — из каталога Студії.
+// По одной попытке на упражнение (их ~34): брак пересниму точечно, передав ключ аргументом.
+const PROGRAM = process.argv.includes('--program');
+if (PROGRAM) {
+  const cat = await fetch('https://iiafijcmajkitvtktntk.supabase.co/functions/v1/exercise-catalog').then((r) => r.json());
+  const { CONFIG } = await import('../js/config.js');
+  for (const e of cat) {
+    if (CLIPS[e.key] || !e.texts || !e.texts.en || !CONFIG.exercises[e.key] || CONFIG.exercises[e.key].gVideo) continue;
+    const t = e.texts.en, side = e.spec && e.spec.facing === 'side';
+    CLIPS[e.key] = `${side ? 'SIDE VIEW: the panda is turned sideways to the camera (its left side toward the camera), so the movement is clearly visible from the side. ' : ''}The panda demonstrates the exercise "${t.name}": ${t.description} ${(t.instructions || []).join(' ')} It repeats the movement slowly and clearly about five times, the whole body visible.`;
+  }
+}
 const ARGS = process.argv.slice(2).filter((a) => !a.startsWith('--'));
-const keys = ARGS.length ? ARGS : VERT ? ['balance', 'high_knees', 'bend', 'jumping_jack', 'shoulder_taps'] : ['balance', 'side_jumps', 'bend'];
+const keys = ARGS.length ? ARGS : PROGRAM ? Object.keys(CLIPS).filter((k) => !['balance', 'side_jumps', 'bend', 'high_knees', 'jumping_jack', 'shoulder_taps', 'squats'].includes(k)) : VERT ? ['balance', 'high_knees', 'bend', 'jumping_jack', 'shoulder_taps'] : ['balance', 'side_jumps', 'bend'];
 fs.mkdirSync('assets/video', { recursive: true });
 for (const key of keys) {
   // Делаем 2 ролика, если их ещё нет; если есть — ещё 2 новых попытки только для ключей, переданных аргументом (переснять)
@@ -43,7 +55,7 @@ for (const key of keys) {
   const have = fs.readdirSync('assets/video').map((f) => (f.match(new RegExp(`^${pre}(\\d+)\\.mp4$`)) || [])[1]).filter(Boolean).map(Number);
   const start = have.length ? Math.max(...have) + 1 : 1;
   const redo = ARGS.includes(key);
-  const list = !have.length ? [1, 2] : redo ? [start, start + 1] : [];
+  const list = !have.length ? (PROGRAM ? [1] : [1, 2]) : redo ? [start, start + 1] : [];
   if (!list.length) console.log('уже есть', key);
   for (const n of list) {
     const out = `assets/video/${pre}${n}.mp4`;

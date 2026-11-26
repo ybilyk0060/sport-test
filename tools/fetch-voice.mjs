@@ -2,6 +2,7 @@
 // (assets/audio/studio/manifest.json) в assets/audio и пишет карту js/voice-map.js.
 // Запуск: node tools/fetch-voice.mjs   (повтор безопасен: файлы сверяются по sha)
 import fs from 'fs'; import crypto from 'crypto';
+import { STUDIO } from '../js/engine/specs-studio.js';
 const BASE = 'https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/';
 const LOCS = ['en', 'de', 'uk'];
 const WANT = {
@@ -23,6 +24,8 @@ const WANT = {
     ...['cross_crawl', 'glute_bridge', 'side_bend', 'side_leg_raise', 'superman_lifts', 'tuck_jump'].flatMap((k) => [`${k}_howto`, `${k}_not_reached`, `${k}_face_wrong`, ...[1, 2, 3, 4].map((n) => `${k}_coach_${n}`)]),
   ],
 };
+// Упражнения из каталога Студії (tools/import-studio.mjs): инструкция и фразы спеки
+for (const [k, e] of Object.entries(STUDIO)) for (const ph of [`${k}_howto`, ...(e.phrases || [])]) if (!WANT.exercise.includes(ph)) WANT.exercise.push(ph);
 const man = await fetch(BASE + 'audio/studio/manifest.json').then((r) => r.json());
 const map = {};
 for (const LOC of LOCS) {

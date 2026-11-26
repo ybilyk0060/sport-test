@@ -3,7 +3,7 @@
 //
 // Акцент — от того, что ребёнку нравится (ответ квиза likes): «команда и мяч» → бег и ловкость, «борьба» → сила и т. д.
 // Плюс одно упражнение на самое слабое качество из теста. Дозировка — от собственного результата ребёнка
-// в тесте и растёт каждую неделю на небольшой шаг. Упражнения — только 5 вправ теста (их считает камера).
+// в тесте и растёт каждую неделю на небольшой шаг. Во 2-й и 3-й тренировках недели — по новому упражнению из Студії.
 
 import { CONFIG } from './config.js?v=eb4804e-mwxu3ali';
 import { QUALITIES } from './scoring.js?v=eb4804e-mwxu3ali';
@@ -68,21 +68,27 @@ export function buildProgram(profile, quiz, results, { month = 1, history = [] }
       if (it.done >= it.target) hit[it.key] = (hit[it.key] || 0) + 1;
     }
   }
+  const doseOf = (key) => DOSE[key] || (CONFIG.exercises[key] && CONFIG.exercises[key].goal === 'seconds' ? { min: 10, step: 3 } : { min: 5, step: 2 });
   const startOf = (key) => {
-    const d = DOSE[key];
+    const d = doseOf(key);
     const m1 = Math.max(d.min, did[key] || Math.round((testTarget[key] ? testTarget[key].target : d.min) * 0.7));
     if (month === 1) return m1;
     if (best[key] != null) return Math.max(d.min, best[key] + (hit[key] ? d.step : 0));
     return m1 + (month - 1) * 2 * d.step; // прошлый месяц не занимались этим упражнением — растём умеренно
   };
   const dose = (key, week) => {
-    const d = DOSE[key];
+    const d = doseOf(key);
     const target = startOf(key) + (week - 1) * d.step;
     const isSec = CONFIG.exercises[key].goal === 'seconds';
     return { key, target, capSec: isSec ? target + 20 : Math.max(25, Math.round(target * 3.5)) };
   };
   const groupMin = parseInt((quiz && quiz.age) || CONFIG.defaultAge, 10) || 6;
-  const fresh = Object.entries(FRESH).filter(([, a]) => a <= Math.max(4, groupMin)).map(([k]) => k).filter((k) => !avail.includes(k));
+  // Новые упражнения: свои из Студії (FRESH) + все опубликованные в каталоге Студії, подходящие по возрасту и сложности
+  // (Юрий 26.11). Сложность: до 6 лет — 1, 7–9 — до 2, 10+ — до 3.
+  const age = Math.max(4, groupMin), maxDiff = age < 7 ? 1 : age < 10 ? 2 : 3;
+  const studio = Object.entries(CONFIG.exercises).filter(([, e]) => e.studio && (e.ageMin || 4) <= age && (e.ageMax || 18) >= age && (e.difficulty || 1) <= maxDiff).map(([k]) => k);
+  const fresh = [...Object.entries(FRESH).filter(([, a]) => a <= age).map(([k]) => k), ...studio].filter((k, i, a) => !avail.includes(k) && a.indexOf(k) === i);
+  let freshN = (month - 1) * WEEKS * 2;
   const workouts = [];
   for (let w = 1; w <= WEEKS; w++) {
     for (let d = 1; d <= PER_WEEK; d++) {
@@ -92,8 +98,10 @@ export function buildProgram(profile, quiz, results, { month = 1, history = [] }
       const swapAt = month % 2 === 0 ? 1 : 2;
       if (d === 2 && keys.length > swapAt) keys[swapAt] = avail.find((k) => !keys.includes(k)) || keys[swapAt];
       // 3-я тренировка недели: одно новое упражнение из Студії по очереди (разнообразие без удлинения теста)
-      if (d === 3 && fresh.length && keys.length > 1) keys[swapAt === 1 ? 2 % keys.length : 1] = fresh[((month - 1) * WEEKS + (w - 1)) % fresh.length];
-      const items = [...new Set(keys)].sort((a, b) => ORDER.indexOf(a) - ORDER.indexOf(b)).map((k) => dose(k, w));
+      // 2-я и 3-я тренировки недели: по одному новому упражнению по очереди — за месяц ребёнок пробует 8 новых
+      if ((d === 2 || d === 3) && fresh.length && keys.length > 1) keys[d === 3 ? (swapAt === 1 ? 2 % keys.length : 1) : keys.length - 1] = fresh[(freshN++) % fresh.length];
+      const ord = (k) => (ORDER.includes(k) ? ORDER.indexOf(k) : ORDER.length);
+      const items = [...new Set(keys)].sort((a, b) => ord(a) - ord(b)).map((k) => dose(k, w));
       workouts.push({ id: monthId(month, w, d), month, week: w, day: d, items });
     }
   }

@@ -1,3 +1,5 @@
+import { STUDIO } from './engine/specs-studio.js';
+import { GREEN } from './green-boxes.js';
 // ЕДИНЫЕ НАСТРОЙКИ. Всё, что владелец может захотеть поменять без программиста, — здесь.
 
 export const CONFIG = {
@@ -216,4 +218,10 @@ export const CONFIG = {
   calcMs: 4000,
 };
 
-
+// Опубликованные упражнения Студії (js/engine/specs-studio.js) — в программу подписчика (Юрий 26.11). Своя спека сайта важнее.
+for (const [k, e] of Object.entries(STUDIO)) {
+  if (CONFIG.exercises[k]) continue;
+  CONFIG.exercises[k] = { spec: k, studio: true, facing: e.facing, goal: e.goal, video: e.video, poster: e.poster, intro: `${k}_howto`, coach: `${k}_coach_`, ageMin: e.ageMin, ageMax: e.ageMax, difficulty: e.difficulty, stat: e.stat };
+}
+// Зелёная панда для упражнений программы (tools/green-boxes.mjs), если у упражнения ещё нет выбранного вручную ролика
+for (const [k, g] of Object.entries(GREEN)) if (CONFIG.exercises[k] && !CONFIG.exercises[k].gVideo) Object.assign(CONFIG.exercises[k], { gVideo: g.video, gBox: g.box });
