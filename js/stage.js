@@ -272,7 +272,7 @@ function intro(p, i, n) {
       coach.frame(lm);
       if (shadow.finished && shadowCount < 1) shadow = newShadow();
       if (!shadow.finished) shadow.frame(lm);
-      if (shadowCount >= 1 && performance.now() - introAt > 1500) { motionCarry = shadow.isSeconds ? 0 : shadowCount; return end('motion', 'motion'); }
+      if (shadowCount >= (p.key === 'high_knees' ? 3 : 1) && performance.now() - introAt > 1500) { // бег: три шага, один подскок не старт motionCarry = shadow.isSeconds ? 0 : shadowCount; return end('motion', 'motion'); }
       const r = gesture.frame(lm, performance.now());
       ring.style.strokeDashoffset = String(HAND_C * (1 - r.progress));
       ring.parentNode.parentNode.classList.toggle('on', r.progress > 0);
@@ -344,7 +344,7 @@ async function liveExercise(p, i, n) {
       aspect: video.videoWidth && video.videoHeight ? video.videoWidth / video.videoHeight : null,
       clock: () => performance.now(),
       on: {
-        count: (c0) => { const c = c0 + carry; ui.num.textContent = c; ui.set(c); ui.num.classList.remove('pop'); void ui.num.offsetWidth; ui.num.classList.add('pop'); const ex = CONFIG.exercises[p.key]; if (c <= 30 && ex.custom !== 'sidejump' && ex.custom !== 'bend') say('count_' + c); if (ex.coach && !run.isSeconds && c % 5 === 0 && c < p.target) setTimeout(() => say(ex.coach + (1 + ((c / 5 - 1) % 4)), { interrupt: false }), 650); },
+        count: (c0) => { const c = c0 + carry; ui.num.textContent = c; ui.set(c); ui.num.classList.remove('pop'); void ui.num.offsetWidth; ui.num.classList.add('pop'); const ex = CONFIG.exercises[p.key]; if (c <= 30 && ex.custom !== 'sidejump' && ex.custom !== 'bend' && !(p.timed && p.key === 'high_knees')) say('count_' + c); if (ex.coach && !run.isSeconds && c % 5 === 0 && c < p.target) setTimeout(() => say(ex.coach + (1 + ((c / 5 - 1) % 4)), { interrupt: false }), 650); },
         hint: (id) => { const text = T.hints[id]; if (!text) return; ui.hint.textContent = text; clearTimeout(hintTimer); hintTimer = setTimeout(() => { ui.hint.textContent = ''; }, 2500); say(exists('hint_' + id) ? 'hint_' + id : id, { interrupt: false }); },
         tick: ({ left }) => { ui.bar.style.width = `${Math.max(0, (left / p.capSec) * 100)}%`; ui.timeLeft(left); },
         finish: async (r) => {

@@ -359,6 +359,8 @@ export default {
   },
 
   program: {
+    doneToday: 'Das heutige Training ist geschafft',
+    nextTomorrow: (name) => `Super! Das nächste wird morgen freigeschaltet: ${name}. Ein Training pro Tag reicht.`,
     who: 'Die WHO empfiehlt Kindern von 5 bis 17 Jahren im Schnitt mindestens 60 Minuten mittlere bis intensive Bewegung pro Tag, mit Kräftigung von Muskeln und Knochen an mindestens 3 Tagen pro Woche. Unsere 3 Einheiten pro Woche zählen darauf ein.',
     who34: 'Die WHO empfiehlt 3- bis 4-Jährigen mindestens 3 Stunden Bewegung am Tag, davon mindestens 1 Stunde aktives Spielen.',
     title: 'Trainingsprogramm',

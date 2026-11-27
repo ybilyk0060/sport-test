@@ -117,7 +117,7 @@ export const CONFIG = {
     '3-5': { engineAge: 4, plan: [
       { key: 'balance_r', target: 10, capSec: 25 },
       { key: 'balance_l', target: 10, capSec: 25 },
-      { key: 'high_knees', target: 15, capSec: 22 },
+      { key: 'high_knees', target: 15, capSec: 15, timed: true },
       { key: 'squats', target: 999, capSec: 15, timed: true },
       { key: 'jumping_jack', target: 999, capSec: 15, timed: true },
     ], program: [
@@ -129,7 +129,7 @@ export const CONFIG = {
     '6-8': { engineAge: 7, plan: [
       { key: 'balance_r', target: 15, capSec: 30 },
       { key: 'balance_l', target: 15, capSec: 30 },
-      { key: 'high_knees', target: 15, capSec: 22 },
+      { key: 'high_knees', target: 15, capSec: 20, timed: true },
       { key: 'squats', target: 999, capSec: 20, timed: true },
       { key: 'jumping_jack', target: 999, capSec: 20, timed: true },
       { key: 'shoulder_taps', target: 999, capSec: 20, timed: true },
@@ -144,7 +144,7 @@ export const CONFIG = {
     '9-11': { engineAge: 10, plan: [
       { key: 'balance_r', target: 15, capSec: 30 },
       { key: 'balance_l', target: 15, capSec: 30 },
-      { key: 'high_knees', target: 15, capSec: 22 },
+      { key: 'high_knees', target: 15, capSec: 20, timed: true },
       { key: 'squats', target: 999, capSec: 20, timed: true },
       { key: 'jumping_jack', target: 999, capSec: 20, timed: true },
       { key: 'shoulder_taps', target: 999, capSec: 20, timed: true },
@@ -159,7 +159,7 @@ export const CONFIG = {
     '12-15': { engineAge: 13, plan: [
       { key: 'balance_r', target: 15, capSec: 30 },
       { key: 'balance_l', target: 15, capSec: 30 },
-      { key: 'high_knees', target: 15, capSec: 22 },
+      { key: 'high_knees', target: 15, capSec: 20, timed: true },
       { key: 'squats', target: 999, capSec: 20, timed: true },
       { key: 'jumping_jack', target: 999, capSec: 20, timed: true },
       { key: 'shoulder_taps', target: 999, capSec: 20, timed: true },

@@ -360,6 +360,8 @@ export default {
   },
 
   program: {
+    doneToday: 'Today’s workout is done',
+    nextTomorrow: (name) => `Great job! Next one opens tomorrow: ${name}. One workout a day is enough.`,
     who: 'The WHO recommends that children aged 5–17 get at least 60 minutes of moderate-to-vigorous activity a day on average, with muscle- and bone-strengthening activities at least 3 days a week. Our 3 sessions a week count toward that goal.',
     who34: 'The WHO recommends at least 3 hours of activity a day for 3–4-year-olds, including at least 1 hour of energetic play.',
     title: 'Training program',

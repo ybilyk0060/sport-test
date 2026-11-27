@@ -417,6 +417,8 @@ function exitOffer() {
   return `<div class="app-card exit-offer"><b>${esc(T.apps.exitTitle)}</b><span class="small muted">${esc(T.apps.exitLead(T.apps[best.k].name))}</span><div class="row-links">${storeLinks(best.k, best.a)}</div></div>`;
 }
 
+const dayKey = (t) => { const d = new Date(t); return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`; };
+const doneToday = () => (state.workouts || []).some((x) => x.at && dayKey(x.at) === dayKey(Date.now()));
 function programBlock(program) {
   const G = T.program, done = state.workouts || [];
   const next = nextWorkout(program, done);
@@ -427,7 +429,10 @@ function programBlock(program) {
   // Упражнения тренировки строками: значок, название, число крупно (Юрий 26.11: «сделать красивее»)
   const IC = { jumping_jack: '⭐', arm_circles: '🔄', squats: '🦵', high_knees: '🏃', good_morning: '🙇', pushups: '💪', wall_french_press: '🧱', quadruped_arm_circles: '🐾', crunches: '🔥', glute_bridge: '🌉', side_bend: '↔️', side_leg_raise: '🦶', superman_lifts: '🦸', tuck_jump: '🐸', cross_crawl: '✖️', shoulder_taps: '👋' };
   const list = (w) => `<div class="ex-list">${w.items.map((it) => `<div class="ex-row"><span class="ex-ic" aria-hidden="true">${IC[it.key] || '•'}</span><span class="ex-n">${esc(T.report.planEx[it.key] || (T.ex[it.key] && T.ex[it.key].name) || it.key)}</span><span class="ex-c"><b>${it.target}</b> ${esc(unit(it.key))}</span></div>`).join('')}</div>`;
-  const card = next
+  // Одна тренировка в день (Юрий 27.11): после сегодняшней следующая открывается завтра (по местной дате устройства)
+  const card = next && doneToday()
+    ? `<div class="next-w done-today"><b>✓ ${esc(G.doneToday)}</b><p class="small muted">${esc(G.nextTomorrow(G.workout(next.week, next.day)))}</p><div class="prog-bar"><i style="width:${Math.round((doneN / total) * 100)}%"></i></div><small class="muted">${esc(G.progress(doneN, total))}</small></div>`
+    : next
     ? `<div class="next-w">${doneN === 0 ? `<b class="plan-ready">${esc(T.apps.planReady)}</b>` : ''}<div class="nw-top"><small>${esc(G.today)} · ${esc(G.month(program.month))} · ${esc(G.workout(next.week, next.day))}</small><small>${esc(G.progress(doneN, total))}</small></div>
         <div class="prog-bar"><i style="width:${Math.round((doneN / total) * 100)}%"></i></div>
         ${list(next)}<button class="btn" data-act="workout">${esc(G.start)}</button></div>`
@@ -499,6 +504,7 @@ function retest() {
 function startWorkout(program) {
   const w = nextWorkout(program, state.workouts || []);
   if (!w) return fullReport();
+  if (doneToday()) return fullReport();
   track('workout_start', { id: w.id });
   app.onclick = null;
   startStage({ list: w.items, mode: 'workout', exit: fullReport, done: (results) => {

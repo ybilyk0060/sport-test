@@ -66,7 +66,7 @@ function soften(key, sp) {
 
 const MIRROR_SUM = new Set(['cross_crawl']);
 // Создаёт прогон упражнения. clock() — время в мс (живая камера: performance.now, запись: позиция в видео).
-export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) {
+export function createRun({ key, target, capSec, ageGroup, aspect, clock, on, timed = false }) {
   const ex = CONFIG.exercises[key] || {};
   // Оценочные упражнения со своей логикой (js/balance.js, js/motor.js)
   if (ex.custom === 'balance') return createBalanceRun({ key, target, capSec, clock, on, leg: ex.leg });
@@ -76,6 +76,7 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
   const lowVis = (sp) => ({ ...sp, gates: { ...(sp.gates || {}), minVisibility: Math.min(sp.gates?.minVisibility ?? 0.5, VIS_GATE) } });
   const spec = soften(ex.spec || key, lowVis(spec0));
   const isSeconds = spec.goal === 'seconds';
+  const timedSteps = timed && isSeconds && key === 'high_knees';
   const engine = new SpecEngine(spec);
   const an = new ExerciseAnalyzer(engine, isSeconds ? 0 : target, Math.min(spec.gates?.minVisibility ?? 0.5, VIS_GATE), isSeconds ? target : 0);
   const age = (CONFIG.ageGroups[ageGroup] || CONFIG.ageGroups[CONFIG.defaultAge]).engineAge;
@@ -212,13 +213,15 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
       if (isSeconds) {
         const held = an.heldSeconds();
         const sec = Math.floor(held);
-        if (sec > lastSec) { lastSec = sec; on.count && on.count(sec); }
+        // На время (тест, Юрий 27.11): время идёт до конца, на экране — число шагов; в результат идут активные секунды (нормы прежние)
+        if (timedSteps) { const n = (lifts.left || 0) + (lifts.right || 0); if (n > lastCount) { lastCount = n; on.count && on.count(n); } }
+        else if (sec > lastSec) { lastSec = sec; on.count && on.count(sec); }
         on.phase && on.phase(an.holdPhase(), held);
         if (key === 'plank' && an.holdPhase() === 'broken') return finish('broken');
       }
       const elapsed = (now - startedAt) / 1000;
       on.tick && on.tick({ elapsed, left: Math.max(0, capSec - elapsed), facingWrong: an.isFacingCamera() });
-      if (metricsNow.isComplete) return finish('complete');
+      if (metricsNow.isComplete && !timedSteps) return finish('complete');
       if (elapsed >= capSec) return finish('time');
     },
   };
