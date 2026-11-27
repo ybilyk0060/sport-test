@@ -1,19 +1,19 @@
 // Экран камеры: разрешение → проверка кадра → 4 упражнения. И запасной путь: разбор записи.
 
-import { T } from './i18n/index.js?v=e185b99-mwz67ip2';
-import { CONFIG } from './config.js?v=e185b99-mwz67ip2';
-import { state, setState, track, exportHandoff } from './store.js?v=e185b99-mwz67ip2';
-import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=e185b99-mwz67ip2';
-import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=e185b99-mwz67ip2';
-import { preloadPose, poseStatus, resetPersonLock, diag } from './pose.js?v=e185b99-mwz67ip2';
-import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=e185b99-mwz67ip2';
-import { framingCheck, frameLoop, createRun } from './session.js?v=e185b99-mwz67ip2';
-import { createRaiseHand, createPlankHold } from './gesture.js?v=e185b99-mwz67ip2';
-import { recording } from './analytics.js?v=e185b99-mwz67ip2';
-import { demoSvg } from './demos.js?v=e185b99-mwz67ip2';
-import { EX_QUALITY } from './scoring.js?v=e185b99-mwz67ip2';
-import { greenOverlay } from './greenkey.js?v=e185b99-mwz67ip2';
-import { createVisCoach } from './viscoach.js?v=e185b99-mwz67ip2';
+import { T } from './i18n/index.js?v=7e19e63-mwz6dvcw';
+import { CONFIG } from './config.js?v=7e19e63-mwz6dvcw';
+import { state, setState, track, exportHandoff } from './store.js?v=7e19e63-mwz6dvcw';
+import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=7e19e63-mwz6dvcw';
+import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=7e19e63-mwz6dvcw';
+import { preloadPose, poseStatus, resetPersonLock, diag } from './pose.js?v=7e19e63-mwz6dvcw';
+import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=7e19e63-mwz6dvcw';
+import { framingCheck, frameLoop, createRun } from './session.js?v=7e19e63-mwz6dvcw';
+import { createRaiseHand, createPlankHold } from './gesture.js?v=7e19e63-mwz6dvcw';
+import { recording } from './analytics.js?v=7e19e63-mwz6dvcw';
+import { demoSvg } from './demos.js?v=7e19e63-mwz6dvcw';
+import { EX_QUALITY } from './scoring.js?v=7e19e63-mwz6dvcw';
+import { greenOverlay } from './greenkey.js?v=7e19e63-mwz6dvcw';
+import { createVisCoach } from './viscoach.js?v=7e19e63-mwz6dvcw';
 // Подсказки видимости: новые фразы (vis_*) озвучиваются после записи голоса; пока их нет — ближайшая записанная
 const VIS_FALLBACK = { vis_cant_see: 'hint_show_full_body', vis_head: 'frame_step_back', vis_contrast: 'hint_show_full_body', vis_light_behind: 'hint_show_full_body', vis_more_light: null };
 const sayVis = (k) => { const c = exists(k) ? k : VIS_FALLBACK[k]; if (c) say(c, { interrupt: false }); };
@@ -197,7 +197,7 @@ function introSheet(p, i, n, btnHtml) {
 // Колени на полу в упоре лёжа: расстояние по вертикали от ладоней (пол) до колен, в долях кадра.
 // Прогон Юрия 27.11: на носках 0,11–0,22 (медиана 0,15), на коленях 0,02–0,06 (медиана 0,05), но кадры «дрожат»,
 // и прежняя проверка (каждый кадр < 0,07, 0,4 с подряд) сбрасывалась — касания на коленях засчитывались.
-// Теперь с гистерезисом: «на коленях», когда зазор < 0,09 дольше 0,25 с; обратно — только когда > 0,105 дольше 0,4 с.
+// Теперь с гистерезисом: «на коленях», когда зазор < 0,08 дольше 0,25 с; обратно — только когда > 0,1 дольше 0,4 с.
 function kneeGap(lm) {
   const lk = lm[25], rk = lm[26], lw = lm[15], rw = lm[16];
   if (!lk || !rk || !lw || !rw) return null;
@@ -210,7 +210,7 @@ export function createKneeWatch() {
   return (lm, now) => {
     const g = kneeGap(lm);
     if (g == null) return down;
-    const want = down ? !(g > 0.105) : g < 0.09;
+    const want = down ? !(g > 0.1) : g < 0.08;
     if (want === down) { since = null; return down; }
     since = since ?? now;
     if (now - since > (down ? 400 : 250)) { down = want; since = null; }
