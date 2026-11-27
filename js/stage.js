@@ -1,19 +1,19 @@
 // Экран камеры: разрешение → проверка кадра → 4 упражнения. И запасной путь: разбор записи.
 
-import { T } from './i18n/index.js?v=d160b1f-mwyzo001';
-import { CONFIG } from './config.js?v=d160b1f-mwyzo001';
-import { state, setState, track, exportHandoff } from './store.js?v=d160b1f-mwyzo001';
-import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=d160b1f-mwyzo001';
-import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=d160b1f-mwyzo001';
-import { preloadPose, poseStatus, resetPersonLock } from './pose.js?v=d160b1f-mwyzo001';
-import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=d160b1f-mwyzo001';
-import { framingCheck, frameLoop, createRun } from './session.js?v=d160b1f-mwyzo001';
-import { createRaiseHand, createPlankHold } from './gesture.js?v=d160b1f-mwyzo001';
-import { recording } from './analytics.js?v=d160b1f-mwyzo001';
-import { demoSvg } from './demos.js?v=d160b1f-mwyzo001';
-import { EX_QUALITY } from './scoring.js?v=d160b1f-mwyzo001';
-import { greenOverlay } from './greenkey.js?v=d160b1f-mwyzo001';
-import { createVisCoach } from './viscoach.js?v=d160b1f-mwyzo001';
+import { T } from './i18n/index.js?v=8555049-mwz3mpno';
+import { CONFIG } from './config.js?v=8555049-mwz3mpno';
+import { state, setState, track, exportHandoff } from './store.js?v=8555049-mwz3mpno';
+import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=8555049-mwz3mpno';
+import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=8555049-mwz3mpno';
+import { preloadPose, poseStatus, resetPersonLock } from './pose.js?v=8555049-mwz3mpno';
+import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=8555049-mwz3mpno';
+import { framingCheck, frameLoop, createRun } from './session.js?v=8555049-mwz3mpno';
+import { createRaiseHand, createPlankHold } from './gesture.js?v=8555049-mwz3mpno';
+import { recording } from './analytics.js?v=8555049-mwz3mpno';
+import { demoSvg } from './demos.js?v=8555049-mwz3mpno';
+import { EX_QUALITY } from './scoring.js?v=8555049-mwz3mpno';
+import { greenOverlay } from './greenkey.js?v=8555049-mwz3mpno';
+import { createVisCoach } from './viscoach.js?v=8555049-mwz3mpno';
 // Подсказки видимости: новые фразы (vis_*) озвучиваются после записи голоса; пока их нет — ближайшая записанная
 const VIS_FALLBACK = { vis_cant_see: 'hint_show_full_body', vis_head: 'frame_step_back', vis_contrast: 'hint_show_full_body', vis_light_behind: 'hint_show_full_body', vis_more_light: null };
 const sayVis = (k) => { const c = exists(k) ? k : VIS_FALLBACK[k]; if (c) say(c, { interrupt: false }); };
