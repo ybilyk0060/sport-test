@@ -19,10 +19,10 @@ async function create(delegate) {
     runningMode: 'VIDEO',
     // до двух человек: второй в кадре не сбивает счёт (js/personlock.js закрепляется за своим) — Юрий 27.11
     numPoses: CONFIG.numPoses || 1,
-    // 27.11: 0,4 вместо 0,5 — меньше «потерь» человека в тёмной одежде и при слабом контрасте с фоном
-    minPoseDetectionConfidence: 0.4,
-    minPosePresenceConfidence: 0.4,
-    minTrackingConfidence: 0.4,
+    // 0,5: при 0,4 на iPhone модель дольше держалась за «мусорную» позу (прогон 27.11, провалы по 2–6 с) — вернули
+    minPoseDetectionConfidence: 0.5,
+    minPosePresenceConfidence: 0.5,
+    minTrackingConfidence: 0.5,
   });
 }
 
@@ -94,5 +94,7 @@ export function detectPose(video) {
   if (ts - fpsT >= 1000) { poseStatus.fps = Math.round((fpsN * 1000) / (ts - fpsT)); fpsT = ts; fpsN = 0; }
   const poses = (res && res.landmarks ? res.landmarks : []).filter((l) => l && l.length);
   poseStatus.people = poses.length;
-  return personLock.pick(poses, ts);
+  // Закрепление за «своим» выключено (CONFIG.personLock): на iPhone 27.11 в прогоне появились провалы позы по 2–6 с,
+  // которых не было ни в одном прогоне до него. Пока не разобрано на телефоне — берём позу модели как раньше.
+  return CONFIG.personLock ? personLock.pick(poses, ts) : (poses[0] || null);
 }
