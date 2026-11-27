@@ -504,3 +504,22 @@ details.box > summary::-webkit-details-marker { display: none; }
 .cta-bar + .prep-cards { margin-top: 10px; }
 /* Подготовка: заголовок ближе к полосе прогресса (Юрий 27.11) */
 .qhead + h1.qtitle { margin-top: -6px; }
+/* Подготовка без прокрутки во встроенных браузерах (Messenger/Instagram съедают ~200 pt высоты) — 27.11 */
+.screen:has(.tips-row) { gap: 10px; }
+.screen:has(.tips-row) .qtitle { font-size: 24px; }
+.prep-why { margin: -2px 0 0; font-size: 15px; }
+.trust-cam { padding: 12px 14px; }
+.trust-cam ul { margin-top: 6px; gap: 3px; }
+.tips-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.tip-mini { display: grid; justify-items: center; gap: 4px; text-align: center; background: var(--card); border-radius: 14px; padding: 8px 6px; box-shadow: inset 0 0 0 1.5px var(--line); }
+.tip-mini svg { width: 40px; height: 40px; }
+.tip-mini span { font-size: 12px; line-height: 1.25; font-weight: 600; }
+.screen:has(.tips-row) .allow-next { margin-bottom: 6px; }
+.screen:has(.tips-row) .link.small { font-size: 13px; padding: 2px 0; }
+.screen:has(.tips-row) { padding-top: calc(10px + var(--safe-t)); }
+.screen:has(.tips-row) .trust-cam .tc-title { font-size: 16px; }
+.screen:has(.tips-row) .trust-cam .tc-title::before { flex-basis: 22px; height: 22px; }
+.tip-mini { padding: 6px 4px; gap: 2px; }
+.tip-mini svg { width: 34px; height: 34px; }
+.screen:has(.tips-row) .allow-next { font-size: 13px; margin-bottom: 4px; }
+@media (max-height: 520px) { .prep-why { display: none; } .tip-mini svg { width: 28px; height: 28px; } }
