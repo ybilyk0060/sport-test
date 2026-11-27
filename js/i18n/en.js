@@ -10,7 +10,7 @@ export default {
     title: 'Which sport fits your kid?',
     promise: 'A 3-minute test in front of your phone’s camera shows your child’s strengths and 3 sports to try.',
     cta: 'Start the test',
-    points: ['7 quick questions', '4–5 short exercises: balance, running in place, squats, jumping jacks and plank shoulder taps', 'Video stays on your phone — nothing is uploaded'],
+    points: ['7 quick questions', '4–5 short exercises, about 3 minutes', 'Video stays on your phone — nothing is uploaded'],
     note: 'You’ll need a phone with a camera and about 6×6 ft (2×2 m) of clear space.',
     disclaimer: 'A playful movement test, not a medical assessment and not an official test. It doesn’t predict sporting success. It shows where your child is strong today.',
     trustShort: 'One-leg balance is adapted from EUROFIT, the Council of Europe youth fitness test.',

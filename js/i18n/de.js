@@ -9,7 +9,7 @@ export default {
     title: 'Welche Sportart passt zu Ihrem Kind?',
     promise: 'Ein 3-Minuten-Test vor der Handykamera zeigt die Stärken Ihres Kindes und 3 passende Sportarten.',
     cta: 'Test starten',
-    points: ['7 kurze Fragen', '4–5 kurze Übungen: Gleichgewicht, Laufen auf der Stelle, Kniebeugen, Hampelmann und Schultertippen im Stütz', 'Das Video bleibt auf Ihrem Handy und wird nicht hochgeladen'],
+    points: ['7 kurze Fragen', '4–5 kurze Übungen, etwa 3 Minuten', 'Das Video bleibt auf Ihrem Handy und wird nicht hochgeladen'],
     note: 'Sie brauchen ein Handy mit Kamera und etwa 2 × 2 m freie Fläche.',
     disclaimer: 'Ein spielerischer Bewegungstest, keine medizinische Untersuchung und kein offizieller Test. Er sagt keinen sportlichen Erfolg voraus, sondern zeigt, wo Ihr Kind heute stark ist.',
     trustShort: 'Der Einbeinstand ist an EUROFIT angelehnt, den Fitnesstest des Europarats für Kinder und Jugendliche.',
