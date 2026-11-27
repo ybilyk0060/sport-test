@@ -51,6 +51,18 @@ const std = (a) => { const m = a.reduce((s, x) => s + x, 0) / a.length; return M
 const meanOf = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);
 const pct = (a, p) => { const s = [...a].sort((x, y) => x - y); return s[Math.min(s.length - 1, Math.max(0, Math.round(p * (s.length - 1))))]; };
 
+// Мягче для живых людей (прогон Юрия 27.11: бежал 15 с, засчитано 3,9 с). Колено в стойке у него на 0,75–0,85 корпуса
+// ниже таза, а «перезарядка» шага требовала 0,74–0,8 — половина шагов не засчитывалась; отсчёт начинался с 4-го шага.
+function soften(key, sp) {
+  if (key !== 'high_knees' || !sp.motion) return sp;
+  const m = sp.motion;
+  return { ...sp, motion: { ...m,
+    rearm: { all: [{ m: 'knee_h', max: { young: -0.7, standard: -0.66 } }] },
+    otherDown: { all: [{ m: 'other_h', max: { young: -0.64, standard: -0.62 } }] },
+    timing: { ...m.timing, activeWindowMs: 1500, startLifts: 2 },
+  } };
+}
+
 // Создаёт прогон упражнения. clock() — время в мс (живая камера: performance.now, запись: позиция в видео).
 export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) {
   const ex = CONFIG.exercises[key] || {};
@@ -60,7 +72,7 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
   if (ex.custom === 'bend') return createBendRun({ key, target, capSec, clock, on });
   const spec0 = SPECS[ex.spec || key] || (STUDIO[key] && STUDIO[key].spec);
   const lowVis = (sp) => ({ ...sp, gates: { ...(sp.gates || {}), minVisibility: Math.min(sp.gates?.minVisibility ?? 0.5, VIS_GATE) } });
-  const spec = lowVis(spec0);
+  const spec = soften(ex.spec || key, lowVis(spec0));
   const isSeconds = spec.goal === 'seconds';
   const engine = new SpecEngine(spec);
   const an = new ExerciseAnalyzer(engine, isSeconds ? 0 : target, Math.min(spec.gates?.minVisibility ?? 0.5, VIS_GATE), isSeconds ? target : 0);

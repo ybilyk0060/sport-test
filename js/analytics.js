@@ -29,7 +29,7 @@ let pixelOn = false;
 const FUNNEL = new Set(['open', 'camera_blocked_shown', 'open_in_chrome_click', 'open_in_safari_click', 'fallback_start', 'quiz_start', 'quiz_answer', 'prep_shown', 'link_form_open', 'link_requested', 'camera_granted', 'camera_denied', 'test_start', 'exercise_done', 'test_done',
   'result_shown', 'paywall_shown', 'offer_timer_end', 'pay_click', 'checkout_open', 'checkout_closed', 'checkout_failed', 'paid', 'pay_cancelled', 'report_shown', 'workout_start', 'workout_done', 'sub_cancelled', 'gift_code', 'app_link']);
 // Только безопасные поля
-const SAFE = ['order', 'fps', 'ms', 'q', 'step', 'reason', 'confirm', 'via', 'n', 'key', 'skipped', 'amount', 'currency', 'discount', 'mode', 'summary', 'plan', 'test', 'app', 'id', 'lang', 'kind', 'via', 'ok', 'browser', 'platform', 'inApp', 'provider', 'utm', 'ref', 'choice', 'done', 'target', 'error', 'regular', 'light'];
+const SAFE = ['order', 'fps', 'ms', 'q', 'step', 'reason', 'confirm', 'via', 'n', 'key', 'skipped', 'amount', 'currency', 'discount', 'mode', 'summary', 'plan', 'test', 'app', 'id', 'lang', 'kind', 'via', 'ok', 'browser', 'platform', 'inApp', 'provider', 'utm', 'ref', 'choice', 'done', 'target', 'error', 'regular', 'light', 'how'];
 const clean = (p) => Object.fromEntries(Object.entries(p || {}).filter(([k, v]) => SAFE.includes(k) && v !== undefined && v !== null));
 
 function loadPixel(id) {
