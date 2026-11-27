@@ -488,7 +488,7 @@ button, .btn, .opt, .glass-btn, .pill-link, a.btn, [data-act] { -webkit-user-sel
 details.box > summary { cursor: pointer; list-style: none; }
 details.box > summary::-webkit-details-marker { display: none; }
 .why-cam .privacy-line { margin: 6px 0 0; }
-.cta-bar { position: sticky; bottom: 0; z-index: 2; padding: 10px 0 calc(8px + env(safe-area-inset-bottom)); background: linear-gradient(to bottom, rgba(255,247,236,0), var(--bg, #fff7ec) 22%); }
+.cta-bar { padding: 4px 0 0; background: linear-gradient(to bottom, rgba(255,247,236,0), var(--bg, #fff7ec) 22%); }
 @media (max-height: 700px) { .pcard { padding: 8px 10px; } .pcard svg { flex-basis: 56px; width: 56px; height: 56px; } .pcard b { font-size: 16px; } }
 .trust-cam { background: #eaf7f1; border-radius: 16px; padding: 14px 16px; box-shadow: inset 0 0 0 2px #9fd8bd; color: #14694a; }
 .trust-cam .tc-title { display: flex; gap: 10px; align-items: center; font-size: 17px; }
@@ -500,4 +500,5 @@ details.box > summary::-webkit-details-marker { display: none; }
 .prep-cards .pcard svg { flex-basis: 52px; width: 52px; height: 52px; }
 .prep-cards .pcard b { font-size: 16px; }
 .prep-cards .pcard span { font-size: 13px; }
-.cta-bar { background: var(--bg); box-shadow: 0 -10px 14px -6px rgba(255,247,236,1); margin-top: 4px; }
+.cta-bar { margin-top: 2px; }
+.cta-bar + .prep-cards { margin-top: 10px; }

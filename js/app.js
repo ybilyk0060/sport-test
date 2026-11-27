@@ -145,9 +145,10 @@ function prep() {
   screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button><div class="progress"><i style="width:100%"></i></div></div><h1 class="qtitle">${esc(P.title)}</h1><p class="prep-why"><b>${esc(P.whyTitle)}</b> ${esc(P.why)}</p>
     <!-- Доверие (Юрий 27.11: выделить и сказать, на чём держится). Только проверяемые факты о технологии, без ссылок на законы и «сертификаты». -->
     <div class="trust-cam"><b class="tc-title">${esc(P.trustTitle)}</b><ul>${P.trust.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>
-    <div class="cards prep-cards">${P.cards.map((c, i) => `<div class="pcard">${ART.prep[i]}<div><b>${esc(c.t)}</b><span>${esc(c.d)}</span></div></div>`).join('')}</div><div class="grow"></div>
-    <!-- Кнопка всегда на экране (реклама 27.11: на iPhone SE она была ниже края, 3 из 7 ушли с подготовки, не нажав) -->
+    <!-- Кнопка сразу под карточкой доверия, на первом экране любого iPhone (реклама 27.11: на SE она была ниже края,
+         3 из 7 ушли с подготовки, не нажав). Советы по месту — ниже, их же повторяет экран «встаньте в кадр». -->
     <div class="cta-bar"><p class="allow-next">${esc(P.allowNext)}</p><button class="btn" data-act="cam">${esc(P.cta)}</button></div>
+    <div class="cards prep-cards">${P.cards.map((c, i) => `<div class="pcard">${ART.prep[i]}<div><b>${esc(c.t)}</b><span>${esc(c.d)}</span></div></div>`).join('')}</div>
     <button class="link center" data-act="alt">${esc(P.alt)}</button>`, {
     cam: () => { app.onclick = null; startStage({ done: testDone, exit: prep }); },
     back: () => quiz(QUIZ.length - 1),
