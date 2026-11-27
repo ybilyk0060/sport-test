@@ -549,3 +549,12 @@ body.has-consent .screen { padding-bottom: 150px; }
 @media (max-height: 600px) { .hv-badge { font-size: 8px; } }
 .hv-badge { white-space: normal; width: auto; max-width: 88%; border-radius: 9px; text-align: center; }
 .hv-badge { left: 8px; right: 8px; transform: none; max-width: none; width: auto; padding: 3px 6px; font-size: 9.5px; }
+/* Юрий 27.11: одна строка, чуть крупнее вшитой */
+.hv-badge { left: 50%; right: auto; transform: translateX(-50%); width: max-content; max-width: none; white-space: nowrap; padding: 1px 6px; border-radius: 999px; font-size: 7.8px; letter-spacing: -0.1px; top: 4px; }
+@media (max-width: 380px) { .hv-badge { font-size: 7.2px; padding: 1px 5px; } }
+@media (max-height: 600px) { .hv-badge { font-size: 6.2px; } }
+.hero-vwrap { container-type: inline-size; }
+.hv-badge { font-size: 4.9cqw; padding: 0.2cqw 3cqw; }
+@media (max-width: 380px) { .hv-badge { font-size: 4.9cqw; } }
+@media (max-height: 600px) { .hv-badge { font-size: 4.9cqw; } }
+.hv-badge { top: 7cqw; }
