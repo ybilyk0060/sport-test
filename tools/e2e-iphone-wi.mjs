@@ -84,7 +84,7 @@ for (;;) {
   if (audKey !== audLogged) { audLogged = audKey; note('audio', { ctx: s.aud, session: s.sess }); }
   if (s.cam && s.cam !== camLogged) { camLogged = s.cam; note('camera', { info: s.cam }); }
   const key = s.report ? 'report' : s.paywall ? 'paywall' : s.err ? 'camera_error' : s.run ? `run:${s.title}` : s.intro ? `intro:${s.introTitle}` : s.framing ? 'framing' : s.stage ? 'stage' : `${s.step}${s.step === 'quiz' ? ':' + s.quizIndex : ''}`;
-  if (key !== last) {
+  if (key !== last) { try { note('pose_diag', await run('return window.__poseDiag ? window.__poseDiag() : null')); } catch {}
     if (last) { steps[last] = +((Date.now() - since) / 1000).toFixed(1); note('step_end', { step: last, sec: steps[last] }); }
     last = key; since = Date.now(); introSince = s.intro ? Date.now() : 0;
     note('screen', { step: key, title: s.qtitle || s.introTitle || s.title, err: s.err || undefined, shot: shot(key) });
