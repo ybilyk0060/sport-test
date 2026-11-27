@@ -1,6 +1,7 @@
 // Распознавание позы в браузере: @mediapipe/tasks-vision, Pose Landmarker (lite).
 // Модель и wasm лежат на нашем адресе (vendor/mediapipe). Кадры обрабатываются на устройстве и никуда не уходят.
 
+import { createPersonLock } from './personlock.js';
 import { CONFIG } from './config.js?v=d160b1f-mwyzo001';
 
 export const poseStatus = { state: 'idle', delegate: null, error: null, loadMs: null, fps: 0, frames: 0 };
@@ -16,7 +17,8 @@ async function create(delegate) {
   return vision.PoseLandmarker.createFromOptions(fileset, {
     baseOptions: { modelAssetPath: abs(CONFIG.modelPath), delegate },
     runningMode: 'VIDEO',
-    numPoses: 1,
+    // до двух человек: второй в кадре не сбивает счёт (js/personlock.js закрепляется за своим) — Юрий 27.11
+    numPoses: CONFIG.numPoses || 1,
     // 27.11: 0,4 вместо 0,5 — меньше «потерь» человека в тёмной одежде и при слабом контрасте с фоном
     minPoseDetectionConfidence: 0.4,
     minPosePresenceConfidence: 0.4,
@@ -67,6 +69,8 @@ export function preloadPose() {
 }
 
 let fpsT = 0, fpsN = 0;
+const personLock = createPersonLock();
+export const resetPersonLock = (floor = false) => personLock.reset(floor);
 // Возвращает массив из 33 точек {x,y,z,visibility} или null. Точки нигде не сохраняются.
 export function detectPose(video) {
   if (!landmarker || !video.videoWidth) return null;
@@ -74,7 +78,8 @@ export function detectPose(video) {
   if (ts <= lastTs) ts = lastTs + 1;
   lastTs = ts;
   let res;
-  try { res = landmarker.detectForVideo(video, ts); }
+  const t0 = performance.now();
+  try { res = landmarker.detectForVideo(video, ts); poseStatus.ms = poseStatus.ms ? poseStatus.ms * 0.9 + (performance.now() - t0) * 0.1 : performance.now() - t0; }
   catch (e) {
     // Сбой GPU на отдельных телефонах: один раз пересоздаём на CPU.
     if (poseStatus.delegate === 'GPU') {
@@ -87,6 +92,7 @@ export function detectPose(video) {
   poseStatus.frames++;
   fpsN++;
   if (ts - fpsT >= 1000) { poseStatus.fps = Math.round((fpsN * 1000) / (ts - fpsT)); fpsT = ts; fpsN = 0; }
-  const lm = res && res.landmarks && res.landmarks[0];
-  return lm && lm.length ? lm : null;
+  const poses = (res && res.landmarks ? res.landmarks : []).filter((l) => l && l.length);
+  poseStatus.people = poses.length;
+  return personLock.pick(poses, ts);
 }

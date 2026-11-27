@@ -5,7 +5,7 @@ import { CONFIG } from './config.js?v=d160b1f-mwyzo001';
 import { state, setState, track, exportHandoff } from './store.js?v=d160b1f-mwyzo001';
 import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=d160b1f-mwyzo001';
 import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=d160b1f-mwyzo001';
-import { preloadPose, poseStatus } from './pose.js?v=d160b1f-mwyzo001';
+import { preloadPose, poseStatus, resetPersonLock } from './pose.js?v=d160b1f-mwyzo001';
 import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=d160b1f-mwyzo001';
 import { framingCheck, frameLoop, createRun } from './session.js?v=d160b1f-mwyzo001';
 import { createRaiseHand, createPlankHold } from './gesture.js?v=d160b1f-mwyzo001';
@@ -208,6 +208,7 @@ const BIG_R = 84, BIG_C = 2 * Math.PI * BIG_R;
 let motionCarry = 0; // повторы, сделанные до старта (старт движением)
 function intro(p, i, n) {
   motionCarry = 0;
+  resetPersonLock(!!CONFIG.exercises[p.key].floor); // каждое упражнение — закрепление за тем, кто встал в кадр
   return new Promise((resolve) => {
     inFrame = false;
     const handHtml = `<div class="raise"><svg viewBox="0 0 80 80" aria-hidden="true"><circle class="r-bg" cx="40" cy="40" r="${HAND_R}"/><circle class="r-fg" data-el="ring" cx="40" cy="40" r="${HAND_R}" stroke-dasharray="${HAND_C}" stroke-dashoffset="${HAND_C}"/><text x="40" y="52" text-anchor="middle" font-size="34">${CONFIG.exercises[p.key].floor ? '🙌' : '✋'}</text></svg><span>${esc(CONFIG.exercises[p.key].floor ? T.cam.plankReady : T.cam.raiseHand)}</span></div>`;
@@ -347,7 +348,7 @@ async function liveExercise(p, i, n) {
           if (stopLoop) { stopLoop(); stopLoop = null; }
           clearTimeout(hintTimer);
           if (carry && !r.skipped) r = { ...r, done: r.target >= 999 ? r.done + carry : Math.min(r.target, r.done + carry), completed: r.target < 999 ? r.done + carry >= r.target : r.completed, metrics: { ...r.metrics, motionStartCarry: carry } };
-          track('exercise_done', { key: p.key, done: r.done, target: r.target, reason: r.reason, sec: r.elapsedSec, fps: poseStatus.fps, skipped: !!r.skipped });
+          track('exercise_done', { key: p.key, done: r.done, target: r.target, reason: r.reason, sec: r.elapsedSec, fps: poseStatus.fps, ms: Math.round(poseStatus.ms || 0), n: poseStatus.people || 0, skipped: !!r.skipped });
           drawSkeleton(null);
           if (!r.skipped) { hud.innerHTML = `<div class="big-center"><div class="done-big" aria-hidden="true">✓</div><div class="t" style="font-size:36px">${esc(T.cam.done)}</div></div>`; await sleep(900); }
           resolve(r);
