@@ -543,3 +543,9 @@ body.has-consent .screen { padding-bottom: 150px; }
 .hero-vwrap .hero-video { width: 100%; flex: none; display: block; }
 .hv-badge { position: absolute; left: 6px; right: 6px; top: 6px; background: rgba(255,255,255,.96); color: #14694a; border-radius: 10px; padding: 5px 6px; font-size: 12.5px; line-height: 1.2; font-weight: 800; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
 @media (max-height: 600px) { .hero-vwrap { flex-basis: 30%; width: 30%; } .hv-badge { font-size: 11px; } }
+/* Юрий 27.11: не закрывать видео — компактная плашка как вшитая, лишь немного крупнее */
+.hv-badge { left: 50%; right: auto; top: 5px; transform: translateX(-50%); width: max-content; max-width: 94%; padding: 2px 7px; border-radius: 999px; font-size: 9.5px; font-weight: 700; line-height: 1.25; color: #1d1b2f; box-shadow: none; white-space: nowrap; }
+@media (max-width: 380px) { .hv-badge { font-size: 8.5px; padding: 2px 5px; } }
+@media (max-height: 600px) { .hv-badge { font-size: 8px; } }
+.hv-badge { white-space: normal; width: auto; max-width: 88%; border-radius: 9px; text-align: center; }
+.hv-badge { left: 8px; right: 8px; transform: none; max-width: none; width: auto; padding: 3px 6px; font-size: 9.5px; }
