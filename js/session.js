@@ -2,13 +2,13 @@
 // Из каждого упражнения берём не только счёт: темп, ритм, глубину, симметрию, устойчивость.
 // Сохраняются только итоговые числа. Кадры и точки тела не сохраняются и не отправляются.
 
-import { createBalanceRun } from './balance.js?v=7e19e63-mwz6dvcw';
-import { createSideJumpRun, createBendRun } from './motor.js?v=7e19e63-mwz6dvcw';
-import { SpecEngine, ExerciseAnalyzer, PoseSmoother, calibrationForAge } from './engine/kidsney-engine.js?v=7e19e63-mwz6dvcw';
-import { SPECS } from './engine/specs.js?v=7e19e63-mwz6dvcw';
-import { STUDIO } from './engine/specs-studio.js?v=7e19e63-mwz6dvcw';
-import { CONFIG } from './config.js?v=7e19e63-mwz6dvcw';
-import { detectPose } from './pose.js?v=7e19e63-mwz6dvcw';
+import { createBalanceRun } from './balance.js?v=39e5375-mwz6navn';
+import { createSideJumpRun, createBendRun } from './motor.js?v=39e5375-mwz6navn';
+import { SpecEngine, ExerciseAnalyzer, PoseSmoother, calibrationForAge } from './engine/kidsney-engine.js?v=39e5375-mwz6navn';
+import { SPECS } from './engine/specs.js?v=39e5375-mwz6navn';
+import { STUDIO } from './engine/specs-studio.js?v=39e5375-mwz6navn';
+import { CONFIG } from './config.js?v=39e5375-mwz6navn';
+import { detectPose } from './pose.js?v=39e5375-mwz6navn';
 
 // 27.11: человек в чёрном — видимость ног у MediaPipe падала ниже 0,5, и счёт обнулялся (баланс «потерян», бег 0).
 // Порог видимости точек для счёта и кадра снижен: лучше засчитать с небольшой погрешностью, чем не засчитать.

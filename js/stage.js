@@ -1,19 +1,19 @@
 // Экран камеры: разрешение → проверка кадра → 4 упражнения. И запасной путь: разбор записи.
 
-import { T } from './i18n/index.js?v=7e19e63-mwz6dvcw';
-import { CONFIG } from './config.js?v=7e19e63-mwz6dvcw';
-import { state, setState, track, exportHandoff } from './store.js?v=7e19e63-mwz6dvcw';
-import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=7e19e63-mwz6dvcw';
-import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=7e19e63-mwz6dvcw';
-import { preloadPose, poseStatus, resetPersonLock, diag } from './pose.js?v=7e19e63-mwz6dvcw';
-import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=7e19e63-mwz6dvcw';
-import { framingCheck, frameLoop, createRun } from './session.js?v=7e19e63-mwz6dvcw';
-import { createRaiseHand, createPlankHold } from './gesture.js?v=7e19e63-mwz6dvcw';
-import { recording } from './analytics.js?v=7e19e63-mwz6dvcw';
-import { demoSvg } from './demos.js?v=7e19e63-mwz6dvcw';
-import { EX_QUALITY } from './scoring.js?v=7e19e63-mwz6dvcw';
-import { greenOverlay } from './greenkey.js?v=7e19e63-mwz6dvcw';
-import { createVisCoach } from './viscoach.js?v=7e19e63-mwz6dvcw';
+import { T } from './i18n/index.js?v=39e5375-mwz6navn';
+import { CONFIG } from './config.js?v=39e5375-mwz6navn';
+import { state, setState, track, exportHandoff } from './store.js?v=39e5375-mwz6navn';
+import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=39e5375-mwz6navn';
+import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=39e5375-mwz6navn';
+import { preloadPose, poseStatus, resetPersonLock, diag } from './pose.js?v=39e5375-mwz6navn';
+import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=39e5375-mwz6navn';
+import { framingCheck, frameLoop, createRun } from './session.js?v=39e5375-mwz6navn';
+import { createRaiseHand, createPlankHold } from './gesture.js?v=39e5375-mwz6navn';
+import { recording } from './analytics.js?v=39e5375-mwz6navn';
+import { demoSvg } from './demos.js?v=39e5375-mwz6navn';
+import { EX_QUALITY } from './scoring.js?v=39e5375-mwz6navn';
+import { greenOverlay } from './greenkey.js?v=39e5375-mwz6navn';
+import { createVisCoach } from './viscoach.js?v=39e5375-mwz6navn';
 // Подсказки видимости: новые фразы (vis_*) озвучиваются после записи голоса; пока их нет — ближайшая записанная
 const VIS_FALLBACK = { vis_cant_see: 'hint_show_full_body', vis_head: 'frame_step_back', vis_contrast: 'hint_show_full_body', vis_light_behind: 'hint_show_full_body', vis_more_light: null };
 const sayVis = (k) => { const c = exists(k) ? k : VIS_FALLBACK[k]; if (c) say(c, { interrupt: false }); };
@@ -267,13 +267,13 @@ function intro(p, i, n) {
     // инструкции; первое засчитанное движение (повтор или секунда на одной ноге) — панда убирается, счёт идёт сразу,
     // без отсчёта 3-2-1, уже сделанные повторы переносятся. Поднятая рука и кнопка работают как раньше.
     const introAt = performance.now();
-    let shadowCount = 0;
+    let shadowCount = 0, shadowHeld = 0;
     // Баланс: короткая попытка (поднял и опустил ногу) завершает «теневой» прогон — создаём новый, иначе вторая
     // попытка уже не запускала упражнение (Юрий 27.11: на левой ноге панда не убралась, пришлось поднимать руку).
     const newShadow = () => { const r = createRun({
       key: p.key, target: p.target, capSec: 600, ageGroup: state.quiz.age || CONFIG.defaultAge, timed: !!p.timed,
       aspect: video.videoWidth && video.videoHeight ? video.videoWidth / video.videoHeight : null,
-      clock: () => performance.now(), on: { count: (c) => { shadowCount = c; }, hint: () => {}, tick: () => {}, finish: () => {} },
+      clock: () => performance.now(), on: { count: (c) => { shadowCount = c; }, phase: (ph, held) => { shadowHeld = held || 0; }, hint: () => {}, tick: () => {}, finish: () => {} },
     }); r.start(); return r; };
     let shadow = newShadow();
     // Камера живая и под карточкой: распознаём позу ради жеста и старта движением
@@ -288,7 +288,8 @@ function intro(p, i, n) {
       // на полу (касания плеч) старт — по удержанию упора 2 с; движением не запускаем (стоя засчитывались ложные касания)
       if (shadow.finished && shadowCount < 1) shadow = newShadow();
       if (!shadow.finished && !ex.floor) shadow.frame(lm);
-      if (shadowCount >= (p.key === 'high_knees' ? 3 : 1) && performance.now() - introAt > 1500) { /* бег: три шага, один подскок не старт */ motionCarry = shadow.isSeconds ? 0 : shadowCount; return end('motion', 'motion'); }
+      /* бег: старт только когда движок признал бег (секунда активного бега: чередование ног, вторая на полу) — прыжки его не запускают */
+      if ((p.key === 'high_knees' ? shadowHeld >= 1 : shadowCount >= 1) && performance.now() - introAt > 1500) { motionCarry = shadow.isSeconds ? 0 : shadowCount; return end('motion', 'motion'); }
       const r = gesture.frame(lm, performance.now());
       ring.style.strokeDashoffset = String(HAND_C * (1 - r.progress));
       ring.parentNode.parentNode.classList.toggle('on', r.progress > 0);
