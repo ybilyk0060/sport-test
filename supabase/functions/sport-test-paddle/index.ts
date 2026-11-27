@@ -73,9 +73,44 @@ async function sendCapi(d: Record<string, any>, orderRef: string, value: number,
   } catch (e) { console.error("capi", String(e)); return "error " + String(e).slice(0, 100); } finally { clearTimeout(t); }
 }
 
+// Lead «анкета завершена» со страницы (27.11): дубль браузерного пикселя с тем же event_id, без подписи Paddle.
+// Только проверка формы; с UK/ЕС без согласия не шлём; повтор одного event_id Meta сама отбрасывает.
+const leadCors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "content-type", "Access-Control-Allow-Methods": "POST, OPTIONS" };
+async function sendLeadCapi(c: Record<string, any>) {
+  if (!CAPI_TOKEN) return "no token";
+  const eventId = str(c.event_id, 120);
+  if (!/^lead-[A-Za-z0-9_-]{4,100}$/.test(eventId)) return "bad id";
+  const country = str(c.country, 2).toUpperCase();
+  if ((CONSENT_COUNTRIES.has(country) || !country) && c.consent !== "all") return "no consent";
+  const user_data: Record<string, unknown> = {};
+  if (/^[A-Z]{2}$/.test(country)) user_data.country = [sha(country)];
+  if (str(c.fbc)) user_data.fbc = str(c.fbc);
+  if (str(c.fbp)) user_data.fbp = str(c.fbp);
+  if (str(c.ua)) user_data.client_user_agent = str(c.ua);
+  const body: Record<string, unknown> = { data: [{ event_name: "Lead", event_id: eventId, event_time: Math.floor(Date.now() / 1000), action_source: "website",
+    event_source_url: str(c.url) || "https://kids-test.com/", user_data, custom_data: { content_name: "quiz_complete" } }] };
+  if (CAPI_TEST) body.test_event_code = CAPI_TEST;
+  const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 4000);
+  try {
+    const r = await fetch(`https://graph.facebook.com/v24.0/${PIXEL}/events?access_token=${encodeURIComponent(CAPI_TOKEN)}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body), signal: ctl.signal });
+    const txt = (await r.text()).slice(0, 200);
+    if (!r.ok) console.error("capi lead", r.status, txt);
+    return String(r.status);
+  } catch (e) { return "error " + String(e).slice(0, 80); } finally { clearTimeout(t); }
+}
+
 Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: leadCors });
   if (req.method !== "POST") return new Response("ok");
   const raw = await req.text();
+  if (raw.length < 4000 && raw.includes('"action":"lead"')) {
+    let c: Record<string, any> = {};
+    try { c = JSON.parse(raw); } catch { return new Response("bad json", { status: 400, headers: leadCors }); }
+    if (c.action === "lead") {
+      const r = await sendLeadCapi(c);
+      return new Response(JSON.stringify({ ok: true, r }), { headers: { ...leadCors, "content-type": "application/json" } });
+    }
+  }
   if (!verify(req.headers.get("Paddle-Signature"), raw)) return new Response("bad signature", { status: 400 });
   let ev: Record<string, any>;
   try { ev = JSON.parse(raw); } catch { return new Response("bad json", { status: 400 }); }

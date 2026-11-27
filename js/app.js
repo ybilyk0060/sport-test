@@ -13,7 +13,7 @@ import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=a
 import { payment, newOrderId, loadPaddle } from './payment.js?v=a2f36a7-mwyvssvh';
 import { ART } from './art.js?v=a2f36a7-mwyvssvh';
 import { initDebug } from './debug.js?v=a2f36a7-mwyvssvh';
-import { initConsent } from './analytics.js?v=a2f36a7-mwyvssvh';
+import { initConsent, sendLead } from './analytics.js?v=a2f36a7-mwyvssvh';
 import * as subapi from './subapi.js?v=a2f36a7-mwyvssvh';
 import { drawShareCard } from './sharecard.js?v=a2f36a7-mwyvssvh';
 import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=a2f36a7-mwyvssvh';
@@ -166,6 +166,7 @@ function prep() {
     back: () => quiz(QUIZ.length - 1),
   });
   track('prep_shown');
+  sendLead(state.sid);
   // Камера запускалась до 17 с (модель позы компилировалась после разрешения). Начинаем загрузку, пока родитель читает
   // этот экран; через 1,2 с, чтобы экран успел отрисоваться (компиляция ненадолго занимает главный поток).
   setTimeout(() => { if (state.step === 'prep') preloadPose().catch(() => {}); }, 1200);

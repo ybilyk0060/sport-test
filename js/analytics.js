@@ -119,8 +119,6 @@ export function send(name, props = {}) {
     if (window.fbq && FUNNEL.has(name)) {
       if (name === 'quiz_start') window.fbq('track', 'ViewContent', { content_name: 'quiz' });
       if (name === 'test_done') window.fbq('track', 'CompleteRegistration', { content_name: 'test_done' });
-      // Анкета завершена (27.11, обучение рекламы на «анкета завершена»): стандартное событие Lead (с сервера пока не дублируется)
-      if (name === 'prep_shown') window.fbq('track', 'Lead', { content_name: 'quiz_complete' });
       // Схема событий для рекламы (тред Meta 25.11): ViewContent — старт, CompleteRegistration — камера пройдена,
       // InitiateCheckout — пейвол, AddPaymentInfo — нажал «Оплатить», Purchase (+Subscribe) — оплата.
       if (name === 'paywall_shown') window.fbq('track', 'InitiateCheckout', { value: p.amount, currency: p.currency });
@@ -159,3 +157,30 @@ export function initConsent() {
   });
   document.body.appendChild(el);
 }
+
+// Анкета завершена → Lead в Meta (обучение рекламы, 27.11): браузерный пиксель и тот же event_id с сервера (Conversions API,
+// функция sport-test-paddle), чтобы Meta склеила дубли, а события, потерянные во встроенных браузерах FB/IG, дошли с сервера.
+// Один раз на прохождение (sid). Страна для правил согласия — из языка браузера или часового пояса (как в оплате).
+const LEAD_FN = 'https://hcnlzndlivlojdqmzbgi.supabase.co/functions/v1/sport-test-paddle';
+function leadCountry() {
+  try {
+    const m = /-([A-Z]{2})$/i.exec(navigator.language || ''); if (m) return m[1].toUpperCase();
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    if (tz.startsWith('Australia/')) return 'AU';
+    if (tz.startsWith('America/')) return 'US';
+    if (tz === 'Europe/London') return 'GB';
+    return '';
+  } catch { return ''; }
+}
+export function sendLead(sid) {
+  if (!sid) return;
+  const key = 'sporttest.lead.' + sid;
+  try { if (localStorage.getItem(key)) return; localStorage.setItem(key, '1'); } catch { /* нет */ }
+  const eventId = `lead-${sid}`;
+  try { if (window.fbq) window.fbq('track', 'Lead', { content_name: 'quiz_complete' }, { eventID: eventId }); } catch { /* нет */ }
+  try {
+    const body = JSON.stringify({ action: 'lead', event_id: eventId, ...adContext(), country: leadCountry() });
+    fetch(LEAD_FN, { method: 'POST', headers: { 'content-type': 'application/json' }, body, keepalive: true }).catch(() => {});
+  } catch { /* нет */ }
+}
+
