@@ -41,7 +41,7 @@ export default {
     ],
     whyTitle: 'Why the camera?',
     trustTitle: 'Video never leaves this phone',
-    trust: ['Moves are recognized right on the phone by on-device AI (Google MediaPipe). No video is sent to any server.', 'Nothing is recorded or saved. We never see your child.', 'Only the results are kept, like “12 jumps”.'],
+    trust: ['Moves are recognized right on the phone by Google’s on-device AI. No video is sent anywhere.', 'No video is collected at all, so there’s nothing to store or share. This is the “privacy by design” approach the GDPR requires.', 'Only the results are kept, like “12 jumps”.'],
     why: 'It works like a coach’s eye: it counts jumps, squats and seconds of balance while your child moves.',
     privacy: 'Video stays on your phone. Nothing is recorded or uploaded.',
     allowNext: 'Your phone will ask about the camera: tap “Allow”.',

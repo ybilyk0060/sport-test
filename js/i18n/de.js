@@ -40,7 +40,7 @@ export default {
     ],
     whyTitle: 'Wozu die Kamera?',
     trustTitle: 'Das Video verlässt dieses Handy nicht',
-    trust: ['Die Bewegungen erkennt eine KI direkt auf dem Handy (Google MediaPipe). Kein Video geht an einen Server.', 'Es wird nichts aufgezeichnet oder gespeichert. Wir sehen Ihr Kind nie.', 'Gespeichert werden nur die Ergebnisse, z. B. „12 Sprünge“.'],
+    trust: ['Die Bewegungen erkennt eine KI von Google direkt auf dem Handy. Kein Video wird irgendwohin gesendet.', 'Es wird überhaupt kein Video erhoben, also kann nichts gespeichert oder weitergegeben werden. Das ist Datenschutz durch Technikgestaltung, wie ihn die DSGVO verlangt.', 'Gespeichert werden nur die Ergebnisse, z. B. „12 Sprünge“.'],
     why: 'Sie zählt wie ein Trainer mit: Sprünge, Kniebeugen und Sekunden auf einem Bein.',
     privacy: 'Das Video bleibt auf Ihrem Handy. Es wird nichts aufgezeichnet oder hochgeladen.',
     allowNext: 'Das Handy fragt nach der Kamera: auf „Erlauben“ tippen.',
