@@ -76,7 +76,7 @@ async function sendCapi(d: Record<string, any>, orderRef: string, value: number,
 // Lead «анкета завершена» со страницы (27.11): дубль браузерного пикселя с тем же event_id, без подписи Paddle.
 // Только проверка формы; с UK/ЕС без согласия не шлём; повтор одного event_id Meta сама отбрасывает.
 const leadCors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "content-type", "Access-Control-Allow-Methods": "POST, OPTIONS" };
-async function sendLeadCapi(c: Record<string, any>) {
+async function sendLeadCapi(c: Record<string, any>, ip: string) {
   if (!CAPI_TOKEN) return "no token";
   const eventId = str(c.event_id, 120);
   if (!/^lead-[A-Za-z0-9_-]{4,100}$/.test(eventId)) return "bad id";
@@ -87,6 +87,7 @@ async function sendLeadCapi(c: Record<string, any>) {
   if (str(c.fbc)) user_data.fbc = str(c.fbc);
   if (str(c.fbp)) user_data.fbp = str(c.fbp);
   if (str(c.ua)) user_data.client_user_agent = str(c.ua);
+  if (/^[0-9a-fA-F:.]{3,45}$/.test(ip)) user_data.client_ip_address = ip; // Meta требует IP или другие данные для событий сайта
   const body: Record<string, unknown> = { data: [{ event_name: "Lead", event_id: eventId, event_time: Math.floor(Date.now() / 1000), action_source: "website",
     event_source_url: str(c.url) || "https://kids-test.com/", user_data, custom_data: { content_name: "quiz_complete" } }] };
   if (CAPI_TEST) body.test_event_code = CAPI_TEST;
@@ -95,7 +96,7 @@ async function sendLeadCapi(c: Record<string, any>) {
     const r = await fetch(`https://graph.facebook.com/v24.0/${PIXEL}/events?access_token=${encodeURIComponent(CAPI_TOKEN)}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body), signal: ctl.signal });
     const txt = (await r.text()).slice(0, 200);
     if (!r.ok) console.error("capi lead", r.status, txt);
-    return String(r.status);
+    return `${r.status} ${r.ok ? "" : txt.slice(0, 160)}`;
   } catch (e) { return "error " + String(e).slice(0, 80); } finally { clearTimeout(t); }
 }
 
@@ -107,7 +108,8 @@ Deno.serve(async (req) => {
     let c: Record<string, any> = {};
     try { c = JSON.parse(raw); } catch { return new Response("bad json", { status: 400, headers: leadCors }); }
     if (c.action === "lead") {
-      const r = await sendLeadCapi(c);
+      const ip = (req.headers.get("x-forwarded-for") || "").split(",")[0].trim();
+      const r = await sendLeadCapi(c, ip);
       return new Response(JSON.stringify({ ok: true, r }), { headers: { ...leadCors, "content-type": "application/json" } });
     }
   }
