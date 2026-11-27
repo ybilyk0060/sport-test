@@ -51,8 +51,10 @@ function landing() {
   // Выбор языка вверху: внизу его закрывала панель Safari (прогон 26.11)
   const langs = Object.keys(LOCALES).length > 1 ? `<div class="langs top">${Object.entries({ en: 'English', de: 'Deutsch', uk: 'Українська' }).filter(([k]) => LOCALES[k] && (k === LANG || !(CONFIG.linkOnlyLanguages || []).includes(k))).map(([k, v]) => `<a href="?lang=${k}" class="${k === LANG ? 'on' : ''}">${v}</a>`).join('')}</div>` : '';
   screen(`${langs}<div class="hero"><div class="hero-art">${ART.hero}</div><h1>${esc(T.landing.title)}</h1><p class="promise">${esc(T.landing.promise)}</p></div>
+    <!-- Кнопка сразу под обещанием (реклама 27.11: в окне Facebook её закрывал баннер cookie, на iPhone SE она была ниже края) -->
+    <button class="btn" data-act="start">${esc(T.landing.cta)}</button>
     <ul class="points">${T.landing.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul><div class="trust-box"><span class="tb-ic" aria-hidden="true">🏅</span><span>${esc(T.landing.trustShort)}</span></div><div class="grow"></div>
-    <button class="btn" data-act="start">${esc(T.landing.cta)}</button><p class="small muted center land-note">${esc(T.landing.note)} ${esc(T.result.shortNote)}</p><p class="small muted center land-note">${esc(T.landing.trustNote)}</p>
+    <p class="small muted center land-note">${esc(T.landing.note)} ${esc(T.result.shortNote)}</p><p class="small muted center land-note">${esc(T.landing.trustNote)}</p>
     ${subapi.subOn() ? `<button class="link center" data-act="restore">${esc(T.paywall.restore)}</button>` : ''}
     ${legalLinks()}`, {
     restore: async () => {

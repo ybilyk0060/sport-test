@@ -523,3 +523,8 @@ details.box > summary::-webkit-details-marker { display: none; }
 .tip-mini svg { width: 34px; height: 34px; }
 .screen:has(.tips-row) .allow-next { font-size: 13px; margin-bottom: 4px; }
 @media (max-height: 520px) { .prep-why { display: none; } .tip-mini svg { width: 28px; height: 28px; } }
+/* Первый экран из рекламы (27.11): кнопка «Start» видна сразу и не под баннером cookie */
+.consent { padding: 10px 12px; gap: 8px; font-size: 12.5px; line-height: 1.35; }
+.consent button { padding: 8px 12px; font-size: 14px; }
+body.has-consent .screen { padding-bottom: 150px; }
+@media (max-height: 760px) { .hero-art { width: min(22vw, 90px); } .hero h1 { font-size: clamp(24px, 7vw, 30px); } .hero .promise { font-size: 16px; } }

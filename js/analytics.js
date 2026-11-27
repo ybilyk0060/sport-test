@@ -131,12 +131,14 @@ export function initConsent() {
   const C = T.consent;
   const el = document.createElement('div');
   el.className = 'consent';
+  document.body.classList.add('has-consent');
   el.innerHTML = `<p>${C.text} <a href="${T.meta.lang === 'uk' ? 'privacy.html' : `privacy-${T.meta.lang}.html`}">${C.more}</a></p><div><button data-c="necessary">${C.decline}</button><button data-c="all" class="primary">${C.accept}</button></div>`;
   el.addEventListener('click', (e) => {
     const b = e.target.closest('[data-c]'); if (!b) return;
     consent = b.dataset.c;
     try { localStorage.setItem(KEY, consent); } catch { /* нет доступа */ }
     el.remove();
+    document.body.classList.remove('has-consent');
     try { window.posthog && window.posthog.register && window.posthog.register({ consent }); } catch { /* нет */ }
     send('consent_choice', { choice: consent });
     start();
