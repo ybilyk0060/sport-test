@@ -1,6 +1,6 @@
 // Валюта, цены и даты по языку. en → USD, de → EUR, uk → UAH. Переопределение для проверки: ?cur=USD|EUR|UAH.
-import { LANG } from './i18n/index.js?v=1dbb396-mwyue5mt';
-import { CONFIG } from './config.js?v=1dbb396-mwyue5mt';
+import { LANG } from './i18n/index.js?v=a2f36a7-mwyvssvh';
+import { CONFIG } from './config.js?v=a2f36a7-mwyvssvh';
 
 const BY_LANG = { en: 'USD', de: 'EUR', uk: 'UAH' };
 let q = null;
