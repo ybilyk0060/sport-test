@@ -558,3 +558,4 @@ body.has-consent .screen { padding-bottom: 150px; }
 @media (max-width: 380px) { .hv-badge { font-size: 4.9cqw; } }
 @media (max-height: 600px) { .hv-badge { font-size: 4.9cqw; } }
 .hv-badge { top: 7cqw; }
+.hv-badge { padding: 1.3cqw 3cqw; top: 5.8cqw; }
