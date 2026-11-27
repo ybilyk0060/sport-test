@@ -1,10 +1,10 @@
 // Языки. Основной — английский (рынки США, Канада, Великобритания, Австралия), немецкий — Германия и Австрия,
 // украинский — Украина. Выбор: ?lang=en|de|uk (запоминается), иначе язык браузера, иначе en.
-import en from './en.js?v=7d9d736-mwyxcl47';
-import de from './de.js?v=7d9d736-mwyxcl47';
-import uk from './uk.js?v=7d9d736-mwyxcl47';
-import { CONFIG } from '../config.js?v=7d9d736-mwyxcl47';
-import { STUDIO } from '../engine/specs-studio.js?v=7d9d736-mwyxcl47';
+import en from './en.js?v=96d2da0-mwyyqqcf';
+import de from './de.js?v=96d2da0-mwyyqqcf';
+import uk from './uk.js?v=96d2da0-mwyyqqcf';
+import { CONFIG } from '../config.js?v=96d2da0-mwyyqqcf';
+import { STUDIO } from '../engine/specs-studio.js?v=96d2da0-mwyyqqcf';
 
 const ALL = { en, de, uk };
 // Только включённые в CONFIG.languages; первый в списке — язык по умолчанию
