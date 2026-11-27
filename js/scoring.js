@@ -91,7 +91,7 @@ export function levelOf(score) {
 // После ~300 тестов на группу «возраст × пол» заменить на P25 / P75 собственных данных.
 export const NORMS = {
   // legs — приседания за время (15 с для 3–5, иначе 20 с), рабочие пороги до данных
-  '3-5': { balance: [6, 15], knees: [14, 24], speed: [6, 12], flex: [2, 4], coordination: [5, 12], arms: null, legs: [5, 9] },
+  '3-5': { balance: [6, 15], knees: [14, 24], speed: [6, 12], flex: [2, 4], coordination: [5, 12], arms: [4, 9], legs: [5, 9] }, // arms: касания плеч за 15 с (рабочий порог 27.11, от 6–8 лет [8, 16] за 20 с)
   '6-8': { balance: [15, 26], knees: [20, 32], speed: [18, 28], flex: [3, 4], coordination: [12, 20], arms: [8, 16], legs: [9, 14] },
   '9-11': { balance: [20, 30], knees: [26, 38], speed: [25, 35], flex: [3, 4], coordination: [15, 24], arms: [12, 22], legs: [11, 16] },
   '12-15': { balance: [24, 30], knees: [30, 42], speed: [30, 40], flex: [3, 4], coordination: [18, 28], arms: [16, 28], legs: [13, 18] },

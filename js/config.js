@@ -120,6 +120,7 @@ export const CONFIG = {
       { key: 'high_knees', target: 15, capSec: 15, timed: true },
       { key: 'squats', target: 999, capSec: 15, timed: true },
       { key: 'jumping_jack', target: 999, capSec: 15, timed: true },
+      { key: 'shoulder_taps', target: 999, capSec: 15, timed: true }, // Юрий 27.11: малышам тоже, 15 с
     ], program: [
       { key: 'jumping_jack', target: 5, capSec: 20 },
       { key: 'arm_circles', target: 5, capSec: 20 },
