@@ -39,6 +39,8 @@ export default {
       { t: 'Ganzer Körper im Bild', d: 'Von Kopf bis Fuß sichtbar.' },
     ],
     whyTitle: 'Wozu die Kamera?',
+    trustTitle: 'Das Video verlässt dieses Handy nicht',
+    trust: ['Die Bewegungen erkennt eine KI direkt auf dem Handy (Google MediaPipe). Kein Video geht an einen Server.', 'Es wird nichts aufgezeichnet oder gespeichert. Wir sehen Ihr Kind nie.', 'Gespeichert werden nur die Ergebnisse, z. B. „12 Sprünge“.'],
     why: 'Sie zählt wie ein Trainer mit: Sprünge, Kniebeugen und Sekunden auf einem Bein.',
     privacy: 'Das Video bleibt auf Ihrem Handy. Es wird nichts aufgezeichnet oder hochgeladen.',
     allowNext: 'Das Handy fragt nach der Kamera: auf „Erlauben“ tippen.',

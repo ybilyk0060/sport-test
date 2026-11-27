@@ -40,6 +40,8 @@ export default {
       { t: 'Whole body in the frame', d: 'Head to toe visible.' },
     ],
     whyTitle: 'Why the camera?',
+    trustTitle: 'Video never leaves this phone',
+    trust: ['Moves are recognized right on the phone by on-device AI (Google MediaPipe). No video is sent to any server.', 'Nothing is recorded or saved. We never see your child.', 'Only the results are kept, like “12 jumps”.'],
     why: 'It works like a coach’s eye: it counts jumps, squats and seconds of balance while your child moves.',
     privacy: 'Video stays on your phone. Nothing is recorded or uploaded.',
     allowNext: 'Your phone will ask about the camera: tap “Allow”.',
