@@ -9,7 +9,9 @@
 //   нет человека в кадре дольше LOST_MS → тоже конец попытки
 // Метрика качества: покачивание таза по горизонтали (СКО в длинах корпуса) за время удержания.
 
-export const BAL = { LIFT: 0.15, START_MS: 400, DROP_MS: 500, LOST_MS: 1200, MIN_VIS: 0.5 };
+// 27.11 (человек в чёрном: баланс «терялся» через 0,6 и 2,2 с): видимость ног 0,2 вместо 0,5, пропажу позы
+// до LOST_MS считаем продолжением удержания (человек стоит, просто модель моргнула), щиколотки не видно — смотрим колени.
+export const BAL = { LIFT: 0.15, KNEE_LIFT: 0.12, START_MS: 400, DROP_MS: 600, LOST_MS: 2500, MIN_VIS: 0.2 };
 
 const mid = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
 const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
@@ -19,11 +21,15 @@ export function balanceFrame(lm) {
   if (!lm || lm.length < 29) return { ok: false };
   const ls = lm[11], rs = lm[12], lh = lm[23], rh = lm[24], la = lm[27], ra = lm[28];
   const vis = (p) => p && (p.visibility ?? 1) >= BAL.MIN_VIS;
-  if (![ls, rs, lh, rh, la, ra].every(vis)) return { ok: false };
+  const lk = lm[25], rk = lm[26];
+  if (![ls, rs, lh, rh].every(vis)) return { ok: false };
   const hip = mid(lh, rh);
   const torso = dist(mid(ls, rs), hip);
   if (!(torso > 0.02)) return { ok: false };
-  const diff = (ra.y - la.y) / torso; // >0: левая щиколотка выше (левая нога поднята)
+  let diff;
+  if (vis(la) && vis(ra)) diff = (ra.y - la.y) / torso; // >0: левая щиколотка выше (левая нога поднята)
+  else if (vis(lk) && vis(rk)) diff = ((rk.y - lk.y) / torso) * (BAL.LIFT / BAL.KNEE_LIFT); // по коленям, в той же шкале
+  else return { ok: false };
   const lifted = Math.abs(diff) >= BAL.LIFT;
   return { ok: true, lifted, side: lifted ? (diff > 0 ? 'left' : 'right') : null, hipX: hip.x / torso, torso };
 }
@@ -39,7 +45,8 @@ export function createBalanceRun({ key, target, capSec, clock, on, leg = null })
     if (finished) return result;
     finished = true;
     const now = clock();
-    if (holdStart != null) held = Math.max(held, (Math.min(now, dropSince ?? lostSince ?? now) - holdStart) / 1000);
+    // ушёл из кадра надолго — время до пропажи (секунды «вслепую» не засчитываем); иначе — до опускания ноги
+    if (holdStart != null) held = reason === 'lost' && lostSince != null ? (lostSince - holdStart) / 1000 : Math.max(held, (Math.min(now, dropSince ?? now) - holdStart) / 1000);
     const done = Math.min(target, Math.round(held * 10) / 10);
     const m = xs.length >= 10 ? xs.reduce((s, x) => s + x, 0) / xs.length : null;
     const sway = m == null ? null : Math.round(Math.sqrt(xs.reduce((s, x) => s + (x - m) ** 2, 0) / xs.length) * 1000) / 1000;
@@ -68,7 +75,11 @@ export function createBalanceRun({ key, target, capSec, clock, on, leg = null })
         if (holdStart != null && now - lostSince > BAL.LOST_MS) return finish('lost');
       } else {
         lostSince = null;
-        if (f.lifted) {
+        if (f.lifted && holdStart != null && f.side !== side) {
+          // Поднята другая нога — это не удержание, а шаг/бег на месте (иначе бег засчитывался как баланс, 27.11)
+          dropSince = dropSince ?? now;
+          return finish('broken');
+        } else if (f.lifted) {
           dropSince = null;
           liftSince = liftSince ?? now;
           if (holdStart == null && now - liftSince >= BAL.START_MS) { holdStart = liftSince; side = f.side; sides[f.side]++; }
@@ -81,7 +92,7 @@ export function createBalanceRun({ key, target, capSec, clock, on, leg = null })
           }
         }
       }
-      if (holdStart != null && dropSince == null && lostSince == null) {
+      if (holdStart != null && dropSince == null) { // пропажа позы короче LOST_MS не прерывает отсчёт
         held = (now - holdStart) / 1000;
         const sec = Math.floor(held);
         if (sec > lastSec) { lastSec = sec; on.count && on.count(Math.min(sec, target)); }

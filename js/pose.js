@@ -17,9 +17,10 @@ async function create(delegate) {
     baseOptions: { modelAssetPath: abs(CONFIG.modelPath), delegate },
     runningMode: 'VIDEO',
     numPoses: 1,
-    minPoseDetectionConfidence: 0.5,
-    minPosePresenceConfidence: 0.5,
-    minTrackingConfidence: 0.5,
+    // 27.11: 0,4 вместо 0,5 — меньше «потерь» человека в тёмной одежде и при слабом контрасте с фоном
+    minPoseDetectionConfidence: 0.4,
+    minPosePresenceConfidence: 0.4,
+    minTrackingConfidence: 0.4,
   });
 }
 

@@ -14,7 +14,8 @@ function pose(lift = 0, sway = 0, vis = 0.95) {
 check('две ноги на полу — не поднята', balanceFrame(pose(0)).lifted === false);
 check('левая поднята на 0,1 (0,4 корпуса) — поднята, сторона left', (() => { const f = balanceFrame(pose(0.1)); return f.lifted && f.side === 'left'; })());
 check('чуть приподнята (0,02 = 0,08 корпуса) — не считается', balanceFrame(pose(0.02)).lifted === false);
-check('плохая видимость — нет данных', balanceFrame(pose(0.1, 0, 0.2)).ok === false);
+check('очень плохая видимость (0,1) — нет данных', balanceFrame(pose(0.1, 0, 0.1)).ok === false);
+check('тёмная одежда (видимость 0,25) — нога поднята', balanceFrame(pose(0.1, 0, 0.25)).lifted === true);
 
 function sim(frames, target = 10, capSec = 30) {
   let t = 0, res = null; const counts = [];
@@ -48,7 +49,9 @@ r = sim([[31000, pose(0)]], 10, 30);
 check('не поднял — 0 с, причина time', r.res.done === 0 && r.res.reason === 'time', r.res);
 
 // Ушёл из кадра во время удержания
-r = sim([[4000, pose(0.1)], [2000, null]]);
+r = sim([[4000, pose(0.1)], [1500, null], [2000, pose(0.1)]]);
+check('модель моргнула на 1,5 с — удержание продолжается (~7,5 с)', Math.abs(r.res.done - 7.5) < 0.5, r.res);
+r = sim([[4000, pose(0.1)], [3000, null]]);
 check('ушёл из кадра — lost, ~4 с', r.res.reason === 'lost' && Math.abs(r.res.done - 4) < 0.5, r.res);
 
 console.log(fail ? `\n${fail} FAILED` : '\nALL OK'); process.exit(fail ? 1 : 0);

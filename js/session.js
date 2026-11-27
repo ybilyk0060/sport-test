@@ -10,7 +10,10 @@ import { STUDIO } from './engine/specs-studio.js?v=d160b1f-mwyzo001';
 import { CONFIG } from './config.js?v=d160b1f-mwyzo001';
 import { detectPose } from './pose.js?v=d160b1f-mwyzo001';
 
-const VIS = 0.5;
+// 27.11: человек в чёрном — видимость ног у MediaPipe падала ниже 0,5, и счёт обнулялся (баланс «потерян», бег 0).
+// Порог видимости точек для счёта и кадра снижен: лучше засчитать с небольшой погрешностью, чем не засчитать.
+export const VIS_GATE = 0.2;
+const VIS = 0.35;
 const seen = (p) => p && p.visibility >= VIS && p.x > 0 && p.x < 1 && p.y > 0 && p.y < 1;
 
 // Проверка перед стартом: голова и стопы в кадре.
@@ -55,10 +58,12 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
   if (ex.custom === 'balance') return createBalanceRun({ key, target, capSec, clock, on, leg: ex.leg });
   if (ex.custom === 'sidejump') return createSideJumpRun({ key, target, capSec, clock, on });
   if (ex.custom === 'bend') return createBendRun({ key, target, capSec, clock, on });
-  const spec = SPECS[ex.spec || key] || (STUDIO[key] && STUDIO[key].spec);
+  const spec0 = SPECS[ex.spec || key] || (STUDIO[key] && STUDIO[key].spec);
+  const lowVis = (sp) => ({ ...sp, gates: { ...(sp.gates || {}), minVisibility: Math.min(sp.gates?.minVisibility ?? 0.5, VIS_GATE) } });
+  const spec = lowVis(spec0);
   const isSeconds = spec.goal === 'seconds';
   const engine = new SpecEngine(spec);
-  const an = new ExerciseAnalyzer(engine, isSeconds ? 0 : target, spec.gates?.minVisibility ?? 0.5, isSeconds ? target : 0);
+  const an = new ExerciseAnalyzer(engine, isSeconds ? 0 : target, Math.min(spec.gates?.minVisibility ?? 0.5, VIS_GATE), isSeconds ? target : 0);
   const age = (CONFIG.ageGroups[ageGroup] || CONFIG.ageGroups[CONFIG.defaultAge]).engineAge;
   an.setCalibration(calibrationForAge(ex.maxEngineAge ? Math.min(age, ex.maxEngineAge) : age));
   if (aspect) an.setFrameAspect(aspect);
@@ -67,7 +72,7 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
   let an2 = null;
   if (ex.altSpec && SPECS[ex.altSpec]) {
     const spec2 = SPECS[ex.altSpec];
-    an2 = new ExerciseAnalyzer(new SpecEngine(spec2), isSeconds ? 0 : target, spec2.gates?.minVisibility ?? 0.5, 0);
+    an2 = new ExerciseAnalyzer(new SpecEngine(lowVis(spec2)), isSeconds ? 0 : target, Math.min(spec2.gates?.minVisibility ?? 0.5, VIS_GATE), 0);
     an2.setCalibration(calibrationForAge(ex.maxEngineAge ? Math.min(age, ex.maxEngineAge) : age));
     if (aspect) an2.setFrameAspect(aspect);
   }

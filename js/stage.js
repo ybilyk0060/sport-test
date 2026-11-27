@@ -199,7 +199,9 @@ function kneesDown(lm) {
 let inFrame = false; // последний кадр вступления: голова и стопы видны
 const HAND_R = 34, HAND_C = 2 * Math.PI * HAND_R;
 const BIG_R = 84, BIG_C = 2 * Math.PI * BIG_R;
+let motionCarry = 0; // повторы, сделанные до старта (старт движением)
 function intro(p, i, n) {
+  motionCarry = 0;
   return new Promise((resolve) => {
     inFrame = false;
     const handHtml = `<div class="raise"><svg viewBox="0 0 80 80" aria-hidden="true"><circle class="r-bg" cx="40" cy="40" r="${HAND_R}"/><circle class="r-fg" data-el="ring" cx="40" cy="40" r="${HAND_R}" stroke-dasharray="${HAND_C}" stroke-dashoffset="${HAND_C}"/><text x="40" y="52" text-anchor="middle" font-size="34">${CONFIG.exercises[p.key].floor ? '🙌' : '✋'}</text></svg><span>${esc(CONFIG.exercises[p.key].floor ? T.cam.plankReady : T.cam.raiseHand)}</span></div>`;
@@ -239,11 +241,24 @@ function intro(p, i, n) {
       resolve(v);
     };
     hud.onclick = (e) => { const a = e.target.closest('[data-act]'); if (!a) return; if (a.dataset.act === 'go') end('go', 'button'); if (a.dataset.act === 'skip-ex') end('skip', 'button'); };
-    // Камера живая и под карточкой: распознаём позу только ради жеста
+    // Старт движением (Юрий 27.11): люди сразу повторяют за пандой. Тот же счётчик упражнения работает «в тени» с начала
+    // инструкции; первое засчитанное движение (повтор или секунда на одной ноге) — панда убирается, счёт идёт сразу,
+    // без отсчёта 3-2-1, уже сделанные повторы переносятся. Поднятая рука и кнопка работают как раньше.
+    const introAt = performance.now();
+    let shadowCount = 0;
+    const shadow = createRun({
+      key: p.key, target: p.target, capSec: 600, ageGroup: state.quiz.age || CONFIG.defaultAge, timed: !!p.timed,
+      aspect: video.videoWidth && video.videoHeight ? video.videoWidth / video.videoHeight : null,
+      clock: () => performance.now(), on: { count: (c) => { shadowCount = c; }, hint: () => {}, tick: () => {}, finish: () => {} },
+    });
+    shadow.start();
+    // Камера живая и под карточкой: распознаём позу ради жеста и старта движением
     if (stopLoop) { stopLoop(); stopLoop = null; }
     stopLoop = frameLoop(video, (lm) => {
       drawSkeleton(lm || false);
       inFrame = framingCheck(lm).ok;
+      if (!shadow.finished) shadow.frame(lm);
+      if (shadowCount >= 1 && performance.now() - introAt > 1500) { motionCarry = shadow.isSeconds ? 0 : shadowCount; return end('motion', 'motion'); }
       const r = gesture.frame(lm, performance.now());
       ring.style.strokeDashoffset = String(HAND_C * (1 - r.progress));
       ring.parentNode.parentNode.classList.toggle('on', r.progress > 0);
@@ -299,10 +314,14 @@ async function liveExercise(p, i, n) {
   const how = await intro(p, i, n);
   if (!alive) return null;
   if (how === 'skip') { const r = skipped(p); track('exercise_done', { key: p.key, skipped: true }); return r; }
+  const carry = how === 'motion' ? motionCarry : 0;
   // Прогон 26.11: рука поднята вплотную к телефону — и баланс начал отсчёт, когда в кадре было одно лицо.
   // Стоя: перед отсчётом снова ждём тело целиком в кадре (на полу голова/стопы не обязаны быть видны).
-  if (!inFrame && !CONFIG.exercises[p.key].floor) { await framing(); if (!alive) return null; }
-  await countdown();
+  // Старт движением: человек уже делает упражнение — ни кадра, ни отсчёта, сразу счёт.
+  if (how !== 'motion') {
+    if (!inFrame && !CONFIG.exercises[p.key].floor) { await framing(); if (!alive) return null; }
+    await countdown();
+  } else say('cue_great', { interrupt: true });
   if (!alive) return null;
   return new Promise((resolve) => {
     let ui, hintTimer = 0, lostSince = null, lostSaidAt = 0, kneelSince = null, kneeling = false, kneelSaid = 0, kneelN = 0;
@@ -311,12 +330,13 @@ async function liveExercise(p, i, n) {
       aspect: video.videoWidth && video.videoHeight ? video.videoWidth / video.videoHeight : null,
       clock: () => performance.now(),
       on: {
-        count: (c) => { ui.num.textContent = c; ui.set(c); ui.num.classList.remove('pop'); void ui.num.offsetWidth; ui.num.classList.add('pop'); const ex = CONFIG.exercises[p.key]; if (c <= 30 && ex.custom !== 'sidejump' && ex.custom !== 'bend') say('count_' + c); if (ex.coach && !run.isSeconds && c % 5 === 0 && c < p.target) setTimeout(() => say(ex.coach + (1 + ((c / 5 - 1) % 4)), { interrupt: false }), 650); },
+        count: (c0) => { const c = c0 + carry; ui.num.textContent = c; ui.set(c); ui.num.classList.remove('pop'); void ui.num.offsetWidth; ui.num.classList.add('pop'); const ex = CONFIG.exercises[p.key]; if (c <= 30 && ex.custom !== 'sidejump' && ex.custom !== 'bend') say('count_' + c); if (ex.coach && !run.isSeconds && c % 5 === 0 && c < p.target) setTimeout(() => say(ex.coach + (1 + ((c / 5 - 1) % 4)), { interrupt: false }), 650); },
         hint: (id) => { const text = T.hints[id]; if (!text) return; ui.hint.textContent = text; clearTimeout(hintTimer); hintTimer = setTimeout(() => { ui.hint.textContent = ''; }, 2500); say(exists('hint_' + id) ? 'hint_' + id : id, { interrupt: false }); },
         tick: ({ left }) => { ui.bar.style.width = `${Math.max(0, (left / p.capSec) * 100)}%`; ui.timeLeft(left); },
         finish: async (r) => {
           if (stopLoop) { stopLoop(); stopLoop = null; }
           clearTimeout(hintTimer);
+          if (carry && !r.skipped) r = { ...r, done: r.target >= 999 ? r.done + carry : Math.min(r.target, r.done + carry), completed: r.target < 999 ? r.done + carry >= r.target : r.completed, metrics: { ...r.metrics, motionStartCarry: carry } };
           track('exercise_done', { key: p.key, done: r.done, target: r.target, reason: r.reason, sec: r.elapsedSec, fps: poseStatus.fps, skipped: !!r.skipped });
           drawSkeleton(null);
           if (!r.skipped) { hud.innerHTML = `<div class="big-center"><div class="done-big" aria-hidden="true">✓</div><div class="t" style="font-size:36px">${esc(T.cam.done)}</div></div>`; await sleep(900); }
@@ -325,6 +345,7 @@ async function liveExercise(p, i, n) {
       },
     });
     ui = runHud(p, i, n, run.isSeconds);
+    if (carry) { ui.num.textContent = carry; ui.set(carry); }
     hud.onclick = (e) => { const a = e.target.closest('[data-act]'); if (a && a.dataset.act === 'skip-ex') run.skip(); };
     track('exercise_start', { key: p.key, target: p.target });
     run.start();
