@@ -10,11 +10,23 @@ import { T } from './i18n/index.js?v=a2f36a7-mwyvssvh';
 const KEY = 'sporttest.consent';
 let consent = null;
 try { consent = localStorage.getItem(KEY); } catch { /* нет доступа */ }
+// Баннер согласия — только для ЕС, ЕЭЗ, Швейцарии и Великобритании (решение Юрия 27.11, о риске предупреждён):
+// в США, Австралии и др. пиксель и аналитика включаются сразу. Регион — по часовому поясу; не удалось определить — спрашиваем.
+export const consentRegion = (() => {
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    if (!tz) return true;
+    if (tz.startsWith('Europe/')) return true;
+    if (['Atlantic/Reykjavik', 'Atlantic/Canary', 'Atlantic/Madeira', 'Atlantic/Azores', 'Atlantic/Faroe', 'Arctic/Longyearbyen'].includes(tz)) return true;
+    return T.meta.lang === 'de';
+  } catch { return true; }
+})();
+if (!consent && !consentRegion) consent = 'all';
 let phMode = null; // null | 'full' (согласие) | 'cookieless' (нет согласия)
 let pixelOn = false;
 
 // Шаги воронки, которые уходят наружу (остальные события — только на устройстве)
-const FUNNEL = new Set(['open', 'camera_blocked_shown', 'open_in_chrome_click', 'open_in_safari_click', 'fallback_start', 'quiz_start', 'quiz_answer', 'prep_shown', 'camera_granted', 'camera_denied', 'test_start', 'exercise_done', 'test_done',
+const FUNNEL = new Set(['open', 'camera_blocked_shown', 'open_in_chrome_click', 'open_in_safari_click', 'fallback_start', 'quiz_start', 'quiz_answer', 'prep_shown', 'link_form_open', 'link_requested', 'camera_granted', 'camera_denied', 'test_start', 'exercise_done', 'test_done',
   'result_shown', 'paywall_shown', 'offer_timer_end', 'pay_click', 'checkout_open', 'checkout_closed', 'checkout_failed', 'paid', 'pay_cancelled', 'report_shown', 'workout_start', 'workout_done', 'sub_cancelled', 'gift_code', 'app_link']);
 // Только безопасные поля
 const SAFE = ['order', 'fps', 'ms', 'q', 'step', 'reason', 'confirm', 'via', 'n', 'key', 'skipped', 'amount', 'currency', 'discount', 'mode', 'summary', 'plan', 'test', 'app', 'id', 'lang', 'kind', 'via', 'ok', 'browser', 'platform', 'inApp', 'provider', 'utm', 'ref', 'choice', 'done', 'target', 'error', 'regular'];
@@ -107,6 +119,8 @@ export function send(name, props = {}) {
     if (window.fbq && FUNNEL.has(name)) {
       if (name === 'quiz_start') window.fbq('track', 'ViewContent', { content_name: 'quiz' });
       if (name === 'test_done') window.fbq('track', 'CompleteRegistration', { content_name: 'test_done' });
+      // Анкета завершена (27.11, обучение рекламы на «анкета завершена»): стандартное событие Lead (с сервера пока не дублируется)
+      if (name === 'prep_shown') window.fbq('track', 'Lead', { content_name: 'quiz_complete' });
       // Схема событий для рекламы (тред Meta 25.11): ViewContent — старт, CompleteRegistration — камера пройдена,
       // InitiateCheckout — пейвол, AddPaymentInfo — нажал «Оплатить», Purchase (+Subscribe) — оплата.
       if (name === 'paywall_shown') window.fbq('track', 'InitiateCheckout', { value: p.amount, currency: p.currency });
@@ -123,7 +137,7 @@ export function send(name, props = {}) {
   } catch { /* аналитика не должна ломать страницу */ }
 }
 
-// Баннер согласия (ЕС, Великобритания и остальные — одинаково)
+// Баннер согласия: только где consentRegion (ЕС/ЕЭЗ/Швейцария/UK); в остальных странах consent уже «all» и баннер не показывается
 export function initConsent() {
   if (!CONFIG.analytics.metaPixelId && !CONFIG.analytics.posthogKey) return; // нечего включать — баннер не нужен
   start(); // PostHog без cookie считает и тех, кто баннер не тронул

@@ -4,9 +4,9 @@ import { T } from './i18n/index.js?v=a2f36a7-mwyvssvh';
 import { CONFIG } from './config.js?v=a2f36a7-mwyvssvh';
 import { money, PRICE, CUR, fmtDate, } from './locale.js?v=a2f36a7-mwyvssvh';
 import { LANG, LOCALES } from './i18n/index.js?v=a2f36a7-mwyvssvh';
-import { state, setState, resetState, track, importHandoff, store } from './store.js?v=a2f36a7-mwyvssvh';
+import { state, setState, resetState, track, importHandoff, exportHandoff, store } from './store.js?v=a2f36a7-mwyvssvh';
 import { detectEnv } from './env.js?v=a2f36a7-mwyvssvh';
-import { prefetchPose } from './pose.js?v=a2f36a7-mwyvssvh';
+import { prefetchPose, preloadPose } from './pose.js?v=a2f36a7-mwyvssvh';
 import { unlockAudio } from './audio.js?v=a2f36a7-mwyvssvh';
 import { startStage, startFallback, toast, prefetchVideos } from './stage.js?v=a2f36a7-mwyvssvh';
 import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=a2f36a7-mwyvssvh';
@@ -23,7 +23,8 @@ const app = document.getElementById('app');
 const params = new URLSearchParams(location.search);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const paywallMode = ['teaser', 'hard'].includes(params.get('paywall')) ? params.get('paywall') : CONFIG.paywallMode;
-const QUIZ = ['age', 'sex', 'body', 'now', 'likes', 'temper', 'goal', 'screen'];
+// Рост и вес убраны (аудит 27.11: шаг терял 27% начавших). Без них — как при «Пропустить»: поправки на телосложение нет.
+const QUIZ = ['age', 'sex', 'now', 'likes', 'temper', 'goal', 'screen'];
 const SUB = CONFIG.subscription;
 const privacyUrl = LANG === 'uk' ? 'privacy.html' : `privacy-${LANG}.html`;
 // Юридические ссылки: рядом с кнопкой оплаты и внизу страниц
@@ -50,7 +51,7 @@ function landing() {
   setState({ step: 'landing' });
   // Выбор языка вверху: внизу его закрывала панель Safari (прогон 26.11)
   const langs = Object.keys(LOCALES).length > 1 ? `<div class="langs top">${Object.entries({ en: 'English', de: 'Deutsch', uk: 'Українська' }).filter(([k]) => LOCALES[k] && (k === LANG || !(CONFIG.linkOnlyLanguages || []).includes(k))).map(([k, v]) => `<a href="?lang=${k}" class="${k === LANG ? 'on' : ''}">${v}</a>`).join('')}</div>` : '';
-  screen(`${langs}<div class="hero"><div class="hero-art">${ART.hero}</div><h1>${esc(T.landing.title)}</h1><p class="promise">${esc(T.landing.promise)}</p></div>
+  screen(`${langs}${LANG === 'en' ? `<div class="hero hero-vid"><video class="hero-video" src="assets/landing/hero-p5.mp4" poster="assets/landing/hero-p5.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video><div class="hv-text"><h1>${esc(T.landing.title)}</h1><p class="promise">${esc(T.landing.promise)}</p></div></div>` : `<div class="hero"><div class="hero-art">${ART.hero}</div><h1>${esc(T.landing.title)}</h1><p class="promise">${esc(T.landing.promise)}</p></div>`}
     <!-- Кнопка сразу под обещанием (реклама 27.11: в окне Facebook её закрывал баннер cookie, на iPhone SE она была ниже края) -->
     <button class="btn" data-act="start">${esc(T.landing.cta)}</button>
     <ul class="points">${T.landing.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul><div class="trust-box"><span class="tb-ic" aria-hidden="true">🏅</span><span>${esc(T.landing.trustShort)}</span></div><div class="grow"></div>
@@ -149,12 +150,25 @@ function prep() {
     <div class="trust-cam"><b class="tc-title">${esc(P.trustTitle)}</b><ul>${P.trust.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>
     <div class="tips-row">${P.tips.map((t, i) => `<div class="tip-mini">${ART.prep[i]}<span>${esc(t)}</span></div>`).join('')}</div><div class="grow"></div>
     <div class="cta-bar"><p class="allow-next">${esc(P.allowNext)}</p><button class="btn" data-act="cam">${esc(P.cta)}</button></div>
-    <button class="link center small" data-act="alt">${esc(P.alt)}</button>`, {
+    <!-- Ребёнка нет рядом (аудит 27.11: родитель листает Facebook один) — ссылка на почту, ответы сохраняются -->
+    <button class="link center small" data-act="later">${esc(P.later)}</button>
+    <div class="later-box" data-el="later" hidden><p class="small">${esc(P.laterLead)}</p><input class="field" type="email" inputmode="email" autocomplete="email" data-el="later-email" placeholder="name@example.com" maxlength="120" value="${esc(state.email || '')}"><button class="btn line" data-act="send-link">${esc(P.laterSend)}</button><p class="small muted">${esc(P.laterNote)}</p></div>`, {
+    later: () => { const b = app.querySelector('[data-el=later]'); b.hidden = false; track('link_form_open'); setTimeout(() => { b.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 50); },
+    'send-link': async () => {
+      const inp = app.querySelector('[data-el=later-email]'), email = (inp.value || '').trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { inp.classList.add('bad'); inp.focus(); return; }
+      inp.classList.remove('bad'); setState({ email });
+      const btn = app.querySelector('[data-act=send-link]'); btn.disabled = true;
+      try { await subapi.sendLink(email, exportHandoff(), LANG); track('link_requested'); app.querySelector('[data-el=later]').innerHTML = `<p class="tip">${esc(P.laterSent)}</p>`; }
+      catch { btn.disabled = false; toast(P.laterFail); }
+    },
     cam: () => { app.onclick = null; startStage({ done: testDone, exit: prep }); },
     back: () => quiz(QUIZ.length - 1),
-    alt: () => { app.onclick = null; startFallback({ done: testDone, exit: prep }); },
   });
   track('prep_shown');
+  // Камера запускалась до 17 с (модель позы компилировалась после разрешения). Начинаем загрузку, пока родитель читает
+  // этот экран; через 1,2 с, чтобы экран успел отрисоваться (компиляция ненадолго занимает главный поток).
+  setTimeout(() => { if (state.step === 'prep') preloadPose().catch(() => {}); }, 1200);
 }
 
 // ---------- 6. «Рахуємо результат» ----------
@@ -374,8 +388,9 @@ function appsBlock() {
   const live = mode === 'live';
   const lead = live ? (state.email ? A.liveLead(state.email) : A.liveLeadNoEmail) : A.soonLead;
   const cards = appsByAge().map(({ k, a, fits }) => {
-    const links = live ? storeLinks(k, a) : '';
-    const soon = live && !(a.ios.live && a.android.live) ? `<span class="small muted">${esc(A.soon([!a.ios.live && A.ios, !a.android.live && A.android].filter(Boolean).join(' / ')))}</span>` : '';
+    // Ссылки в магазины — для уже вышедших приложений и в режиме 'soon' (Kidsney вышел, Юрий 27.11); премиум по подписке — «скоро»
+    const links = storeLinks(k, a);
+    const soon = !(a.ios.live && a.android.live) ? `<span class="small muted">${esc(A.soon([!a.ios.live && A.ios, !a.android.live && A.android].filter(Boolean).join(' / ')))}</span>` : '';
     return `<div class="app-card"><div><b>${esc(A[k].name)}</b>${fits ? `<span class="tag-ok">${esc(A.forAge)}</span>` : ''}</div><span class="small muted">${esc(A[k].d)}</span>${links ? `<div class="row-links">${links}</div>` : ''}${soon}</div>`;
   }).join('');
   return `<div class="apps-block${live ? '' : ' apps-soon-card'}"><h2 class="sec-title">${esc(live ? A.liveTitle : A.soonTitle)}</h2><p class="small muted">${esc(lead)}</p>${cards}</div>`;

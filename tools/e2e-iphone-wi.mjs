@@ -19,7 +19,7 @@ const sec = () => +((Date.now() - T0) / 1000).toFixed(1);
 const note = (type, data = {}) => { const e = { t: sec(), type, ...data }; fs.appendFileSync(path.join(OUT, 'log.jsonl'), JSON.stringify(e) + '\n'); console.log(`[${e.t}s] ${type}`, JSON.stringify(data)); };
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const ANSWERS = { age: '12-15', sex: 'boy', now: 'section', likes: 'team', temper: 'active', goal: 'health', screen: 'mid' };
-const IDS = ['age', 'sex', 'body', 'now', 'likes', 'temper', 'goal', 'screen'];
+const IDS = ['age', 'sex', 'now', 'likes', 'temper', 'goal', 'screen'];
 const BODY = { cm: '158', kg: '47' };
 let shotN = 0;
 function shot(name) {

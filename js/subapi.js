@@ -16,6 +16,8 @@ export const cancel = (token) => call({ action: 'cancel', token });
 export const resume = (token) => call({ action: 'resume', token });
 export const sync = (token, workouts) => call({ action: 'sync', token, workouts }).catch(() => null);
 export const restore = (email, lang) => call({ action: 'restore', email, lang, returnTo: siteUrl() });
+// «Ребёнка нет рядом»: письмо со ссылкой продолжить тест (ответы анкеты в ссылке, s=…)
+export const sendLink = (email, s, lang) => call({ action: 'sendlink', email, s, lang, returnTo: siteUrl() });
 
 // Серверная подписка → вид, который хранит страница
 export const fromServer = (s) => ({ status: s.status, startedAt: s.startedAt, paidUntil: s.paidUntil, cancelledAt: s.cancelledAt, test: s.mode !== 'live', server: true });

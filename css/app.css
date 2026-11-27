@@ -528,3 +528,13 @@ details.box > summary::-webkit-details-marker { display: none; }
 .consent button { padding: 8px 12px; font-size: 14px; }
 body.has-consent .screen { padding-bottom: 150px; }
 @media (max-height: 760px) { .hero-art { width: min(22vw, 90px); } .hero h1 { font-size: clamp(24px, 7vw, 30px); } .hero .promise { font-size: 16px; } }
+/* Первый экран как в рекламе: ролик P5 слева, вопрос объявления справа (аудит 27.11) */
+.hero-vid { flex-direction: row; align-items: center; gap: 14px; }
+.hero-video { flex: 0 0 36%; width: 36%; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 16px; background: #f4e7d6; box-shadow: 0 6px 18px rgba(29,27,47,.12); }
+.hv-text { display: grid; gap: 8px; }
+.hero-vid h1 { font-size: clamp(26px, 7.6vw, 32px); }
+.hero-vid .promise { font-size: 15px; line-height: 1.35; }
+@media (max-height: 600px) { .hero-video { flex-basis: 28%; width: 28%; } }
+.later-box { display: grid; gap: 8px; background: var(--card); border-radius: 16px; padding: 12px 14px; box-shadow: inset 0 0 0 1.5px var(--line); }
+.later-box .field.bad { box-shadow: inset 0 0 0 2px #e0533d; }
+.later-box[hidden] { display: none; }

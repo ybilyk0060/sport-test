@@ -8,6 +8,7 @@
 // POST {action:'resume', token}            -> {sub}
 // POST {action:'sync', token, workouts}    -> {ok}         (выполненные тренировки — для других устройств)
 // POST {action:'restore', email, returnTo} -> {ok:true}    (всегда ok; письмо со ссылкой, если подписка есть)
+// POST {action:'sendlink', email, s, lang, returnTo} -> {ok:true} (письмо «продолжить тест», когда ребёнок рядом; лимиты)
 // POST {action:'remind'} + заголовок x-cron-secret -> письма «через 3 дня продление: цена, дата, ссылка отмены» (cron раз в час)
 //
 // Письма — через Brevo (секреты BREVO_API_KEY, SPORT_TEST_MAIL_FROM). Без секретов письма не отправляются, остальное работает.
@@ -208,6 +209,31 @@ Deno.serve(async (req) => {
         }
       }
       return json({ ok: true, sent, nurtured });
+    }
+
+    // «Ребёнка нет рядом»: письмо со ссылкой продолжить тест (ответы анкеты в ссылке). Не больше 3 писем на адрес за сутки
+    // и 300 в час на всех; адрес не храним (только sha256 для счёта). Ответ одинаковый — по нему нельзя ничего узнать.
+    if (b.action === "sendlink") {
+      const email = String(b.email || "").trim().toLowerCase();
+      const site = safeSite(String(b.returnTo || ""));
+      const s = String(b.s || "");
+      if (!emailOk(email) || !site || !/^[A-Za-z0-9_-]{10,3000}$/.test(s)) return json({ ok: false }, 400);
+      const eh = hash("link:" + email);
+      const day = new Date(Date.now() - 86400000).toISOString(), hour = new Date(Date.now() - 3600000).toISOString();
+      const { count: mine } = await db.from("sport_test_link_requests").select("id", { count: "exact", head: true }).eq("email_hash", eh).gte("created_at", day);
+      const { count: all } = await db.from("sport_test_link_requests").select("id", { count: "exact", head: true }).gte("created_at", hour);
+      if ((mine ?? 0) >= 3 || (all ?? 0) >= 300) return json({ ok: true });
+      await db.from("sport_test_link_requests").insert({ email_hash: eh });
+      await db.from("sport_test_link_requests").delete().lt("created_at", new Date(Date.now() - 30 * 86400000).toISOString()); // храним не больше 30 дней (privacy-en)
+      const lang = ["en", "de", "uk"].includes(String(b.lang)) ? String(b.lang) : "en";
+      const link = `${site}?s=${s}&lang=${lang}`;
+      const M = {
+        en: { subject: "Your link to the kids sports test", text: `Here is your link to continue the test when your child is nearby. Your answers are saved:\n${link}\n\nYou'll need about 6×6 ft (2×2 m) of space and the phone 2–3 steps away. The exercises take about 3 minutes. Video stays on your phone.\n\nkids-test.com` },
+        de: { subject: "Ihr Link zum Sporttest für Kinder", text: `Hier ist Ihr Link, um den Test fortzusetzen, wenn Ihr Kind in der Nähe ist. Ihre Antworten sind gespeichert:\n${link}\n\nSie brauchen etwa 2 × 2 m Platz, das Handy steht 2–3 Schritte entfernt. Die Übungen dauern etwa 3 Minuten. Das Video bleibt auf Ihrem Handy.\n\nkids-test.com` },
+        uk: { subject: "Ваше посилання на спортивний тест для дитини", text: `Ось посилання, щоб продовжити тест, коли дитина буде поруч. Ваші відповіді збережено:\n${link}\n\nПотрібно близько 2×2 м вільного місця, телефон за 2–3 кроки. Вправи займуть близько 3 хвилин. Відео залишається на телефоні.\n\nkids-test.com` },
+      }[lang]!;
+      await mail(email, M.subject, M.text);
+      return json({ ok: true });
     }
 
     if (b.action === "restore") {
