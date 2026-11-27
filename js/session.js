@@ -54,16 +54,17 @@ const pct = (a, p) => { const s = [...a].sort((x, y) => x - y); return s[Math.mi
 // Мягче для живых людей (прогон Юрия 27.11: бежал 15 с, засчитано 3,9 с). Колено в стойке у него на 0,75–0,85 корпуса
 // ниже таза, а «перезарядка» шага требовала 0,74–0,8 — половина шагов не засчитывалась; отсчёт начинался с 4-го шага.
 function soften(key, sp) {
-  if (key !== 'high_knees' || !sp.motion) return sp;
+  if (key !== 'high_knees' || !sp.motion || globalThis.__NOSOFT) return sp;
   const m = sp.motion;
   return { ...sp, motion: { ...m,
     rearm: { all: [{ m: 'knee_h', max: { young: -0.7, standard: -0.66 } }] },
-    otherDown: { all: [{ m: 'other_h', max: { young: -0.64, standard: -0.62 } }] },
+    // otherDown (вторая нога на полу) не трогаем: с ослабленным прыжки и приседания засчитывались как бег
     // maxPauseMs: после паузы дольше 3 с (человека не было видно) бег больше не засчитывался до конца упражнения — 27.11
-    timing: { ...m.timing, activeWindowMs: 1500, startLifts: 2, maxPauseMs: 60000 },
+    timing: { ...m.timing, activeWindowMs: 1500, startLifts: 3, maxPauseMs: 60000 },
   } };
 }
 
+const MIRROR_SUM = new Set(['cross_crawl']);
 // Создаёт прогон упражнения. clock() — время в мс (живая камера: performance.now, запись: позиция в видео).
 export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) {
   const ex = CONFIG.exercises[key] || {};
@@ -89,8 +90,17 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
     an2.setCalibration(calibrationForAge(ex.maxEngineAge ? Math.min(age, ex.maxEngineAge) : age));
     if (aspect) an2.setFrameAspect(aspect);
   }
+  // Локоть к колену (Юрий 27.11): спека считала только левое колено. Зеркальная копия спеки считает правое,
+  // счёт — сумма обеих сторон: каждое касание (левое и правое) засчитывается.
+  const sumMirror = MIRROR_SUM.has(ex.spec || key) && !an2;
+  if (sumMirror) {
+    const spec2 = JSON.parse(JSON.stringify(spec).replace(/left_|right_/g, (w) => (w === 'left_' ? 'right_' : 'left_')));
+    an2 = new ExerciseAnalyzer(new SpecEngine(spec2), target, Math.min(spec2.gates?.minVisibility ?? 0.5, VIS_GATE), 0);
+    an2.setCalibration(calibrationForAge(ex.maxEngineAge ? Math.min(age, ex.maxEngineAge) : age));
+    if (aspect) an2.setFrameAspect(aspect);
+  }
   const facingHints = new Set([spec.facingHint, ex.altSpec && SPECS[ex.altSpec] ? SPECS[ex.altSpec].facingHint : null, 'turn_sideways', 'jumping_jack_face_wrong'].filter(Boolean));
-  const reps = () => Math.max(an.repsCompleted, an2 ? an2.repsCompleted : 0);
+  const reps = () => (sumMirror ? an.repsCompleted + an2.repsCompleted : Math.max(an.repsCompleted, an2 ? an2.repsCompleted : 0));
 
   const m = { hints: {}, lostFrames: 0, frames: 0 };
   const perRep = { armDiffs: [], feet: [], depths: [] };
@@ -173,7 +183,8 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
       if (lm) {
         const sm = smoother.smooth(lm.map((p) => ({ x: p.x, y: p.y, z: p.z || 0, visibility: p.visibility ?? 0 })), now);
         metricsNow = an.processFrame(sm, now);
-        if (an2) { const m2 = an2.processFrame(sm, now); if (m2.repsCompleted > metricsNow.repsCompleted) metricsNow = { ...metricsNow, repsCompleted: m2.repsCompleted, isComplete: m2.isComplete || metricsNow.isComplete }; }
+        if (sumMirror) { const m2 = an2.processFrame(sm, now); const sum = metricsNow.repsCompleted + m2.repsCompleted; metricsNow = { ...metricsNow, repsCompleted: sum, isComplete: !isSeconds && target < 999 && sum >= target }; }
+        else if (an2) { const m2 = an2.processFrame(sm, now); if (m2.repsCompleted > metricsNow.repsCompleted) metricsNow = { ...metricsNow, repsCompleted: m2.repsCompleted, isComplete: m2.isComplete || metricsNow.isComplete }; }
       } else {
         m.lostFrames++;
         if (an.isHold()) an.processFrame([], now);

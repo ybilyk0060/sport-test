@@ -32,9 +32,10 @@ export function measureLight(video, cv = document.createElement('canvas')) {
 
 // Чистая функция: что не так с кадром сейчас (null — всё хорошо). light может быть null (нет данных).
 export function visProblem(lm, light, { floor = false } = {}) {
-  if (light && light.mean < VC.DARK) return 'vis_more_light';
   const vis = (p, t = 0.2) => p && (p.visibility ?? 1) >= t;
   if (!lm || lm.length < 29 || ![11, 12, 23, 24].some((i) => vis(lm[i]))) {
+    // «темно» говорим, только когда человека из-за этого не видно: в полумраке, где счёт идёт, подсказка мешала (прогон 27.11)
+    if (light && light.mean < VC.DARK) return 'vis_more_light';
     if (light && light.edge > 0.55 && light.edge - light.center > 0.22) return 'vis_light_behind';
     return 'vis_cant_see';
   }

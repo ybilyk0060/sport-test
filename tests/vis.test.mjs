@@ -15,7 +15,8 @@ function body({ scale = 1, dy = 0, vis = 0.95, legVis = vis, footVis = legVis } 
 }
 const ok = { mean: 0.45, center: 0.45, edge: 0.45 };
 check('всё хорошо', visProblem(body(), ok) === null, visProblem(body(), ok));
-check('темно', visProblem(body(), { mean: 0.1, center: 0.1, edge: 0.1 }) === 'vis_more_light');
+check('темно и человека не видно', visProblem(null, { mean: 0.1, center: 0.1, edge: 0.1 }) === 'vis_more_light');
+check('полумрак, но человека видно — без подсказки', visProblem(body(), { mean: 0.13, center: 0.13, edge: 0.13 }) === null);
 check('никого нет', visProblem(null, ok) === 'vis_cant_see');
 check('никого нет, окно сзади', visProblem(null, { mean: 0.5, center: 0.3, edge: 0.75 }) === 'vis_light_behind');
 check('далеко', visProblem(body({ scale: 0.2 }), ok) === 'frame_step_closer', visProblem(body({ scale: 0.2 }), ok));

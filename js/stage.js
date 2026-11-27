@@ -253,12 +253,14 @@ function intro(p, i, n) {
     // без отсчёта 3-2-1, уже сделанные повторы переносятся. Поднятая рука и кнопка работают как раньше.
     const introAt = performance.now();
     let shadowCount = 0;
-    const shadow = createRun({
+    // Баланс: короткая попытка (поднял и опустил ногу) завершает «теневой» прогон — создаём новый, иначе вторая
+    // попытка уже не запускала упражнение (Юрий 27.11: на левой ноге панда не убралась, пришлось поднимать руку).
+    const newShadow = () => { const r = createRun({
       key: p.key, target: p.target, capSec: 600, ageGroup: state.quiz.age || CONFIG.defaultAge, timed: !!p.timed,
       aspect: video.videoWidth && video.videoHeight ? video.videoWidth / video.videoHeight : null,
       clock: () => performance.now(), on: { count: (c) => { shadowCount = c; }, hint: () => {}, tick: () => {}, finish: () => {} },
-    });
-    shadow.start();
+    }); r.start(); return r; };
+    let shadow = newShadow();
     // Камера живая и под карточкой: распознаём позу ради жеста и старта движением
     if (stopLoop) { stopLoop(); stopLoop = null; }
     // На инструкции тоже следим, видно ли человека; говорим только после инструкции (не перебивать её)
@@ -268,6 +270,7 @@ function intro(p, i, n) {
       drawSkeleton(lm || false);
       inFrame = framingCheck(lm).ok;
       coach.frame(lm);
+      if (shadow.finished && shadowCount < 1) shadow = newShadow();
       if (!shadow.finished) shadow.frame(lm);
       if (shadowCount >= 1 && performance.now() - introAt > 1500) { motionCarry = shadow.isSeconds ? 0 : shadowCount; return end('motion', 'motion'); }
       const r = gesture.frame(lm, performance.now());

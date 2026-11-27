@@ -1,11 +1,12 @@
 import fs from 'fs';
+if (process.env.NOSOFT) globalThis.__NOSOFT = 1;
 const { createRun } = await import('/Users/Urij/спорт тест/js/session.js');
 const IDX = [0, 11, 12, 15, 16, 23, 24, 27, 28, 25, 26, 13, 14]; // 13/14 (локти) — в записях с 26.11 вечера
 const VISK = Number(process.env.VISK || 1); // имитация тёмной одежды: видимость таза, колен, щиколоток × VISK
 const GAP = (process.env.GAP || '').split(':').map(Number); // GAP=2.8:2.1 — с 2,8-й секунды 2,1 с без позы
 const KEY = process.env.KEY || 'jumping_jack', AGE = process.env.AGE || '12-15', CAP = Number(process.env.CAP || 20);
 for (const d of process.argv.slice(2)) {
-  const rows = fs.readFileSync(d + '/pose.jsonl', 'utf8').trim().split('\n').map((l) => JSON.parse(l)).filter((r) => r[0] === KEY);
+  const rows = fs.readFileSync(d + '/pose.jsonl', 'utf8').trim().split('\n').map((l) => JSON.parse(l)).filter((r) => r[0] === (process.env.SRC || KEY)); // SRC=jumping_jack KEY=high_knees — кадры одного упражнения в счётчик другого
   if (!rows.length) { console.log(d.split('/').pop(), 'нет записей', KEY); continue; }
   let now = rows[0][1], res = null, count = 0;
   const run = createRun({ key: KEY, target: 999, capSec: CAP, ageGroup: AGE, aspect: 9 / 16, clock: () => now, on: { count: (c) => { count = c; }, hint: () => {}, finish: (r) => { res = r; } } });
