@@ -144,8 +144,10 @@ function prep() {
   const P = T.prep;
   screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button><div class="progress"><i style="width:100%"></i></div></div><h1 class="qtitle">${esc(P.title)}</h1>
     <div class="cards">${P.cards.map((c, i) => `<div class="pcard">${ART.prep[i]}<div><b>${esc(c.t)}</b><span>${esc(c.d)}</span></div></div>`).join('')}</div>
-    <p class="privacy-line">${esc(P.privacy)}</p><div class="grow"></div>
-    <button class="btn" data-act="cam">${esc(P.cta)}</button><button class="link center" data-act="alt">${esc(P.alt)}</button>`, {
+    <div class="why-cam"><b>${esc(P.whyTitle)}</b><span>${esc(P.why)}</span><p class="privacy-line">${esc(P.privacy)}</p></div><div class="grow"></div>
+    <!-- Кнопка всегда на экране (реклама 27.11: на iPhone SE она была ниже края, 3 из 7 ушли с подготовки, не нажав) -->
+    <div class="cta-bar"><p class="allow-next">${esc(P.allowNext)}</p><button class="btn" data-act="cam">${esc(P.cta)}</button></div>
+    <button class="link center" data-act="alt">${esc(P.alt)}</button>`, {
     cam: () => { app.onclick = null; startStage({ done: testDone, exit: prep }); },
     back: () => quiz(QUIZ.length - 1),
     alt: () => { app.onclick = null; startFallback({ done: testDone, exit: prep }); },

@@ -363,6 +363,8 @@ function showBlocked(kind) {
   let head, body = '';
   const steps = (arr) => `<div class="box"><ol class="steps">${arr.map((s) => `<li>${esc(s)}</li>`).join('')}</ol></div>`;
   const retry = `<button class="btn" data-act="retry">${esc(T.common.retry)}</button>`;
+  // Повтор после отказа — перезагрузкой: браузер спросит о камере заново, ответы анкеты сохранены (вернёмся на подготовку)
+  const reload = `<button class="btn" data-act="reload">${esc(T.common.retry)}</button>`;
   const fb = `<div class="box"><button class="btn line" data-act="fallback">${esc(B.fallbackCta)}</button><p class="small muted center">${esc(B.fallbackNote)}</p></div>`;
 
   if (env.inApp && env.platform === 'android') {
@@ -380,11 +382,16 @@ function showBlocked(kind) {
     head = `<h1 class="rtitle">${esc(B.openSafariTitle)}</h1><p>${esc(B.openSafariLead)}</p>`;
     // Меньше касаний: главная кнопка — сразу в Safari с сохранёнными ответами; копировать ссылку — запасной путь.
     // Запись видео встроенной камерой в браузерах приложений на iOS даёт чёрный экран — не показываем.
-    body = `<a class="btn" data-act="open-safari" href="${esc(safariUrl(link))}">${esc(B.openSafari)}</a><p class="small muted center">${esc(B.openManual)}</p><button class="btn ghost" data-act="copy">${esc(B.copyLink)}</button>${kind === 'denied' ? `<div class="box"><p class="small"><b>${esc(B.deniedTitle)}</b></p>${steps(B.howIosInApp(env.app || 'Instagram'))}<button class="btn line" data-act="retry">${esc(T.common.retry)}</button></div>` : ''}`;
+    if (kind === 'denied') {
+      // Прогон рекламы 27.11: в Facebook/Instagram отказали в камере и ушли с экрана «откройте в Safari». Отказ чаще случайный:
+      // главное действие — спокойно попробовать ещё раз (перезагрузка, ответы сохранены), Safari — запасной путь.
+      head = `<h1 class="rtitle">${esc(B.deniedTitle)}</h1><p>${esc(B.retryLead)}</p>`;
+      body = `${reload}<a class="btn line" data-act="open-safari" href="${esc(safariUrl(link))}">${esc(B.openSafari)}</a><details class="box"><summary class="small"><b>${esc(B.stillBlocked)}</b></summary>${steps(B.howIosInApp(env.app || 'Instagram'))}</details>`;
+    } else body = `<a class="btn" data-act="open-safari" href="${esc(safariUrl(link))}">${esc(B.openSafari)}</a><p class="small muted center">${esc(B.openManual)}</p><button class="btn ghost" data-act="copy">${esc(B.copyLink)}</button>`;
     track('open_in_safari_shown', { kind });
   } else if (kind === 'denied') {
-    head = `<h1 class="rtitle">${esc(B.deniedTitle)}</h1><p>${esc(B.deniedLead)}</p>`;
-    body = steps(env.platform === 'ios' ? B.howIosSafari : env.platform === 'android' ? B.howAndroid : B.howGeneric) + retry + fb;
+    head = `<h1 class="rtitle">${esc(B.deniedTitle)}</h1><p>${esc(B.retryLead)}</p>`;
+    body = `${reload}<details class="box"><summary class="small"><b>${esc(B.stillBlocked)}</b></summary>${steps(env.platform === 'ios' ? B.howIosSafari : env.platform === 'android' ? B.howAndroid : B.howGeneric)}</details>${fb}`;
   } else if (kind === 'model') {
     head = `<h1 class="rtitle">${esc(B.noCamTitle)}</h1><p>${esc(T.cam.modelFail)}</p>`;
     body = retry;
@@ -398,6 +405,7 @@ function showBlocked(kind) {
     const a = e.target.closest('[data-act]'); if (!a) return;
     const act = a.dataset.act;
     if (act === 'retry') { app.onclick = null; startStage({ done: onDone, exit: onExit }); }
+    else if (act === 'reload') { track('camera_retry_reload', { kind }); app.onclick = null; setTimeout(() => location.reload(), 150); }
     else if (act === 'fallback') { app.onclick = null; startFallback({ done: onDone, exit: onExit }); }
     else if (act === 'exit') { app.onclick = null; onExit && onExit(); }
     else if (act === 'open-chrome') track('open_in_chrome_click');

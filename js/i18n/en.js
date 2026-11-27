@@ -39,7 +39,10 @@ export default {
       { t: 'Phone 2–3 steps away', d: 'Prop it upright or have someone hold it.' },
       { t: 'Whole body in the frame', d: 'Head to toe visible.' },
     ],
-    privacy: 'Video stays on your phone — nothing is uploaded.',
+    whyTitle: 'Why the camera?',
+    why: 'It works like a coach’s eye: it counts jumps, squats and seconds of balance while your child moves.',
+    privacy: 'Video stays on your phone. Nothing is recorded or uploaded.',
+    allowNext: 'Your phone will ask about the camera: tap “Allow”.',
     cta: 'Turn on the camera',
     modelLoading: 'Getting motion tracking ready…',
     alt: 'Camera won’t turn on? Record a video with the regular camera',
@@ -161,6 +164,8 @@ export default {
 
   blocked: {
     deniedTitle: 'No camera access',
+    retryLead: 'That’s okay, nothing was turned on. The camera only counts the moves, and video never leaves your phone. Tap “Try again” and choose “Allow”.',
+    stillBlocked: 'Phone doesn’t ask anymore?',
     deniedLead: 'Without the camera we can’t see the moves. You can turn access on in a minute:',
     howIosSafari: ['Tap “aA” to the left of the page address.', 'Choose “Website Settings” → “Camera” → “Allow”.', 'Come back and tap “Try again”.'],
     howIosInApp: (app) => [`Open your phone’s Settings → ${app}.`, 'Turn on “Camera”.', 'Come back and tap “Try again”.'],

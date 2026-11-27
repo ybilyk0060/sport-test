@@ -38,7 +38,10 @@ export default {
       { t: 'Handy 2–3 Schritte entfernt', d: 'Aufrecht hinstellen oder von jemandem halten lassen.' },
       { t: 'Ganzer Körper im Bild', d: 'Von Kopf bis Fuß sichtbar.' },
     ],
-    privacy: 'Das Video bleibt auf Ihrem Handy und wird nicht hochgeladen.',
+    whyTitle: 'Wozu die Kamera?',
+    why: 'Sie zählt wie ein Trainer mit: Sprünge, Kniebeugen und Sekunden auf einem Bein.',
+    privacy: 'Das Video bleibt auf Ihrem Handy. Es wird nichts aufgezeichnet oder hochgeladen.',
+    allowNext: 'Das Handy fragt nach der Kamera: auf „Erlauben“ tippen.',
     cta: 'Kamera einschalten',
     modelLoading: 'Bewegungserkennung wird vorbereitet…',
     alt: 'Kamera startet nicht? Ein Video mit der normalen Kamera aufnehmen',
@@ -160,6 +163,8 @@ export default {
 
   blocked: {
     deniedTitle: 'Kein Kamerazugriff',
+    retryLead: 'Kein Problem, es wurde nichts eingeschaltet. Die Kamera zählt nur die Bewegungen, das Video verlässt Ihr Handy nicht. Tippen Sie auf „Erneut versuchen“ und dann auf „Erlauben“.',
+    stillBlocked: 'Das Handy fragt nicht mehr?',
     deniedLead: 'Ohne Kamera sehen wir die Übungen nicht. Der Zugriff ist in einer Minute aktiviert:',
     howIosSafari: ['Auf „aA“ links neben der Adresse tippen.', '„Website-Einstellungen“ → „Kamera“ → „Erlauben“ wählen.', 'Zurückkehren und „Erneut versuchen“ tippen.'],
     howIosInApp: (app) => [`Einstellungen des Handys öffnen → ${app}.`, '„Kamera“ einschalten.', 'Zurückkehren und „Erneut versuchen“ tippen.'],

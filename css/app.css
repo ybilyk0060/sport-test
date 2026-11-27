@@ -480,3 +480,13 @@ button, .btn, .opt, .glass-btn, .pill-link, a.btn, [data-act] { -webkit-user-sel
 .ex-n { flex: 1; font-weight: 600; font-size: 15px; }
 .ex-c { color: var(--muted); font-size: 13px; white-space: nowrap; } .ex-c b { color: var(--accent); font-size: 18px; font-weight: 800; }
 .plan-s .ex-list { margin-top: 6px; }
+/* Экран подготовки: зачем камера и что спросит телефон (реклама 27.11: до камеры доходили, но не разрешали) */
+.why-cam { display: grid; gap: 4px; background: var(--card); border-radius: 14px; padding: 12px 14px; box-shadow: inset 0 0 0 1.5px var(--line); }
+.why-cam b { font-size: 16px; }
+.why-cam span { color: var(--muted); font-size: 14px; }
+.allow-next { text-align: center; font-size: 14px; font-weight: 600; margin: 0 0 8px; }
+details.box > summary { cursor: pointer; list-style: none; }
+details.box > summary::-webkit-details-marker { display: none; }
+.why-cam .privacy-line { margin: 6px 0 0; }
+.cta-bar { position: sticky; bottom: 0; z-index: 2; padding: 10px 0 calc(8px + env(safe-area-inset-bottom)); background: linear-gradient(to bottom, rgba(255,247,236,0), var(--bg, #fff7ec) 22%); }
+@media (max-height: 700px) { .pcard { padding: 8px 10px; } .pcard svg { flex-basis: 56px; width: 56px; height: 56px; } .pcard b { font-size: 16px; } }
