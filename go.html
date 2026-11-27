@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Open in Safari — check</title>
+<style>
+  body { font: 17px/1.4 -apple-system, system-ui, sans-serif; margin: 0; padding: 18px; background: #fff7ec; color: #1d1b2f; }
+  h1 { font-size: 22px; margin: 0 0 8px; }
+  .ok { background: #eaf7f1; color: #14694a; border-radius: 14px; padding: 14px; font-weight: 700; font-size: 20px; }
+  .info { background: #fff; border-radius: 12px; padding: 10px 12px; font-size: 13px; word-break: break-all; margin: 10px 0; }
+  a.b, button.b { display: block; width: 100%; box-sizing: border-box; margin: 10px 0; padding: 16px; border: 0; border-radius: 14px; background: #ff7a1a; color: #fff; font-weight: 700; font-size: 17px; text-align: center; text-decoration: none; }
+  small { color: #6b6880; }
+</style>
+</head>
+<body>
+<!-- Проверочная страница (Юрий 27.11): можно ли из встроенного браузера TikTok открыть сайт в Safari. На живой трафик не влияет: ссылок сюда нет. -->
+<div id="out"></div>
+<script>
+(function () {
+  var ua = navigator.userAgent || '';
+  var q = new URLSearchParams(location.search);
+  var via = q.get('via') || '';
+  var inApp = /TikTok|musical_ly|BytedanceWebview|trill|Instagram|FBAN|FBAV|FB_IAB|Messenger|Telegram|Viber/i.test(ua);
+  var isSafari = /Safari\//.test(ua) && /Version\//.test(ua) && !inApp && !/CriOS|FxiOS|EdgiOS/.test(ua);
+  var out = document.getElementById('out');
+  var here = 'kids-test.com/go.html';
+  var keep = ['s', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'ttclid', 'fbclid'].filter(function (k) { return q.get(k); }).map(function (k) { return k + '=' + encodeURIComponent(q.get(k)); }).join('&');
+  var target = function (m) { return here + '?via=' + m + (keep ? '&' + keep : ''); };
+  var html = '';
+  if (via && isSafari) html += '<p class="ok">✅ Opened in Safari via: ' + via + '</p><p>Saved link data: ' + (keep || 'none') + '</p>';
+  else if (via) html += '<p class="ok" style="background:#fdecea;color:#a3271b">Opened via ' + via + ', but this is NOT Safari</p>';
+  html += '<h1>' + (inApp ? 'In-app browser detected' : isSafari ? 'This is Safari' : 'Other browser') + '</h1><div class="info">' + ua + '</div>';
+  var M = [
+    ['1. x-safari-https link', 'a', 'x-safari-https://' + target('x-safari')],
+    ['2. Safari tab scheme', 'a', 'com-apple-mobilesafari-tab:https://' + target('safari-tab')],
+    ['3. New window (target=_blank)', 'blank', 'https://' + target('blank')],
+    ['4. window.open', 'open', 'https://' + target('window-open')],
+    ['5. Share sheet', 'share', 'https://' + target('share')],
+    ['6. Chrome (if installed)', 'a', 'googlechromes://' + target('chrome')],
+    ['7. Copy link', 'copy', 'https://' + target('copy')]
+  ];
+  html += M.map(function (m, i) { return m[1] === 'a' ? '<a class="b" href="' + m[2] + '">' + m[0] + '</a>' : m[1] === 'blank' ? '<a class="b" target="_blank" rel="noopener" href="' + m[2] + '">' + m[0] + '</a>' : '<button class="b" data-i="' + i + '">' + m[0] + '</button>'; }).join('');
+  html += '<p><small>Auto mode: add ?auto=1 to try method 1 without a tap.</small></p><div class="info" id="log"></div>';
+  out.innerHTML = html;
+  var log = function (t) { document.getElementById('log').textContent += t + ' · '; };
+  out.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-i]'); if (!b) return;
+    var m = M[Number(b.dataset.i)];
+    if (m[1] === 'open') { var w = window.open(m[2], '_blank'); log('window.open: ' + (w ? 'returned window' : 'blocked')); }
+    if (m[1] === 'share') { if (navigator.share) navigator.share({ url: m[2] }).then(function () { log('share ok'); }, function (err) { log('share: ' + err.name); }); else log('no navigator.share'); }
+    if (m[1] === 'copy') { (navigator.clipboard ? navigator.clipboard.writeText(m[2]) : Promise.reject()).then(function () { log('copied'); }, function () { log('copy failed'); }); }
+  });
+  if (q.get('auto') === '1' && inApp && !via) { log('auto: trying x-safari'); setTimeout(function () { location.href = M[0][2] + '-auto'; }, 400); }
+})();
+</script>
+</body>
+</html>
