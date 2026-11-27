@@ -4,8 +4,8 @@
 // ничего не пишется в браузер, человек анонимен и не склеивается между визитами, записей сессий нет. Видео, точки тела и ответы о ребёнке наружу не уходят:
 // в события идут только имя шага, номер вопроса, ключ упражнения, сумма и валюта.
 
-import { CONFIG } from './config.js?v=e9c53be-mwz656hs';
-import { T } from './i18n/index.js?v=e9c53be-mwz656hs';
+import { CONFIG } from './config.js?v=e185b99-mwz67ip2';
+import { T } from './i18n/index.js?v=e185b99-mwz67ip2';
 
 const KEY = 'sporttest.consent';
 let consent = null;

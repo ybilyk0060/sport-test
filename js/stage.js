@@ -1,19 +1,19 @@
 // Экран камеры: разрешение → проверка кадра → 4 упражнения. И запасной путь: разбор записи.
 
-import { T } from './i18n/index.js?v=e9c53be-mwz656hs';
-import { CONFIG } from './config.js?v=e9c53be-mwz656hs';
-import { state, setState, track, exportHandoff } from './store.js?v=e9c53be-mwz656hs';
-import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=e9c53be-mwz656hs';
-import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=e9c53be-mwz656hs';
-import { preloadPose, poseStatus, resetPersonLock, diag } from './pose.js?v=e9c53be-mwz656hs';
-import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=e9c53be-mwz656hs';
-import { framingCheck, frameLoop, createRun } from './session.js?v=e9c53be-mwz656hs';
-import { createRaiseHand, createPlankHold } from './gesture.js?v=e9c53be-mwz656hs';
-import { recording } from './analytics.js?v=e9c53be-mwz656hs';
-import { demoSvg } from './demos.js?v=e9c53be-mwz656hs';
-import { EX_QUALITY } from './scoring.js?v=e9c53be-mwz656hs';
-import { greenOverlay } from './greenkey.js?v=e9c53be-mwz656hs';
-import { createVisCoach } from './viscoach.js?v=e9c53be-mwz656hs';
+import { T } from './i18n/index.js?v=e185b99-mwz67ip2';
+import { CONFIG } from './config.js?v=e185b99-mwz67ip2';
+import { state, setState, track, exportHandoff } from './store.js?v=e185b99-mwz67ip2';
+import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=e185b99-mwz67ip2';
+import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=e185b99-mwz67ip2';
+import { preloadPose, poseStatus, resetPersonLock, diag } from './pose.js?v=e185b99-mwz67ip2';
+import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=e185b99-mwz67ip2';
+import { framingCheck, frameLoop, createRun } from './session.js?v=e185b99-mwz67ip2';
+import { createRaiseHand, createPlankHold } from './gesture.js?v=e185b99-mwz67ip2';
+import { recording } from './analytics.js?v=e185b99-mwz67ip2';
+import { demoSvg } from './demos.js?v=e185b99-mwz67ip2';
+import { EX_QUALITY } from './scoring.js?v=e185b99-mwz67ip2';
+import { greenOverlay } from './greenkey.js?v=e185b99-mwz67ip2';
+import { createVisCoach } from './viscoach.js?v=e185b99-mwz67ip2';
 // Подсказки видимости: новые фразы (vis_*) озвучиваются после записи голоса; пока их нет — ближайшая записанная
 const VIS_FALLBACK = { vis_cant_see: 'hint_show_full_body', vis_head: 'frame_step_back', vis_contrast: 'hint_show_full_body', vis_light_behind: 'hint_show_full_body', vis_more_light: null };
 const sayVis = (k) => { const c = exists(k) ? k : VIS_FALLBACK[k]; if (c) say(c, { interrupt: false }); };
@@ -272,7 +272,7 @@ function intro(p, i, n) {
       coach.frame(lm);
       if (shadow.finished && shadowCount < 1) shadow = newShadow();
       if (!shadow.finished) shadow.frame(lm);
-      if (shadowCount >= (p.key === 'high_knees' ? 3 : 1) && performance.now() - introAt > 1500) { // бег: три шага, один подскок не старт motionCarry = shadow.isSeconds ? 0 : shadowCount; return end('motion', 'motion'); }
+      if (shadowCount >= (p.key === 'high_knees' ? 3 : 1) && performance.now() - introAt > 1500) { /* бег: три шага, один подскок не старт */ motionCarry = shadow.isSeconds ? 0 : shadowCount; return end('motion', 'motion'); }
       const r = gesture.frame(lm, performance.now());
       ring.style.strokeDashoffset = String(HAND_C * (1 - r.progress));
       ring.parentNode.parentNode.classList.toggle('on', r.progress > 0);

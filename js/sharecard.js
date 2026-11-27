@@ -1,5 +1,5 @@
 // Карточка для отправки в мессенджер: рисуется на устройстве, без имени и без фото ребёнка.
-import { QUALITIES } from './scoring.js?v=e9c53be-mwz656hs';
+import { QUALITIES } from './scoring.js?v=e185b99-mwz67ip2';
 
 export function drawShareCard(cv, profile, T) {
   const g = cv.getContext('2d'), W = cv.width, H = cv.height;
