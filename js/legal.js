@@ -1,5 +1,5 @@
 // Юридические страницы: подставляют реквизиты продавца и цены из js/config.js, чтобы они были в одном месте.
-import { CONFIG } from './config.js?v=39e5375-mwz6navn';
+import { CONFIG } from './config.js?v=051a648-mwz93ikl';
 const U = CONFIG.subscription.prices.USD, E = CONFIG.subscription.prices.EUR;
 const S = CONFIG.seller, P = CONFIG.subscription.prices.UAH, D = CONFIG.subscription.periodDays;
 const en = document.documentElement.lang !== 'uk';
