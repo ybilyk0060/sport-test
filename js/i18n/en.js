@@ -125,6 +125,17 @@ export default {
     crunches: { name: 'Sit-ups', task: (n) => `Do ${n} sit-ups`, how: 'Lie on your back sideways to the camera, knees bent, feet on the floor. Sit up, then lie all the way back.' },
   },
 
+  vis: {
+    vis_more_light: "It’s too dark. Please turn on the light.",
+    vis_light_behind: "Too much light behind you. Turn the phone so the window is behind the phone.",
+    vis_cant_see: "I can’t see you! Stand in front of the phone.",
+    frame_step_closer: "Come a little closer.",
+    frame_upper_only: "I can’t see your feet. Step back a little.",
+    frame_step_back: "Step back so your whole body fits.",
+    vis_head: "I can’t see your head. Step back or tilt the phone up.",
+    vis_contrast: "I can barely see your legs. Stand in front of a lighter wall.",
+  },
+
   hints: {
     bend_knees_straight: 'Keep your knees straight',
     lie_down_flat: 'Lie down flat on your back',

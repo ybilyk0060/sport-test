@@ -124,6 +124,17 @@ export default {
     crunches: { name: 'Sit-ups', task: (n) => `Mach ${n} Sit-ups`, how: 'Seitlich zur Kamera auf den Rücken legen, Knie gebeugt, Füße am Boden. Aufrichten, dann ganz zurücklegen.' },
   },
 
+  vis: {
+    vis_more_light: "Es ist zu dunkel. Bitte mach das Licht an.",
+    vis_light_behind: "Zu viel Licht hinter dir. Stell das Handy so, dass das Fenster hinter dem Handy ist.",
+    vis_cant_see: "Ich sehe dich nicht! Stell dich vor das Handy.",
+    frame_step_closer: "Komm ein bisschen näher.",
+    frame_upper_only: "Ich sehe deine Füße nicht. Geh ein Stück zurück.",
+    frame_step_back: "Geh zurück, damit dein ganzer Körper zu sehen ist.",
+    vis_head: "Ich sehe deinen Kopf nicht. Geh zurück oder kipp das Handy nach oben.",
+    vis_contrast: "Ich sehe deine Beine kaum. Stell dich vor eine hellere Wand.",
+  },
+
   hints: {
     bend_knees_straight: 'Knie gestreckt lassen',
     lie_down_flat: 'Leg dich flach auf den Rücken',

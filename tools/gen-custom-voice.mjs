@@ -9,6 +9,13 @@ const KID = '/Volumes/KidsneyDrive/dev/kidsney';
 const { buildRequest, synthesize, bearerFromServiceAccount } = await import(`${KID}/scripts/voice/tts.mjs`);
 
 const PHRASES = [
+  // Подсказки видимости (27.11): тест сам говорит, если ребёнка не видно, темно, свет сзади, не видно головы или ног
+  { key: 'vis_more_light', style: 'hint', text: { uk: "Занадто темно. Увімкни, будь ласка, світло.", en: "It’s too dark. Please turn on the light.", de: "Es ist zu dunkel. Bitte mach das Licht an." } },
+  { key: 'vis_light_behind', style: 'hint', text: { uk: "Забагато світла позаду тебе. Постав телефон так, щоб вікно було за телефоном.", en: "Too much light behind you. Turn the phone so the window is behind the phone.", de: "Zu viel Licht hinter dir. Stell das Handy so, dass das Fenster hinter dem Handy ist." } },
+  { key: 'vis_cant_see', style: 'hint', text: { uk: "Я тебе не бачу! Стань перед телефоном.", en: "I can’t see you! Stand in front of the phone.", de: "Ich sehe dich nicht! Stell dich vor das Handy." } },
+  { key: 'vis_head', style: 'hint', text: { uk: "Не бачу твоєї голови. Відійди або нахили телефон вгору.", en: "I can’t see your head. Step back or tilt the phone up.", de: "Ich sehe deinen Kopf nicht. Geh zurück oder kipp das Handy nach oben." } },
+  { key: 'vis_contrast', style: 'hint', text: { uk: "Ледве бачу твої ноги. Стань на тлі світлішої стіни.", en: "I can barely see your legs. Stand in front of a lighter wall.", de: "Ich sehe deine Beine kaum. Stell dich vor eine hellere Wand." } },
+
   // Оценочный тест v3 (25.11): баланс, прыжки через линию, наклон стоя, касания плеч головой к телефону
   { key: 'balance_howto', style: 'howto', text: {
     uk: 'Стань босоніж обличчям до телефону, руки на пояс. Стань на праву ногу, ліву зігни назад. Тримай рівновагу якомога довше!',

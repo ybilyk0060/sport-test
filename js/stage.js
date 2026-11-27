@@ -13,6 +13,11 @@ import { recording } from './analytics.js?v=d160b1f-mwyzo001';
 import { demoSvg } from './demos.js?v=d160b1f-mwyzo001';
 import { EX_QUALITY } from './scoring.js?v=d160b1f-mwyzo001';
 import { greenOverlay } from './greenkey.js?v=d160b1f-mwyzo001';
+import { createVisCoach } from './viscoach.js?v=d160b1f-mwyzo001';
+// Подсказки видимости: новые фразы (vis_*) озвучиваются после записи голоса; пока их нет — ближайшая записанная
+const VIS_FALLBACK = { vis_cant_see: 'hint_show_full_body', vis_head: 'frame_step_back', vis_contrast: 'hint_show_full_body', vis_light_behind: 'hint_show_full_body', vis_more_light: null };
+const sayVis = (k) => { const c = exists(k) ? k : VIS_FALLBACK[k]; if (c) say(c, { interrupt: false }); };
+const visText = (k) => T.vis[k] || '';
 
 const env = detectEnv();
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -159,6 +164,7 @@ function framing() {
     const msg = $('[data-el=msg]', hud), head = $('[data-el=head]', hud), feet = $('[data-el=feet]', hud);
     let okSince = null, doneFlag = false, lastHint = 0;
     const t0 = performance.now();
+    const coach = createVisCoach({ video, track, where: 'framing', text: visText, show: () => {}, say: (k) => { if (performance.now() - t0 > 4500) sayVis(k); } });
     const end = (how) => { if (doneFlag) return; doneFlag = true; if (stopLoop) { stopLoop(); stopLoop = null; } track('framing_ok', { how, ms: Math.round(performance.now() - t0), fps: poseStatus.fps }); resolve(); };
     hud.onclick = (e) => { const a = e.target.closest('[data-act]'); if (!a) return; if (a.dataset.act === 'start-anyway') end('manual'); if (a.dataset.act === 'switch-cam') switchCamera(); };
     stopLoop = frameLoop(video, (lm) => {
@@ -166,11 +172,11 @@ function framing() {
       const c = framingCheck(lm);
       head.classList.toggle('ok', c.head); feet.classList.toggle('ok', c.feet);
       hud.querySelector('.frame-card').classList.toggle('ok', c.ok);
-      msg.textContent = c.ok ? T.cam.frameOk : !c.body ? T.cam.frameNoBody : !c.head ? T.cam.frameNoHead : T.cam.frameNoFeet;
+      const vp = coach.frame(lm);
+      msg.textContent = c.ok ? T.cam.frameOk : vp && visText(vp) ? visText(vp) : !c.body ? T.cam.frameNoBody : !c.head ? T.cam.frameNoHead : T.cam.frameNoFeet;
       const now = performance.now();
       if (c.ok) { okSince = okSince ?? now; if (now - okSince > 1000) end('auto'); } else okSince = null; // «Чудово!» звучит в начале вступления первого упражнения одной очередью, чтобы не перебить инструкцию
-      // Голосовые подсказки кадра (не чаще раза в 5 с, после вступления)
-      if (!c.ok && now - t0 > 4500 && now - lastHint > 5000) { lastHint = now; say(!c.body ? 'ui_steps_back' : !c.head && !c.feet ? 'frame_step_back' : !c.feet ? 'frame_upper_only' : 'frame_step_back', { interrupt: false }); }
+      // Голосовые подсказки кадра — viscoach (темно, свет сзади, не видно, далеко/близко, ноги/голова), после вступления
       if (now - t0 > 8000) $('[data-act=start-anyway]', hud).hidden = false;
     });
   });
@@ -254,9 +260,13 @@ function intro(p, i, n) {
     shadow.start();
     // Камера живая и под карточкой: распознаём позу ради жеста и старта движением
     if (stopLoop) { stopLoop(); stopLoop = null; }
+    // На инструкции тоже следим, видно ли человека; говорим только после инструкции (не перебивать её)
+    const visBar = document.createElement('div'); visBar.className = 'vis-bar'; visBar.hidden = true; hud.appendChild(visBar);
+    const coach = createVisCoach({ video, track, where: 'intro', floor: !!ex.floor, text: visText, show: (t) => { visBar.textContent = t; visBar.hidden = !t; }, say: (k) => { if (handArmed) sayVis(k); } });
     stopLoop = frameLoop(video, (lm) => {
       drawSkeleton(lm || false);
       inFrame = framingCheck(lm).ok;
+      coach.frame(lm);
       if (!shadow.finished) shadow.frame(lm);
       if (shadowCount >= 1 && performance.now() - introAt > 1500) { motionCarry = shadow.isSeconds ? 0 : shadowCount; return end('motion', 'motion'); }
       const r = gesture.frame(lm, performance.now());
@@ -345,6 +355,8 @@ async function liveExercise(p, i, n) {
       },
     });
     ui = runHud(p, i, n, run.isSeconds);
+    let visShown = '';
+    const runCoach = createVisCoach({ video, track, where: 'run:' + p.key, floor: !!CONFIG.exercises[p.key].floor, text: visText, say: sayVis, show: (t) => { if (t) { visShown = t; ui.hint.textContent = t; } else if (ui.hint.textContent === visShown) { ui.hint.textContent = ''; visShown = ''; } } });
     if (carry) { ui.num.textContent = carry; ui.set(carry); }
     hud.onclick = (e) => { const a = e.target.closest('[data-act]'); if (a && a.dataset.act === 'skip-ex') run.skip(); };
     track('exercise_start', { key: p.key, target: p.target });
@@ -352,9 +364,8 @@ async function liveExercise(p, i, n) {
     stopLoop = frameLoop(video, (lm) => {
       drawSkeleton(lm || false);
       // Тело должно быть в кадре целиком (стоя): иначе подсказка «отойдите» (прогон 26.11: вплотную к телефону было видно одно лицо)
-      const seen = lm && (CONFIG.exercises[p.key].floor || framingCheck(lm).ok);
-      if (!seen) { lostSince = lostSince ?? performance.now(); if (performance.now() - lostSince > 1500 && !ui.hint.textContent) { ui.hint.textContent = T.cam.lost; if (performance.now() - lostSaidAt > 6000) { lostSaidAt = performance.now(); say('ui_steps_back', { interrupt: false }); } } }
-      else if (lostSince) { lostSince = null; if (ui.hint.textContent === T.cam.lost) ui.hint.textContent = ''; }
+      // Не видно / темно / далеко / обрезаны ноги — голосом и строкой на экране (viscoach, Юрий 27.11)
+      runCoach.frame(lm);
       // Касания плеч: колени на полу не засчитываем (Юрий 26.11). Камера у пола спереди: при упоре на коленях колени
       // в кадре на уровне ладоней (пол), на носках — заметно выше (прогоны 5 и 6: разница 0,15 против 0,01–0,05 кадра).
       if (p.key === 'shoulder_taps' && lm) {

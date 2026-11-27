@@ -559,3 +559,4 @@ body.has-consent .screen { padding-bottom: 150px; }
 @media (max-height: 600px) { .hv-badge { font-size: 4.9cqw; } }
 .hv-badge { top: 7cqw; }
 .hv-badge { padding: 1.3cqw 3cqw; top: 5.8cqw; }
+.vis-bar { position: absolute; left: 12px; right: 12px; top: 64px; z-index: 6; background: rgba(29,27,47,.82); color: #fff; border-radius: 14px; padding: 10px 14px; font-weight: 700; font-size: 17px; text-align: center; }
