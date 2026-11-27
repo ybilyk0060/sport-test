@@ -298,7 +298,12 @@ export const VOICE_FILES = {
   "shoulder_taps_front_howto": "en/custom/shoulder_taps_front_howto.m4a",
   "shoulder_taps_head_howto": "en/custom/shoulder_taps_head_howto.wav",
   "side_jumps_again": "en/custom/side_jumps_again.wav",
-  "side_jumps_howto": "en/custom/side_jumps_howto.wav"
+  "side_jumps_howto": "en/custom/side_jumps_howto.wav",
+  "vis_cant_see": "en/custom/vis_cant_see.wav",
+  "vis_contrast": "en/custom/vis_contrast.wav",
+  "vis_head": "en/custom/vis_head.wav",
+  "vis_light_behind": "en/custom/vis_light_behind.wav",
+  "vis_more_light": "en/custom/vis_more_light.wav"
  },
  "de": {
   "ui_raise_hand": "de/ui_raise_hand.m4a",
@@ -598,7 +603,12 @@ export const VOICE_FILES = {
   "shoulder_taps_front_howto": "de/custom/shoulder_taps_front_howto.m4a",
   "shoulder_taps_head_howto": "de/custom/shoulder_taps_head_howto.wav",
   "side_jumps_again": "de/custom/side_jumps_again.wav",
-  "side_jumps_howto": "de/custom/side_jumps_howto.wav"
+  "side_jumps_howto": "de/custom/side_jumps_howto.wav",
+  "vis_cant_see": "de/custom/vis_cant_see.wav",
+  "vis_contrast": "de/custom/vis_contrast.wav",
+  "vis_head": "de/custom/vis_head.wav",
+  "vis_light_behind": "de/custom/vis_light_behind.wav",
+  "vis_more_light": "de/custom/vis_more_light.wav"
  },
  "uk": {
   "ui_raise_hand": "uk/ui_raise_hand.m4a",
@@ -898,6 +908,11 @@ export const VOICE_FILES = {
   "shoulder_taps_front_howto": "uk/custom/shoulder_taps_front_howto.m4a",
   "shoulder_taps_head_howto": "uk/custom/shoulder_taps_head_howto.wav",
   "side_jumps_again": "uk/custom/side_jumps_again.wav",
-  "side_jumps_howto": "uk/custom/side_jumps_howto.wav"
+  "side_jumps_howto": "uk/custom/side_jumps_howto.wav",
+  "vis_cant_see": "uk/custom/vis_cant_see.wav",
+  "vis_contrast": "uk/custom/vis_contrast.wav",
+  "vis_head": "uk/custom/vis_head.wav",
+  "vis_light_behind": "uk/custom/vis_light_behind.wav",
+  "vis_more_light": "uk/custom/vis_more_light.wav"
  }
 };
