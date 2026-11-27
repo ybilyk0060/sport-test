@@ -502,3 +502,5 @@ details.box > summary::-webkit-details-marker { display: none; }
 .prep-cards .pcard span { font-size: 13px; }
 .cta-bar { margin-top: 2px; }
 .cta-bar + .prep-cards { margin-top: 10px; }
+/* Подготовка: заголовок ближе к полосе прогресса (Юрий 27.11) */
+.qhead + h1.qtitle { margin-top: -6px; }
