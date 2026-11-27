@@ -194,13 +194,28 @@ function introSheet(p, i, n, btnHtml) {
 // Короткое видео с пандой и голос студии перед упражнением.
 // Дальше — поднятой рукой (держать 1,5 с), как во всех приложениях Kidsney, или кнопкой. Подходить к телефону не нужно.
 // Колени на полу в упоре лёжа (камера на полу перед ребёнком): колени видны и почти на уровне ладоней
-function kneesDown(lm) {
+// Колени на полу в упоре лёжа: расстояние по вертикали от ладоней (пол) до колен, в долях кадра.
+// Прогон Юрия 27.11: на носках 0,11–0,22 (медиана 0,15), на коленях 0,02–0,06 (медиана 0,05), но кадры «дрожат»,
+// и прежняя проверка (каждый кадр < 0,07, 0,4 с подряд) сбрасывалась — касания на коленях засчитывались.
+// Теперь с гистерезисом: «на коленях», когда зазор < 0,09 дольше 0,25 с; обратно — только когда > 0,105 дольше 0,4 с.
+function kneeGap(lm) {
   const lk = lm[25], rk = lm[26], lw = lm[15], rw = lm[16];
-  if (!lk || !rk || !lw || !rw) return false;
-  const vk = [lk, rk].filter((p) => (p.visibility ?? 0) >= 0.5);
-  if (!vk.length) return false;
-  const floor = Math.max(lw.y, rw.y), knee = Math.max(...vk.map((p) => p.y));
-  return floor - knee < 0.07;
+  if (!lk || !rk || !lw || !rw) return null;
+  const vk = [lk, rk].filter((p) => (p.visibility ?? 0) >= 0.3);
+  if (!vk.length) return null;
+  return Math.max(lw.y, rw.y) - Math.max(...vk.map((p) => p.y));
+}
+export function createKneeWatch() {
+  let down = false, since = null;
+  return (lm, now) => {
+    const g = kneeGap(lm);
+    if (g == null) return down;
+    const want = down ? !(g > 0.105) : g < 0.09;
+    if (want === down) { since = null; return down; }
+    since = since ?? now;
+    if (now - since > (down ? 400 : 250)) { down = want; since = null; }
+    return down;
+  };
 }
 let inFrame = false; // последний кадр вступления: голова и стопы видны
 const HAND_R = 34, HAND_C = 2 * Math.PI * HAND_R;
@@ -270,8 +285,9 @@ function intro(p, i, n) {
       drawSkeleton(lm || false);
       inFrame = framingCheck(lm).ok;
       coach.frame(lm);
+      // на полу (касания плеч) старт — по удержанию упора 2 с; движением не запускаем (стоя засчитывались ложные касания)
       if (shadow.finished && shadowCount < 1) shadow = newShadow();
-      if (!shadow.finished) shadow.frame(lm);
+      if (!shadow.finished && !ex.floor) shadow.frame(lm);
       if (shadowCount >= (p.key === 'high_knees' ? 3 : 1) && performance.now() - introAt > 1500) { /* бег: три шага, один подскок не старт */ motionCarry = shadow.isSeconds ? 0 : shadowCount; return end('motion', 'motion'); }
       const r = gesture.frame(lm, performance.now());
       ring.style.strokeDashoffset = String(HAND_C * (1 - r.progress));
@@ -338,7 +354,8 @@ async function liveExercise(p, i, n) {
   } else say('cue_great', { interrupt: true });
   if (!alive) return null;
   return new Promise((resolve) => {
-    let ui, hintTimer = 0, lostSince = null, lostSaidAt = 0, kneelSince = null, kneeling = false, kneelSaid = 0, kneelN = 0;
+    let ui, hintTimer = 0, kneeling = false, kneelSaid = 0, kneelN = 0;
+    const kneeWatch = createKneeWatch();
     const run = createRun({
       key: p.key, target: p.target, capSec: p.capSec, ageGroup: state.quiz.age || CONFIG.defaultAge, timed: !!p.timed,
       aspect: video.videoWidth && video.videoHeight ? video.videoWidth / video.videoHeight : null,
@@ -374,9 +391,8 @@ async function liveExercise(p, i, n) {
       // Касания плеч: колени на полу не засчитываем (Юрий 26.11). Камера у пола спереди: при упоре на коленях колени
       // в кадре на уровне ладоней (пол), на носках — заметно выше (прогоны 5 и 6: разница 0,15 против 0,01–0,05 кадра).
       if (p.key === 'shoulder_taps' && lm) {
-        const k = kneesDown(lm), now = performance.now();
-        if (k) { kneelSince = kneelSince ?? now; } else kneelSince = null;
-        kneeling = kneelSince != null && now - kneelSince > 400;
+        const now = performance.now();
+        kneeling = kneeWatch(lm, now);
         if (kneeling) { ui.hint.textContent = T.cam.kneesUp; if (now - kneelSaid > 5000) { kneelSaid = now; kneelN++; say(kneelN % 2 ? 'hint_no_knees_on_floor' : 'hint_keep_body_straight', { interrupt: false }); } }
         else if (ui.hint.textContent === T.cam.kneesUp) ui.hint.textContent = '';
       }
