@@ -250,7 +250,10 @@ function intro(p, i, n) {
     // Стоя — поднятая рука (1,5 с); в упоре лёжа — удержание упора 2 с
     // В упоре лёжа старт по самому упору (2 с); поднятая рука — запасной вариант (Юрий 26.11)
     const plank = ex.floor ? createPlankHold() : null, hand = createRaiseHand();
-    const gesture = { frame: (lm, ts) => { const a = hand.frame(lm, ts); if (!plank) return a; const b = plank.frame(lm, ts); return a.fired || b.fired ? { progress: 1, fired: true } : b.progress >= a.progress ? b : a; } };
+    // На полу поднятая рука считается только у стоящего в полный рост (голова и стопы в кадре, плечи выше таза):
+    // когда человек подходил и опускался в упор, кисть оказывалась выше головы и упражнение стартовало само (Юрий 27.11).
+    const standing = (lm) => { if (!lm || !framingCheck(lm).ok) return false; const sy = (lm[11].y + lm[12].y) / 2, hy = (lm[23].y + lm[24].y) / 2; return hy - sy > 0.1; };
+    const gesture = { frame: (lm, ts) => { const a = hand.frame(plank && !standing(lm) ? null : lm, ts); if (!plank) return a; const b = plank.frame(lm, ts); return a.fired || b.fired ? { progress: 1, fired: true } : b.progress >= a.progress ? b : a; } };
     // Голос «Підніми руку»: после инструкции, потом напоминания (как в Kidsney: 20 с, затем каждые 15 с, не больше 3 раз)
     let reminders = 0;
     const remind = () => { if (ended || ex.floor) return; say('ui_raise_hand', { interrupt: false }); if (++reminders < 3) remindTimer = setTimeout(remind, 15000); };
