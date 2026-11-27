@@ -2,6 +2,7 @@ import fs from 'fs';
 const { createRun } = await import('/Users/Urij/спорт тест/js/session.js');
 const IDX = [0, 11, 12, 15, 16, 23, 24, 27, 28, 25, 26, 13, 14]; // 13/14 (локти) — в записях с 26.11 вечера
 const VISK = Number(process.env.VISK || 1); // имитация тёмной одежды: видимость таза, колен, щиколоток × VISK
+const GAP = (process.env.GAP || '').split(':').map(Number); // GAP=2.8:2.1 — с 2,8-й секунды 2,1 с без позы
 const KEY = process.env.KEY || 'jumping_jack', AGE = process.env.AGE || '12-15', CAP = Number(process.env.CAP || 20);
 for (const d of process.argv.slice(2)) {
   const rows = fs.readFileSync(d + '/pose.jsonl', 'utf8').trim().split('\n').map((l) => JSON.parse(l)).filter((r) => r[0] === KEY);
@@ -11,7 +12,7 @@ for (const d of process.argv.slice(2)) {
   run.start();
   for (const r of rows) {
     now = r[1];
-    if (r.length < 3) { run.frame(null); continue; }
+    if (r.length < 3 || (GAP.length === 2 && (r[1] - rows[0][1]) / 1000 >= GAP[0] && (r[1] - rows[0][1]) / 1000 < GAP[0] + GAP[1])) { run.frame(null); continue; }
     const lm = Array.from({ length: 33 }, () => ({ x: 0.5, y: 0.5, z: 0, visibility: 0 }));
     IDX.forEach((ix, j) => { const p = r[2 + j]; if (p) lm[ix] = { x: p[0], y: p[1], z: 0, visibility: ix >= 23 ? p[2] * VISK : p[2] }; });
     // локти и кисти-пальцы — между плечом и кистью (их нет в записи)

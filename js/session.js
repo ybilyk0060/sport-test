@@ -59,7 +59,8 @@ function soften(key, sp) {
   return { ...sp, motion: { ...m,
     rearm: { all: [{ m: 'knee_h', max: { young: -0.7, standard: -0.66 } }] },
     otherDown: { all: [{ m: 'other_h', max: { young: -0.64, standard: -0.62 } }] },
-    timing: { ...m.timing, activeWindowMs: 1500, startLifts: 2 },
+    // maxPauseMs: после паузы дольше 3 с (человека не было видно) бег больше не засчитывался до конца упражнения — 27.11
+    timing: { ...m.timing, activeWindowMs: 1500, startLifts: 2, maxPauseMs: 60000 },
   } };
 }
 

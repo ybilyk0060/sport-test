@@ -70,6 +70,11 @@ export function preloadPose() {
 
 let fpsT = 0, fpsN = 0;
 const personLock = createPersonLock();
+// ?lock=1 в адресе включает закрепление за человеком для проверки на телефоне (по умолчанию — CONFIG.personLock)
+let lockOn = !!CONFIG.personLock;
+try { const q = new URLSearchParams(location.search).get('lock'); if (q === '1') sessionStorage.setItem('sporttest.lock', '1'); if (q === '0') sessionStorage.removeItem('sporttest.lock'); if (sessionStorage.getItem('sporttest.lock')) lockOn = true; } catch { /* нет */ }
+export const diag = { frames: 0, noPose: 0, lockDrop: 0, errors: 0, lastError: '' };
+try { window.__poseDiag = () => ({ ...diag, lockOn, delegate: poseStatus.delegate, fps: poseStatus.fps, ms: Math.round(poseStatus.ms || 0) }); } catch { /* нет окна (тесты) */ }
 export const resetPersonLock = (floor = false) => personLock.reset(floor);
 // Возвращает массив из 33 точек {x,y,z,visibility} или null. Точки нигде не сохраняются.
 export function detectPose(video) {
@@ -81,6 +86,7 @@ export function detectPose(video) {
   const t0 = performance.now();
   try { res = landmarker.detectForVideo(video, ts); poseStatus.ms = poseStatus.ms ? poseStatus.ms * 0.9 + (performance.now() - t0) * 0.1 : performance.now() - t0; }
   catch (e) {
+    diag.errors++; diag.lastError = String(e && e.message ? e.message : e).slice(0, 120);
     // Сбой GPU на отдельных телефонах: один раз пересоздаём на CPU.
     if (poseStatus.delegate === 'GPU') {
       poseStatus.delegate = 'CPU (после сбоя GPU)';
@@ -96,5 +102,8 @@ export function detectPose(video) {
   poseStatus.people = poses.length;
   // Закрепление за «своим» выключено (CONFIG.personLock): на iPhone 27.11 в прогоне появились провалы позы по 2–6 с,
   // которых не было ни в одном прогоне до него. Пока не разобрано на телефоне — берём позу модели как раньше.
-  return CONFIG.personLock ? personLock.pick(poses, ts) : (poses[0] || null);
+  const out = lockOn ? personLock.pick(poses, ts) : (poses[0] || null);
+  // Диагностика провалов позы (прогон 27.11): сколько кадров модель никого не нашла и сколько отбросило закрепление
+  diag.frames++; if (!poses.length) diag.noPose++; else if (!out) diag.lockDrop++;
+  return out;
 }

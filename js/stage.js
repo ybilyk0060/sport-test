@@ -5,7 +5,7 @@ import { CONFIG } from './config.js?v=8555049-mwz3mpno';
 import { state, setState, track, exportHandoff } from './store.js?v=8555049-mwz3mpno';
 import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=8555049-mwz3mpno';
 import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=8555049-mwz3mpno';
-import { preloadPose, poseStatus, resetPersonLock } from './pose.js?v=8555049-mwz3mpno';
+import { preloadPose, poseStatus, resetPersonLock, diag } from './pose.js?v=8555049-mwz3mpno';
 import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=8555049-mwz3mpno';
 import { framingCheck, frameLoop, createRun } from './session.js?v=8555049-mwz3mpno';
 import { createRaiseHand, createPlankHold } from './gesture.js?v=8555049-mwz3mpno';
@@ -348,7 +348,8 @@ async function liveExercise(p, i, n) {
           if (stopLoop) { stopLoop(); stopLoop = null; }
           clearTimeout(hintTimer);
           if (carry && !r.skipped) r = { ...r, done: r.target >= 999 ? r.done + carry : Math.min(r.target, r.done + carry), completed: r.target < 999 ? r.done + carry >= r.target : r.completed, metrics: { ...r.metrics, motionStartCarry: carry } };
-          track('exercise_done', { key: p.key, done: r.done, target: r.target, reason: r.reason, sec: r.elapsedSec, fps: poseStatus.fps, ms: Math.round(poseStatus.ms || 0), n: poseStatus.people || 0, skipped: !!r.skipped });
+          track('exercise_done', { key: p.key, done: r.done, target: r.target, reason: r.reason, sec: r.elapsedSec, fps: poseStatus.fps, ms: Math.round(poseStatus.ms || 0), n: poseStatus.people || 0, skipped: !!r.skipped, summary: `f${diag.frames} np${diag.noPose} ld${diag.lockDrop} e${diag.errors} ${poseStatus.delegate}` });
+          diag.frames = 0; diag.noPose = 0; diag.lockDrop = 0;
           drawSkeleton(null);
           if (!r.skipped) { hud.innerHTML = `<div class="big-center"><div class="done-big" aria-hidden="true">✓</div><div class="t" style="font-size:36px">${esc(T.cam.done)}</div></div>`; await sleep(900); }
           resolve(r);
