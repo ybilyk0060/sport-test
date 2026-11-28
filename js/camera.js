@@ -32,7 +32,10 @@ export async function openCamera(video, facing = 'environment') {
     camStatus.state = 'error'; camStatus.error = 'unsupported'; camStatus.errorName = 'NoMediaDevices';
     const err = new Error('getUserMedia недоступен'); err.kind = 'unsupported'; throw err;
   }
-  const base = { width: { ideal: 960 }, height: { ideal: 540 }, frameRate: { ideal: 30 } }; // 960×540: быстрее открывается и распознаётся, для позы хватает
+  // 960×540: быстрее открывается и распознаётся, для позы хватает. Во встроенных браузерах приложений (Messenger, Instagram)
+  // ресурсов меньше — 640×360: модель всё равно уменьшает кадр, а подсчёт меньше подвисает (Юрий 25.11).
+  const inApp = /Instagram|FBAN|FBAV|FB_IAB|FBIOS|FB4A|Messenger|musical_ly|BytedanceWebview|Telegram|Viber/i.test(navigator.userAgent || '');
+  const base = inApp ? { width: { ideal: 640 }, height: { ideal: 360 }, frameRate: { ideal: 30 } } : { width: { ideal: 960 }, height: { ideal: 540 }, frameRate: { ideal: 30 } };
   const tries = [{ ...base, facingMode: { ideal: facing } }, { facingMode: facing }, true];
   let lastErr = null;
   for (const v of tries) {

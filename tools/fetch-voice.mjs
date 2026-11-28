@@ -2,41 +2,58 @@
 // (assets/audio/studio/manifest.json) в assets/audio и пишет карту js/voice-map.js.
 // Запуск: node tools/fetch-voice.mjs   (повтор безопасен: файлы сверяются по sha)
 import fs from 'fs'; import crypto from 'crypto';
+import { STUDIO } from '../js/engine/specs-studio.js';
 const BASE = 'https://iiafijcmajkitvtktntk.supabase.co/storage/v1/object/public/assets/';
-const LOC = 'uk';
+const LOCS = ['en', 'de', 'uk'];
 const WANT = {
+  coach: ['ui_raise_hand', 'howto_jumping_jack', 'howto_squats', 'howto_high_knees', 'pf_phone', 'ui_steps_back', 'ui_phone_tip', 'cue_great', 'intro_next', 'intro_last', 'howto_arm_circles', 'howto_pushups', 'howto_crunches'],
   voice: [
     ...Array.from({ length: 30 }, (_, i) => `count_${i + 1}`),
     'session_get_ready', 'session_start', 'session_finished', 'session_time_up', 'session_last_one', 'session_halfway', 'session_camera_lost',
     'hint_sit_lower', 'hint_turn_sideways', 'hint_keep_feet_planted', 'hint_stand_straight_arms_down', 'hint_keep_moving', 'hint_switch_legs',
     'hint_start_high_knees', 'hint_lift_knees_higher', 'hint_show_full_body', 'hint_jumping_jack_face_wrong', 'hint_jumping_jack_not_reached',
-    'hint_get_into_plank', 'hint_keep_body_straight', 'frame_step_back',
+    'hint_lie_down_flat', 'hint_sit_up_higher', 'hint_bend_your_knees', 'hint_lie_all_the_way_back', 'hint_get_into_plank', 'hint_keep_body_straight', 'hint_go_lower', 'hint_body_too_upright', 'hint_keep_hips_steady', 'hint_no_knees_on_floor', 'frame_step_back', 'frame_step_closer', 'frame_upper_only',
   ],
   exercise: [
     'jumping_jack_howto', 'squats_howto', 'high_knees_howto', 'good_morning_howto', 'name_shoulder_taps',
+    'quadruped_arm_circles_howto', 'wall_french_press_howto', 'arm_circles_not_reached', 'arm_circles_face_wrong', 'quadruped_arm_circles_not_reached', 'wall_french_press_not_reached',
+    ...['arm_circles', 'quadruped_arm_circles', 'wall_french_press'].flatMap((k) => [1, 2, 3, 4].map((n) => `${k}_coach_${n}`)),
     'good_morning_not_reached', 'good_morning_face_wrong', 'shoulder_taps_not_reached',
     ...['jumping_jack', 'good_morning', 'shoulder_taps'].flatMap((k) => [1, 2, 3, 4].map((n) => `${k}_coach_${n}`)),
+    // Новые из Студії 25.11 (помечены для sport_test)
+    ...['cross_crawl', 'glute_bridge', 'side_bend', 'side_leg_raise', 'superman_lifts', 'tuck_jump'].flatMap((k) => [`${k}_howto`, `${k}_not_reached`, `${k}_face_wrong`, ...[1, 2, 3, 4].map((n) => `${k}_coach_${n}`)]),
   ],
 };
+// Упражнения из каталога Студії (tools/import-studio.mjs): инструкция и фразы спеки
+for (const [k, e] of Object.entries(STUDIO)) for (const ph of [`${k}_howto`, ...(e.phrases || [])]) if (!WANT.exercise.includes(ph)) WANT.exercise.push(ph);
 const man = await fetch(BASE + 'audio/studio/manifest.json').then((r) => r.json());
 const map = {};
-fs.mkdirSync('assets/audio', { recursive: true });
-for (const [set, keys] of Object.entries(WANT)) {
-  for (const key of keys) {
-    const e = man.sets[set] && man.sets[set][LOC] && man.sets[set][LOC][key];
-    if (!e) { console.log('НЕТ В МАНИФЕСТЕ', set, key); continue; }
-    const ext = e.path.split('.').pop();
-    const file = `${key}.${ext}`;
-    const dest = `assets/audio/${file}`;
-    const have = fs.existsSync(dest) ? crypto.createHash('sha256').update(fs.readFileSync(dest)).digest('hex').slice(0, 16) : null;
-    if (have !== e.sha) {
-      const buf = Buffer.from(await fetch(`${BASE}${e.path}?v=${e.sha}`).then((r) => { if (!r.ok) throw new Error(`${r.status} ${e.path}`); return r.arrayBuffer(); }));
-      const sha = crypto.createHash('sha256').update(buf).digest('hex').slice(0, 16);
-      if (sha !== e.sha) console.log('sha не совпал', key, sha, e.sha);
-      fs.writeFileSync(dest, buf);
+for (const LOC of LOCS) {
+  map[LOC] = {};
+  fs.mkdirSync(`assets/audio/${LOC}`, { recursive: true });
+  for (const [set, keys] of Object.entries(WANT)) {
+    for (const key of keys) {
+      const e = man.sets[set] && man.sets[set][LOC] && man.sets[set][LOC][key];
+      if (!e) { console.log('НЕТ В МАНИФЕСТЕ', LOC, set, key); continue; }
+      const ext = e.path.split('.').pop();
+      const file = `${LOC}/${key}.${ext}`;
+      const dest = `assets/audio/${file}`;
+      const have = fs.existsSync(dest) ? crypto.createHash('sha256').update(fs.readFileSync(dest)).digest('hex').slice(0, 16) : null;
+      if (have !== e.sha) {
+        const buf = Buffer.from(await fetch(`${BASE}${e.path}?v=${e.sha}`).then((r) => { if (!r.ok) throw new Error(`${r.status} ${e.path}`); return r.arrayBuffer(); }));
+        const sha = crypto.createHash('sha256').update(buf).digest('hex').slice(0, 16);
+        if (sha !== e.sha) console.log('sha не совпал', LOC, key, sha, e.sha);
+        fs.writeFileSync(dest, buf);
+      }
+      map[LOC][key] = file;
     }
-    map[key] = file;
   }
 }
-fs.writeFileSync('js/voice-map.js', `// Сгенерировано tools/fetch-voice.mjs из манифеста Студії вправ (${man.generatedAt}). Голос Achird. Не править руками.\nexport const VOICE_FILES = ${JSON.stringify(map, null, 1)};\n`);
-console.log('клипов', Object.keys(map).length);
+// Свои фразы сайта тем же голосом (tools/gen-custom-voice.mjs): assets/audio/<lang>/custom/<key>.wav
+for (const LOC of LOCS) {
+  const dir = `assets/audio/${LOC}/custom`;
+  if (!fs.existsSync(dir)) continue;
+  for (const f of fs.readdirSync(dir)) if (/\.(wav|m4a)$/.test(f)) map[LOC][f.replace(/\.(wav|m4a)$/, '')] = `${LOC}/custom/${f}`;
+}
+fs.writeFileSync('js/voice-map.js', `// Сгенерировано tools/fetch-voice.mjs из манифеста Студії вправ (${man.generatedAt}). Голос Achird, языки en/de/uk. Не править руками.\nexport const VOICE_FILES = ${JSON.stringify(map, null, 1)};\n`);
+console.log('клипов', Object.fromEntries(Object.entries(map).map(([l, m]) => [l, Object.keys(m).length])));

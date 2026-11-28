@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Privacy policy — the 3-minute kids’ strengths test</title>
+<link rel="stylesheet" href="css/app.css?v=b17bd53-mx0m9pxl">
+<link rel="stylesheet" href="legal.css?v=b17bd53-mx0m9pxl">
+<style>.doc h2{font-size:19px;margin-top:10px}.doc ul{margin:0;padding-left:20px;display:grid;gap:6px}.doc p,.doc li{font-size:15px}</style>
+</head>
+<body>
+<main class="screen doc">
+  <a class="link" href="index.html?lang=en">← Back to the test</a>
+  <nav class="legal-nav"><a href="pricing-en.html">Pricing</a><a href="terms-en.html">Terms</a><a href="refund-en.html">Refunds</a><a href="privacy-en.html">Privacy</a><a href="contact-en.html">Contact</a></nav>
+  <h1 class="rtitle">Privacy policy</h1>
+  <p class="muted small">The 3-minute kids’ strengths test. Last updated 25.11.2026.</p>
+  <p data-paddle hidden>Payments are processed by Paddle.com (Merchant of Record), which receives your payment details and email under its own privacy policy.</p>
+
+  <h2>What we do NOT collect</h2>
+  <ul>
+    <li><b>Your child’s video.</b> The camera works only on your phone: video is not recorded, stored or uploaded.</li>
+    <li><b>Body points and images.</b> Movements are recognized in the browser on your phone. No frames or body coordinates leave the phone.</li>
+    <li><b>Backup recordings.</b> If you record a video with the regular camera, it is analyzed on your phone and never uploaded.</li>
+    <li><b>Your child’s name, photos or health data.</b> We don’t ask for them.</li>
+    <li><b>Card details.</b> You enter your card only in Paddle’s secure checkout window; we never see it.</li>
+  </ul>
+
+  <h2>What we keep</h2>
+  <ul>
+    <li>Answers to 8 questions (age range, sex if you choose to give it, interests).</li>
+    <li>Height and weight, only if you enter them. They stay in your browser and are never sent to us or to analytics; only a summary of how gentle the recommended load should be (one of three levels) is saved with your answers.</li>
+    <li>Test totals: reps, seconds, quality levels.</li>
+    <li>Journey events: which steps were opened, browser and phone type (iOS or Android).</li>
+    <li>Subscription state (start date, paid until, cancelled or not) and completed program workouts.</li>
+    <li><b>The email you enter at payment</b> — to send the subscription terms, an access link for any device and to handle cancellation. Email, subscription state, answers and test totals are stored on our server (Supabase) and not shared. Ask us to delete them at the address below.</li>
+  </ul>
+  <p>Without a subscription, answers and results stay <b>only on your phone</b>, in the browser’s storage.</p>
+
+  <h2>Cookies, Meta Pixel, TikTok Pixel and analytics</h2>
+  <p>In the EU, the EEA, Switzerland and the UK we show a cookie banner, and only if you tap “Accept” do we turn on the Meta Pixel (Meta Platforms Ireland Ltd.) and the TikTok Pixel (TikTok Technology Ltd.) to measure ads, and our analytics service (PostHog). Only step names (for example “payment opened”), amount and currency are sent. Answers about your child, exercise results, video and body points are never sent. If you choose “Only necessary”, nothing third-party is loaded. To change your choice, use “Delete my data” below.</p>
+  <p>Outside these regions (for example in the US and Australia) the Meta Pixel, the TikTok Pixel and PostHog analytics are turned on when the page opens, with the same limits: only step names, amount and currency, never answers about your child, results or video. To opt out, use your browser’s settings to block cookies for this site.</p>
+  <p>If you ask us to email you a link to continue the test later, we use your email only to send that one email. We don’t store the address; we keep only a one-way hash and the time, for up to 30 days, to prevent abuse.</p>
+  <p>With the same consent, our analytics service (PostHog, EU servers) records clicks, scrolling and session replays of the website so we can see where the test is hard to use. Text fields are masked, answer buttons in the questionnaire are excluded, and the camera screen is never recorded: recording pauses while the camera is on.</p>
+
+  <h2>How to delete data</h2>
+  <p>Tap the button below to erase all test data on this phone, including your cookie choice. Clearing site data in your browser settings does the same.</p>
+  <button class="btn line" id="wipe">Delete my data</button>
+  <p class="small muted" id="done" hidden>Data deleted.</p>
+
+  <h2>Service providers</h2>
+  <p>Paddle.com (payments, Merchant of Record), Supabase (subscription data, servers in Frankfurt, EU), Brevo (subscription emails, EU), PostHog (analytics, EU servers, only with your consent), TikTok Technology Ltd. (ad measurement, only with your consent), Meta Platforms Ireland Ltd. (ad measurement, only with your consent).</p>
+  <h2>Legal basis and how long we keep data</h2>
+  <p>We process your email and subscription data to perform the contract (GDPR Art. 6(1)(b)), and analytics and ad measurement only with your consent (Art. 6(1)(a)), which you can withdraw at any time. Subscription data is kept while the subscription is active and for up to 12 months after it ends, unless the law requires longer (for example, tax records kept by Paddle).</p>
+  <h2>Your rights</h2>
+  <p>You can ask us for access to, correction or deletion of your data, restriction of processing, data portability, and you can object to processing. You also have the right to complain to a data protection authority in your country.</p>
+  <h2>Children</h2>
+  <p>An adult takes the test together with the child. The child does not enter any data about themselves.</p>
+
+  <h2>Contact</h2>
+  <p>Data controller: <span data-s="name"></span>. Questions about data: <span data-s="email"></span>.</p>
+</main>
+<script type="module">
+import { store } from './js/store.js?v=b17bd53-mx0m9pxl';
+document.getElementById('wipe').onclick = () => { store.clearAll(); try { localStorage.removeItem('sporttest.consent'); localStorage.removeItem('sporttest.v1.offer'); } catch {} document.getElementById('done').hidden = false; };
+</script>
+<script type="module" src="js/legal.js?v=b17bd53-mx0m9pxl"></script>
+</body>
+</html>

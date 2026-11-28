@@ -47,3 +47,16 @@ export function shoulderTapFrame(side, tap, { reach = 1 } = {}) {
   return lm;
 }
 export function shoulderTaps(n, opt) { const f = []; for (let i = 0; i < 10; i++) f.push(shoulderTapFrame(null, 0)); for (let k = 0; k < n; k++) { const s = k % 2 ? 'right' : 'left'; for (let i = 1; i <= 8; i++) f.push(shoulderTapFrame(s, i / 8, opt)); for (let i = 0; i < 3; i++) f.push(shoulderTapFrame(s, 1, opt)); for (let i = 1; i <= 8; i++) f.push(shoulderTapFrame(s, 1 - i / 8, opt)); for (let i = 0; i < 4; i++) f.push(shoulderTapFrame(null, 0)); } return f; }
+
+// Віджимання лицом к камере (телефон на полу перед ребёнком): bend 0..1 — локти разводятся, плечи опускаются.
+export function pushFrontFrame(bend, depth = 1) {
+  const P = (x, y) => mock.pt(x, y); const lm = Array.from({ length: 33 }, () => P(0.5, 0.5));
+  const b = bend * depth, shY = 0.5 + 0.08 * b;
+  lm[0] = P(0.5, shY - 0.08); lm[11] = P(0.6, shY); lm[12] = P(0.4, shY);
+  lm[15] = P(0.62, 0.74); lm[16] = P(0.38, 0.74);
+  lm[13] = P(0.61 + 0.12 * b, (shY + 0.74) / 2); lm[14] = P(0.39 - 0.12 * b, (shY + 0.74) / 2);
+  lm[23] = P(0.55, shY - 0.03); lm[24] = P(0.45, shY - 0.03);
+  for (const i of [25, 26, 27, 28, 29, 30, 31, 32]) lm[i] = { ...P(0.5, 0.4), visibility: 0.1 };
+  return lm;
+}
+export function pushFronts(n, depth = 1) { const f = []; for (let i = 0; i < 10; i++) f.push(pushFrontFrame(0)); for (let k = 0; k < n; k++) { for (let i = 1; i <= 10; i++) f.push(pushFrontFrame(i / 10, depth)); for (let i = 0; i < 3; i++) f.push(pushFrontFrame(1, depth)); for (let i = 1; i <= 10; i++) f.push(pushFrontFrame(1 - i / 10, depth)); for (let i = 0; i < 4; i++) f.push(pushFrontFrame(0)); } return f; }

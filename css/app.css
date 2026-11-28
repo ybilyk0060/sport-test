@@ -206,9 +206,369 @@ button.pill { min-height: 40px; }
 .row-links { display: flex; gap: 8px; flex-wrap: wrap; }
 .pill-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: var(--ink); color: #fff; text-decoration: none; font-weight: 700; font-size: 14px; }
 .rowline { display: flex; justify-content: space-between; gap: 12px; font-size: 16px; }
-.code-box { display: grid; gap: 4px; background: #f4efe6; border-radius: 12px; padding: 10px 12px; }
-.code-box b { font-size: 20px; letter-spacing: .06em; font-variant-numeric: tabular-nums; }
-.code-box .link { justify-self: start; font-weight: 700; text-decoration: underline; }
+.growth { display: grid; gap: 8px; }
+.growth-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--card); border-radius: 14px; padding: 12px 14px; box-shadow: inset 0 0 0 1.5px var(--line); }
+.growth-row > div { display: grid; gap: 2px; }
+.growth-row .pill-link { flex: none; }
+.next-w .plan-ready { font-size: 16px; color: #17603f; }
+.exit-offer { margin-top: 12px; }
 .price-card .timer { justify-self: start; font-weight: 800; font-size: 15px; color: #fff; background: var(--warn); border-radius: 999px; padding: 4px 12px; font-variant-numeric: tabular-nums; }
 .price-card .timer.over { background: #e3ddd2; color: var(--muted); }
 .price-card.no-disc { box-shadow: inset 0 0 0 2px var(--line); }
+.langs { display: flex; justify-content: center; gap: 14px; font-size: 14px; }
+.langs a { color: var(--muted); text-decoration: none; } .langs a.on { color: var(--ink); font-weight: 700; text-decoration: underline; }
+.consent { position: fixed; left: 10px; right: 10px; bottom: calc(10px + var(--safe-b)); z-index: 60; background: var(--ink); color: #fff; border-radius: 16px; padding: 14px; display: grid; gap: 10px; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.25); max-width: 520px; margin: 0 auto; }
+.consent a { color: #ffd3ad; }
+.consent div { display: flex; gap: 8px; justify-content: flex-end; }
+.consent button { padding: 10px 14px; border-radius: 12px; font-weight: 700; background: rgba(255,255,255,.12); }
+.consent button.primary { background: var(--accent); }
+/* Жест «Підніми руку» на карточке упражнения */
+.raise { display: flex; align-items: center; gap: 12px; background: #f4efe6; border-radius: 16px; padding: 8px 12px; font-weight: 700; }
+.raise svg { width: 64px; height: 64px; flex: none; transform: rotate(-90deg); }
+.raise svg text { transform: rotate(90deg); transform-origin: 40px 40px; }
+.raise circle { fill: none; stroke-width: 7; }
+.raise .r-bg { stroke: #e3ddd2; } .raise .r-fg { stroke: var(--ok); stroke-linecap: round; transition: stroke-dashoffset .1s linear; }
+.raise.on { background: #e9f6ef; }
+
+/* --- Компактный отчёт подписчика --- */
+.rep-head { background: var(--card); border-radius: 20px; padding: 16px; box-shadow: inset 0 0 0 1.5px var(--line); display: grid; gap: 6px; }
+.rep-head small { color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 12px; }
+.rep-head h1 { font-size: 28px; line-height: 1.1; }
+.rep-head p { font-size: 15px; color: var(--muted); margin-bottom: 4px; }
+.mini { display: grid; grid-template-columns: 1fr 76px 112px; align-items: center; gap: 8px; font-size: 14px; }
+.mini .dots { display: flex; gap: 3px; } .mini .dots i { flex: 1; height: 7px; border-radius: 4px; background: var(--line); }
+.mini .dots.l3 i { background: var(--l3); } .mini .dots.l2 i:nth-child(-n+2) { background: var(--l2); } .mini .dots.l1 i:first-child { background: var(--l1); }
+.mini em { font-style: normal; font-size: 12px; font-weight: 700; text-align: right; }
+.next-w .nw-top { display: flex; justify-content: space-between; gap: 8px; }
+details.sec { background: var(--card); border-radius: 16px; box-shadow: inset 0 0 0 1.5px var(--line); padding: 14px 16px; }
+details.sec > summary { font-weight: 800; font-size: 17px; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 8px; }
+details.sec > summary::after { content: "▾"; color: var(--muted); } details.sec[open] > summary::after { content: "▴"; }
+details.sec > summary span { font-weight: 600; font-size: 13px; }
+details.sec[open] > summary { margin-bottom: 10px; }
+details.sec > * + * { margin-top: 10px; }
+.sport-row { display: flex; gap: 10px; align-items: flex-start; } .sport-row > div { display: grid; gap: 2px; }
+.sport-row .n { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 14px; }
+.foot-links { display: grid; justify-items: center; gap: 10px; padding: 8px 0 16px; }
+.stage-close { position: absolute; z-index: 8; left: 12px; top: calc(10px + var(--safe-t)); width: 48px; height: 48px; border-radius: 50%; background: rgba(0,0,0,.55); color: #fff; font-size: 22px; font-weight: 700; display: grid; place-items: center; }
+.hud-top { padding-left: 58px; }
+.sheet .tag.checks { background: #e9f6ef; color: #17603f; margin-left: 6px; }
+.apps-block { display: grid; gap: 10px; }
+.apps-soon-card { background: #eef6f0; border-radius: 20px; padding: 16px; box-shadow: inset 0 0 0 2px #9fd0b0; }
+.apps-soon-card .sec-title { margin: 0; }
+.apps-soon-card .sec-title::before { content: "📱 "; }
+.apps-soon-card .app-card { background: #fff; }
+.legal-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; font-size: 13px; } .legal-links a { color: var(--muted); }
+.email-field { display: grid; gap: 6px; } .email-field .field { width: 100%; }
+
+/* Рост и вес */
+.units { display: flex; gap: 8px; margin: 14px 0 10px; }
+.unit { flex: 1; min-height: 44px; border-radius: 12px; background: var(--card); font-weight: 600; box-shadow: inset 0 0 0 2px var(--line); }
+.unit.sel { box-shadow: inset 0 0 0 2px var(--accent); color: var(--ink); }
+.body-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.body-grid label { display: grid; gap: 6px; }
+.body-grid .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.body-grid .field { min-width: 0; text-align: center; }
+.bad { color: #c0392b; margin-bottom: 8px; }
+
+/* Экран камеры: единый «стеклянный» стиль (25.11) */
+.hud-top { align-items: flex-start; }
+.hud-actions { display: flex; gap: 8px; }
+.glass-pill, .glass-btn, .stage-close, .glass-card {
+  background: rgba(22, 22, 34, .52); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, .16); color: #fff; box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+}
+.glass-pill { border-radius: 999px; padding: 10px 16px; font-size: 15px; font-weight: 700; line-height: 1.2; max-width: 62vw; }
+.glass-btn { min-height: 48px; border-radius: 999px; padding: 0 18px; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.glass-btn.icon { width: 48px; padding: 0; }
+.glass-btn.wide { width: 100%; margin-top: 12px; background: rgba(255, 255, 255, .92); color: var(--ink); border-color: transparent; }
+.glass-btn:active, .stage-close:active { transform: scale(.96); }
+.stage-close { border-radius: 50%; }
+.frame-guide { position: absolute; left: 9%; right: 9%; top: 14%; bottom: 30%; pointer-events: none; }
+.frame-guide i { position: absolute; width: 34px; height: 34px; border: 4px solid rgba(255, 255, 255, .85); border-radius: 6px; }
+.frame-guide i:nth-child(1) { left: 0; top: 0; border-right: 0; border-bottom: 0; }
+.frame-guide i:nth-child(2) { right: 0; top: 0; border-left: 0; border-bottom: 0; }
+.frame-guide i:nth-child(3) { left: 0; bottom: 0; border-right: 0; border-top: 0; }
+.frame-guide i:nth-child(4) { right: 0; bottom: 0; border-left: 0; border-top: 0; }
+.glass-card { margin-top: auto; border-radius: 26px; padding: 16px 18px 18px; text-align: center; transition: background .25s; }
+.glass-card.ok { background: rgba(22, 120, 80, .62); }
+.fc-title { font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; opacity: .75; }
+.fc-msg { font-size: 21px; font-weight: 800; line-height: 1.25; margin-top: 6px; min-height: 2.5em; display: grid; place-items: center; }
+.frame-card .checks { margin-top: 12px; }
+.frame-card .chk { background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .18); padding: 8px 16px; font-size: 15px; }
+.frame-card .chk.ok { background: var(--ok); border-color: transparent; }
+
+/* Пейвол: закрытые карточки видов спорта, короткий повтор цены, строка доверия */
+.teaser { margin: 16px 0; }
+.teaser h3 { margin-bottom: 4px; }
+.lock-card { display: grid; grid-template-columns: 36px 1fr 28px; align-items: center; gap: 12px; padding: 14px 14px; margin-top: 10px; border-radius: 16px; background: linear-gradient(135deg, #fff3e6, #ffe7d1); box-shadow: inset 0 0 0 1.5px #ffd2ad; }
+.lock-card b { display: block; font-size: 16px; }
+.lock-card small { display: block; color: var(--muted); font-size: 14px; margin-top: 2px; }
+.lock-n { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 800; display: grid; place-items: center; }
+.lock-ic { font-size: 20px; text-align: center; }
+.price-mini { display: grid; grid-template-columns: 1fr; align-items: center; gap: 10px; text-align: center; margin: 18px 0 8px; padding: 14px; border-radius: 18px; background: var(--card); box-shadow: inset 0 0 0 2px var(--accent); }
+.price-mini b { font-size: 22px; } .price-mini s { color: var(--muted); font-size: 14px; } .price-mini small { display: block; color: var(--muted); font-size: 13px; }
+.price-mini .btn { min-height: 52px; font-size: 16px; }
+.trust { color: var(--muted); margin-top: 10px; }
+.check a { color: inherit; text-decoration: underline; }
+
+/* Первый экран целиком помещается во встроенных браузерах (TikTok/Instagram ниже обычного Safari) */
+.hero { gap: 8px; padding-top: 0; }
+.hero-art { width: min(30vw, 130px); }
+.hero h1 { font-size: clamp(26px, 7.6vw, 34px); }
+.hero .promise { font-size: 17px; line-height: 1.35; }
+.points { gap: 8px; }
+.land-note { font-size: 13px; margin-top: -6px; }
+@media (max-height: 720px) { .hero-art { width: min(24vw, 96px); } .hero .promise { font-size: 16px; } .screen { gap: 12px; } }
+.bal-art { font-size: 96px; text-align: center; line-height: 1.2; }
+
+/* Анимированные примеры оценочных упражнений (js/demos.js) */
+.demo { background: #fff3e6; border-radius: 18px; padding: 8px; display: grid; place-items: center; }
+.demo svg { width: min(56vw, 220px); height: auto; aspect-ratio: 1 / 1; }
+.demo svg * { stroke: #1f2a3d; fill: none; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+.demo svg .head, .demo svg .dot { fill: #1f2a3d; stroke: none; }
+.demo svg .dot { fill: var(--accent); }
+.demo svg .floor { stroke: #b9a68f; stroke-width: 3; stroke-dasharray: 2 8; }
+.demo svg .tape { stroke: var(--accent); stroke-width: 6; }
+.demo svg .mark { stroke: var(--accent); stroke-width: 4; }
+.demo .f { opacity: 0; animation-iteration-count: infinite; animation-timing-function: steps(1, end); }
+.demo.n3 .f { animation-name: demo3; animation-duration: 2.1s; }
+.demo.n4 .f { animation-name: demo4; animation-duration: 2.8s; }
+@keyframes demo3 { 0% { opacity: 1; } 33.3% { opacity: 0; } 100% { opacity: 0; } }
+@keyframes demo4 { 0% { opacity: 1; } 25% { opacity: 0; } 100% { opacity: 0; } }
+
+/* Карточка упражнения целиком на экране без прокрутки (Юрий 25.11, iPhone Safari) */
+.sheet { gap: 8px; padding-top: 14px; max-height: 96dvh; }
+.sheet .tag { font-size: 13px; padding: 4px 10px; }
+.sheet h2 { font-size: 19px; line-height: 1.2; }
+.sheet .panda, .sheet .demo { max-height: 26dvh; }
+.sheet .panda { aspect-ratio: auto; height: 26dvh; }
+.sheet .demo { padding: 4px; }
+.sheet .demo svg { width: auto; height: min(24dvh, 200px); }
+.sheet > p { font-size: 15px; line-height: 1.35; margin: 0; }
+.sheet .note { font-size: 14px; }
+.sheet .raise { padding: 6px 10px; font-size: 14px; }
+.sheet .raise svg { width: 44px; height: 44px; }
+.sheet .btn { min-height: 50px; }
+.sheet .btn.ghost { min-height: 36px; font-size: 15px; }
+@media (max-height: 700px) { .sheet .panda { height: 20dvh; } .sheet .demo svg { height: 18dvh; } .sheet > p.small { display: none; } }
+.sheet .tags { display: flex; flex-wrap: wrap; gap: 6px; } .sheet .tags .tag { margin: 0; }
+.sheet .panda { height: auto; width: auto; max-width: 100%; aspect-ratio: 16 / 9; max-height: 28dvh; align-self: center; object-fit: contain; }
+@media (max-height: 700px) { .sheet .panda { max-height: 22dvh; } }
+/* Уверенность в направлении спорта (отчёт после оплаты) */
+.conf { display: inline-block; margin: 4px 0 2px; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 700; }
+.conf.c-high { background: #e3f5ea; color: #17603f; } .conf.c-medium { background: #fff1dc; color: #8a5300; } .conf.c-low { background: #eef0f3; color: #4b5563; }
+/* Блок доверия на первом экране */
+.trust-box { display: flex; gap: 10px; align-items: center; background: #fff; border-radius: 14px; padding: 10px 12px; box-shadow: inset 0 0 0 1.5px var(--line); font-size: 14px; line-height: 1.35; font-weight: 600; }
+.trust-box .tb-ic { font-size: 22px; flex: none; }
+
+/* 26.11 прогон на iPhone: читаемые надписи в углах экрана камеры, крупная панда, кнопки без выделения текста */
+button, .btn, .opt, .glass-btn, .pill-link, a.btn, [data-act] { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
+.hud-title { display: grid; gap: 2px; background: rgba(14, 14, 24, .86); border-color: rgba(255, 255, 255, .22); padding: 9px 16px 10px; max-width: 64vw; }
+.hud-title small { font-size: 13px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; opacity: .8; }
+.hud-title b { font-size: 20px; font-weight: 800; line-height: 1.15; }
+.hud-actions .glass-btn[data-act=skip-ex] { background: rgba(255, 255, 255, .94); color: var(--ink); border-color: transparent; white-space: nowrap; font-size: 15px; min-height: 44px; padding: 0 16px; }
+.sheet .panda { width: 100%; max-width: 100%; height: 44dvh; max-height: none; aspect-ratio: auto; object-fit: cover; object-position: center 45%; border-radius: 18px; }
+@media (max-height: 700px) { .sheet .panda { height: 36dvh; max-height: none; } }
+.raise.wait { opacity: .45; }
+.sheet { max-height: calc(100dvh - 76px - var(--safe-t, 0px)); }
+@media (max-height: 700px) { .sheet .panda { height: 31dvh; } .sheet .note { display: none; } }
+
+/* 26.11 (2) Юрий: аккуратные маленькие плашки сверху в стиле оранжевых кнопок; счётчик не закрывает ребёнка; панда на весь экран */
+.hud-title { display: block; background: var(--accent); color: #fff; border: 0; border-radius: 999px; padding: 7px 14px; max-width: 60vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-shadow: 0 3px 0 #d95f08, 0 6px 16px rgba(0,0,0,.25); backdrop-filter: none; -webkit-backdrop-filter: none; }
+.hud-title small { font-size: 13px; font-weight: 700; letter-spacing: 0; text-transform: none; opacity: .9; }
+.hud-title b { font-size: 14px; font-weight: 800; }
+.hud-actions .glass-btn[data-act=skip-ex] { min-height: 34px; padding: 0 12px; font-size: 13px; border-radius: 999px; background: rgba(255,255,255,.92); color: var(--ink); box-shadow: 0 4px 12px rgba(0,0,0,.2); }
+.hud-top { align-items: center; }
+.sheet.show { top: 0; max-height: none; border-radius: 0; padding-top: calc(76px + var(--safe-t, 0px)); gap: 10px; }
+.sheet.show .panda { flex: 1 1 auto; min-height: 0; height: auto; max-height: none; width: calc(100% + 2 * var(--pad)); margin: 0 calc(-1 * var(--pad)); border-radius: 0; object-fit: cover; object-position: center 42%; aspect-ratio: auto; }
+.sheet.show .demo { flex: 1 1 auto; }
+.sheet.show > p { font-size: 14px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.sheet.show .note { display: none; }
+.sheet.show h2 { font-size: 22px; }
+.sheet.show .panda { max-width: none; align-self: stretch; }
+.sheet.show > p:not(.note) { -webkit-line-clamp: 1; }
+.hud-top .hud-title { flex: 0 1 auto; min-width: 0; max-width: none; padding: 7px 12px; }
+.hud-title b, .hud-title small { font-size: 13px; }
+.hud-actions { flex: none; }
+.hud-actions .glass-btn[data-act=skip-ex] { font-size: 12px; padding: 0 11px; }
+
+.sheet.show .panda.vert { object-position: center 30%; background: #f3ece2; }
+.sheet.show .panda.vert { object-fit: contain; object-position: center; background: #ece4d8; }
+.sheet.show > p:not(.note):not(.small) { display: none; }
+
+/* Панда поверх камеры (зелёный фон вырезан в js/greenkey.js) */
+.panda-key { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.pk-src { position: absolute; width: 2px; height: 2px; opacity: 0; pointer-events: none; }
+.pk-src.plain { inset: 0; width: 100%; height: 100%; opacity: 1; object-fit: contain; }
+.over-bottom { margin-top: auto; display: grid; gap: 8px; position: relative; }
+.over-bottom .raise { background: rgba(255, 255, 255, .9); }
+.over-bottom .btn { min-height: 50px; }
+.over-bottom .btn.ghost { min-height: 34px; font-size: 14px; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.6); background: none; box-shadow: none; }
+.over-bottom .raise { color: var(--ink); }
+.panda-key { inset: auto; left: 0; right: 0; top: calc(64px + var(--safe-t, 0px)); bottom: calc(196px + var(--safe-b, 0px)); width: 100%; height: auto; }
+.panda-key { height: calc(100% - 260px - var(--safe-t, 0px) - var(--safe-b, 0px)); bottom: auto; }
+
+/* Панда почти во весь экран: компактный низ */
+.panda-key { top: calc(52px + var(--safe-t, 0px)); height: calc(100% - 200px - var(--safe-t, 0px) - var(--safe-b, 0px)); }
+.over-bottom { gap: 6px; }
+.over-bottom .raise { padding: 6px 10px; font-size: 14px; }
+.over-bottom .raise svg { width: 44px; height: 44px; }
+.over-bottom .btn { min-height: 46px; font-size: 17px; }
+
+/* Страница после оплаты: виды спорта открыты сразу, приложения одной строкой */
+.sports-open { display: grid; gap: 10px; }
+.apps-soon { background: #f4efe6; border-radius: 14px; padding: 10px 14px; color: var(--muted); }
+.small-sec summary { font-size: 15px; }
+
+/* Большое кольцо удержания жеста поверх панды */
+.big-ring { position: absolute; left: 50%; top: 42%; width: min(58vw, 240px); aspect-ratio: 1; transform: translate(-50%, -50%); display: grid; place-items: center; pointer-events: none; filter: drop-shadow(0 6px 20px rgba(0,0,0,.45)); }
+.big-ring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.big-ring circle { fill: rgba(0,0,0,.25); stroke-width: 16; }
+.big-ring .br-bg { stroke: rgba(255,255,255,.35); }
+.big-ring .br-fg { fill: none; stroke: var(--ok, #22a06b); stroke-linecap: round; transition: stroke-dashoffset .1s linear; }
+.big-ring span { font-size: min(20vw, 84px); position: relative; }
+
+.sub-foot { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 10px; font-size: 13px; color: #6b6878; margin: 4px 0 8px; }
+.sub-foot .link { font-size: 13px; color: #55526a; text-decoration: underline; }
+
+/* Цена и кнопка сразу под главным результатом: до оплаты не нужно листать 3 экрана */
+.price-chip { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px 16px; border-radius: 16px; background: var(--card); box-shadow: inset 0 0 0 2px var(--accent); color: var(--ink); text-align: left; font-weight: 700; }
+.price-chip b { font-size: 20px; color: var(--accent); }
+.price-chip span { flex: 1; font-size: 15px; }
+.price-chip i { font-style: normal; font-size: 18px; color: var(--accent); }
+.big-ring[hidden] { display: none; }
+
+.langs.top { justify-content: flex-end; margin: -6px 0 2px; gap: 14px; font-size: 14px; }
+/* Пейвол: первый экран = результат одной строкой, закрытые виды спорта, цена и кнопка без прокрутки */
+.rtitle.compact { font-size: 24px; margin: 0; }
+.best-line { margin: 2px 0 0; font-size: 15px; } .best-line span { color: var(--muted); } .best-line b { color: var(--accent); }
+.pw-head { gap: 10px; }
+.pw-head .teaser h3 { font-size: 17px; margin: 0; }
+.pw-head .teaser > p { display: none; }
+.pw-head .lock-card { padding: 8px 12px; }
+.pw-head .lock-card small { font-size: 12px; }
+.pw-head .price-card .renew { font-size: 12px; line-height: 1.3; padding: 6px 10px; }
+.pw-head .price-card .email-field .small { font-size: 12px; }
+.pw-head .price-card .field { min-height: 44px; padding: 8px 12px; }
+.pw-head .price-card .check { font-size: 12px; line-height: 1.3; }
+.pw-head .price-card .pc-row b { font-size: 16px; } .pw-head .price-card .pc-price b { font-size: 26px; }
+.pw-head { padding: 0; background: none; box-shadow: none; border: 0; }
+.pw-head .teaser { padding: 0; background: none; box-shadow: none; gap: 6px; }
+.pw-head .lock-card { padding: 6px 10px; min-height: 0; gap: 10px; }
+.pw-head .lock-card b { font-size: 15px; }
+.pw-head .lock-n { width: 28px; height: 28px; font-size: 15px; }
+.pw-head .price-card { padding: 12px 14px; gap: 8px; }
+.pw-head .price-card .timer { font-size: 14px; padding: 4px 10px; }
+.pw-head .email-field .small { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pw-head .price-card .btn { min-height: 52px; }
+.best-line { font-size: 14px; }
+.rtitle.compact { font-size: 22px; }
+.pw-head .email-field .small { display: none; }
+.pw-head .price-card .pc-row small { display: none; }
+.pw-head .teaser { gap: 4px; }
+.pw-head .teaser h3 { font-size: 16px; }
+
+/* Упражнение выполнено: зелёная плашка с галочкой (Юрий 26.11) */
+.hud .left.ok { background: #22a06b; color: #fff; font-size: 28px; padding: 8px 22px; box-shadow: 0 6px 20px rgba(34,160,107,.45); }
+
+.done-big { width: 132px; height: 132px; margin: 0 auto 12px; border-radius: 50%; background: #22a06b; color: #fff; font-size: 84px; font-weight: 800; line-height: 132px; text-align: center; box-shadow: 0 10px 30px rgba(34,160,107,.5); animation: pop .3s; }
+
+/* Тренировка: упражнения строками с числом справа */
+.ex-list { display: grid; gap: 6px; }
+.ex-row { display: flex; align-items: center; gap: 10px; background: #f8f4ec; border-radius: 12px; padding: 8px 12px; }
+.ex-ic { font-size: 20px; width: 26px; text-align: center; }
+.ex-n { flex: 1; font-weight: 600; font-size: 15px; }
+.ex-c { color: var(--muted); font-size: 13px; white-space: nowrap; } .ex-c b { color: var(--accent); font-size: 18px; font-weight: 800; }
+.plan-s .ex-list { margin-top: 6px; }
+/* Экран подготовки: зачем камера и что спросит телефон (реклама 27.11: до камеры доходили, но не разрешали) */
+.why-cam { display: grid; gap: 4px; background: var(--card); border-radius: 14px; padding: 12px 14px; box-shadow: inset 0 0 0 1.5px var(--line); }
+.why-cam b { font-size: 16px; }
+.why-cam span { color: var(--muted); font-size: 14px; }
+.allow-next { text-align: center; font-size: 14px; font-weight: 600; margin: 0 0 8px; }
+details.box > summary { cursor: pointer; list-style: none; }
+details.box > summary::-webkit-details-marker { display: none; }
+.why-cam .privacy-line { margin: 6px 0 0; }
+.cta-bar { padding: 4px 0 0; background: linear-gradient(to bottom, rgba(255,247,236,0), var(--bg, #fff7ec) 22%); }
+@media (max-height: 700px) { .pcard { padding: 8px 10px; } .pcard svg { flex-basis: 56px; width: 56px; height: 56px; } .pcard b { font-size: 16px; } }
+.trust-cam { background: #eaf7f1; border-radius: 16px; padding: 14px 16px; box-shadow: inset 0 0 0 2px #9fd8bd; color: #14694a; }
+.trust-cam .tc-title { display: flex; gap: 10px; align-items: center; font-size: 17px; }
+.trust-cam .tc-title::before { content: ""; flex: 0 0 26px; height: 26px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 1.5l7 2.6v5.2c0 4.3-2.9 7.7-7 9.2-4.1-1.5-7-4.9-7-9.2V4.1z' fill='%231f9d6b'/%3E%3Cpath d='M6.5 10.2l2.4 2.4 4.6-4.9' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat; }
+.trust-cam ul { margin: 8px 0 0; padding-left: 20px; display: grid; gap: 4px; font-size: 14px; color: #1d5a43; }
+.prep-why { margin: -4px 0 0; color: var(--muted); font-size: 15px; }
+.prep-why b { color: var(--ink); }
+.prep-cards .pcard { padding: 8px 12px; }
+.prep-cards .pcard svg { flex-basis: 52px; width: 52px; height: 52px; }
+.prep-cards .pcard b { font-size: 16px; }
+.prep-cards .pcard span { font-size: 13px; }
+.cta-bar { margin-top: 2px; }
+.cta-bar + .prep-cards { margin-top: 10px; }
+/* Подготовка: заголовок ближе к полосе прогресса (Юрий 27.11) */
+.qhead + h1.qtitle { margin-top: -6px; }
+/* Подготовка без прокрутки во встроенных браузерах (Messenger/Instagram съедают ~200 pt высоты) — 27.11 */
+.screen:has(.tips-row) { gap: 10px; }
+.screen:has(.tips-row) .qtitle { font-size: 24px; }
+.prep-why { margin: -2px 0 0; font-size: 15px; }
+.trust-cam { padding: 12px 14px; }
+.trust-cam ul { margin-top: 6px; gap: 3px; }
+.tips-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.tip-mini { display: grid; justify-items: center; gap: 4px; text-align: center; background: var(--card); border-radius: 14px; padding: 8px 6px; box-shadow: inset 0 0 0 1.5px var(--line); }
+.tip-mini svg { width: 40px; height: 40px; }
+.tip-mini span { font-size: 12px; line-height: 1.25; font-weight: 600; }
+.screen:has(.tips-row) .allow-next { margin-bottom: 6px; }
+.screen:has(.tips-row) .link.small { font-size: 13px; padding: 2px 0; }
+.screen:has(.tips-row) { padding-top: calc(10px + var(--safe-t)); }
+.screen:has(.tips-row) .trust-cam .tc-title { font-size: 16px; }
+.screen:has(.tips-row) .trust-cam .tc-title::before { flex-basis: 22px; height: 22px; }
+.tip-mini { padding: 6px 4px; gap: 2px; }
+.tip-mini svg { width: 34px; height: 34px; }
+.screen:has(.tips-row) .allow-next { font-size: 13px; margin-bottom: 4px; }
+@media (max-height: 520px) { .prep-why { display: none; } .tip-mini svg { width: 28px; height: 28px; } }
+/* Первый экран из рекламы (27.11): кнопка «Start» видна сразу и не под баннером cookie */
+.consent { padding: 10px 12px; gap: 8px; font-size: 12.5px; line-height: 1.35; }
+.consent button { padding: 8px 12px; font-size: 14px; }
+body.has-consent .screen { padding-bottom: 150px; }
+@media (max-height: 760px) { .hero-art { width: min(22vw, 90px); } .hero h1 { font-size: clamp(24px, 7vw, 30px); } .hero .promise { font-size: 16px; } }
+/* Первый экран как в рекламе: ролик P5 слева, вопрос объявления справа (аудит 27.11) */
+.hero-vid { flex-direction: row; align-items: center; gap: 14px; }
+.hero-video { flex: 0 0 36%; width: 36%; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 16px; background: #f4e7d6; box-shadow: 0 6px 18px rgba(29,27,47,.12); }
+.hv-text { display: grid; gap: 8px; }
+.hero-vid h1 { font-size: clamp(26px, 7.6vw, 32px); }
+.hero-vid .promise { font-size: 15px; line-height: 1.35; }
+@media (max-height: 600px) { .hero-video { flex-basis: 28%; width: 28%; } }
+.later-box { display: grid; gap: 8px; background: var(--card); border-radius: 16px; padding: 12px 14px; box-shadow: inset 0 0 0 1.5px var(--line); }
+.later-box .field.bad { box-shadow: inset 0 0 0 2px #e0533d; }
+.later-box[hidden] { display: none; }
+/* Надпись поверх ролика крупно (Юрий 27.11: вшитая была нечитаемой); закрывает мелкую вшитую плашку */
+.hero-vwrap { position: relative; flex: 0 0 38%; width: 38%; }
+.hero-vwrap .hero-video { width: 100%; flex: none; display: block; }
+.hv-badge { position: absolute; left: 6px; right: 6px; top: 6px; background: rgba(255,255,255,.96); color: #14694a; border-radius: 10px; padding: 5px 6px; font-size: 12.5px; line-height: 1.2; font-weight: 800; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+@media (max-height: 600px) { .hero-vwrap { flex-basis: 30%; width: 30%; } .hv-badge { font-size: 11px; } }
+/* Юрий 27.11: не закрывать видео — компактная плашка как вшитая, лишь немного крупнее */
+.hv-badge { left: 50%; right: auto; top: 5px; transform: translateX(-50%); width: max-content; max-width: 94%; padding: 2px 7px; border-radius: 999px; font-size: 9.5px; font-weight: 700; line-height: 1.25; color: #1d1b2f; box-shadow: none; white-space: nowrap; }
+@media (max-width: 380px) { .hv-badge { font-size: 8.5px; padding: 2px 5px; } }
+@media (max-height: 600px) { .hv-badge { font-size: 8px; } }
+.hv-badge { white-space: normal; width: auto; max-width: 88%; border-radius: 9px; text-align: center; }
+.hv-badge { left: 8px; right: 8px; transform: none; max-width: none; width: auto; padding: 3px 6px; font-size: 9.5px; }
+/* Юрий 27.11: одна строка, чуть крупнее вшитой */
+.hv-badge { left: 50%; right: auto; transform: translateX(-50%); width: max-content; max-width: none; white-space: nowrap; padding: 1px 6px; border-radius: 999px; font-size: 7.8px; letter-spacing: -0.1px; top: 4px; }
+@media (max-width: 380px) { .hv-badge { font-size: 7.2px; padding: 1px 5px; } }
+@media (max-height: 600px) { .hv-badge { font-size: 6.2px; } }
+.hero-vwrap { container-type: inline-size; }
+.hv-badge { font-size: 4.9cqw; padding: 0.2cqw 3cqw; }
+@media (max-width: 380px) { .hv-badge { font-size: 4.9cqw; } }
+@media (max-height: 600px) { .hv-badge { font-size: 4.9cqw; } }
+.hv-badge { top: 7cqw; }
+.hv-badge { padding: 1.3cqw 3cqw; top: 5.8cqw; }
+.vis-bar { position: absolute; left: 12px; right: 12px; top: 64px; z-index: 6; background: rgba(29,27,47,.82); color: #fff; border-radius: 14px; padding: 10px 14px; font-weight: 700; font-size: 17px; text-align: center; }
+
+/* Подготовка 28.11: демо-ролик рядом с объяснением и заметная вторая кнопка «пришлите ссылку» */
+.prep-demo { display: flex; align-items: center; gap: 12px; margin: 2px 0 10px; }
+.prep-demo video { width: 76px; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 12px; background: #eadfce; flex: none; }
+.prep-demo .prep-why { margin: 0; text-align: left; }
+.btn.later-btn { margin-top: 8px; padding-top: 11px; padding-bottom: 11px; font-size: 15px; }
+@media (max-height: 640px) { .prep-demo video { width: 56px; } .btn.later-btn { padding-top: 8px; padding-bottom: 8px; font-size: 14px; } }
+
+/* Вшитый первый экран (index.html): кнопку нажали до загрузки программы — показываем, что нажатие принято */
+.btn.wait { opacity: .75; pointer-events: none; }
+.btn.wait::after { content: ""; display: inline-block; width: 16px; height: 16px; margin-left: 10px; vertical-align: -2px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: ktspin .7s linear infinite; }
+@keyframes ktspin { to { transform: rotate(360deg); } }

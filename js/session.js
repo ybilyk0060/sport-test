@@ -2,12 +2,18 @@
 // Из каждого упражнения берём не только счёт: темп, ритм, глубину, симметрию, устойчивость.
 // Сохраняются только итоговые числа. Кадры и точки тела не сохраняются и не отправляются.
 
-import { SpecEngine, ExerciseAnalyzer, PoseSmoother, calibrationForAge } from './engine/kidsney-engine.js';
-import { SPECS } from './engine/specs.js';
-import { CONFIG } from './config.js';
-import { detectPose } from './pose.js';
+import { createBalanceRun } from './balance.js?v=b17bd53-mx0m9pxl';
+import { createSideJumpRun, createBendRun } from './motor.js?v=b17bd53-mx0m9pxl';
+import { SpecEngine, ExerciseAnalyzer, PoseSmoother, calibrationForAge } from './engine/kidsney-engine.js?v=b17bd53-mx0m9pxl';
+import { SPECS } from './engine/specs.js?v=b17bd53-mx0m9pxl';
+import { STUDIO } from './engine/specs-studio.js?v=b17bd53-mx0m9pxl';
+import { CONFIG } from './config.js?v=b17bd53-mx0m9pxl';
+import { detectPose } from './pose.js?v=b17bd53-mx0m9pxl';
 
-const VIS = 0.5;
+// 27.11: человек в чёрном — видимость ног у MediaPipe падала ниже 0,5, и счёт обнулялся (баланс «потерян», бег 0).
+// Порог видимости точек для счёта и кадра снижен: лучше засчитать с небольшой погрешностью, чем не засчитать.
+export const VIS_GATE = 0.2;
+const VIS = 0.35;
 const seen = (p) => p && p.visibility >= VIS && p.x > 0 && p.x < 1 && p.y > 0 && p.y < 1;
 
 // Проверка перед стартом: голова и стопы в кадре.
@@ -45,17 +51,57 @@ const std = (a) => { const m = a.reduce((s, x) => s + x, 0) / a.length; return M
 const meanOf = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);
 const pct = (a, p) => { const s = [...a].sort((x, y) => x - y); return s[Math.min(s.length - 1, Math.max(0, Math.round(p * (s.length - 1))))]; };
 
+// Мягче для живых людей (прогон Юрия 27.11: бежал 15 с, засчитано 3,9 с). Колено в стойке у него на 0,75–0,85 корпуса
+// ниже таза, а «перезарядка» шага требовала 0,74–0,8 — половина шагов не засчитывалась; отсчёт начинался с 4-го шага.
+function soften(key, sp) {
+  if (key !== 'high_knees' || !sp.motion || globalThis.__NOSOFT) return sp;
+  const m = sp.motion;
+  return { ...sp, motion: { ...m,
+    rearm: { all: [{ m: 'knee_h', max: { young: -0.7, standard: -0.66 } }] },
+    // otherDown (вторая нога на полу) не трогаем: с ослабленным прыжки и приседания засчитывались как бег
+    // maxPauseMs: после паузы дольше 3 с (человека не было видно) бег больше не засчитывался до конца упражнения — 27.11
+    timing: { ...m.timing, activeWindowMs: 1500, startLifts: 3, maxPauseMs: 60000 },
+  } };
+}
+
+const MIRROR_SUM = new Set(['cross_crawl']);
 // Создаёт прогон упражнения. clock() — время в мс (живая камера: performance.now, запись: позиция в видео).
-export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) {
+export function createRun({ key, target, capSec, ageGroup, aspect, clock, on, timed = false }) {
   const ex = CONFIG.exercises[key] || {};
-  const spec = SPECS[ex.spec || key];
+  // Оценочные упражнения со своей логикой (js/balance.js, js/motor.js)
+  if (ex.custom === 'balance') return createBalanceRun({ key, target, capSec, clock, on, leg: ex.leg });
+  if (ex.custom === 'sidejump') return createSideJumpRun({ key, target, capSec, clock, on });
+  if (ex.custom === 'bend') return createBendRun({ key, target, capSec, clock, on });
+  const spec0 = SPECS[ex.spec || key] || (STUDIO[key] && STUDIO[key].spec);
+  const lowVis = (sp) => ({ ...sp, gates: { ...(sp.gates || {}), minVisibility: Math.min(sp.gates?.minVisibility ?? 0.5, VIS_GATE) } });
+  const spec = soften(ex.spec || key, lowVis(spec0));
   const isSeconds = spec.goal === 'seconds';
+  const timedSteps = timed && isSeconds && key === 'high_knees';
   const engine = new SpecEngine(spec);
-  const an = new ExerciseAnalyzer(engine, isSeconds ? 0 : target, spec.gates?.minVisibility ?? 0.5, isSeconds ? target : 0);
-  const age = (CONFIG.ageGroups[ageGroup] || CONFIG.ageGroups['7-9']).engineAge;
+  const an = new ExerciseAnalyzer(engine, isSeconds ? 0 : target, Math.min(spec.gates?.minVisibility ?? 0.5, VIS_GATE), isSeconds ? target : 0);
+  const age = (CONFIG.ageGroups[ageGroup] || CONFIG.ageGroups[CONFIG.defaultAge]).engineAge;
   an.setCalibration(calibrationForAge(ex.maxEngineAge ? Math.min(age, ex.maxEngineAge) : age));
   if (aspect) an.setFrameAspect(aspect);
   const smoother = new PoseSmoother();
+  // Второй способ счёта (віджимання лицом к камере): свой анализатор, берётся больший счёт
+  let an2 = null;
+  if (ex.altSpec && SPECS[ex.altSpec]) {
+    const spec2 = SPECS[ex.altSpec];
+    an2 = new ExerciseAnalyzer(new SpecEngine(lowVis(spec2)), isSeconds ? 0 : target, Math.min(spec2.gates?.minVisibility ?? 0.5, VIS_GATE), 0);
+    an2.setCalibration(calibrationForAge(ex.maxEngineAge ? Math.min(age, ex.maxEngineAge) : age));
+    if (aspect) an2.setFrameAspect(aspect);
+  }
+  // Локоть к колену (Юрий 27.11): спека считала только левое колено. Зеркальная копия спеки считает правое,
+  // счёт — сумма обеих сторон: каждое касание (левое и правое) засчитывается.
+  const sumMirror = MIRROR_SUM.has(ex.spec || key) && !an2;
+  if (sumMirror) {
+    const spec2 = JSON.parse(JSON.stringify(spec).replace(/left_|right_/g, (w) => (w === 'left_' ? 'right_' : 'left_')));
+    an2 = new ExerciseAnalyzer(new SpecEngine(spec2), target, Math.min(spec2.gates?.minVisibility ?? 0.5, VIS_GATE), 0);
+    an2.setCalibration(calibrationForAge(ex.maxEngineAge ? Math.min(age, ex.maxEngineAge) : age));
+    if (aspect) an2.setFrameAspect(aspect);
+  }
+  const facingHints = new Set([spec.facingHint, ex.altSpec && SPECS[ex.altSpec] ? SPECS[ex.altSpec].facingHint : null, 'turn_sideways', 'jumping_jack_face_wrong'].filter(Boolean));
+  const reps = () => (sumMirror ? an.repsCompleted + an2.repsCompleted : Math.max(an.repsCompleted, an2 ? an2.repsCompleted : 0));
 
   const m = { hints: {}, lostFrames: 0, frames: 0 };
   const perRep = { armDiffs: [], feet: [], depths: [] };
@@ -64,7 +110,7 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
   const hipLine = [];
   let startedAt = null, firstActionAt = null, finished = false, lastCount = 0, lastSec = 0, result = null;
 
-  an.onHint = (id) => { m.hints[id] = (m.hints[id] || 0) + 1; on.hint && on.hint(id); };
+  an.onHint = (id) => { if (an2 && facingHints.has(id)) return; m.hints[id] = (m.hints[id] || 0) + 1; on.hint && on.hint(id); };
   engine.onEvent = (e) => {
     if (e.type === 'lift' && e.counted) { lifts[e.side] = (lifts[e.side] || 0) + 1; if (firstActionAt == null) firstActionAt = clock(); }
   };
@@ -75,14 +121,15 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
     const now = clock();
     const elapsedFrom = isSeconds && key === 'high_knees' && firstActionAt != null ? firstActionAt : startedAt;
     const elapsedSec = startedAt == null ? 0 : Math.max(0, (now - (elapsedFrom ?? now)) / 1000);
-    const reps = an.repsCompleted;
-    const done = isSeconds ? Math.min(target, Math.round(an.heldSeconds() * 10) / 10) : reps;
-    const ts = an.repTimestamps;
+    const done = isSeconds ? Math.min(target, Math.round(an.heldSeconds() * 10) / 10) : reps();
+    const ts = an2 && an2.repsCompleted > an.repsCompleted ? an2.repTimestamps : an.repTimestamps;
     const iv = []; for (let i = 1; i < ts.length; i++) iv.push(ts[i] - ts[i - 1]);
     const metrics = {};
     if (!isSeconds) {
       metrics.rhythmCv = iv.length >= 2 ? Math.round((std(iv) / meanOf(iv)) * 100) / 100 : null;
       metrics.tempoPerMin = iv.length >= 1 ? Math.round(60000 / meanOf(iv)) : null;
+      // Падение темпа: средний интервал 2-й половины / 1-й (>1 — к концу медленнее). Для «выносливости» в тесте на время.
+      if (iv.length >= 6) { const h = Math.floor(iv.length / 2); metrics.slowdown = Math.round((meanOf(iv.slice(h)) / meanOf(iv.slice(0, h))) * 100) / 100; }
     }
     if (key === 'jumping_jack') {
       metrics.armDiff = perRep.armDiffs.length ? Math.round(meanOf(perRep.armDiffs) * 100) / 100 : null;
@@ -93,6 +140,10 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
       metrics.shallow = m.hints.sit_lower || 0;
     }
     if (key === 'good_morning') metrics.shallow = m.hints.good_morning_not_reached || 0;
+    if (key === 'arm_circles') metrics.shallow = m.hints.arm_circles_not_reached || 0;
+    if (key === 'quadruped_arm_circles') metrics.shallow = m.hints.quadruped_arm_circles_not_reached || 0;
+    if (key === 'wall_french_press') metrics.shallow = m.hints.wall_french_press_not_reached || 0;
+    if (key === 'pushups') { metrics.shallow = (m.hints.go_lower || 0); metrics.view = an2 && an2.repsCompleted > an.repsCompleted ? 'front' : 'side'; }
     if (key === 'shoulder_taps') {
       metrics.liftsLeft = lifts.left || 0; metrics.liftsRight = lifts.right || 0;
       metrics.shallow = m.hints.shoulder_taps_not_reached || 0;
@@ -101,6 +152,9 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
       metrics.liftsLeft = lifts.left || 0; metrics.liftsRight = lifts.right || 0;
       metrics.cadence = done > 0 ? Math.round(((lifts.left + lifts.right) / done) * 10) / 10 : null;
     }
+    if (key === 'crunches') metrics.shallow = m.hints.sit_up_higher || 0;
+    // Остальные спеки Студії: неполные повторы — по подсказке «не дотянул» из самой спеки
+    if (metrics.shallow == null && spec.motion && spec.motion.abandon && spec.motion.abandon.hint) metrics.shallow = m.hints[spec.motion.abandon.hint] || 0;
     if (key === 'plank') {
       metrics.driftDeg = hipLine.length >= 15 ? Math.round((pct(hipLine, 0.95) - pct(hipLine, 0.05)) * 10) / 10 : null;
       metrics.broken = an.holdPhase() === 'broken';
@@ -130,6 +184,8 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
       if (lm) {
         const sm = smoother.smooth(lm.map((p) => ({ x: p.x, y: p.y, z: p.z || 0, visibility: p.visibility ?? 0 })), now);
         metricsNow = an.processFrame(sm, now);
+        if (sumMirror) { const m2 = an2.processFrame(sm, now); const sum = metricsNow.repsCompleted + m2.repsCompleted; metricsNow = { ...metricsNow, repsCompleted: sum, isComplete: !isSeconds && target < 999 && sum >= target }; }
+        else if (an2) { const m2 = an2.processFrame(sm, now); if (m2.repsCompleted > metricsNow.repsCompleted) metricsNow = { ...metricsNow, repsCompleted: m2.repsCompleted, isComplete: m2.isComplete || metricsNow.isComplete }; }
       } else {
         m.lostFrames++;
         if (an.isHold()) an.processFrame([], now);
@@ -157,13 +213,15 @@ export function createRun({ key, target, capSec, ageGroup, aspect, clock, on }) 
       if (isSeconds) {
         const held = an.heldSeconds();
         const sec = Math.floor(held);
-        if (sec > lastSec) { lastSec = sec; on.count && on.count(sec); }
+        // На время (тест, Юрий 27.11): время идёт до конца, на экране — число шагов; в результат идут активные секунды (нормы прежние)
+        if (timedSteps) { const n = (lifts.left || 0) + (lifts.right || 0); if (n > lastCount) { lastCount = n; on.count && on.count(n); } }
+        else if (sec > lastSec) { lastSec = sec; on.count && on.count(sec); }
         on.phase && on.phase(an.holdPhase(), held);
         if (key === 'plank' && an.holdPhase() === 'broken') return finish('broken');
       }
       const elapsed = (now - startedAt) / 1000;
       on.tick && on.tick({ elapsed, left: Math.max(0, capSec - elapsed), facingWrong: an.isFacingCamera() });
-      if (metricsNow.isComplete) return finish('complete');
+      if (metricsNow.isComplete && !timedSteps) return finish('complete');
       if (elapsed >= capSec) return finish('time');
     },
   };

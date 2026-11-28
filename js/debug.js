@@ -1,12 +1,12 @@
 // Страница ?debug=1: что определилось на этом телефоне. Владелец присылает её снимок.
 // Подписи здесь служебные (для владельца), поэтому не в файле переводов.
 
-import { detectEnv } from './env.js';
-import { camStatus, openCamera, queryPermission } from './camera.js';
-import { poseStatus, preloadPose, detectPose } from './pose.js';
-import { audioStatus } from './audio.js';
-import { CONFIG } from './config.js';
-import { state, store } from './store.js';
+import { detectEnv } from './env.js?v=b17bd53-mx0m9pxl';
+import { camStatus, openCamera, queryPermission } from './camera.js?v=b17bd53-mx0m9pxl';
+import { poseStatus, preloadPose, detectPose } from './pose.js?v=b17bd53-mx0m9pxl';
+import { audioStatus } from './audio.js?v=b17bd53-mx0m9pxl';
+import { CONFIG } from './config.js?v=b17bd53-mx0m9pxl';
+import { state, store } from './store.js?v=b17bd53-mx0m9pxl';
 
 export function initDebug({ paywallMode, restart, toast }) {
   if (new URLSearchParams(location.search).get('debug') !== '1') return;
@@ -29,7 +29,7 @@ export function initDebug({ paywallMode, restart, toast }) {
     ['Кадрів за секунду', `<b class="${poseStatus.fps >= 15 ? 'good' : poseStatus.fps > 0 ? 'bad' : ''}">${poseStatus.fps || '—'}</b> (оброблено ${poseStatus.frames})`],
     ['Звук', audioStatus.state],
     ['Екран', `${innerWidth}×${innerHeight} · dpr ${devicePixelRatio}`],
-    ['Крок / пейвол', `${state.step} · ${paywallMode} · ${CONFIG.subscription.firstUah}→${CONFIG.subscription.regularUah} грн · підписка: ${state.sub ? state.sub.status : '—'} · оплата: ${CONFIG.paymentProvider}`],
+    ['Крок / пейвол', `${state.step} · ${paywallMode} · ${JSON.stringify(CONFIG.subscription.prices)} · підписка: ${state.sub ? state.sub.status : '—'} · оплата: ${CONFIG.paymentProvider}`],
     ['Події', `${store.events().length} · останні: ${store.events().slice(-4).map((e) => e.name).join(', ')}`],
     ['Помилка', lastErr ? `<span class="bad">${lastErr}</span>` : '—'],
     ['UA', `<span style="word-break:break-all">${env.ua}</span>`],
