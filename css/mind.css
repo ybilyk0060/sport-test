@@ -67,3 +67,17 @@ html:has(body.t-mind) { background: #f5f2ff; }
 .t-mind .says p { border-left: 4px solid var(--accent); border-radius: 6px 14px 14px 6px; font-style: italic; font-weight: 500; }
 .t-mind .progress > i { background: linear-gradient(90deg, #6a4df4, #12a37f); }
 .t-mind .consent button.primary { background: var(--accent); }
+
+/* Иллюстрация карточки дня: сцена из трёх значков на цветной плашке шкалы */
+.dart { display: flex; justify-content: center; align-items: center; gap: 14px; height: 132px; border-radius: 16px; font-size: 54px; line-height: 1; background: linear-gradient(135deg, #efeaff, #e3f1ff); overflow: hidden; }
+.dart span:nth-child(2) { font-size: 72px; transform: translateY(-4px); }
+.dart span:nth-child(1) { transform: rotate(-8deg); }
+.dart span:nth-child(3) { transform: rotate(8deg); }
+.dart.s-builder { background: linear-gradient(135deg, #fff1d6, #ffe1c2); }
+.dart.s-inventor { background: linear-gradient(135deg, #dff4ff, #d9e8ff); }
+.dart.s-storyteller { background: linear-gradient(135deg, #ffe6f0, #f3e3ff); }
+.dart.s-artist { background: linear-gradient(135deg, #f3e3ff, #ffe9d6); }
+.dart.s-explorer { background: linear-gradient(135deg, #e0f7e4, #dff4ff); }
+.dart.s-leader { background: linear-gradient(135deg, #fff3c9, #ffe1d6); }
+.dart.s-helper { background: linear-gradient(135deg, #ffe3e3, #fff1d6); }
+.dart.s-mover { background: linear-gradient(135deg, #dcf7ef, #e6f3d2); }

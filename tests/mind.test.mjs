@@ -46,13 +46,13 @@ ok('оттенок', () => {
   assert.equal(score({}, { ...mid, energy: 2, pace: 2 }).shade, 'calm');
   assert.equal(score({}, { ...mid, energy: 5, pace: 1 }).shade, null);
 });
-ok('набор карточек: 40 разных, первые 30 по правилу, без повтора шкалы подряд', () => {
+ok('набор карточек: 64 разных, первые 30 по правилу, без повтора шкалы подряд', () => {
   const scaleOf = Object.fromEntries(KEY.cards.map((c) => [c.id, c.scale]));
   for (const p of SCALES) for (const s of SCALES) {
     if (p === s) continue;
     const order = [p, s, ...SCALES.filter((x) => x !== p && x !== s)];
     const plan = dailyPlan(order);
-    assert.equal(plan.length, 40); assert.equal(new Set(plan).size, 40);
+    assert.equal(plan.length, 64); assert.equal(new Set(plan).size, 64);
     assert.ok(plan.every((id) => scaleOf[id]), 'все карточки существуют');
     const first = plan.slice(0, 30).map((id) => scaleOf[id]);
     assert.equal(first.filter((x) => x === p).length, 5);
@@ -83,7 +83,7 @@ ok('данные: полные на всех языках, типографик�
   const walk = (o, f, p = '') => { if (typeof o === 'string') f(o, p); else if (o && typeof o === 'object') for (const [k, v] of Object.entries(o)) walk(v, f, p + '/' + k); };
   for (const [L, d] of Object.entries(DATA)) {
     assert.equal(d.questions.length, 16); assert.equal(d.sliders.items.length, 6); assert.equal(d.sliders.labels.length, 5);
-    assert.equal(d.cards.length, 40); assert.equal(Object.keys(d.report).length, 8);
+    assert.equal(d.cards.length, 64); assert.equal(Object.keys(d.report).length, 8);
     walk(d, (s, p) => {
       assert.ok(s.trim(), `${L}${p} пусто`);
       assert.ok(!s.includes('—'), `${L}${p} длинное тире`);

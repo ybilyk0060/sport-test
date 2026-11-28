@@ -160,8 +160,8 @@ function mindMail(kind: "terms" | "d3" | "d7" | "retest", lang: string, s: Recor
   } as const;
   const nb = (t: string) => (L === "fr" ? t.replace(/« /g, "«\u00a0").replace(/ »/g, "\u00a0»").replace(/ ([:;?!])/g, "\u00a0$1") : t);
   const m = M[L][kind];
-  // Покупатель из ЕС/UK согласился на немедленный доступ и отказ от права отзыва: письмо-подтверждение это фиксирует
-  const W = { en: "\n\nYou expressly agreed that access starts immediately, before the 14-day withdrawal period ends, and acknowledged that you thereby lose your right of withdrawal.", de: "\n\nSie haben ausdrücklich zugestimmt, dass wir vor Ablauf der Widerrufsfrist mit der Ausführung des Vertrags beginnen, und bestätigt, dass Ihr Widerrufsrecht damit erlischt.", fr: "\n\nVous avez demandé l’accès immédiat au contenu et renoncé expressément à votre droit de rétractation de 14 jours." };
+  // Покупателю из ЕС/UK у кнопки оплаты показана строка о немедленном доступе: письмо-подтверждение её повторяет
+  const W = { en: "\n\nBy subscribing you asked for access to start immediately. Once the full report has opened, the first payment is non-refundable and the 14-day right of withdrawal ends.", de: "\n\nMit dem Abschluss haben Sie ausdrücklich verlangt, dass der Zugang sofort beginnt. Sobald der vollständige Bericht geöffnet ist, erlischt Ihr Widerrufsrecht und die erste Zahlung wird nicht erstattet.", fr: "\n\nEn vous abonnant, vous avez demandé l’accès immédiat au contenu. Dès l’ouverture du rapport complet, vous renoncez à votre droit de rétractation de 14 jours et le premier paiement n’est pas remboursé." };
   const waiver = kind === "terms" && (s.quiz as any)?.waiver ? W[L] : "";
   return { subject: nb(m.subject), text: `${nb(m.text + waiver)}\n\n${M[L].q}${L === "fr" ? "\u00a0" : ""}: ${FROM}` };
 }

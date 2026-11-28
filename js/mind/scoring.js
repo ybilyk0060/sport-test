@@ -35,7 +35,8 @@ export function score(answers, sliders) {
 // (у двух самых сильных из остальных по 4, у четырёх по 3). Каждый третий день — сильная сторона, одна шкала два дня подряд не идёт.
 // Дни 31–40 — оставшиеся 10 карточек.
 export function dailyPlan(order) {
-  const by = (s) => KEY.cards.filter((c) => c.scale === s).map((c) => c.id);
+  const all = (s) => KEY.cards.filter((c) => c.scale === s).map((c) => c.id);
+  const by = (s) => all(s).slice(0, 5), next = (s) => all(s).slice(5); // первые пять карточек шкалы идут в первый месяц, остальные во второй
   const [p, s2, ...rest] = order;
   const strong = [];
   for (let i = 0; i < 5; i++) strong.push(by(p)[i], by(s2)[i]);
@@ -46,7 +47,13 @@ export function dailyPlan(order) {
   const out = [];
   let a = 0, b = 0;
   for (let i = 0; i < 30; i++) out.push(i % 3 === 0 ? strong[a++] : other[b++]);
-  return [...out, ...left];
+  // Второй месяц: каждая четвёртая карточка из двух ведущих шкал, остальные по кругу из прочих
+  const strong2 = [], other2 = [];
+  for (let i = 0; i < 3; i++) { strong2.push(next(p)[i], next(s2)[i]); for (const s of rest) other2.push(next(s)[i]); }
+  const mix = [...strong2, ...other2].filter(Boolean), out2 = [];
+  const st2 = mix.slice(0, strong2.filter(Boolean).length), ot2 = mix.slice(st2.length);
+  while (st2.length || ot2.length) { if (st2.length && (out2.length % 4 === 0 || !ot2.length)) out2.push(st2.shift()); else out2.push(ot2.shift()); }
+  return [...out, ...left, ...out2];
 }
 
 // Номер дня подписки (с 1) по местным календарным дням

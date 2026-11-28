@@ -32,7 +32,9 @@ for (const L of LANGS) {
       const opt = (o) => (o && typeof o[L] === 'string' && o[L].trim() ? fix(o[L], L) : undefined);
       const byAge = (m, f) => (m ? Object.fromEntries(Object.entries(m).map(([a, x]) => [a, f(x)]).filter(([, v]) => v)) : {});
       const need = byAge(c.need, opt), steps = byAge(c.steps, (x) => (Array.isArray(x[L]) && x[L].length ? x[L].map((s) => fix(s, L)) : undefined));
-      return { id: c.id, scale: c.scale, title: t(c.title), task: Object.fromEntries(Object.entries(c.task).map(([a, x]) => [a, t(x)])),
+      if (!c.task && Object.keys(steps).length !== 3) throw new Error(`card ${c.id}: no ${L} steps and no short task`);
+      // У карточек второго месяца короткого текста нет: все языки обязаны иметь шаги
+      return { id: c.id, scale: c.scale, art: c.art, title: t(c.title), ...(c.task ? { task: Object.fromEntries(Object.entries(c.task).map(([a, x]) => [a, t(x)])) } : {}),
         ...(opt(c.why) ? { why: opt(c.why) } : {}), ...(opt(c.tip) ? { tip: opt(c.tip) } : {}),
         ...(Object.keys(need).length ? { need } : {}), ...(Object.keys(steps).length ? { steps } : {}) };
     }),

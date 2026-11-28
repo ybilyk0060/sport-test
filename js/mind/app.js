@@ -53,7 +53,6 @@ const legalLinks = () => `<nav class="legal-links">${Object.keys(LEGAL).map((k) 
 const KEY = 'mindtest.v1.state';
 const fresh = () => ({ step: 'landing', i: 0, intro: {}, name: '', answers: {}, sliders: {}, goal: null, result: null, email: '', orderId: null, payAmount: null, pending: null, pendingAt: 0, sub: null, subToken: null, done: {}, doneFor: 0, startedAt: Date.now() });
 let st = fresh();
-let wdOk = false; // галочка согласия на немедленный доступ: переживает перерисовку экрана оплаты
 try { const v = JSON.parse(localStorage.getItem(KEY) || 'null'); if (v && typeof v === 'object') st = { ...fresh(), ...v }; } catch { /* нет доступа */ }
 const set = (patch) => { Object.assign(st, patch); try { localStorage.setItem(KEY, JSON.stringify(st)); } catch { /* нет доступа */ } return st; };
 const track = (name, props = {}) => trackRaw(`mind_${name}`, { app: 'mind', lang: LANG, ...props });
@@ -165,7 +164,7 @@ const discountOn = () => { const d = offerDeadline(); return !!d && Date.now() <
 const firstPrice = () => (discountOn() ? PRICE.first : PRICE.regular);
 const pct = () => Math.round((1 - PRICE.first / PRICE.regular) * 100);
 const mmss = (ms) => { const s = Math.max(0, Math.ceil(ms / 1000)); return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; };
-// Согласие на немедленный доступ (право отказа): ЕС и Великобритания, по часовому поясу или языку
+// Строка о немедленном доступе у кнопки оплаты (без галочки): ЕС и Великобритания, по часовому поясу или языку
 function needWithdrawal() {
   if (AMERICAS) return false;
   if (LANG === 'de' || LANG === 'fr') return true;
@@ -200,8 +199,7 @@ function result_(note = '') {
       <div class="pc-price">${on ? `<s>${esc(money(PRICE.regular))}</s>` : ''}<b>${esc(money(first))}</b></div></div>
       <p class="renew">${esc(P.renew(money(PRICE.regular), SUB.periodDays, fmtDate(renewAt)))}</p>
       <label class="email-field"><span class="small">${esc(P.emailLabel)}</span><input class="field" type="email" inputmode="email" autocomplete="email" data-el="email" value="${esc(st.email || '')}" maxlength="120" placeholder="${esc(P.emailPh)}"></label>
-      ${needWithdrawal() ? `<label class="check small"><input type="checkbox" data-el="withdrawal"${wdOk ? ' checked' : ''}><span>${esc(P.withdrawal)}</span></label>` : ''}
-      <p class="fine consent-line">${esc(P.fine(money(first), money(PRICE.regular), SUB.periodDays))}</p>
+      <p class="fine consent-line">${esc(P.fine(money(first), money(PRICE.regular), SUB.periodDays))}${needWithdrawal() ? ' ' + esc(P.instant) : ''}</p>
       <button class="btn" data-act="pay">${esc(P.cta(money(first)))}</button>
       <p class="trust small center">🔒 ${esc(P.trust)}</p></div>
     <h3>${esc(P.inside)}</h3><ul class="points checks-list">${P.items.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
@@ -211,8 +209,6 @@ function result_(note = '') {
     <button class="link center" data-act="restore">${esc(P.restore)}</button>
     <button class="link center" data-act="again">${esc(T.result.again)}</button>`, {
     pay: (btn) => {
-      const box = app.querySelector('[data-el=withdrawal]');
-      if (box && !box.checked) { toast(P.withdrawalNeeded); box.scrollIntoView({ block: 'center' }); return; }
       const emailEl = app.querySelector('[data-el=email]');
       const email = emailEl.value.trim();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { emailEl.focus(); emailEl.scrollIntoView({ block: 'center' }); toast(P.emailBad); return; }
@@ -220,7 +216,7 @@ function result_(note = '') {
       btn.disabled = true; setTimeout(() => { btn.disabled = false; }, 4000); // двойное нажатие не создаёт два заказа
       const orderId = newOrderId(visitor.sid);
       const amount = firstPrice();
-      set({ email, orderId, payAmount: amount, waiver: !!(box && box.checked) }); // сумма фиксируется в момент нажатия: таймер может истечь, пока открыто окно оплаты
+      set({ email, orderId, payAmount: amount, waiver: needWithdrawal() }); // сумма фиксируется в момент нажатия: таймер может истечь, пока открыто окно оплаты
       track('pay_click', { provider: payment.name, amount, discount: amount < PRICE.regular, plan: 'sub', currency: CUR });
       const ret = new URL(location.href); ret.search = ''; ret.hash = '';
       Promise.resolve(payment.startCheckout({ orderId, amount, currency: CUR, lang: LANG, email, discount: amount < PRICE.regular, description: T.title, returnUrl: ret.toString() }))
@@ -230,11 +226,9 @@ function result_(note = '') {
     restore: () => restore(),
     again: () => retake(),
   });
-  // Введённый email и галочка не пропадают, когда таймер перерисовывает экран
+  // Введённый email не пропадает, когда таймер перерисовывает экран
   const emailEl = app.querySelector('[data-el=email]');
   if (emailEl) emailEl.addEventListener('input', () => set({ email: emailEl.value.trim().slice(0, 120) }));
-  const wdEl = app.querySelector('[data-el=withdrawal]');
-  if (wdEl) wdEl.addEventListener('change', () => { wdOk = wdEl.checked; });
   if (on) timer = setInterval(() => {
     const left = d - Date.now();
     const el = app.querySelector('[data-el=offer-timer]');
@@ -366,11 +360,12 @@ function daily(showDay = 0) {
   for (let n = today; n >= Math.max(1, today - 6); n--) if (n !== day) earlier.push(n);
   screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.daily.back)}">←</button><b>${esc(T.report.daily)}</b></div>
     <div class="dcard"><div class="row"><span class="tag">${esc(T.daily.title(day))}</span><span class="tag-ok">${esc(T.daily.forAge(age))}</span></div>
+      ${card.art ? `<div class="dart s-${card.scale}" aria-hidden="true">${[...new Intl.Segmenter().segment(card.art)].map((x) => `<span>${x.segment}</span>`).join('')}</div>` : ''}
       <h1 class="qtitle">${esc(card.title)}</h1>
       ${card.steps && card.steps[age] ? `${card.need && card.need[age] ? `<p class="need"><b>${esc(T.daily.need)}</b> ${esc(card.need[age])}</p>` : ''}
         <ol class="dsteps">${card.steps[age].map((s) => `<li>${esc(s)}</li>`).join('')}</ol>
         ${card.why ? `<p class="dnote"><b>${esc(T.daily.why)}</b> ${esc(card.why)}</p>` : ''}${card.tip ? `<p class="dnote tip"><b>${esc(T.daily.tip)}</b> ${esc(card.tip)}</p>` : ''}`
-      : `<p class="task">${esc(card.task[age])}</p>`}
+      : `<p class="task">${esc((card.task || {})[age] || '')}</p>`}
       <p class="small muted">${esc(D.safety)}</p></div>
     ${isDone ? `<p class="box center"><b>✓ ${esc(T.daily.doneMsg)}</b></p>` : `<button class="btn" data-act="done">${esc(T.daily.done)}</button>`}
     <div class="row stats"><span>🔥 ${esc(T.daily.streak(streak(doneDays, today)))}</span><span>${esc(T.daily.total(doneDays.length))}</span></div>
