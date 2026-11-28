@@ -560,3 +560,10 @@ body.has-consent .screen { padding-bottom: 150px; }
 .hv-badge { top: 7cqw; }
 .hv-badge { padding: 1.3cqw 3cqw; top: 5.8cqw; }
 .vis-bar { position: absolute; left: 12px; right: 12px; top: 64px; z-index: 6; background: rgba(29,27,47,.82); color: #fff; border-radius: 14px; padding: 10px 14px; font-weight: 700; font-size: 17px; text-align: center; }
+
+/* Подготовка 28.11: демо-ролик рядом с объяснением и заметная вторая кнопка «пришлите ссылку» */
+.prep-demo { display: flex; align-items: center; gap: 12px; margin: 2px 0 10px; }
+.prep-demo video { width: 76px; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 12px; background: #eadfce; flex: none; }
+.prep-demo .prep-why { margin: 0; text-align: left; }
+.btn.later-btn { margin-top: 8px; padding-top: 11px; padding-bottom: 11px; font-size: 15px; }
+@media (max-height: 640px) { .prep-demo video { width: 56px; } .btn.later-btn { padding-top: 8px; padding-bottom: 8px; font-size: 14px; } }

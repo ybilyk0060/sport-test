@@ -1,8 +1,8 @@
 // Распознавание позы в браузере: @mediapipe/tasks-vision, Pose Landmarker (lite).
 // Модель и wasm лежат на нашем адресе (vendor/mediapipe). Кадры обрабатываются на устройстве и никуда не уходят.
 
-import { createPersonLock } from './personlock.js?v=051a648-mwz93ikl';
-import { CONFIG } from './config.js?v=051a648-mwz93ikl';
+import { createPersonLock } from './personlock.js?v=40f6e24-mx057znb';
+import { CONFIG } from './config.js?v=40f6e24-mx057znb';
 
 export const poseStatus = { state: 'idle', delegate: null, error: null, loadMs: null, fps: 0, frames: 0 };
 let landmarker = null;
@@ -12,6 +12,18 @@ let fileset = null;
 let lastTs = 0;
 
 const abs = (p) => new URL(p, document.baseURI).href;
+
+// Модель позы собрана с WebAssembly SIMD. Safari до iOS 16.4 его не умеет: wasm не компилируется вовсе
+// (реклама 28.11: iPhone 8 Plus на iOS 15.4 — «WebAssembly.Module doesn't parse», 40 повторов за 2 минуты).
+// Проверяем заранее, чтобы не спрашивать камеру и не гонять человека по кругу.
+let simd = null;
+export function poseSupported() {
+  if (simd !== null) return simd;
+  try {
+    simd = typeof WebAssembly === 'object' && WebAssembly.validate(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 5, 1, 96, 0, 1, 123, 3, 2, 1, 0, 10, 10, 1, 8, 0, 65, 0, 253, 15, 253, 98, 11]));
+  } catch { simd = false; }
+  return simd;
+}
 
 async function create(delegate) {
   return vision.PoseLandmarker.createFromOptions(fileset, {
@@ -52,7 +64,7 @@ async function load() {
 // под системным вопросом о камере и индикатором загрузки.
 let prefetching = null;
 export function prefetchPose() {
-  if (prefetching || loading) return prefetching;
+  if (prefetching || loading || !poseSupported()) return prefetching;
   const files = [CONFIG.modelPath, 'vendor/mediapipe/vision_bundle.mjs', `${CONFIG.wasmPath}/vision_wasm_internal.js`, `${CONFIG.wasmPath}/vision_wasm_internal.wasm`];
   prefetching = (async () => {
     for (const f of files) {

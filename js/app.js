@@ -1,22 +1,22 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
-import { T } from './i18n/index.js?v=051a648-mwz93ikl';
-import { CONFIG } from './config.js?v=051a648-mwz93ikl';
-import { money, PRICE, CUR, fmtDate, } from './locale.js?v=051a648-mwz93ikl';
-import { LANG, LOCALES } from './i18n/index.js?v=051a648-mwz93ikl';
-import { state, setState, resetState, track, importHandoff, exportHandoff, store } from './store.js?v=051a648-mwz93ikl';
-import { detectEnv } from './env.js?v=051a648-mwz93ikl';
-import { prefetchPose, preloadPose } from './pose.js?v=051a648-mwz93ikl';
-import { unlockAudio } from './audio.js?v=051a648-mwz93ikl';
-import { startStage, startFallback, toast, prefetchVideos } from './stage.js?v=051a648-mwz93ikl';
-import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=051a648-mwz93ikl';
-import { payment, newOrderId, loadPaddle } from './payment.js?v=051a648-mwz93ikl';
-import { ART } from './art.js?v=051a648-mwz93ikl';
-import { initDebug } from './debug.js?v=051a648-mwz93ikl';
-import { initConsent, sendLead } from './analytics.js?v=051a648-mwz93ikl';
-import * as subapi from './subapi.js?v=051a648-mwz93ikl';
-import { drawShareCard } from './sharecard.js?v=051a648-mwz93ikl';
-import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=051a648-mwz93ikl';
+import { T } from './i18n/index.js?v=40f6e24-mx057znb';
+import { CONFIG } from './config.js?v=40f6e24-mx057znb';
+import { money, PRICE, CUR, fmtDate, } from './locale.js?v=40f6e24-mx057znb';
+import { LANG, LOCALES } from './i18n/index.js?v=40f6e24-mx057znb';
+import { state, setState, resetState, track, importHandoff, exportHandoff, store } from './store.js?v=40f6e24-mx057znb';
+import { detectEnv } from './env.js?v=40f6e24-mx057znb';
+import { prefetchPose, preloadPose } from './pose.js?v=40f6e24-mx057znb';
+import { unlockAudio } from './audio.js?v=40f6e24-mx057znb';
+import { startStage, startFallback, toast, prefetchVideos } from './stage.js?v=40f6e24-mx057znb';
+import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=40f6e24-mx057znb';
+import { payment, newOrderId, loadPaddle } from './payment.js?v=40f6e24-mx057znb';
+import { ART } from './art.js?v=40f6e24-mx057znb';
+import { initDebug } from './debug.js?v=40f6e24-mx057znb';
+import { initConsent, sendLead } from './analytics.js?v=40f6e24-mx057znb';
+import * as subapi from './subapi.js?v=40f6e24-mx057znb';
+import { drawShareCard } from './sharecard.js?v=40f6e24-mx057znb';
+import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=40f6e24-mx057znb';
 
 const env = detectEnv();
 const app = document.getElementById('app');
@@ -145,13 +145,15 @@ function prep() {
   prefetchPose();
   prefetchVideos();
   const P = T.prep;
-  screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button><div class="progress"><i style="width:100%"></i></div></div><h1 class="qtitle">${esc(P.title)}</h1><p class="prep-why">${esc(P.why)}</p>
+  screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button><div class="progress"><i style="width:100%"></i></div></div><h1 class="qtitle">${esc(P.title)}</h1>
+    <!-- Демо (реклама 28.11: 15 из 22 ушли с этого экрана, ничего не нажав): 5 секунд, как камера считает движения -->
+    <div class="prep-demo"><video src="assets/landing/hero-moves.mp4#t=0.1" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video><p class="prep-why">${esc(P.why)}</p></div>
     <!-- Доверие (Юрий 27.11): только проверяемые факты о технологии. Весь экран — без прокрутки даже во встроенном браузере Messenger (27.11). -->
     <div class="trust-cam"><b class="tc-title">${esc(P.trustTitle)}</b><ul>${P.trust.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>
     <div class="tips-row">${P.tips.map((t, i) => `<div class="tip-mini">${ART.prep[i]}<span>${esc(t)}</span></div>`).join('')}</div><div class="grow"></div>
     <div class="cta-bar"><p class="allow-next">${esc(P.allowNext)}</p><button class="btn" data-act="cam">${esc(P.cta)}</button></div>
     <!-- Ребёнка нет рядом (аудит 27.11: родитель листает Facebook один) — ссылка на почту, ответы сохраняются -->
-    <button class="link center small" data-act="later">${esc(P.later)}</button>
+    <button class="btn line later-btn" data-act="later">${esc(P.later)}</button>
     <div class="later-box" data-el="later" hidden><p class="small">${esc(P.laterLead)}</p><input class="field" type="email" inputmode="email" autocomplete="email" data-el="later-email" placeholder="name@example.com" maxlength="120" value="${esc(state.email || '')}"><button class="btn line" data-act="send-link">${esc(P.laterSend)}</button><p class="small muted">${esc(P.laterNote)}</p></div>`, {
     later: () => { const b = app.querySelector('[data-el=later]'); b.hidden = false; track('link_form_open'); setTimeout(() => { b.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 50); },
     'send-link': async () => {
@@ -167,9 +169,9 @@ function prep() {
   });
   track('prep_shown');
   sendLead(state.sid);
-  // Камера запускалась до 17 с (модель позы компилировалась после разрешения). Начинаем загрузку, пока родитель читает
-  // этот экран; через 1,2 с, чтобы экран успел отрисоваться (компиляция ненадолго занимает главный поток).
-  setTimeout(() => { if (state.step === 'prep') preloadPose().catch(() => {}); }, 1200);
+  // Компиляцию модели на этом экране убрали (реклама 28.11): она занимает главный поток, во встроенном браузере Facebook
+  // экран замирал, 11 из 16 ушли, не нажав кнопку (в Safari — 4 из 9). Здесь только скачивание файлов (prefetchPose выше),
+  // компиляция — по нажатию «Включить камеру», под системным вопросом о камере.
 }
 
 // ---------- 6. «Рахуємо результат» ----------
@@ -553,8 +555,8 @@ function manageSub(confirm = false) {
 function boot() {
   initDebug({ paywallMode, restart: () => { resetState(); landing(); }, toast });
   initConsent();
-  // Файлы модели позы скачиваются в фоне после открытия (без компиляции — она блокирует нажатия)
-  setTimeout(() => prefetchPose(), 1500);
+  // Файлы модели (20 МБ) на первом экране не качаем (28.11: 40 из 53 уходят за 3 с, а загрузка спорит с роликом и страницей).
+  // Скачивание начинается по кнопке Start (см. landing) и идёт, пока родитель отвечает на 7 вопросов.
   // Перенос ответов из встроенного браузера («Відкрити в Chrome»): квиз заново не проходим.
   // Ссылка доступа из письма (?sub=…): подписка, ответы и результаты приезжают с сервера — на любом устройстве
   if (params.get('sub') && subapi.subOn()) {

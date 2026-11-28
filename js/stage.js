@@ -1,19 +1,19 @@
 // Экран камеры: разрешение → проверка кадра → 4 упражнения. И запасной путь: разбор записи.
 
-import { T } from './i18n/index.js?v=051a648-mwz93ikl';
-import { CONFIG } from './config.js?v=051a648-mwz93ikl';
-import { state, setState, track, exportHandoff } from './store.js?v=051a648-mwz93ikl';
-import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=051a648-mwz93ikl';
-import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=051a648-mwz93ikl';
-import { preloadPose, poseStatus, resetPersonLock, diag } from './pose.js?v=051a648-mwz93ikl';
-import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=051a648-mwz93ikl';
-import { framingCheck, frameLoop, createRun } from './session.js?v=051a648-mwz93ikl';
-import { createRaiseHand, createPlankHold } from './gesture.js?v=051a648-mwz93ikl';
-import { recording } from './analytics.js?v=051a648-mwz93ikl';
-import { demoSvg } from './demos.js?v=051a648-mwz93ikl';
-import { EX_QUALITY } from './scoring.js?v=051a648-mwz93ikl';
-import { greenOverlay } from './greenkey.js?v=051a648-mwz93ikl';
-import { createVisCoach } from './viscoach.js?v=051a648-mwz93ikl';
+import { T } from './i18n/index.js?v=40f6e24-mx057znb';
+import { CONFIG } from './config.js?v=40f6e24-mx057znb';
+import { state, setState, track, exportHandoff } from './store.js?v=40f6e24-mx057znb';
+import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=40f6e24-mx057znb';
+import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=40f6e24-mx057znb';
+import { preloadPose, poseSupported, poseStatus, resetPersonLock, diag } from './pose.js?v=40f6e24-mx057znb';
+import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=40f6e24-mx057znb';
+import { framingCheck, frameLoop, createRun } from './session.js?v=40f6e24-mx057znb';
+import { createRaiseHand, createPlankHold } from './gesture.js?v=40f6e24-mx057znb';
+import { recording } from './analytics.js?v=40f6e24-mx057znb';
+import { demoSvg } from './demos.js?v=40f6e24-mx057znb';
+import { EX_QUALITY } from './scoring.js?v=40f6e24-mx057znb';
+import { greenOverlay } from './greenkey.js?v=40f6e24-mx057znb';
+import { createVisCoach } from './viscoach.js?v=40f6e24-mx057znb';
 // Подсказки видимости: новые фразы (vis_*) озвучиваются после записи голоса; пока их нет — ближайшая записанная
 const VIS_FALLBACK = { vis_cant_see: 'hint_show_full_body', vis_head: 'frame_step_back', vis_contrast: 'hint_show_full_body', vis_light_behind: 'hint_show_full_body', vis_more_light: null };
 const sayVis = (k) => { const c = exists(k) ? k : VIS_FALLBACK[k]; if (c) say(c, { interrupt: false }); };
@@ -108,6 +108,8 @@ export function prefetchVideos() {
 export async function startStage({ done, exit, list = null, mode = 'live' }) {
   onDone = done; onExit = exit; customList = list;
   unlockAudio();
+  // Телефон не умеет запускать распознавание (старая система): не спрашиваем камеру, сразу честный экран со ссылкой
+  if (!poseSupported()) { track('model_unsupported', { os: env.osVersion }); return showBlocked('oldos'); }
   prefetchVideos();
   mount();
   hud.innerHTML = `<div class="big-center"><div><div class="spinner"></div><p class="t" style="margin-top:16px">${esc(T.cam.requesting)}</p><p style="margin-top:8px;opacity:.85">${esc(T.cam.allowHint)}</p></div></div>`;
@@ -424,7 +426,12 @@ function showBlocked(kind) {
   const reload = `<button class="btn" data-act="reload">${esc(T.common.retry)}</button>`;
   const fb = `<div class="box"><button class="btn line" data-act="fallback">${esc(B.fallbackCta)}</button><p class="small muted center">${esc(B.fallbackNote)}</p></div>`;
 
-  if (env.inApp && env.platform === 'android') {
+  const tooOld = kind === 'oldos' || (kind === 'model' && !poseSupported());
+  if (tooOld) {
+    // Старая система: повтор и другой браузер не помогут. Ответы едут в ссылке — открыть на другом телефоне или после обновления.
+    head = `<h1 class="rtitle">${esc(B.oldTitle)}</h1><p>${esc(env.platform === 'ios' ? B.oldLeadIos : B.oldLead)}</p>`;
+    body = `<button class="btn" data-act="copy">${esc(B.copyLinkBig)}</button><p class="small muted center">${esc(B.oldNote)}</p>`;
+  } else if (env.inApp && env.platform === 'android') {
     // Встроенный браузер на Android без камеры: одна кнопка «Відкрити в Chrome», ответы едут в ссылке.
     head = `<h1 class="rtitle">${esc(B.openChromeTitle)}</h1><p>${esc(B.openChromeLead)}</p>`;
     body = `<a class="btn" data-act="open-chrome" href="${esc(chromeIntentUrl(link))}">${esc(B.openChrome)}</a><p class="small muted center">${esc(B.openManual)}</p><button class="btn ghost" data-act="copy">${esc(B.copyLink)}</button>${fb}`;
