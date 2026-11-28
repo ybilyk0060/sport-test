@@ -10,6 +10,9 @@
 .mind-type .tag { background: rgba(255,255,255,.22); color: #fff; }
 .mind .second { font-size: 16px; }
 .mbars { display: grid; gap: 10px; }
+/* Согласие на подписку стоит прямо над кнопкой оплаты и читается без увеличения */
+.t-mind .consent-line { font-size: 13px; line-height: 1.45; color: var(--ink); margin: 0; }
+.t-mind .renew { font-size: 15px; }
 .mbar { display: grid; grid-template-columns: minmax(96px, 34%) 1fr 44px; align-items: center; gap: 10px; font-size: 15px; }
 .mbar span { font-weight: 600; overflow-wrap: anywhere; }
 .mbar i { height: 12px; border-radius: 12px; background: var(--line); overflow: hidden; }

@@ -37,15 +37,17 @@ const loadData = () => (LANG === 'de' ? import('./data-de.js?v=7a4e716-mx078zpq'
 let D = null;
 
 // --- Валюта и цены: en → USD, de и fr → EUR. Проверка: ?cur=USD|EUR ---
-const CUR = Object.hasOwn(SUB.prices, params.get('cur') || '') && params.get('cur') !== 'UAH' ? params.get('cur') : { de: 'EUR', fr: 'EUR' }[LANG] || 'USD';
+const AMERICAS = /-(CA|US)$/i.test(navigator.language || '') && (() => { try { return /^America\//.test(Intl.DateTimeFormat().resolvedOptions().timeZone || ''); } catch { return false; } })(); // fr-CA: французский текст, но доллары и без европейской галочки
+const CUR = Object.hasOwn(SUB.prices, params.get('cur') || '') && params.get('cur') !== 'UAH' ? params.get('cur') : (!AMERICAS && { de: 'EUR', fr: 'EUR' }[LANG]) || 'USD';
 const PRICE = SUB.prices[CUR];
 const LOC = { en: 'en-US', de: 'de-DE', fr: 'fr-FR', ru: 'ru-RU' }[LANG];
 const money = (n) => new Intl.NumberFormat(LOC, { style: 'currency', currency: CUR, minimumFractionDigits: Number.isInteger(n) ? 0 : 2 }).format(n);
 const fmtDate = (t) => new Date(t).toLocaleDateString(LOC, { day: 'numeric', month: 'long' });
-const LEGAL = LANG === 'de'
-  ? { pricing: 'pricing-de.html', terms: 'agb-de.html', refund: 'refund-de.html', privacy: 'privacy-de.html', contact: 'impressum-de.html' }
-  : { pricing: 'pricing-en.html', terms: 'terms-en.html', refund: 'refund-en.html', privacy: 'privacy-en.html', contact: 'contact-en.html' };
-const legalLinks = () => `<nav class="legal-links">${Object.keys(LEGAL).map((k) => `<a href="${LEGAL[k]}">${esc(T.legal[k])}</a>`).join('')}</nav>`;
+// Юридические тексты этого теста: одна страница на язык с разделами (русская версия для вычитки ведёт на английскую)
+const DOC = `legal-mind-${LANG === 'de' || LANG === 'fr' ? LANG : 'en'}.html`;
+const LEGAL = { pricing: `${DOC}#pricing`, terms: `${DOC}#terms`, refund: `${DOC}#refund`, privacy: `${DOC}#privacy`, contact: `${DOC}#contact` };
+// Последняя ссылка — расторжение без входа: доступна с любого экрана, где есть подвал
+const legalLinks = () => `<nav class="legal-links">${Object.keys(LEGAL).map((k) => `<a href="${LEGAL[k]}">${esc(T.legal[k])}</a>`).join('')}<a href="?cancel=1">${esc(T.sub.cancelLink)}</a></nav>`;
 
 // --- Состояние ---
 const KEY = 'mindtest.v1.state';
@@ -165,6 +167,7 @@ const pct = () => Math.round((1 - PRICE.first / PRICE.regular) * 100);
 const mmss = (ms) => { const s = Math.max(0, Math.ceil(ms / 1000)); return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; };
 // Согласие на немедленный доступ (право отказа): ЕС и Великобритания, по часовому поясу или языку
 function needWithdrawal() {
+  if (AMERICAS) return false;
   if (LANG === 'de' || LANG === 'fr') return true;
   try { return /^Europe\//.test(Intl.DateTimeFormat().resolvedOptions().timeZone || ''); } catch { return false; }
 }
@@ -198,10 +201,10 @@ function result_(note = '') {
       <p class="renew">${esc(P.renew(money(PRICE.regular), SUB.periodDays, fmtDate(renewAt)))}</p>
       <label class="email-field"><span class="small">${esc(P.emailLabel)}</span><input class="field" type="email" inputmode="email" autocomplete="email" data-el="email" value="${esc(st.email || '')}" maxlength="120" placeholder="${esc(P.emailPh)}"></label>
       ${needWithdrawal() ? `<label class="check small"><input type="checkbox" data-el="withdrawal"${wdOk ? ' checked' : ''}><span>${esc(P.withdrawal)} <a href="${LEGAL.refund}" target="_blank" rel="noopener">${esc(P.withdrawalLink)}</a></span></label>` : ''}
+      <p class="fine consent-line">${esc(P.fine(money(first), money(PRICE.regular), SUB.periodDays))}</p>
       <button class="btn" data-act="pay">${esc(P.cta(money(first)))}</button>
       <p class="trust small center">🔒 ${esc(P.trust)}</p></div>
     <h3>${esc(P.inside)}</h3><ul class="points checks-list">${P.items.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
-    <p class="fine">${esc(P.fine(money(first), money(PRICE.regular), SUB.periodDays))}</p>
     <p class="fine">${esc(D.disclaimer)}</p>
     ${legalLinks()}</div>
     <button class="btn line" data-act="share">${esc(T.result.share)}</button>
@@ -217,7 +220,7 @@ function result_(note = '') {
       btn.disabled = true; setTimeout(() => { btn.disabled = false; }, 4000); // двойное нажатие не создаёт два заказа
       const orderId = newOrderId(visitor.sid);
       const amount = firstPrice();
-      set({ email, orderId, payAmount: amount }); // сумма фиксируется в момент нажатия: таймер может истечь, пока открыто окно оплаты
+      set({ email, orderId, payAmount: amount, waiver: !!(box && box.checked) }); // сумма фиксируется в момент нажатия: таймер может истечь, пока открыто окно оплаты
       track('pay_click', { provider: payment.name, amount, discount: amount < PRICE.regular, plan: 'sub', currency: CUR });
       const ret = new URL(location.href); ret.search = ''; ret.hash = '';
       Promise.resolve(payment.startCheckout({ orderId, amount, currency: CUR, lang: LANG, email, discount: amount < PRICE.regular, description: T.title, returnUrl: ret.toString() }))
@@ -273,7 +276,7 @@ function activateServer() {
   if (!subapi.subOn() || !st.email || !st.orderId) return Promise.resolve(false);
   const r0 = st.result;
   return subapi.activate({ orderRef: st.orderId, email: st.email, currency: CUR, first: st.payAmount ?? PRICE.first, regular: PRICE.regular, test: !!payment.isTest, lang: LANG,
-    quiz: { product: 'mind', intro: st.intro, answers: st.answers, sliders: st.sliders, goal: st.goal },
+    quiz: { product: 'mind', intro: st.intro, answers: st.answers, sliders: st.sliders, goal: st.goal, ...(st.waiver ? { waiver: true } : {}) },
     results: r0 ? { product: 'mind', primary: r0.primary, secondary: r0.secondary, percent: r0.percent } : { product: 'mind' } })
     .then((r) => { set({ subToken: r.token, sub: { ...subapi.fromServer(r.sub), orderId: st.orderId } }); track('sub_server', { ok: true }); return true; })
     .catch(() => { track('sub_server', { ok: false }); return false; });
@@ -404,6 +407,25 @@ function manage(confirm = false) {
   });
 }
 
+// Расторжение без входа: email оплаты и одна кнопка. Подтверждение приходит письмом.
+function cancelForm() {
+  const S = T.sub;
+  screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button></div>
+    <h1 class="qtitle">${esc(S.cancelLink)}</h1><p class="muted">${esc(S.cancelReqLead)}</p>
+    <input class="field" type="email" inputmode="email" autocomplete="email" data-el="email" maxlength="120" placeholder="${esc(T.pay.restoreAsk)}" value="${esc(st.email || '')}">
+    <div class="grow"></div><button class="btn" data-act="send">${esc(S.cancelReqSend)}</button>`, {
+    back: () => route(),
+    send: async (b) => {
+      const email = app.querySelector('[data-el=email]').value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { toast(T.pay.emailBad); return; }
+      b.disabled = true;
+      try { await subapi.cancelReq(email, LANG); } catch { b.disabled = false; toast(S.error); return; }
+      track('sub_cancel_form');
+      if (st.sub && st.email && st.email.toLowerCase() === email.toLowerCase()) set({ sub: { ...st.sub, status: 'cancelled' } });
+      screen(`<div class="hero"><h1>${esc(S.cancelReqDone)}</h1><p class="promise">${esc(S.cancelReqNote)}</p></div><div class="grow"></div><button class="btn line" data-act="ok">${esc(T.common.next)}</button>`, { ok: () => route() });
+    },
+  });
+}
 function route() {
   if (subActive()) return st.step === 'daily' ? daily() : st.step === 'manage' ? manage() : report();
   if (st.step === 'quiz') return quiz();
@@ -470,6 +492,7 @@ async function boot() {
     if (await payment.verify(st.pending, back ? 15 : 2)) { startSub(st.pending); return report(); }
     if (back) { track('pay_unconfirmed', { provider: payment.name }); return st.result ? result_(T.pay.pending) : landing(); }
   }
+  if (params.get('cancel')) { cleanUrl(); return cancelForm(); }
   track('open', { ref: document.referrer ? new URL(document.referrer).hostname : '', utm: params.get('utm_source') || '' });
   route();
 }

@@ -67,11 +67,46 @@ async function issueToken(subId: string) {
   return token;
 }
 
-async function mail(to: string, subject: string, text: string) {
+// Отмена (с конца оплаченного периода) и снятие отмены. Подписка Paddle меняется у Paddle, иначе списания продолжатся.
+async function changeSub(sub: Record<string, any>, action: "cancel" | "resume"): Promise<{ ok: boolean; data?: Record<string, any> }> {
+  const patch = action === "cancel" ? { status: "cancelled", cancelled_at: new Date().toISOString() } : { status: "active", cancelled_at: null };
+  if (!sub.provider_sub && sub.order_ref) {
+    const { data: o } = await db.from("sport_test_orders").select("provider, provider_sub, provider_txn").eq("order_ref", sub.order_ref).maybeSingle();
+    if (o?.provider_sub) sub.provider_sub = o.provider_sub;
+    // Прогон 26.11: вебхук не записал id подписки Paddle (заказ стал «paid» раньше, чем пришёл id) — берём его из транзакции
+    else if (o?.provider === "paddle" && o.provider_txn) {
+      try { const t = await paddle(`/transactions/${o.provider_txn}`, "GET"); if (t?.data?.subscription_id) sub.provider_sub = t.data.subscription_id; } catch (e) { console.error("paddle txn", String(e)); }
+    }
+    if (sub.provider_sub) { await db.from("sport_test_subscriptions").update({ provider_sub: sub.provider_sub }).eq("id", sub.id); await db.from("sport_test_orders").update({ provider_sub: sub.provider_sub }).eq("order_ref", sub.order_ref); }
+    else if (o?.provider === "paddle") return { ok: false }; // не отменяем «на словах», пока у Paddle идут списания
+  }
+  if (sub.provider_sub) {
+    try {
+      if (action === "cancel") await paddle(`/subscriptions/${sub.provider_sub}/cancel`, "POST", { effective_from: "next_billing_period" });
+      else await paddle(`/subscriptions/${sub.provider_sub}`, "PATCH", { scheduled_change: null });
+    } catch (e) { console.error("paddle", String(e)); return { ok: false }; }
+  }
+  const { data } = await db.from("sport_test_subscriptions").update(patch).eq("id", sub.id).select("*").single();
+  return { ok: true, data };
+}
+const senderFor = (s: Record<string, any>) => (isMind(s) ? ({ de: "Wie denkt Ihr Kind?", fr: "Comment pense votre enfant ?" } as Record<string, string>)[String(s.lang)] || "How does your child think?" : undefined);
+function cancelMail(lang: string, s: Record<string, any>, link: string) {
+  const L = ["de", "fr", "uk"].includes(lang) ? lang : "en";
+  const until = fmtDate(s.paid_until, L);
+  const M: Record<string, { subject: string; text: string }> = {
+    en: { subject: "Your subscription is cancelled", text: `We have received your cancellation. Your subscription ends on ${until}. There will be no further charges, and access stays open until that date.\n\nChanged your mind? You can resume here:\n${link}` },
+    de: { subject: "Kündigungsbestätigung", text: `Wir bestätigen den Eingang Ihrer Kündigung. Ihr Abo endet am ${until}. Es erfolgen keine weiteren Abbuchungen, der Zugang bleibt bis zu diesem Datum bestehen.\n\nDoch weitermachen? Hier können Sie das Abo fortsetzen:\n${link}` },
+    fr: { subject: "Confirmation de résiliation", text: `Nous confirmons la réception de votre résiliation. Votre abonnement prend fin le ${until}. Aucun autre paiement ne sera prélevé et l’accès reste ouvert jusqu’à cette date.\n\nVous changez d’avis\u00a0? Vous pouvez reprendre l’abonnement ici\u00a0:\n${link}` },
+    uk: { subject: "Підписку скасовано", text: `Ми отримали ваше скасування. Підписка діє до ${until}. Нових списань не буде, доступ зберігається до цієї дати.\n\nПередумали? Відновити можна тут:\n${link}` },
+  };
+  return { subject: M[L].subject, text: `${M[L].text}\n\n${FROM}` };
+}
+
+async function mail(to: string, subject: string, text: string, name = "Kids strengths test") {
   if (!BREVO) return false;
   const r = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST", headers: { "api-key": BREVO, "content-type": "application/json", accept: "application/json" },
-    body: JSON.stringify({ sender: { email: FROM, name: "Kids strengths test" }, to: [{ email: to }], subject, textContent: text }),
+    body: JSON.stringify({ sender: { email: FROM, name }, to: [{ email: to }], subject, textContent: text }),
   });
   if (!r.ok) { lastMailError = `${r.status} ${(await r.text()).slice(0, 200)}`; console.error("brevo", lastMailError); }
   return r.ok;
@@ -88,6 +123,7 @@ function appsLine(lang: string) {
     : lang === "de" ? "\n\nIhr Abo enthält Premium in Kidsney, Kidsney Zoo und Chill Move. Installieren Sie die App und melden Sie sich mit dieser E-Mail-Adresse an."
     : "\n\nYour subscription includes premium in Kidsney, Kidsney Zoo and Chill Move. Install the app and sign in with this email.";
   if (APP_ACCESS === "soon") return lang === "uk" ? "\n\nСкоро: преміум у наших застосунках Kidsney, Kidsney Zoo і Chill Move стане частиною вашої підписки, нічого докуповувати не доведеться. Ми напишемо, щойно все буде готово."
+    : lang === "fr" ? "\n\nBientôt : le premium de nos applications Kidsney, Kidsney Zoo et Chill Move fera partie de votre abonnement, sans supplément. Nous vous préviendrons dès que ce sera prêt."
     : lang === "de" ? "\n\nBald: Premium in unseren Apps Kidsney, Kidsney Zoo und Chill Move wird ohne Aufpreis Teil Ihres Abos. Wir geben Bescheid, sobald es so weit ist."
     : "\n\nComing soon: premium in our apps Kidsney, Kidsney Zoo and Chill Move will become part of your subscription at no extra cost. We’ll let you know as soon as it’s ready.";
   return "";
@@ -108,23 +144,26 @@ function mindMail(kind: "terms" | "d3" | "d7" | "retest", lang: string, s: Recor
       q: "Questions",
     },
     de: {
-      terms: { subject: "Abo abgeschlossen: „Wie denkt Ihr Kind?“", text: `Danke! Ihr Abo ist aktiv.\n\nErste Zahlung: ${first} für ${PERIOD_DAYS} Tage.\nDanach ${regular} alle ${PERIOD_DAYS} Tage, erstmals am ${until}, bis Sie kündigen.\n\nBericht, Aufgabe des Tages und Abo-Verwaltung (Kündigung mit zwei Klicks) auf jedem Gerät öffnen:\n${link}${appsLine("de")}` },
-      d3: { subject: "Die 10 Minuten von heute", text: `Drei Tage sind vorbei. Jeden Tag gibt es eine kurze Aufgabe passend zum Denkstil Ihres Kindes: 5 bis 10 Minuten gemeinsam, ohne Bildschirm, mit Dingen, die Sie zu Hause haben.\n\nHeutige Aufgabe öffnen:\n${link}` },
-      d7: { subject: "Eine Woche ist geschafft: Was ist Ihnen aufgefallen?", text: `Eine Woche mit kurzen Aufgaben reicht, um zu sehen, was Ihr Kind fesselt und was nicht. Im Bericht stehen Sätze, die Selbstvertrauen stärken: Probieren Sie heute einen aus.\n\nBericht und heutige Aufgabe öffnen:\n${link}${appsLine("de")}` },
+      terms: { subject: "Abo abgeschlossen: „Wie denkt Ihr Kind?“", text: `Danke! Ihr Abo ist aktiv.\n\nErste Zahlung: ${first} für ${PERIOD_DAYS} Tage.\nDanach ${regular} alle ${PERIOD_DAYS} Tage, erstmals am ${until}, bis Sie kündigen.\n\nBericht, Spielidee des Tages und „Mein Abo“ (Kündigung mit zwei Klicks) auf jedem Gerät öffnen:\n${link}${appsLine("de")}` },
+      d3: { subject: "Ihre 10 Minuten für heute", text: `Drei Tage sind vorbei. Jeden Tag gibt es eine kurze Spielidee passend zum Denkstil Ihres Kindes: 5 bis 10 Minuten gemeinsam, ohne Bildschirm, mit Dingen, die Sie zu Hause haben.\n\nIdee für heute öffnen:\n${link}` },
+      d7: { subject: "Eine Woche ist geschafft: Was ist Ihnen aufgefallen?", text: `Eine Woche mit kurzen Spielideen reicht, um zu sehen, was Ihr Kind fesselt und was nicht. Im Bericht stehen Sätze, die Selbstvertrauen stärken: Probieren Sie heute einen aus.\n\nBericht und Idee für heute öffnen:\n${link}${appsLine("de")}` },
       retest: { subject: "Ein Monat ist vorbei: Machen Sie den Test noch einmal", text: `Kinder verändern sich schnell. Beantworten Sie die Fragen noch einmal (3 Minuten) und sehen Sie, was sich bei Interessen und Stärken Ihres Kindes verschoben hat.\n\nÖffnen:\n${link}` },
       q: "Fragen",
     },
     fr: {
-      terms: { subject: "Abonnement confirmé : « Comment pense votre enfant ? »", text: `Merci ! Votre abonnement est actif.\n\nPremier paiement : ${first} pour ${PERIOD_DAYS} jours.\nEnsuite ${regular} tous les ${PERIOD_DAYS} jours, à partir du ${until}, jusqu’à la résiliation.\n\nOuvrez le rapport complet, l’activité du jour et la gestion de l’abonnement (résiliation en deux clics) sur n’importe quel appareil :\n${link}` },
+      terms: { subject: "Abonnement confirmé : « Comment pense votre enfant ? »", text: `Merci ! Votre abonnement est actif.\n\nPremier paiement : ${first} pour ${PERIOD_DAYS} jours.\nEnsuite ${regular} tous les ${PERIOD_DAYS} jours, à partir du ${until}, jusqu’à la résiliation.\n\nOuvrez le rapport complet, l’activité du jour et la gestion de l’abonnement (résiliation en deux clics) sur n’importe quel appareil :\n${link}${appsLine("fr")}` },
       d3: { subject: "Les 10 minutes d’aujourd’hui", text: `Trois jours déjà. Chaque jour, une courte activité est choisie selon le style de pensée de votre enfant : 5 à 10 minutes ensemble, sans écran, avec ce que vous avez à la maison.\n\nOuvrir l’activité du jour :\n${link}` },
-      d7: { subject: "Une semaine déjà : qu’avez-vous remarqué ?", text: `Une semaine de courtes activités suffit pour voir ce qui passionne votre enfant et ce qui le lasse. Le rapport propose des phrases qui donnent confiance : essayez-en une aujourd’hui.\n\nOuvrir le rapport et l’activité du jour :\n${link}` },
+      d7: { subject: "Une semaine déjà : qu’avez-vous remarqué ?", text: `Une semaine de courtes activités suffit pour voir ce qui passionne votre enfant et ce qui l’ennuie. Le rapport propose des phrases qui donnent confiance : essayez-en une aujourd’hui.\n\nOuvrir le rapport et l’activité du jour :\n${link}` },
       retest: { subject: "Un mois a passé : refaites le test", text: `Les enfants changent vite. Répondez de nouveau aux questions (3 minutes) et voyez ce qui a évolué dans les centres d’intérêt et les points forts de votre enfant.\n\nOuvrir :\n${link}` },
       q: "Questions",
     },
   } as const;
   const nb = (t: string) => (L === "fr" ? t.replace(/« /g, "«\u00a0").replace(/ »/g, "\u00a0»").replace(/ ([:;?!])/g, "\u00a0$1") : t);
   const m = M[L][kind];
-  return { subject: nb(m.subject), text: `${nb(m.text)}\n\n${M[L].q}${L === "fr" ? "\u00a0" : ""}: ${FROM}` };
+  // Покупатель из ЕС/UK согласился на немедленный доступ и отказ от права отзыва: письмо-подтверждение это фиксирует
+  const W = { en: "\n\nYou expressly agreed that access starts immediately, before the 14-day withdrawal period ends, and acknowledged that you thereby lose your right of withdrawal.", de: "\n\nSie haben ausdrücklich zugestimmt, dass wir vor Ablauf der Widerrufsfrist mit der Ausführung des Vertrags beginnen, und bestätigt, dass Ihr Widerrufsrecht damit erlischt.", fr: "\n\nVous avez demandé l’accès immédiat au contenu et renoncé expressément à votre droit de rétractation de 14 jours." };
+  const waiver = kind === "terms" && (s.quiz as any)?.waiver ? W[L] : "";
+  return { subject: nb(m.subject), text: `${nb(m.text + waiver)}\n\n${M[L].q}${L === "fr" ? "\u00a0" : ""}: ${FROM}` };
 }
 function nurtureMail(kind: "d3" | "d7" | "retest", lang: string, link: string) {
   const L = lang === "uk" || lang === "de" ? lang : "en";
@@ -199,7 +238,7 @@ Deno.serve(async (req) => {
       const token = await issueToken(sub.id);
       const site = safeSite(String(b.returnTo || ""));
       let mailed: boolean | null = null;
-      if (site && !existing) { const m = isMind(sub) ? mindMail("terms", String(sub.lang || "en"), sub, `${site}?sub=${token}`) : termsMail(String(b.lang || "en"), sub, `${site}?sub=${token}`); mailed = await mail(email, m.subject, m.text); }
+      if (site && !existing) { const m = isMind(sub) ? mindMail("terms", String(sub.lang || "en"), sub, `${site}?sub=${token}`) : termsMail(String(b.lang || "en"), sub, `${site}?sub=${token}`); mailed = await mail(email, m.subject, m.text, senderFor(sub)); }
       return json({ token, sub: view(sub), mailed, mailError: mailed === false ? (BREVO ? lastMailError : "no BREVO_API_KEY") : undefined, from: FROM });
     }
 
@@ -291,31 +330,30 @@ Deno.serve(async (req) => {
       return json({ ok: true }); // одинаковый ответ — по email нельзя узнать, есть ли подписка
     }
 
+    if (b.action === "cancelreq") {
+      const email = String(b.email || "").trim().toLowerCase();
+      if (!emailOk(email)) return json({ ok: true });
+      const { data: subs } = await db.from("sport_test_subscriptions").select("*").eq("email", email).eq("status", "active").order("created_at", { ascending: false }).limit(5);
+      for (const s0 of subs || []) {
+        const r = await changeSub(s0, "cancel");
+        if (!r.ok) { console.error("cancelreq provider", s0.id); await mail(FROM, "Cancellation needs manual handling", `Subscription ${s0.id}: the payment provider did not confirm the cancellation requested by email form.`); continue; }
+        const site = s0.site || safeSite(String(b.returnTo || ""));
+        const m = cancelMail(String(s0.lang || b.lang || "en"), r.data!, site ? `${site}?sub=${await issueToken(s0.id)}` : "");
+        await mail(email, m.subject, m.text, senderFor(s0));
+      }
+      return json({ ok: true });
+    }
+
     const sub = await byToken(String(b.token || ""));
     if (!sub) return json({ error: "not found" }, 404);
 
     if (b.action === "status") return json({ sub: view(sub) });
     if (b.action === "cancel" || b.action === "resume") {
-      const patch = b.action === "cancel" ? { status: "cancelled", cancelled_at: new Date().toISOString() } : { status: "active", cancelled_at: null };
-      // Подписка Paddle: отмена с конца оплаченного периода / снятие запланированной отмены — у Paddle, иначе списания продолжатся
-      if (!sub.provider_sub && sub.order_ref) {
-        const { data: o } = await db.from("sport_test_orders").select("provider, provider_sub, provider_txn").eq("order_ref", sub.order_ref).maybeSingle();
-        if (o?.provider_sub) sub.provider_sub = o.provider_sub;
-        // Прогон 26.11: вебхук не записал id подписки Paddle (заказ стал «paid» раньше, чем пришёл id) — берём его из транзакции
-        else if (o?.provider === "paddle" && o.provider_txn) {
-          try { const t = await paddle(`/transactions/${o.provider_txn}`, "GET"); if (t?.data?.subscription_id) sub.provider_sub = t.data.subscription_id; } catch (e) { console.error("paddle txn", String(e)); }
-        }
-        if (sub.provider_sub) { await db.from("sport_test_subscriptions").update({ provider_sub: sub.provider_sub }).eq("id", sub.id); await db.from("sport_test_orders").update({ provider_sub: sub.provider_sub }).eq("order_ref", sub.order_ref); }
-        else if (o?.provider === "paddle") return json({ error: "provider" }, 502); // не отменяем «на словах», пока у Paddle идут списания
-      }
-      if (sub.provider_sub) {
-        try {
-          if (b.action === "cancel") await paddle(`/subscriptions/${sub.provider_sub}/cancel`, "POST", { effective_from: "next_billing_period" });
-          else await paddle(`/subscriptions/${sub.provider_sub}`, "PATCH", { scheduled_change: null });
-        } catch (e) { console.error("paddle", String(e)); return json({ error: "provider" }, 502); }
-      }
-      const { data } = await db.from("sport_test_subscriptions").update(patch).eq("id", sub.id).select("*").single();
-      return json({ sub: view(data) });
+      const r = await changeSub(sub, b.action);
+      if (!r.ok) return json({ error: "provider" }, 502);
+      // Подтверждение расторжения письмом (§ 312k BGB, art. L215-1-1 C. conso.): сразу, со ссылкой, по которой подписку можно вернуть
+      if (b.action === "cancel" && sub.site) { const m = cancelMail(String(sub.lang || "en"), r.data, `${sub.site}?sub=${await issueToken(sub.id)}`); await mail(String(sub.email), m.subject, m.text, senderFor(sub)); }
+      return json({ sub: view(r.data) });
     }
     if (b.action === "sync") {
       const w = clip(b.workouts, 50000);

@@ -77,12 +77,12 @@ export const QUESTIONS = [
 export const STYLE = {
   builder: ['hands-on', 'praktisch', 'pratique', 'практичный'],
   inventor: ['curious', 'neugierig', 'curieux', 'любознательный'],
-  storyteller: ['verbal', 'sprachgewandt', 'narratif', 'разговорный'],
+  storyteller: ['talkative', 'sprachgewandt', 'expressif', 'разговорный'],
   artist: ['creative', 'kreativ', 'créatif', 'творческий'],
   explorer: ['exploring', 'entdeckungsfreudig', 'explorateur', 'исследовательский'],
   leader: ['organizing', 'führungsstark', 'organisateur', 'организаторский'],
   helper: ['caring', 'fürsorglich', 'attentionné', 'заботливый'],
-  mover: ['active', 'tatkräftig', 'dynamique', 'деятельный'],
+  mover: ['active', 'bewegungsfreudig', 'dynamique', 'деятельный'],
 };
 
 // Что родитель этого стиля даёт ребёнку
@@ -123,7 +123,7 @@ export const NEEDS = {
 
 // Что сделать вместе на этой неделе (по типу ребёнка)
 export const TOGETHER = {
-  builder: ['Build one thing together where your child is the chief and you are the assistant.', 'Bauen Sie zusammen etwas, bei dem Ihr Kind bestimmt und Sie assistieren.', 'Construisez une chose ensemble : votre enfant dirige, vous assistez.', 'Постройте вместе одну вещь, где ребёнок главный, а вы помощник.'],
+  builder: ['Build one thing together where your child is the boss and you are the assistant.', 'Bauen Sie zusammen etwas, bei dem Ihr Kind bestimmt und Sie assistieren.', 'Construisez une chose ensemble : votre enfant dirige, vous assistez.', 'Постройте вместе одну вещь, где ребёнок главный, а вы помощник.'],
   inventor: ['Pick one “what happens if” question and test it together.', 'Wählen Sie eine „Was passiert, wenn“-Frage und probieren Sie es zusammen aus.', 'Choisissez une question « que se passe-t-il si » et testez-la ensemble.', 'Выберите один вопрос «а что будет, если» и проверьте его вместе.'],
   storyteller: ['Make up a bedtime story in turns, one sentence each.', 'Erfinden Sie abwechselnd eine Gutenachtgeschichte, jeder einen Satz.', 'Inventez une histoire du soir à tour de rôle, une phrase chacun.', 'Сочините сказку на ночь по очереди, по одному предложению.'],
   artist: ['Make one picture together with one rule: nobody comments until the end.', 'Malen Sie zusammen ein Bild mit einer Regel: Bis zum Schluss wird nichts kommentiert.', 'Faites un dessin ensemble avec une seule règle : aucun commentaire avant la fin.', 'Нарисуйте одну картину вместе с одним правилом: до конца никто ничего не комментирует.'],
@@ -135,23 +135,23 @@ export const TOGETHER = {
 
 export const UI = {
   title: ['You and your child: a 2-minute mini-test', 'Sie und Ihr Kind: ein Mini-Test in 2 Minuten', 'Vous et votre enfant : un mini-test de 2 minutes', 'Ребёнок и вы: мини-тест на 2 минуты'],
-  kicker: ['Mini-test for subscribers', 'Mini-Test für Abonnenten', 'Mini-test pour les abonnés', 'Мини-тест для подписчиков'],
+  kicker: ['Mini-test for subscribers', 'Mini-Test im Abo', 'Mini-test inclus dans l’abonnement', 'Мини-тест для подписчиков'],
   h1: ['You and your child', 'Sie und Ihr Kind', 'Vous et votre enfant', 'Ребёнок и вы'],
   sub: ['10 questions about you. See how your own style meets your child’s thinking style, and what to do with it this week.', '10 Fragen über Sie. Sehen Sie, wie Ihr eigener Stil auf den Denkstil Ihres Kindes trifft und was Sie diese Woche daraus machen können.', '10 questions sur vous. Découvrez comment votre style rencontre le style de pensée de votre enfant, et quoi en faire cette semaine.', '10 вопросов о вас. Узнайте, как ваш стиль сочетается с типом мышления ребёнка и что с этим делать на этой неделе.'],
   cta: ['Start', 'Starten', 'Commencer', 'Начать'],
-  note: ['Not a psychological assessment. It is a way to look at everyday habits.', 'Keine psychologische Diagnostik. Ein Blick auf Gewohnheiten im Alltag.', 'Ce n’est pas une évaluation psychologique. C’est un regard sur les habitudes du quotidien.', 'Это не психологическая оценка. Это способ посмотреть на повседневные привычки.'],
+  note: ['Not a psychological assessment. It is a way to look at everyday habits.', 'Keine psychologische Beurteilung. Ein Blick auf Gewohnheiten im Alltag.', 'Ce n’est pas une évaluation psychologique. C’est un regard sur les habitudes du quotidien.', 'Это не психологическая оценка. Это способ посмотреть на повседневные привычки.'],
   back: ['Back', 'Zurück', 'Retour', 'Назад'],
   count: ['{n} of {t}', '{n} von {t}', '{n} sur {t}', '{n} из {t}'],
   childQ: ['Which thinking style did your child’s test show?', 'Welchen Denkstil hat der Test Ihres Kindes gezeigt?', 'Quel style de pensée le test de votre enfant a-t-il montré ?', 'Какой тип мышления показал тест ребёнка?'],
   childTest: ['I haven’t taken the child’s test yet', 'Ich habe den Test für mein Kind noch nicht gemacht', 'Je n’ai pas encore fait le test de mon enfant', 'Я ещё не проходил тест ребёнка'],
   yourStyle: ['Your style as a parent', 'Ihr Stil als Elternteil', 'Votre style de parent', 'Ваш стиль как родителя'],
   childStyle: ['Your child', 'Ihr Kind', 'Votre enfant', 'Ваш ребёнок'],
-  same: ['You share a style, so understanding comes easily. The other side: you also share the same weak spot. It helps to bring people with other styles into your child’s life.', 'Sie teilen einen Stil, deshalb verstehen Sie sich leicht. Die Kehrseite: Sie teilen auch dieselbe Schwachstelle. Es hilft, Menschen mit anderen Stilen ins Leben Ihres Kindes zu holen.', 'Vous partagez le même style : vous vous comprenez facilement. Le revers : vous partagez aussi le même point faible. Il est utile de faire entrer dans la vie de votre enfant des personnes d’un autre style.', 'У вас один стиль, поэтому вы легко понимаете друг друга. Обратная сторона: слабое место у вас тоже общее. Полезно, чтобы в жизни ребёнка были люди с другим стилем.'],
+  same: ['You share a style, so understanding comes easily. The other side: you may overlook the same things. It helps to bring people with other styles into your child’s life.', 'Sie teilen einen Stil, deshalb verstehen Sie sich leicht. Die Kehrseite: Sie übersehen womöglich dieselben Dinge. Es hilft, Menschen mit anderen Stilen ins Leben Ihres Kindes zu holen.', 'Vous partagez le même style : vous vous comprenez facilement. Le revers : vous risquez de passer à côté des mêmes choses. Il est utile de faire entrer dans la vie de votre enfant des personnes d’un autre style.', 'У вас один стиль, поэтому вы легко понимаете друг друга. Обратная сторона: вы можете не замечать одно и то же. Полезно, чтобы в жизни ребёнка были люди с другим стилем.'],
   diff: ['You think differently, and that is useful: your child gets from you what does not come naturally. It also means that what recharges you can tire your child.', 'Sie denken unterschiedlich, und das ist nützlich: Ihr Kind bekommt von Ihnen, was ihm nicht von selbst zufällt. Es heißt aber auch: Was Ihnen Kraft gibt, kann Ihr Kind ermüden.', 'Vous pensez différemment, et c’est utile : votre enfant reçoit de vous ce qui ne lui vient pas naturellement. Cela veut dire aussi que ce qui vous ressource peut fatiguer votre enfant.', 'Вы думаете по-разному, и это полезно: ребёнок получает от вас то, что не даётся ему само. Но это значит и то, что ваш отдых может его утомлять.'],
   give: ['What you give your child', 'Was Sie Ihrem Kind geben', 'Ce que vous apportez à votre enfant', 'Что вы даёте ребёнку'],
   watch: ['What to watch for', 'Worauf Sie achten können', 'Le point à surveiller', 'На что обратить внимание'],
   needs: ['What your child needs from you', 'Was Ihr Kind von Ihnen braucht', 'Ce dont votre enfant a besoin de votre part', 'Что ребёнку нужно от вас'],
-  together: ['Try this week', 'Probieren Sie es diese Woche', 'À essayer cette semaine', 'Попробуйте на этой неделе'],
+  together: ['Try this week', 'Diese Woche ausprobieren', 'À essayer cette semaine', 'Попробуйте на этой неделе'],
   lockTitle: ['The full result is part of the subscription', 'Das vollständige Ergebnis gehört zum Abo', 'Le résultat complet fait partie de l’abonnement', 'Полный результат входит в подписку'],
   lockLead: ['Take the “How does your child think?” test. The subscription opens the full report, the activity of the day and this mini-test.', 'Machen Sie den Test „Wie denkt Ihr Kind?“. Das Abo öffnet den vollständigen Bericht, die Aufgabe des Tages und diesen Mini-Test.', 'Faites le test « Comment pense votre enfant ? ». L’abonnement ouvre le rapport complet, l’activité du jour et ce mini-test.', 'Пройдите тест «Как думает ваш ребёнок». Подписка открывает полный отчёт, задание дня и этот мини-тест.'],
   lockCta: ['Go to the child’s test', 'Zum Test für Ihr Kind', 'Vers le test de l’enfant', 'К тесту ребёнка'],

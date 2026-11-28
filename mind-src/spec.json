@@ -68,7 +68,7 @@
     "ru": "Чем ребёнок занимается, когда его никто не занимает?",
     "en": "What does your child do when nobody is entertaining them?",
     "de": "Was macht Ihr Kind, wenn niemand es beschäftigt?",
-    "fr": "Que fait votre enfant quand personne ne s'occupe de lui ?"
+    "fr": "Que fait votre enfant quand personne n'est là pour l'occuper ?"
    },
    "options": [
     {
@@ -84,7 +84,7 @@
      "scale": "storyteller",
      "text": {
       "ru": "Придумывает истории, говорит за игрушки",
-      "en": "Makes up stories, talks for the toys",
+      "en": "Makes up stories, gives the toys voices",
       "de": "Erfindet Geschichten, spricht für die Spielfiguren",
       "fr": "Invente des histoires, fait parler ses jouets"
      }
@@ -126,7 +126,7 @@
       "ru": "Головоломки, наборы для опытов",
       "en": "Puzzles and experiment kits",
       "de": "Knobelspiele und Experimentierkästen",
-      "fr": "Casse-têtes et kits d'expériences"
+      "fr": "Jeux de logique et coffrets d'expériences"
      }
     },
     {
@@ -166,7 +166,7 @@
     "ru": "О чём он чаще всего спрашивает «почему»?",
     "en": "What does your child ask \"why\" about most often?",
     "de": "Worüber stellt Ihr Kind die meisten Warum-Fragen?",
-    "fr": "À propos de quoi votre enfant demande-t-il le plus souvent « pourquoi » ?"
+    "fr": "Sur quoi portent le plus souvent les « pourquoi » de votre enfant ?"
    },
    "options": [
     {
@@ -215,7 +215,7 @@
     "ru": "Что он выбирает на экране, если можно выбрать самому?",
     "en": "What does your child pick on a screen when the choice is theirs?",
     "de": "Was wählt Ihr Kind am Bildschirm, wenn es selbst entscheiden darf?",
-    "fr": "Que choisit votre enfant sur un écran quand il décide seul ?"
+    "fr": "Que choisit votre enfant sur un écran quand le choix lui revient ?"
    },
    "options": [
     {
@@ -313,7 +313,7 @@
     "ru": "Какие книги и истории он любит?",
     "en": "Which books and stories does your child like?",
     "de": "Welche Bücher und Geschichten mag Ihr Kind?",
-    "fr": "Quels livres et histoires votre enfant aime-t-il ?"
+    "fr": "Quels livres et histoires plaisent à votre enfant ?"
    },
    "options": [
     {
@@ -347,7 +347,7 @@
      "scale": "builder",
      "text": {
       "ru": "Про машины, технику, стройку",
-      "en": "About vehicles, machines, building sites",
+      "en": "About vehicles, machines, construction sites",
       "de": "Über Fahrzeuge, Technik, Baustellen",
       "fr": "Sur les véhicules, les machines, les chantiers"
      }
@@ -362,7 +362,7 @@
     "ru": "Какой подарок он выберет сам?",
     "en": "Which gift would your child choose?",
     "de": "Welches Geschenk würde Ihr Kind selbst wählen?",
-    "fr": "Quel cadeau votre enfant choisirait-il ?"
+    "fr": "Quel cadeau choisirait votre enfant ?"
    },
    "options": [
     {
@@ -380,7 +380,7 @@
       "ru": "Набор для творчества или инструмент",
       "en": "An art set or a musical instrument",
       "de": "Ein Kreativset oder ein Instrument",
-      "fr": "Un kit créatif ou un instrument"
+      "fr": "Un coffret créatif ou un instrument"
      }
     },
     {
@@ -389,7 +389,7 @@
       "ru": "Набор юного учёного",
       "en": "A science kit",
       "de": "Einen Experimentierkasten",
-      "fr": "Un kit scientifique"
+      "fr": "Un coffret scientifique"
      }
     },
     {
@@ -411,7 +411,7 @@
     "ru": "Чем он гордится больше всего?",
     "en": "What makes your child most proud?",
     "de": "Worauf ist Ihr Kind am meisten stolz?",
-    "fr": "De quoi votre enfant est-il le plus fier ?"
+    "fr": "Qu'est-ce qui donne le plus de fierté à votre enfant ?"
    },
    "options": [
     {
@@ -420,7 +420,7 @@
       "ru": "Победил или был главным",
       "en": "Winning or being in charge",
       "de": "Gewonnen oder das Sagen gehabt zu haben",
-      "fr": "Avoir gagné ou avoir été le chef"
+      "fr": "Avoir gagné ou avoir dirigé"
      }
     },
     {
@@ -527,7 +527,7 @@
       "ru": "Находит одного ребёнка и дружит с ним",
       "en": "Finds one child and makes friends",
       "de": "Sucht sich ein Kind und freundet sich mit ihm an",
-      "fr": "Trouve un enfant et devient son ami"
+      "fr": "Trouve un enfant et se lie d'amitié"
      }
     },
     {
@@ -536,7 +536,7 @@
       "ru": "Сначала наблюдает и осматривается",
       "en": "Watches and looks around first",
       "de": "Beobachtet erst und schaut sich um",
-      "fr": "Observe d'abord et regarde autour de lui"
+      "fr": "Observe d'abord les alentours"
      }
     },
     {
@@ -558,7 +558,7 @@
     "ru": "Задача не получается. Что он делает?",
     "en": "A task isn't working out. What does your child do?",
     "de": "Eine Aufgabe klappt nicht. Was macht Ihr Kind?",
-    "fr": "Votre enfant n'arrive pas à faire quelque chose. Que fait-il ?"
+    "fr": "Quelque chose ne marche pas. Que fait votre enfant ?"
    },
    "options": [
     {
@@ -754,7 +754,7 @@
     "ru": "Собираетесь в поездку. Как он собирается?",
     "en": "You're packing for a trip. How does your child get ready?",
     "de": "Sie packen für einen Ausflug. Wie bereitet sich Ihr Kind vor?",
-    "fr": "Vous préparez un voyage. Comment votre enfant se prépare-t-il ?"
+    "fr": "Vous préparez une sortie. Comment se prépare votre enfant ?"
    },
    "options": [
     {
@@ -803,7 +803,7 @@
     "ru": "Ему дали коробку с разными деталями. Что он сделает?",
     "en": "Your child gets a box of random parts. What do they do?",
     "de": "Ihr Kind bekommt eine Kiste mit verschiedenen Teilen. Was macht es?",
-    "fr": "Votre enfant reçoit une boîte de pièces diverses. Que fait-il ?"
+    "fr": "Votre enfant reçoit une boîte de pièces diverses. Que se passe-t-il ?"
    },
    "options": [
     {
@@ -881,16 +881,16 @@
     "id": "energy",
     "text": {
      "ru": "У ребёнка много энергии, ему трудно усидеть на месте",
-     "en": "My child has lots of energy and finds it hard to sit still",
-     "de": "Mein Kind hat viel Energie und kann schwer stillsitzen",
-     "fr": "Mon enfant a beaucoup d'énergie et a du mal à rester assis"
+     "en": "My child prefers active play to sitting activities",
+     "de": "Mein Kind spielt lieber in Bewegung als im Sitzen",
+     "fr": "Mon enfant préfère les jeux actifs aux activités assises"
     }
    },
    {
     "id": "boldness",
     "text": {
      "ru": "Смело идёт в новое: место, люди, занятие",
-     "en": "Walks boldly into new places, people and activities",
+     "en": "Approaches new places, people and activities with confidence",
      "de": "Geht mutig auf Neues zu: Orte, Menschen, Aktivitäten",
      "fr": "Va avec assurance vers la nouveauté : lieux, personnes, activités"
     }
@@ -901,7 +901,7 @@
      "ru": "Доводит начатое до конца, даже когда трудно",
      "en": "Finishes what they start, even when it's hard",
      "de": "Bringt Angefangenes zu Ende, auch wenn es schwer ist",
-     "fr": "Finit ce qu'il commence, même quand c'est difficile"
+     "fr": "Va au bout de ce qui est commencé, même quand c'est difficile"
     }
    },
    {
@@ -919,7 +919,7 @@
      "ru": "Легко заводит знакомства и любит быть среди людей",
      "en": "Makes friends easily and loves being around people",
      "de": "Findet leicht Anschluss und ist gern unter Menschen",
-     "fr": "Se fait facilement des amis et aime être entouré"
+     "fr": "Se fait facilement des amis et aime la compagnie"
     }
    },
    {
@@ -964,10 +964,10 @@
    {
     "id": "future",
     "text": {
-     "ru": "Кем он может стать",
-     "en": "What my child might become",
-     "de": "Was aus meinem Kind werden könnte",
-     "fr": "Ce que mon enfant pourrait devenir"
+     "ru": "Что попробовать с ребёнком дальше",
+     "en": "What to try next with my child",
+     "de": "Was ich mit meinem Kind als Nächstes ausprobieren kann",
+     "fr": "Quoi essayer ensuite avec mon enfant"
     }
    },
    {

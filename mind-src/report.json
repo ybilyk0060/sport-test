@@ -15,8 +15,8 @@
    },
    "hooks": {
     "ru": "Затягивает: задачи с понятным результатом, который можно потрогать. Быстро надоедает: долгие объяснения без дела и занятия, где «нечего строить».",
-    "en": "Pulls them in: tasks with a clear result you can touch. Wears thin fast: long explanations with nothing to do and activities with nothing to build.",
-    "de": "Das fesselt: Aufgaben mit einem klaren Ergebnis zum Anfassen. Das langweilt schnell: lange Erklärungen ohne etwas zu tun und Beschäftigungen, bei denen nichts entsteht.",
+    "en": "Pulls them in: tasks with a clear result you can touch. Gets boring fast: long explanations with nothing to do and activities with nothing to build.",
+    "de": "Das fesselt: Aufgaben mit einem klaren Ergebnis zum Anfassen. Das langweilt schnell: lange Erklärungen, bei denen es nichts zu tun gibt und Beschäftigungen, bei denen nichts entsteht.",
     "fr": "Ce qui passionne : les tâches avec un résultat concret, que l'on peut toucher. Ce qui lasse vite : les longues explications sans rien à faire et les activités où l'on ne fabrique rien."
    },
    "strengths": [
@@ -29,7 +29,7 @@
     {
      "ru": "Терпение в работе шаг за шагом",
      "en": "Patience for step-by-step work",
-     "de": "Geduld für Arbeit Schritt für Schritt",
+     "de": "Geduld für schrittweises Arbeiten",
      "fr": "Patience pour le travail étape par étape"
     },
     {
@@ -80,7 +80,7 @@
     },
     "9-12": {
      "ru": "моделирование, 3D-ручка или 3D-редактор, столярная или техническая мастерская",
-     "en": "model making, a 3D pen or 3D design app, a woodwork or maker workshop",
+     "en": "model making, a 3D pen or 3D design app, a woodworking or maker workshop",
      "de": "Modellbau, ein 3D-Stift oder eine 3D-Design-App, eine Holz- oder Bastelwerkstatt",
      "fr": "modélisme, un stylo 3D ou une application de création 3D, un atelier bois ou bricolage"
     }
@@ -101,7 +101,7 @@
     {
      "ru": "Неделя 3. Задача с ограничением: мост из бумаги, который выдержит книгу.",
      "en": "Week 3. A challenge with limits: a paper bridge that holds a book.",
-     "de": "Woche 3. Eine Aufgabe mit Grenzen: eine Papierbrücke, die ein Buch trägt.",
+     "de": "Woche 3. Eine Herausforderung mit Vorgaben: eine Papierbrücke, die ein Buch trägt.",
      "fr": "Semaine 3. Un défi avec contraintes : un pont en papier qui supporte un livre."
     },
     {
@@ -115,13 +115,13 @@
   "inventor": {
    "about": {
     "ru": "{name} хочет знать, как всё устроено, и проверяет это сам. Готовый ответ ему менее интересен, чем собственный опыт. Он пробует, ошибается и пробует иначе.",
-    "en": "{name} wants to know how everything works and checks it personally. A ready answer interests them less than their own experiment. They try, get it wrong and try another way.",
+    "en": "{name} wants to know how everything works and has to test it for themselves. A ready answer interests them less than their own experiment. They try, get it wrong and try another way.",
     "de": "{name} will wissen, wie alles funktioniert, und prüft es selbst nach. Eine fertige Antwort ist weniger spannend als das eigene Experiment. Kinder mit diesem Profil probieren aus, irren sich und versuchen es auf einem anderen Weg.",
-    "fr": "{name} veut savoir comment tout fonctionne et le vérifie en personne. Une réponse toute faite intéresse moins que sa propre expérience. Les enfants de ce profil essaient, se trompent et cherchent une autre voie."
+    "fr": "{name} veut savoir comment tout fonctionne et veut le vérifier par l'expérience. Une réponse toute faite intéresse moins que sa propre expérience. Les enfants de ce profil essaient, se trompent et cherchent une autre voie."
    },
    "hooks": {
     "ru": "Затягивает: загадки, опыты, вопрос «а что будет, если…». Быстро надоедает: повторять одно и то же и делать «потому что так надо».",
-    "en": "Pulls them in: puzzles, experiments, the question \"what happens if…\". Wears thin fast: repeating the same thing and doing it \"because that's the rule\".",
+    "en": "Pulls them in: puzzles, experiments, the question \"what happens if…\". Gets boring fast: repeating the same thing and doing it \"because that's the rule\".",
     "de": "Das fesselt: Rätsel, Experimente, die Frage „Was passiert, wenn …?“. Das langweilt schnell: immer das Gleiche wiederholen und etwas tun, „weil man das eben so macht“.",
     "fr": "Ce qui passionne : les énigmes, les expériences, la question « que se passe-t-il si… ? ». Ce qui lasse vite : répéter la même chose et faire « parce que c'est la règle »."
    },
@@ -173,10 +173,10 @@
    ],
    "ages": {
     "3-5": {
-     "ru": "опыты с водой и магнитами, сортировка, простые головоломки",
-     "en": "water and magnet experiments, sorting games, simple puzzles",
-     "de": "Experimente mit Wasser und Magneten, Sortierspiele, einfache Puzzles",
-     "fr": "expériences avec l'eau et les aimants, jeux de tri, puzzles simples"
+     "ru": "игры с водой и большие магниты для холодильника, сортировка, простые головоломки",
+     "en": "water play and large fridge magnets, sorting games, simple puzzles",
+     "de": "Wasserspiele und große Kühlschrankmagnete, Sortierspiele, einfache Puzzles",
+     "fr": "jeux d'eau et gros aimants de frigo, jeux de tri, puzzles simples"
     },
     "6-8": {
      "ru": "наборы юного учёного, шахматы, логические игры, первые шаги в программировании",
@@ -200,7 +200,7 @@
     },
     {
      "ru": "Неделя 2. Дневник «я думал, а оказалось»: предположение до опыта и результат после.",
-     "en": "Week 2. A \"I thought, but it turned out\" journal: a guess before, the result after.",
+     "en": "Week 2. An \"I thought… but it turned out…\" journal: a guess before, the result after.",
      "de": "Woche 2. Ein Tagebuch „Ich dachte, aber es kam so“: vorher die Vermutung, danach das Ergebnis.",
      "fr": "Semaine 2. Un carnet « Je pensais, mais en fait » : l'hypothèse avant, le résultat après."
     },
@@ -227,7 +227,7 @@
    },
    "hooks": {
     "ru": "Затягивает: книги, разговоры, роли, выступления. Быстро надоедает: молчаливая работа в одиночку и задания без смысла и героя.",
-    "en": "Pulls them in: books, conversations, role play, performing. Wears thin fast: silent solo work and tasks with no meaning or character.",
+    "en": "Pulls them in: books, conversations, role play, performing. Gets boring fast: silent solo work and tasks with no story or characters.",
     "de": "Das fesselt: Bücher, Gespräche, Rollenspiele, Auftritte. Das langweilt schnell: stille Einzelarbeit und Aufgaben ohne Sinn und ohne Figuren.",
     "fr": "Ce qui passionne : les livres, les conversations, les jeux de rôle, la scène. Ce qui lasse vite : le travail silencieux en solitaire et les tâches sans sens ni personnages."
    },
@@ -333,8 +333,8 @@
    },
    "hooks": {
     "ru": "Затягивает: свобода выбрать материал и результат. Быстро надоедает: раскраски «по номерам», спешка и оценка «правильно или неправильно».",
-    "en": "Pulls them in: freedom to choose the material and the result. Wears thin fast: paint-by-numbers tasks, rushing and being judged right or wrong.",
-    "de": "Das fesselt: die Freiheit, Material und Ergebnis selbst zu wählen. Das langweilt schnell: Aufgaben nach Schablone, Eile und Bewertungen als richtig oder falsch.",
+    "en": "Pulls them in: freedom to choose the material and the result. Gets boring fast: paint-by-numbers tasks, rushing and being judged right or wrong.",
+    "de": "Das fesselt: die Freiheit, Material und Ergebnis selbst zu wählen. Das langweilt schnell: Aufgaben nach Schablone, Eile und Bewertungen nach „richtig“ oder „falsch“.",
     "fr": "Ce qui passionne : la liberté de choisir la matière et le résultat. Ce qui lasse vite : les tâches à suivre à la lettre, la précipitation et les jugements « juste » ou « faux »."
    },
    "strengths": [
@@ -354,7 +354,7 @@
      "ru": "Способен надолго погрузиться в своё дело",
      "en": "Can stay absorbed in their work for a long time",
      "de": "Kann lange in die eigene Arbeit vertieft bleiben",
-     "fr": "Peut rester longtemps dans son travail"
+     "fr": "Peut se plonger longtemps dans son travail"
     }
    ],
    "grow": {
@@ -386,7 +386,7 @@
    "ages": {
     "3-5": {
      "ru": "краски и пальчиковое рисование, лепка, музыка и танцы под неё",
-     "en": "paints and finger painting, modelling clay, music and dancing to it",
+     "en": "paints and finger painting, modeling clay, music and dancing to it",
      "de": "Farben und Fingermalen, Knete, Musik und Tanzen dazu",
      "fr": "peinture et peinture au doigt, pâte à modeler, musique et danse"
     },
@@ -435,11 +435,11 @@
     "ru": "{name} сначала смотрит, потом действует. Он собирает факты, замечает закономерности и помнит удивительные подробности о животных, планетах или динозаврах.",
     "en": "{name} looks first and acts second. They collect facts, spot patterns and remember amazing details about animals, planets or dinosaurs.",
     "de": "{name} schaut erst und handelt dann. Kinder mit diesem Profil sammeln Fakten, erkennen Muster und merken sich erstaunliche Einzelheiten über Tiere, Planeten oder Dinosaurier.",
-    "fr": "{name} observe d'abord et agit ensuite. Les enfants de ce profil collectionnent les faits, repèrent les régularités et retiennent des détails étonnants sur les animaux, les planètes ou les dinosaures."
+    "fr": "{name} observe d'abord et agit ensuite. Les enfants de ce profil collectionnent les faits, repèrent ce qui se répète et retiennent des détails étonnants sur les animaux, les planètes ou les dinosaures."
    },
    "hooks": {
     "ru": "Затягивает: всё новое, живое и настоящее, коллекции и карты. Быстро надоедает: сидеть в четырёх стенах и учить то, что нельзя увидеть.",
-    "en": "Pulls them in: anything new, living and real, collections and maps. Wears thin fast: staying indoors and learning what they can't see.",
+    "en": "Pulls them in: anything new, living and real, collections and maps. Gets boring fast: staying indoors and learning what they can't see.",
     "de": "Das fesselt: alles Neue, Lebendige und Echte, Sammlungen und Karten. Das langweilt schnell: drinnen bleiben und Dinge lernen, die man nicht sehen kann.",
     "fr": "Ce qui passionne : tout ce qui est nouveau, vivant et réel, les collections et les cartes. Ce qui lasse vite : rester à l'intérieur et apprendre ce que l'on ne peut pas voir."
    },
@@ -466,8 +466,8 @@
    "grow": {
     "ru": "Чему стоит помочь: входить в новую компанию. Ему нужно время, чтобы осмотреться. Не торопите, дайте 10 минут понаблюдать.",
     "en": "Worth supporting: joining a new group. They need time to look around. Don't rush them, give them 10 minutes to watch.",
-    "de": "Hier lohnt sich Unterstützung: in eine neue Gruppe hineinfinden. Dafür braucht es Zeit zum Umschauen. Drängen Sie nicht, geben Sie 10 Minuten zum Zuschauen.",
-    "fr": "À encourager : entrer dans un nouveau groupe. Il faut du temps pour regarder autour de soi. Ne pressez pas, laissez 10 minutes pour observer."
+    "de": "Hier lohnt sich Unterstützung: in eine neue Gruppe hineinfinden. Dafür braucht es Zeit zum Umschauen. Drängen Sie Ihr Kind nicht. Geben Sie ihm 10 Minuten zum Zuschauen.",
+    "fr": "À encourager : entrer dans un nouveau groupe. Il faut du temps pour regarder autour de soi. Ne brusquez pas votre enfant : laissez-lui 10 minutes pour observer."
    },
    "say": [
     {
@@ -514,7 +514,7 @@
      "ru": "Неделя 1. Прогулка-исследование: каждый день найти три новые вещи на знакомом маршруте.",
      "en": "Week 1. Discovery walks: find three new things each day on a familiar route.",
      "de": "Woche 1. Entdeckerspaziergänge: jeden Tag drei neue Dinge auf einem bekannten Weg finden.",
-     "fr": "Semaine 1. Promenades découvertes : trouver chaque jour trois nouveautés sur un trajet connu."
+     "fr": "Semaine 1. Promenades découverte : trouver chaque jour trois nouveautés sur un trajet connu."
     },
     {
      "ru": "Неделя 2. Коллекция: собрать, разложить и подписать 10 находок.",
@@ -545,7 +545,7 @@
    },
    "hooks": {
     "ru": "Затягивает: цель, команда и возможность решать. Быстро надоедает: задания без выбора и ситуации, где от него ничего не зависит.",
-    "en": "Pulls them in: a goal, a team and a say in decisions. Wears thin fast: tasks with no choice and situations where nothing depends on them.",
+    "en": "Pulls them in: a goal, a team and a say in decisions. Gets boring fast: tasks with no choice and situations where nothing depends on them.",
     "de": "Das fesselt: ein Ziel, ein Team und Mitsprache bei Entscheidungen. Das langweilt schnell: Aufgaben ohne Wahl und Situationen, in denen nichts vom eigenen Beitrag abhängt.",
     "fr": "Ce qui passionne : un but, une équipe et un mot à dire dans les décisions. Ce qui lasse vite : les tâches sans choix et les situations où rien ne dépend de soi."
    },
@@ -572,8 +572,8 @@
    "grow": {
     "ru": "Чему стоит помочь: уступать и проигрывать. Давайте иногда роль «помощника капитана», где главный другой.",
     "en": "Worth supporting: giving way and losing. Sometimes give them the \"first mate\" role, with someone else in charge.",
-    "de": "Hier lohnt sich Unterstützung: nachgeben und verlieren können. Geben Sie ab und zu die Rolle der „rechten Hand“, während jemand anderes das Sagen hat.",
-    "fr": "À encourager : céder et savoir perdre. Donnez parfois le rôle de « bras droit », quand une autre personne dirige."
+    "de": "Hier lohnt sich Unterstützung: nachgeben und verlieren können. Lassen Sie Ihr Kind ab und zu die „rechte Hand“ sein, während jemand anderes das Sagen hat.",
+    "fr": "À encourager : céder et savoir perdre. Confiez-lui parfois le rôle de « bras droit », quand une autre personne dirige."
    },
    "say": [
     {
@@ -600,7 +600,7 @@
      "ru": "игры с правилами, «дежурный по дому», простые командные игры",
      "en": "games with rules, being the \"helper of the day\" at home, simple team games",
      "de": "Spiele mit Regeln, zu Hause „Helferkind des Tages“ sein, einfache Mannschaftsspiele",
-     "fr": "jeux avec des règles, rôle d'« assistant du jour » à la maison, jeux d'équipe simples"
+     "fr": "jeux avec des règles, rôle de « bras droit du jour » à la maison, jeux d'équipe simples"
     },
     "6-8": {
      "ru": "командный спорт, настольные стратегии, скауты",
@@ -610,7 +610,7 @@
     },
     "9-12": {
      "ru": "капитан команды, школьное самоуправление, свой маленький проект или ярмарка",
-     "en": "team captain, student council, a small project or stall of their own",
+     "en": "team captain, student council, a small project or stand of their own",
      "de": "Mannschaftsführung, Schülervertretung, ein eigenes kleines Projekt oder ein Verkaufsstand",
      "fr": "rôle de capitaine d'équipe, conseil des élèves, un petit projet ou un stand à soi"
     }
@@ -619,7 +619,7 @@
     {
      "ru": "Неделя 1. Одно своё дело дома: отвечает за него сам всю неделю.",
      "en": "Week 1. One job at home that is fully theirs for the week.",
-     "de": "Woche 1. Eine Aufgabe zu Hause, die eine Woche lang ganz in der eigenen Hand liegt.",
+     "de": "Woche 1. Eine Aufgabe zu Hause, für die Ihr Kind eine Woche lang allein zuständig ist.",
      "fr": "Semaine 1. Une tâche à la maison confiée entièrement à votre enfant pour la semaine."
     },
     {
@@ -651,7 +651,7 @@
    },
    "hooks": {
     "ru": "Затягивает: дела вместе с кем-то и для кого-то. Быстро надоедает: соперничество и занятия, где каждый сам за себя.",
-    "en": "Pulls them in: doing things with someone and for someone. Wears thin fast: rivalry and activities where everyone is on their own.",
+    "en": "Pulls them in: doing things with someone and for someone. Gets boring fast: rivalry and activities where everyone is on their own.",
     "de": "Das fesselt: etwas mit jemandem und für jemanden tun. Das langweilt schnell: Konkurrenz und Beschäftigungen, bei denen alle für sich allein sind.",
     "fr": "Ce qui passionne : faire les choses avec quelqu'un et pour quelqu'un. Ce qui lasse vite : la rivalité et les activités où chacun reste dans son coin."
    },
@@ -684,7 +684,7 @@
    "say": [
     {
      "ru": "«Ты заметил, что ему грустно. Это ценно»",
-     "en": "\"You noticed he was sad. That matters\"",
+     "en": "\"You noticed someone was sad. That matters\"",
      "de": "„Du hast gemerkt, dass jemand traurig war. Das ist wichtig“",
      "fr": "« Tu as remarqué que quelqu'un était triste. C'est important »"
     },
@@ -704,7 +704,7 @@
    "ages": {
     "3-5": {
      "ru": "ролевые игры в доктора и семью, уход за питомцем или растением, помощь на кухне",
-     "en": "playing doctor and house, caring for a pet or plant, helping in the kitchen",
+     "en": "playing house and vet, caring for a pet or plant, helping in the kitchen",
      "de": "Arzt und Familie spielen, ein Haustier oder eine Pflanze versorgen, in der Küche helfen",
      "fr": "jouer au docteur et à la famille, s'occuper d'un animal ou d'une plante, aider en cuisine"
     },
@@ -729,10 +729,10 @@
      "fr": "Semaine 1. Une bonne action par jour et, le soir, quelques mots sur la façon dont cela s'est passé."
     },
     {
-     "ru": "Неделя 2. Забота о живом: растение или питомец полностью на нём.",
-     "en": "Week 2. Caring for something living: a plant or pet is fully in their hands.",
-     "de": "Woche 2. Etwas Lebendiges versorgen: Eine Pflanze oder ein Haustier liegt ganz in der eigenen Hand.",
-     "fr": "Semaine 2. Prendre soin du vivant : une plante ou un animal entièrement sous sa responsabilité."
+     "ru": "Неделя 2. Забота о живом: поливать растение или кормить питомца становится ежедневным делом ребёнка, вы проверяете.",
+     "en": "Week 2. Caring for something living: watering a plant or feeding a pet becomes their daily job, with you checking.",
+     "de": "Woche 2. Etwas Lebendiges versorgen: Eine Pflanze gießen oder ein Haustier füttern wird die tägliche Aufgabe Ihres Kindes, und Sie schauen nach.",
+     "fr": "Semaine 2. Prendre soin du vivant : arroser une plante ou nourrir un animal devient sa tâche quotidienne, et vous vérifiez."
     },
     {
      "ru": "Неделя 3. Мои желания: каждый день один выбор делает только он (ужин, игра, маршрут).",
@@ -757,7 +757,7 @@
    },
    "hooks": {
     "ru": "Затягивает: скорость, вызов, новые трюки. Быстро надоедает: долго сидеть и слушать без возможности встать.",
-    "en": "Pulls them in: speed, a challenge, new tricks. Wears thin fast: sitting and listening for a long time with no chance to get up.",
+    "en": "Pulls them in: speed, a challenge, new tricks. Gets boring fast: sitting and listening for a long time with no chance to get up.",
     "de": "Das fesselt: Tempo, Herausforderung, neue Tricks. Das langweilt schnell: lange sitzen und zuhören, ohne aufstehen zu dürfen.",
     "fr": "Ce qui passionne : la vitesse, le défi, les nouvelles figures. Ce qui lasse vite : rester longtemps sur une chaise à écouter sans pouvoir se lever."
    },
@@ -784,8 +784,8 @@
    "grow": {
     "ru": "Чему стоит помочь: спокойным занятиям. Давайте подвигаться перед ними: 10 минут активности помогают потом усидеть.",
     "en": "Worth supporting: quiet activities. Let them move first: 10 active minutes make sitting still easier afterwards.",
-    "de": "Hier lohnt sich Unterstützung: ruhige Beschäftigungen. Lassen Sie vorher Bewegung zu: Nach 10 aktiven Minuten fällt das Stillsitzen leichter.",
-    "fr": "À encourager : les activités calmes. Laissez d'abord bouger : après 10 minutes d'activité, il est plus facile de rester en place."
+    "de": "Hier lohnt sich Unterstützung: ruhige Beschäftigungen. Erst darf sich Ihr Kind bewegen: Nach 10 aktiven Minuten fällt das Stillsitzen leichter.",
+    "fr": "À encourager : les activités calmes. Laissez d'abord votre enfant bouger : après 10 minutes d'activité, il est plus facile de rester en place."
    },
    "say": [
     {
@@ -849,8 +849,8 @@
     {
      "ru": "Неделя 4. Повторный замер: пройти тест движений и сравнить с первым результатом.",
      "en": "Week 4. Re-check: take the movement test again and compare with the first result.",
-     "de": "Woche 4. Zweite Messung: den Bewegungstest noch einmal machen und mit dem ersten Ergebnis vergleichen.",
-     "fr": "Semaine 4. Nouvelle mesure : refaire le test de mouvement et comparer avec le premier résultat."
+     "de": "Woche 4. Zweiter Durchgang: den Bewegungstest noch einmal machen und mit dem ersten Ergebnis vergleichen.",
+     "fr": "Semaine 4. Deuxième essai : refaire le test de mouvement et comparer avec le premier résultat."
     }
    ],
    "extra": {

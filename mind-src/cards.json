@@ -8,7 +8,7 @@
  },
  "safety_note": {
   "ru": "Задания выполняются вместе со взрослым. Ножницы, нож и горячее берёт взрослый.",
-  "en": "Do the activities together with an adult. An adult handles scissors, knives and anything hot.",
+  "en": "Do the activities together. An adult handles scissors, knives and anything hot.",
   "de": "Die Aufgaben werden zusammen mit einem Erwachsenen gemacht. Schere, Messer und Heißes übernimmt der Erwachsene.",
   "fr": "Les activités se font avec un adulte. Les ciseaux, les couteaux et tout ce qui est chaud restent entre les mains de l'adulte."
  },
@@ -57,7 +57,7 @@
      "ru": "Постройте башню из кубиков или пластиковых стаканов выше, чем колено ребёнка. Потом выше пояса.",
      "en": "Build a tower of blocks or plastic cups taller than your child's knee. Then taller than their waist.",
      "de": "Bauen Sie einen Turm aus Bausteinen oder Plastikbechern, höher als das Knie Ihres Kindes. Dann höher als die Hüfte.",
-     "fr": "Construisez une tour de cubes ou de gobelets en plastique plus haute que le genou de votre enfant. Puis plus haute que sa taille."
+     "fr": "Construisez une tour de cubes ou de gobelets en plastique plus haute que le genou de votre enfant. Puis plus haute que ses hanches."
     },
     "6-8": {
      "ru": "У вас 20 предметов из кухни (стаканчики, губки, коробки). Постройте башню выше стола. Упала? Найдите, какой этаж подвёл.",
@@ -93,7 +93,7 @@
      "ru": "Постройте из коробки дом для игрушки: дверь, которая открывается, и окно. Ножницами работает взрослый.",
      "en": "Build a toy house from a box: a door that opens and a window. An adult does the cutting.",
      "de": "Bauen Sie aus einer Schachtel ein Spielzeughaus: mit einer Tür, die aufgeht, und einem Fenster. Das Schneiden übernimmt ein Erwachsener.",
-     "fr": "Fabriquez une maison de jouet dans une boîte : une porte qui s'ouvre et une fenêtre. Le découpage est fait par un adulte."
+     "fr": "Fabriquez une maison pour jouets avec une boîte en carton : une porte qui s'ouvre et une fenêtre. Le découpage est fait par un adulte."
     },
     "9-12": {
      "ru": "Спроектируйте дом из коробки: сначала чертёж с размерами, потом сборка. В доме должно быть два этажа и лестница.",
@@ -144,10 +144,10 @@
    },
    "task": {
     "3-5": {
-     "ru": "Дайте ребёнку закрутить большую крышку, вставить батарейку или застегнуть застёжку. Пусть сделает сам до конца.",
-     "en": "Let your child screw on a big lid, put in a battery or do up a fastener. Let them finish it on their own.",
-     "de": "Lassen Sie Ihr Kind einen großen Deckel zudrehen, eine Batterie einlegen oder einen Verschluss schließen. Ihr Kind macht es allein zu Ende.",
-     "fr": "Laissez votre enfant visser un gros couvercle, mettre une pile ou fermer une attache. Votre enfant va jusqu'au bout sans aide."
+     "ru": "Дайте ребёнку закрутить большую крышку, застегнуть молнию или липучку. Пусть сделает сам до конца.",
+     "en": "Let your child screw on a big lid, zip up a zipper or close a snap. Let them finish it on their own.",
+     "de": "Lassen Sie Ihr Kind einen großen Deckel zudrehen, einen Reißverschluss zuziehen oder einen Klettverschluss schließen. Ihr Kind macht es allein zu Ende.",
+     "fr": "Laissez votre enfant visser un gros couvercle, fermer une fermeture éclair ou un scratch. Votre enfant va jusqu'au bout sans aide."
     },
     "6-8": {
      "ru": "Найдите дома вещь, которую надо подтянуть или склеить. Ребёнок делает, вы только подсказываете.",
@@ -174,10 +174,10 @@
    },
    "task": {
     "3-5": {
-     "ru": "Таз с водой и 6 предметов. Перед каждым спросите: утонет или поплывёт? Потом проверьте.",
-     "en": "A bowl of water and 6 objects. Before each one ask: will it sink or float? Then test it.",
-     "de": "Eine Schüssel Wasser und 6 Gegenstände. Fragen Sie vor jedem: Sinkt es oder schwimmt es? Dann ausprobieren.",
-     "fr": "Une bassine d'eau et 6 objets. Avant chacun, demandez : ça coule ou ça flotte ? Puis vérifiez."
+     "ru": "Таз с водой и 6 крупных предметов. Перед каждым спросите: утонет или поплывёт? Потом проверьте. Будьте рядом и вылейте воду сразу после игры.",
+     "en": "A bowl of water and 6 large objects. Before each one ask: will it sink or float? Then test it. Stay beside the water and empty the bowl afterwards.",
+     "de": "Eine Schüssel Wasser und 6 große Gegenstände. Fragen Sie vor jedem: Sinkt es oder schwimmt es? Dann ausprobieren. Bleiben Sie am Wasser dabei und leeren Sie die Schüssel danach aus.",
+     "fr": "Une bassine d'eau et 6 gros objets. Avant chacun, demandez : ça coule ou ça flotte ? Puis vérifiez. Restez à côté de l'eau et videz la bassine ensuite."
     },
     "6-8": {
      "ru": "10 предметов. Ребёнок записывает прогноз для каждого, потом проверяет. Сколько угадал? Что общего у тех, что плавают?",
@@ -204,10 +204,10 @@
    },
    "task": {
     "3-5": {
-     "ru": "Смешайте воду с тем, что есть на кухне: соль, сахар, мука, масло. Что исчезло, а что нет?",
-     "en": "Mix water with what you have in the kitchen: salt, sugar, flour, oil. What disappears and what doesn't?",
-     "de": "Mischen Sie Wasser mit dem, was in der Küche da ist: Salz, Zucker, Mehl, Öl. Was verschwindet und was nicht?",
-     "fr": "Mélangez de l'eau avec ce qu'il y a dans la cuisine : sel, sucre, farine, huile. Qu'est-ce qui disparaît, qu'est-ce qui reste ?"
+     "ru": "Смешайте воду с тем, что есть на кухне: соль, сахар, мука, масло. Что исчезло, а что нет? Пробовать на вкус ничего не нужно. Пробовать на вкус ничего не нужно.",
+     "en": "Mix water with what you have in the kitchen: salt, sugar, flour, oil. What disappears and what doesn't? Nothing here is for tasting. Nothing here is for tasting.",
+     "de": "Mischen Sie Wasser mit dem, was in der Küche da ist: Salz, Zucker, Mehl, Öl. Was verschwindet und was nicht? Probiert wird dabei nichts. Probiert wird dabei nichts.",
+     "fr": "Mélangez de l'eau avec ce qu'il y a dans la cuisine : sel, sucre, farine, huile. Qu'est-ce qui disparaît, qu'est-ce qui reste ? On ne goûte rien."
     },
     "6-8": {
      "ru": "Сода и уксус в стакане. Сначала прогноз, потом опыт. Что изменится, если соды взять вдвое больше?",
@@ -237,7 +237,7 @@
      "ru": "Возьмите пустую коробку. Чем она может быть? Придумайте три варианта и поиграйте в каждый.",
      "en": "Take an empty box. What could it be? Think of three ideas and play each one.",
      "de": "Nehmen Sie eine leere Schachtel. Was könnte sie sein? Denken Sie sich drei Ideen aus und spielen Sie jede.",
-     "fr": "Prenez une boîte vide. Que pourrait-elle devenir ? Trouvez trois idées et jouez chacune."
+     "fr": "Prenez une boîte vide. Que pourrait-elle devenir ? Trouvez trois idées et mettez-les en scène une par une."
     },
     "6-8": {
      "ru": "Одна прищепка. Придумайте 10 способов её использовать, кроме сушки белья. Лучший проверьте на деле.",
@@ -393,13 +393,13 @@
      "ru": "Ребёнок готовит 5 вопросов бабушке, дедушке или вам про детство и берёт интервью. Потом рассказывает, что удивило.",
      "en": "Your child prepares 5 questions for a grandparent or for you about childhood and does the interview. Then tells you what surprised them.",
      "de": "Ihr Kind bereitet 5 Fragen an die Großeltern oder an Sie über die Kindheit vor und führt das Interview. Danach erzählt es, was überrascht hat.",
-     "fr": "Votre enfant prépare 5 questions sur l'enfance pour un grand-parent ou pour vous, puis mène l'interview. Ensuite, votre enfant raconte ce qui l'a le plus surpris."
+     "fr": "Votre enfant prépare 5 questions sur l'enfance pour un grand-parent ou pour vous, puis mène l'interview. Ensuite, votre enfant raconte ce qui a été le plus surprenant."
     },
     "9-12": {
      "ru": "Ребёнок берёт интервью у взрослого о его профессии: 7 вопросов, без «да/нет». Потом пересказывает главное за одну минуту.",
      "en": "Your child interviews an adult about their job: 7 questions, none answered with yes or no. Then sums up the main points in one minute.",
      "de": "Ihr Kind befragt einen Erwachsenen zu seinem Beruf: 7 Fragen, keine mit Ja oder Nein zu beantworten. Dann fasst es das Wichtigste in einer Minute zusammen.",
-     "fr": "Votre enfant interroge un adulte sur son métier : 7 questions, aucune à laquelle on répond par oui ou par non. Puis un résumé de l'essentiel en une minute."
+     "fr": "Votre enfant interroge un adulte sur son métier : 7 questions, aucune à laquelle on répond par oui ou par non, puis résume l'essentiel en une minute."
     }
    }
   },
@@ -445,7 +445,7 @@
    "task": {
     "3-5": {
      "ru": "Ребёнок рассказывает, что видит в окне, как диктор: «Вот едет красная машина…»",
-     "en": "Your child tells you what they see out of the window like a presenter: \"Here comes a red car…\"",
+     "en": "Your child tells you what they see out of the window like a TV reporter: \"Here comes a red car…\"",
      "de": "Ihr Kind erzählt wie im Fernsehen, was es aus dem Fenster sieht: „Da kommt ein rotes Auto …“",
      "fr": "Votre enfant raconte ce qu'on voit par la fenêtre, comme à la télé : « Voici une voiture rouge… »"
     },
@@ -468,21 +468,21 @@
    "scale": "artist",
    "title": {
     "ru": "Рисунок из кляксы",
-    "en": "The blot drawing",
-    "de": "Bild aus einem Kritzel",
+    "en": "The scribble drawing",
+    "de": "Bild aus einer Kritzelei",
     "fr": "Le dessin gribouillé"
    },
    "task": {
     "3-5": {
      "ru": "Нарисуйте каракулю. Ребёнок превращает её в зверя: добавляет глаза, лапы, хвост.",
      "en": "Draw a scribble. Your child turns it into an animal: adds eyes, paws, a tail.",
-     "de": "Zeichnen Sie einen Kritzel. Ihr Kind macht daraus ein Tier: mit Augen, Pfoten, Schwanz.",
+     "de": "Zeichnen Sie eine Kritzelei. Ihr Kind macht daraus ein Tier: mit Augen, Pfoten, Schwanz.",
      "fr": "Faites un gribouillis. Votre enfant le transforme en animal : des yeux, des pattes, une queue."
     },
     "6-8": {
      "ru": "Каждый рисует каракулю и отдаёт другому. Задача: превратить чужую каракулю в картинку и дать ей название.",
      "en": "Each of you draws a scribble and hands it over. The task: turn the other person's scribble into a picture and give it a title.",
-     "de": "Jeder zeichnet einen Kritzel und gibt ihn weiter. Aufgabe: aus dem fremden Kritzel ein Bild machen und ihm einen Titel geben.",
+     "de": "Beide zeichnen eine Kritzelei und tauschen. Aufgabe: aus der fremden Kritzelei ein Bild machen und ihm einen Titel geben.",
      "fr": "Chacun fait un gribouillis et le passe à l'autre. La mission : transformer le gribouillis reçu en image et lui donner un titre."
     },
     "9-12": {
@@ -541,9 +541,9 @@
     },
     "6-8": {
      "ru": "Включите музыку без слов. Ребёнок рисует то, что слышит: линии, пятна, цвета. Потом рассказывает, где на рисунке громко.",
-     "en": "Play music without words. Your child draws what they hear: lines, blots, colors. Then tells you where the drawing is loud.",
+     "en": "Play music without words. Your child draws what they hear: lines, blobs, colors. Then tells you where the drawing is loud.",
      "de": "Spielen Sie Musik ohne Text. Ihr Kind malt, was es hört: Linien, Flecken, Farben. Dann zeigt es, wo das Bild laut ist.",
-     "fr": "Passez une musique sans paroles. Votre enfant dessine ce que l'on entend : des lignes, des taches, des couleurs. Puis montre où le dessin est fort."
+     "fr": "Passez une musique sans paroles. Votre enfant dessine ce que l'on entend : des lignes, des taches, des couleurs, puis montre où le dessin « fait du bruit »."
     },
     "9-12": {
      "ru": "Два разных трека, два листа. Ребёнок передаёт настроение каждого только формой и цветом, без предметов. Вы угадываете, где какой.",
@@ -564,10 +564,10 @@
    },
    "task": {
     "3-5": {
-     "ru": "Соберите на прогулке листья, палочки, камешки. Дома выложите из них лицо или зверя.",
-     "en": "Collect leaves, sticks and pebbles on a walk. At home, lay out a face or an animal from them.",
-     "de": "Sammeln Sie beim Spaziergang Blätter, Stöckchen und Steinchen. Legen Sie zu Hause daraus ein Gesicht oder ein Tier.",
-     "fr": "Ramassez en promenade des feuilles, des bâtons et des cailloux. À la maison, composez un visage ou un animal."
+     "ru": "Соберите на прогулке листья, палочки, шишки. Дома выложите из них лицо или зверя.",
+     "en": "Collect leaves, sticks and pine cones on a walk. At home, lay out a face or an animal from them.",
+     "de": "Sammeln Sie beim Spaziergang Blätter, Stöckchen und Zapfen. Legen Sie zu Hause daraus ein Gesicht oder ein Tier.",
+     "fr": "Ramassez en promenade des feuilles, des bâtons et des pommes de pin. À la maison, composez un visage ou un animal."
     },
     "6-8": {
      "ru": "Коллаж из старого журнала и находок с прогулки. Тема: «место, где я хочу оказаться».",
@@ -597,7 +597,7 @@
      "ru": "Печатайте краской пальцами, губкой или половинкой картофеля. Получится узор для открытки.",
      "en": "Print with paint using fingers, a sponge or half a potato. You get a pattern for a card.",
      "de": "Drucken Sie mit Farbe: mit den Fingern, einem Schwamm oder einer halben Kartoffel. So entsteht ein Muster für eine Karte.",
-     "fr": "Imprimez avec de la peinture : avec les doigts, une éponge ou une demi-pomme de terre. Vous obtenez un motif pour une carte."
+     "fr": "Faites des empreintes à la peinture : avec les doigts, une éponge ou une demi-pomme de terre. Vous obtenez un motif pour une carte."
     },
     "6-8": {
      "ru": "Придумайте узор для своей футболки или кружки и нарисуйте его на бумаге в натуральную величину.",
@@ -609,7 +609,7 @@
      "ru": "Придумайте знак (логотип) для своей семьи: три наброска, один финальный. Объясните, что значит каждая деталь.",
      "en": "Design a logo for your family: three sketches, one final. Explain what each detail means.",
      "de": "Ihr Kind entwirft ein Logo für die Familie: drei Skizzen, eine endgültige Fassung. Dann erklärt es, was jedes Detail bedeutet.",
-     "fr": "Votre enfant crée un logo pour la famille : trois croquis, une version finale. Puis explique ce que signifie chaque détail."
+     "fr": "Votre enfant crée un logo pour la famille : trois croquis, une version finale, puis explique ce que signifie chaque détail."
     }
    }
   },
@@ -661,13 +661,13 @@
     },
     "6-8": {
      "ru": "Ребёнок рисует карту комнаты сверху и отмечает крестиком спрятанный клад. Вы ищете по карте.",
-     "en": "Your child draws a map of the room from above and marks hidden treasure with a cross. You search using the map.",
+     "en": "Your child draws a map of the room from above and marks hidden treasure with an X. You search using the map.",
      "de": "Ihr Kind zeichnet eine Karte des Zimmers von oben und markiert den versteckten Schatz mit einem Kreuz. Sie suchen mit der Karte.",
      "fr": "Votre enfant dessine le plan de la pièce vue d'en haut et marque le trésor caché d'une croix. Vous cherchez avec le plan."
     },
     "9-12": {
      "ru": "Ребёнок рисует карту пути от дома до школы или магазина по памяти. Потом вы проходите маршрут и исправляете карту.",
-     "en": "Your child draws a map of the way from home to school or a shop from memory. Then you walk the route and correct the map.",
+     "en": "Your child draws a map of the way from home to school or a store from memory. Then you walk the route and correct the map.",
      "de": "Ihr Kind zeichnet aus dem Gedächtnis eine Karte des Wegs von zu Hause zur Schule oder zu einem Geschäft. Dann gehen Sie den Weg ab und verbessern die Karte.",
      "fr": "Votre enfant dessine de mémoire le plan du trajet de la maison à l'école ou à un magasin. Ensuite, vous faites le trajet ensemble et corrigez le plan."
     }
@@ -693,13 +693,13 @@
      "ru": "5 минут во дворе молча. Потом каждый называет три вещи, которые заметил, а другой нет.",
      "en": "5 silent minutes outside. Then each of you names three things you noticed and the other didn't.",
      "de": "5 Minuten draußen ohne zu sprechen. Danach nennt jeder drei Dinge, die er bemerkt hat und der andere nicht.",
-     "fr": "5 minutes dehors en silence. Ensuite, chacun cite trois choses qu'il a remarquées et que l'autre n'a pas vues."
+     "fr": "5 minutes dehors en silence. Ensuite, chacun cite trois choses remarquées que l'autre n'a pas vues."
     },
     "9-12": {
      "ru": "10 минут наблюдения за одним местом (кормушка, перекрёсток, муравейник). Ребёнок записывает, что происходит, и находит одну закономерность.",
-     "en": "10 minutes watching one spot (a bird feeder, a crossing, an anthill). Your child notes what happens and finds one pattern.",
+     "en": "10 minutes watching one spot (a bird feeder, an intersection, an anthill). Your child notes what happens and finds one pattern.",
      "de": "10 Minuten einen Ort beobachten (ein Vogelhäuschen, eine Kreuzung, einen Ameisenhaufen). Ihr Kind notiert, was passiert, und findet ein Muster.",
-     "fr": "10 minutes à observer un seul endroit (une mangeoire, un carrefour, une fourmilière). Votre enfant note ce qui se passe et repère une régularité."
+     "fr": "10 minutes à observer un seul endroit (une mangeoire, un carrefour, une fourmilière). Votre enfant note ce qui se passe et repère quelque chose qui se répète."
     }
    }
   },
@@ -714,10 +714,10 @@
    },
    "task": {
     "3-5": {
-     "ru": "Разложите пуговицы, крышки или камешки по кучкам: по цвету, потом по размеру.",
-     "en": "Sort buttons, lids or pebbles into piles: by color, then by size.",
-     "de": "Sortieren Sie Knöpfe, Deckel oder Steinchen in Häufchen: nach Farbe, dann nach Größe.",
-     "fr": "Triez des boutons, des bouchons ou des cailloux en petits tas : par couleur, puis par taille."
+     "ru": "Разложите большие крышки, носки или кубики по кучкам: по цвету, потом по размеру.",
+     "en": "Sort large lids, socks or toy blocks into piles: by color, then by size.",
+     "de": "Sortieren Sie große Deckel, Socken oder Bauklötze in Häufchen: nach Farbe, dann nach Größe.",
+     "fr": "Triez de grands couvercles, des chaussettes ou des cubes en petits tas : par couleur, puis par taille."
     },
     "6-8": {
      "ru": "Соберите 10 листьев или камней. Ребёнок сам решает, как их разделить на группы, и объясняет правило.",
@@ -729,7 +729,7 @@
      "ru": "Начните коллекцию на неделю: каждый день одна находка с подписью, где и когда найдена. В конце недели сделайте витрину.",
      "en": "Start a one-week collection: one find a day with a label saying where and when it was found. At the end of the week make a display.",
      "de": "Ihr Kind beginnt eine Sammlung für eine Woche: jeden Tag ein Fundstück mit einem Schildchen, wo und wann es gefunden wurde. Am Ende der Woche gibt es eine kleine Ausstellung.",
-     "fr": "Votre enfant commence une collection d'une semaine : une trouvaille par jour avec une étiquette indiquant où et quand. À la fin de la semaine, préparez une vitrine."
+     "fr": "Votre enfant commence une collection d'une semaine : une trouvaille par jour avec une étiquette indiquant où et quand. À la fin de la semaine, préparez une petite exposition."
     }
    }
   },
@@ -819,7 +819,7 @@
      "ru": "Ребёнок придумывает настольную игру на листе бумаги: цель, ходы, как выиграть. Сыграйте и вместе исправьте одно слабое правило.",
      "en": "Your child designs a board game on a sheet of paper: the goal, the moves, how to win. Play it and fix one weak rule together.",
      "de": "Ihr Kind entwirft ein Brettspiel auf einem Blatt Papier: das Ziel, die Züge, wie man gewinnt. Spielen Sie es und verbessern Sie zusammen eine schwache Regel.",
-     "fr": "Votre enfant conçoit un jeu de société sur une feuille de papier : le but, les tours, comment gagner. Jouez et corrigez ensemble une règle faible."
+     "fr": "Votre enfant conçoit un jeu de société sur une feuille de papier : le but, le déroulement, comment gagner. Jouez et corrigez ensemble une règle qui fonctionne mal."
     }
    }
   },
@@ -894,10 +894,10 @@
    },
    "task": {
     "3-5": {
-     "ru": "Игра в магазин: ребёнок продавец, вы покупатель. Он называет цену и считает «монеты» (пуговицы).",
-     "en": "Play store: your child is the seller, you are the customer. They name the price and count the \"coins\" (buttons).",
-     "de": "Kaufladen spielen: Ihr Kind verkauft, Sie kaufen ein. Ihr Kind nennt den Preis und zählt die „Münzen“ (Knöpfe).",
-     "fr": "Jouez à la marchande : votre enfant vend, vous achetez. Votre enfant annonce le prix et compte les « pièces » (des boutons)."
+     "ru": "Игра в магазин: ребёнок продавец, вы покупатель. Он называет цену и считает «монеты» из бумаги.",
+     "en": "Play store: your child is the seller, you are the customer. They name the price and count the \"coins\" cut from paper.",
+     "de": "Kaufladen spielen: Ihr Kind verkauft, Sie kaufen ein. Ihr Kind nennt den Preis und zählt die „Münzen“ aus Papier.",
+     "fr": "Jouez à la marchande : votre enfant vend, vous achetez. Votre enfant annonce le prix et compte les « pièces » en papier."
     },
     "6-8": {
      "ru": "Ребёнок решает, что можно сделать для соседей или родных (открытки, печенье), и раздаёт задачи семье.",
@@ -909,7 +909,7 @@
      "ru": "Ребёнок придумывает маленькое дело на выходные: что делаем, для кого, сколько стоит. Считает расходы и результат.",
      "en": "Your child plans a small weekend venture: what we do, for whom, what it costs. They add up the costs and the result.",
      "de": "Ihr Kind plant ein kleines Vorhaben fürs Wochenende: was wir machen, für wen, was es kostet. Dann rechnet es Kosten und Ergebnis zusammen.",
-     "fr": "Votre enfant prépare un petit projet pour le week-end : ce que l'on fait, pour qui, combien ça coûte. Puis fait le compte des dépenses et du résultat."
+     "fr": "Votre enfant prépare un petit projet pour le week-end : ce que l'on fait, pour qui, combien ça coûte, puis fait le compte des dépenses et du résultat."
     }
    }
   },
@@ -919,7 +919,7 @@
    "title": {
     "ru": "Что он чувствует",
     "en": "How do they feel",
-    "de": "Wie fühlt sich das an?",
+    "de": "Wie fühlen sich die anderen?",
     "fr": "Qu'est-ce qu'on ressent ?"
    },
    "task": {
@@ -931,13 +931,13 @@
     },
     "6-8": {
      "ru": "Откройте книгу на картинке. Что чувствует каждый герой? По чему это видно?",
-     "en": "Open a book at a picture. How does each character feel? What shows it?",
+     "en": "Open a book to a picture. How does each character feel? What shows it?",
      "de": "Schlagen Sie in einem Buch ein Bild auf. Wie fühlt sich jede Figur? Woran erkennt man das?",
      "fr": "Ouvrez un livre sur une image. Que ressent chaque personnage ? À quoi le voit-on ?"
     },
     "9-12": {
      "ru": "Посмотрите минуту фильма без звука. Ребёнок объясняет, что чувствуют герои и что, скорее всего, было сказано.",
-     "en": "Watch a minute of a film with no sound. Your child explains how the characters feel and what was probably said.",
+     "en": "Watch a minute of a movie with no sound. Your child explains how the characters feel and what was probably said.",
      "de": "Schauen Sie eine Filmminute ohne Ton. Ihr Kind erklärt, wie sich die Figuren fühlen und was vermutlich gesagt wurde.",
      "fr": "Regardez une minute de film sans le son. Votre enfant explique ce que ressentent les personnages et ce qui a sans doute été dit."
     }
@@ -955,7 +955,7 @@
    "task": {
     "3-5": {
      "ru": "Вместе сделайте сюрприз кому-то дома: рисунок под подушку или накрытый стол.",
-     "en": "Make a surprise for someone at home together: a drawing under a pillow or a table laid for them.",
+     "en": "Make a surprise for someone at home together: a drawing under a pillow or a table set for them.",
      "de": "Bereiten Sie zusammen eine Überraschung für jemanden zu Hause vor: ein Bild unter dem Kopfkissen oder ein gedeckter Tisch.",
      "fr": "Préparez ensemble une surprise pour quelqu'un à la maison : un dessin sous l'oreiller ou une table déjà mise."
     },
@@ -1017,13 +1017,13 @@
      "ru": "Ребёнок рисует открытку человеку, который ему помог. Вы подписываете его словами.",
      "en": "Your child draws a card for someone who helped them. You write their words on it.",
      "de": "Ihr Kind malt eine Karte für jemanden, der geholfen hat. Sie schreiben die Worte Ihres Kindes dazu.",
-     "fr": "Votre enfant dessine une carte pour une personne qui l'a aidé. Vous y écrivez ses mots."
+     "fr": "Votre enfant dessine une carte pour une personne qui lui a rendu service. Vous y écrivez ses mots."
     },
     "6-8": {
      "ru": "Ребёнок пишет три предложения спасибо учителю, тренеру или соседу: за что именно и что это изменило.",
      "en": "Your child writes a three-sentence thank-you to a teacher, coach or neighbor: for what exactly and what it changed.",
      "de": "Ihr Kind schreibt drei Sätze Dank an eine Lehrkraft, eine Trainerin oder einen Trainer oder an Nachbarn: wofür genau und was es verändert hat.",
-     "fr": "Votre enfant écrit trois phrases de remerciement pour l'école, le club ou un voisin : pour quoi exactement et ce que cela a changé."
+     "fr": "Votre enfant écrit trois phrases de remerciement pour quelqu'un de l'école, du club ou du voisinage : pour quoi exactement et ce que cela a changé."
     },
     "9-12": {
      "ru": "Ребёнок пишет письмо человеку, которого давно не благодарил, и сам решает, как его передать.",
@@ -1047,13 +1047,13 @@
      "ru": "Ребёнок учит игрушку или вас тому, что умеет: чистить зубы, надевать куртку.",
      "en": "Your child teaches a toy or you something they can do: brush teeth, put on a jacket.",
      "de": "Ihr Kind bringt einem Spielzeug oder Ihnen etwas bei, das es kann: Zähne putzen, die Jacke anziehen.",
-     "fr": "Votre enfant apprend à un jouet ou à vous une chose déjà maîtrisée : se brosser les dents, mettre sa veste."
+     "fr": "Votre enfant montre à un jouet, ou à vous-même, une chose déjà maîtrisée : se brosser les dents, mettre sa veste."
     },
     "6-8": {
      "ru": "Ребёнок учит вас или младшего одной вещи, которую умеет хорошо. Вы стараетесь и иногда ошибаетесь.",
      "en": "Your child teaches you or a younger child one thing they do well. You try hard and sometimes get it wrong.",
      "de": "Ihr Kind bringt Ihnen oder einem jüngeren Kind etwas bei, das es gut kann. Sie geben sich Mühe und machen manchmal Fehler.",
-     "fr": "Votre enfant apprend à vous ou à un enfant plus jeune une chose bien maîtrisée. Vous faites de votre mieux et vous vous trompez parfois."
+     "fr": "Votre enfant vous montre, à vous ou à un enfant plus jeune, une chose bien maîtrisée. Vous faites de votre mieux et vous vous trompez parfois."
     },
     "9-12": {
      "ru": "Ребёнок готовит десятиминутный урок для семьи по теме, в которой разбирается: объяснение, пример, вопрос на проверку.",
@@ -1140,16 +1140,16 @@
      "fr": "Lancer une balle molle en l'air et la rattraper à deux mains. Puis taper dans ses mains pendant que la balle est en l'air."
     },
     "6-8": {
-     "ru": "Выберите трюк: 10 прыжков на скакалке подряд или набить воздушный шар 20 раз. Пять минут практики, потом зачёт.",
-     "en": "Pick a trick: 10 rope jumps in a row or keeping a balloon up for 20 hits. Five minutes of practice, then the test.",
-     "de": "Wählen Sie einen Trick: 10 Seilsprünge am Stück oder einen Luftballon 20-mal in der Luft halten. Fünf Minuten üben, dann zählt es.",
-     "fr": "Choisissez une figure : 10 sauts à la corde d'affilée ou garder un ballon de baudruche en l'air pendant 20 touches. Cinq minutes d'entraînement, puis le test."
+     "ru": "Выберите трюк: 10 прыжков на скакалке подряд или набить воздушный шар 20 раз. Пять минут практики, потом зачёт. Лопнувший шар убирает взрослый. Лопнувший шар убирает взрослый.",
+     "en": "Pick a trick: 10 jump-rope jumps in a row or keeping a balloon up for 20 hits. Five minutes of practice, then the test. If the balloon pops, an adult picks up the pieces. If the balloon pops, an adult picks up the pieces.",
+     "de": "Wählen Sie einen Trick: 10 Seilsprünge am Stück oder einen Luftballon 20-mal in der Luft halten. Fünf Minuten üben, dann zählt es. Platzt der Ballon, sammelt ein Erwachsener die Reste ein. Platzt der Ballon, sammelt ein Erwachsener die Reste ein.",
+     "fr": "Choisissez une figure : 10 sauts à la corde d'affilée ou garder un ballon de baudruche en l'air pendant 20 touches. Cinq minutes d'entraînement, puis le test. Si le ballon éclate, un adulte ramasse les morceaux. Si le ballon éclate, un adulte ramasse les morceaux."
     },
     "9-12": {
      "ru": "Ребёнок выбирает навык на неделю (жонглирование двумя мячами, стойка у стены, чеканка). Сегодня первый замер и план.",
      "en": "Your child picks a skill for the week (juggling two balls, a wall handstand, foot juggling with a ball). Today: the first measure and a plan.",
-     "de": "Ihr Kind wählt eine Fertigkeit für die Woche (mit zwei Bällen jonglieren, Handstand an der Wand, Ball hochhalten mit dem Fuß). Heute: die erste Messung und ein Plan.",
-     "fr": "Votre enfant choisit un geste pour la semaine (jongler avec deux balles, équilibre contre un mur, jongles au pied). Aujourd'hui : la première mesure et un plan."
+     "de": "Ihr Kind wählt eine Fertigkeit für die Woche (mit zwei Bällen jonglieren, Handstand an der Wand, Ball hochhalten mit dem Fuß). Heute: der erste Stand und ein Plan.",
+     "fr": "Votre enfant choisit un geste pour la semaine (jongler avec deux balles, poirier contre un mur, jongles au pied). Aujourd'hui : le score de départ et un plan."
     }
    }
   },
@@ -1177,7 +1177,7 @@
     },
     "9-12": {
      "ru": "Таблица умножения в движении: ответ надо не сказать, а пропрыгать или отбить мячом. 10 примеров на скорость.",
-     "en": "Times tables on the move: the answer is not said but jumped or bounced with a ball. 10 sums against the clock.",
+     "en": "Times tables on the move: the answer is not said but jumped or bounced with a ball. 10 problems against the clock.",
      "de": "Einmaleins in Bewegung: Das Ergebnis wird nicht gesagt, sondern gesprungen oder mit dem Ball geprellt. 10 Aufgaben auf Zeit.",
      "fr": "Les tables de multiplication en mouvement : la réponse ne se dit pas, elle se saute ou se dribble avec un ballon. 10 calculs contre la montre."
     }
@@ -1209,7 +1209,7 @@
      "ru": "Ребёнок проверяет на себе: читает 10 минут после разминки и 10 минут без неё. Когда запомнилось больше?",
      "en": "Your child runs their own test: reads for 10 minutes after a warm-up and 10 minutes without one. When did more stick?",
      "de": "Ihr Kind macht einen eigenen Test: 10 Minuten lesen nach dem Aufwärmen und 10 Minuten ohne. Wann ist mehr hängen geblieben?",
-     "fr": "Votre enfant fait son propre test : lire 10 minutes après un échauffement, puis 10 minutes sans. Quand la mémoire a-t-elle mieux retenu ?"
+     "fr": "Votre enfant fait son propre test : lire 10 minutes après un échauffement, puis 10 minutes sans. Après quelle lecture reste-t-il le plus de souvenirs ?"
     }
    }
   }
