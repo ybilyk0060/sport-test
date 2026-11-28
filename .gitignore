@@ -3,3 +3,5 @@ node_modules
 js/engine/kidsney-engine.extracted.js
 e2e-runs/
 dist-mind/
+ads-mind/*.png
+ads-mind/*.zip
