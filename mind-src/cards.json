@@ -46,7 +46,7 @@
     "ru": "Ребёнок на деле видит, что форма делает слабый материал прочным. Это основа инженерного мышления.",
     "en": "Your child sees firsthand that shape can make a weak material strong. That is the heart of engineering thinking.",
     "de": "Ihr Kind erlebt selbst, dass die Form ein schwaches Material stabil macht. Das ist der Kern des Ingenieurdenkens.",
-    "fr": "Votre enfant constate par lui-même que la forme rend solide un matériau fragile. C'est la base de la pensée d'ingénieur."
+    "fr": "Votre enfant constate par l'expérience que la forme rend solide un matériau fragile. C'est la base de la pensée d'ingénieur."
    },
    "tip": {
     "ru": "Не подсказывайте решение. Спросите: «Как думаешь, почему провисло? Что можно изменить?»",
@@ -472,7 +472,7 @@
     }
    },
    "why": {
-    "ru": "Опыт с наклоном и скоростью: ребёнок сам меняет условие и сразу видит результат.",
+    "ru": "Опыт с наклоном и скоростью: ребёнок самостоятельно меняет условие и сразу видит результат.",
     "en": "An experiment with slope and speed: your child changes one thing and sees the result right away.",
     "de": "Ein Versuch zu Neigung und Tempo: Ihr Kind ändert eine Bedingung und sieht sofort das Ergebnis.",
     "fr": "Une expérience sur la pente et la vitesse : votre enfant change une condition et voit tout de suite le résultat."
@@ -509,7 +509,7 @@
       "Сделайте горку: один край картонки положите на диван или стопку книг.",
       "Скатите мячик, потом машинку. Что приехало быстрее?",
       "Поднимите край выше и проверьте ещё раз.",
-      "Пусть ребёнок сам выберет, что скатить третьим."
+      "Третий предмет для спуска пусть выберет ребёнок."
      ],
      "en": [
       "Make a ramp: rest one edge of the cardboard on the couch or a stack of books.",
@@ -596,7 +596,7 @@
    },
    "task": {
     "3-5": {
-     "ru": "Дайте ребёнку закрутить большую крышку, застегнуть молнию или липучку. Пусть сделает сам до конца.",
+     "ru": "Дайте ребёнку закрутить большую крышку, застегнуть молнию или липучку. Пусть доведёт дело до конца без помощи.",
      "en": "Let your child screw on a big lid, zip up a zipper or close a snap. Let them finish it on their own.",
      "de": "Lassen Sie Ihr Kind einen großen Deckel zudrehen, einen Reißverschluss zuziehen oder einen Klettverschluss schließen. Ihr Kind macht es allein zu Ende.",
      "fr": "Laissez votre enfant visser un gros couvercle, fermer une fermeture éclair ou un scratch. Votre enfant va jusqu'au bout sans aide."
@@ -608,14 +608,14 @@
      "fr": "Trouvez à la maison un objet à resserrer ou à recoller. Votre enfant le fait, vous donnez seulement des indices."
     },
     "9-12": {
-     "ru": "Выберите вместе небольшую домашнюю поломку. Ребёнок сам выясняет причину, предлагает способ и чинит. Вы отвечаете за безопасность.",
+     "ru": "Выберите вместе небольшую домашнюю поломку. Ребёнок самостоятельно выясняет причину, предлагает способ и чинит. Вы отвечаете за безопасность.",
      "en": "Pick a small thing at home that needs fixing. Your child works out the cause, suggests a method and fixes it. You look after safety.",
      "de": "Wählen Sie zusammen eine Kleinigkeit, die zu Hause repariert werden muss. Ihr Kind findet die Ursache, schlägt einen Weg vor und repariert. Sie achten auf die Sicherheit.",
      "fr": "Choisissez ensemble une petite chose à réparer à la maison. Votre enfant trouve la cause, propose une méthode et répare. Vous veillez à la sécurité."
     }
    },
    "why": {
-    "ru": "Ребёнок чувствует, что его руки могут починить настоящую вещь. Это добавляет уверенности.",
+    "ru": "Ребёнок чувствует, что своими руками можно починить настоящую вещь. Это добавляет уверенности.",
     "en": "Your child feels that their own hands can fix a real thing. That builds confidence.",
     "de": "Ihr Kind spürt, dass seine Hände etwas Echtes reparieren können. Das stärkt das Selbstvertrauen.",
     "fr": "Votre enfant sent que ses mains peuvent réparer un vrai objet. Cela donne confiance."
@@ -650,9 +650,9 @@
     "3-5": {
      "ru": [
       "Покажите один раз медленно, как закручивается крышка.",
-      "Ребёнок закручивает сам до конца.",
+      "Ребёнок закручивает до конца без помощи.",
       "То же с молнией и липучкой.",
-      "Скажите, что именно получилось: «Ты сам застегнул до самого верха»."
+      "Скажите, что именно получилось: «Застёгнуто до самого верха, без помощи»."
      ],
      "en": [
       "Show once, slowly, how the lid screws on.",
@@ -668,9 +668,9 @@
      ],
      "fr": [
       "Montrez une fois, lentement, comment on visse le couvercle.",
-      "Votre enfant le visse seul jusqu'au bout.",
+      "Votre enfant le visse sans aide jusqu'au bout.",
       "Même chose avec la fermeture éclair et le scratch.",
-      "Dites précisément ce qui a réussi : « Tu l'as fermée tout seul jusqu'en haut. »"
+      "Dites précisément ce qui a réussi : « Tu l'as fermée sans aide jusqu'en haut. »"
      ]
     },
     "6-8": {
@@ -745,7 +745,7 @@
      "fr": "Une bassine d'eau et 6 gros objets. Avant chacun, demandez : ça coule ou ça flotte ? Puis vérifiez. Restez à côté de l'eau et videz la bassine ensuite."
     },
     "6-8": {
-     "ru": "10 предметов. Ребёнок записывает прогноз для каждого, потом проверяет. Сколько угадал? Что общего у тех, что плавают?",
+     "ru": "10 предметов. Ребёнок записывает прогноз для каждого, потом проверяет. Сколько прогнозов сбылось? Что общего у тех, что плавают?",
      "en": "10 objects. Your child writes a guess for each, then tests. How many were right? What do the floating ones have in common?",
      "de": "10 Gegenstände. Ihr Kind schreibt für jeden eine Vermutung auf und prüft sie dann. Wie viele stimmten? Was haben die schwimmenden gemeinsam?",
      "fr": "10 objets. Votre enfant note une hypothèse pour chacun, puis vérifie. Combien de bonnes réponses ? Qu'ont en commun ceux qui flottent ?"
@@ -793,7 +793,7 @@
     "3-5": {
      "ru": [
       "Перед каждым предметом спросите: утонет или поплывёт?",
-      "Ребёнок опускает предмет в воду сам.",
+      "Предмет в воду опускает ребёнок.",
       "Разложите на две стороны: что плавает и что тонет.",
       "Будьте рядом всё время. После игры сразу вылейте воду."
      ],
@@ -837,7 +837,7 @@
      ],
      "fr": [
       "Votre enfant écrit ou dessine sa prévision pour chaque objet.",
-      "Il les teste un par un et met un plus ou un moins.",
+      "Votre enfant les teste un par un et met un plus ou un moins.",
       "Comptez combien de prévisions étaient justes.",
       "Demandez : qu'ont en commun ceux qui flottent ?"
      ]
@@ -1006,9 +1006,9 @@
      ],
      "fr": [
       "Votre enfant invente sa propre question « que se passe-t-il si… ».",
-      "Il note sa prévision.",
-      "Il mène l'expérience. Vous veillez à la sécurité.",
-      "Il note le résultat et le compare à sa prévision."
+      "Votre enfant note sa prévision.",
+      "Votre enfant mène l'expérience. Vous veillez à la sécurité.",
+      "Votre enfant note le résultat et le compare à sa prévision."
      ]
     }
    },
@@ -1150,7 +1150,7 @@
      "fr": [
       "Choisissez un objet : un bocal, une boîte, un vieux tee-shirt.",
       "Votre enfant imagine quel objet utile pour la maison il deviendra.",
-      "Il le fabrique. Vous aidez seulement là où il faut un outil.",
+      "Votre enfant le fabrique. Vous aidez seulement là où il faut un outil.",
       "Trouvez-lui une place et utilisez-le pendant une semaine."
      ]
     }
@@ -1196,7 +1196,7 @@
     "ru": "Когда ребёнок загадывает ряд вам, ошибитесь один раз нарочно. Пусть объяснит правило.",
     "en": "When your child sets a sequence for you, get it wrong once on purpose. Let them explain the rule.",
     "de": "Wenn Ihr Kind Ihnen eine Reihe aufgibt, machen Sie einmal absichtlich einen Fehler. Lassen Sie sich die Regel erklären.",
-    "fr": "Quand votre enfant vous propose une suite, trompez-vous une fois exprès. Laissez-le expliquer la règle."
+    "fr": "Quand votre enfant vous propose une suite, trompez-vous une fois exprès, pour vous faire expliquer la règle."
    },
    "need": {
     "3-5": {
@@ -1292,7 +1292,7 @@
      ],
      "fr": [
       "Votre enfant invente un code : chaque lettre devient un nombre ou un signe.",
-      "Il vous écrit un message d'une phrase.",
+      "Votre enfant vous écrit un message d'une phrase.",
       "Vous le déchiffrez. Ne demandez la clé qu'après trois essais.",
       "Échangez les rôles."
      ]
@@ -1410,8 +1410,8 @@
      "fr": [
       "Le défi : imaginer une machine qui nourrit le chat ou arrose une plante.",
       "Votre enfant la dessine en entier.",
-      "Il écrit à quoi sert chaque partie.",
-      "Il vous explique comment elle fonctionne, du début à la fin."
+      "Votre enfant écrit à quoi sert chaque partie.",
+      "Votre enfant vous explique comment elle fonctionne, du début à la fin."
      ]
     },
     "9-12": {
@@ -1536,7 +1536,7 @@
       "Ребёнок с закрытыми глазами выбирает три предмета.",
       "Условие: в истории важны все три.",
       "У истории есть начало, беда и конец. Ребёнок рассказывает вслух.",
-      "Перескажите историю ему в двух фразах: так ли вы поняли?"
+      "Перескажите историю ребёнку в двух фразах: так ли вы поняли?"
      ],
      "en": [
       "With eyes closed, your child picks three things.",
@@ -1580,7 +1580,7 @@
       "Ouvrez le livre au hasard trois fois et notez un mot à chaque fois.",
       "En 10 minutes, votre enfant écrit une histoire d'une demi-page avec ces mots.",
       "La règle : une fin inattendue.",
-      "Votre enfant lit à voix haute. Dites à quel moment l'histoire vous a accroché."
+      "Votre enfant lit à voix haute. Dites à quel moment l'histoire a retenu votre attention."
      ]
     }
    },
@@ -1722,7 +1722,7 @@
      "fr": [
       "Choisissez une histoire, un livre ou un film connu.",
       "Votre enfant choisit un personnage secondaire.",
-      "Il raconte les événements de son point de vue : ce qu'il a vu et ce qu'il ignorait.",
+      "Votre enfant raconte les événements du point de vue de ce personnage : ce qu'il a vu et ce qu'il ignorait.",
       "Demandez : qui est le héros dans cette version ?"
      ]
     }
@@ -1740,7 +1740,7 @@
    },
    "task": {
     "3-5": {
-     "ru": "Ребёнок с «микрофоном» (ложкой) спрашивает вас: что ты любил, когда был маленьким?",
+     "ru": "Ребёнок с «микрофоном» (ложкой) спрашивает вас: что тебе нравилось в детстве?",
      "en": "With a \"microphone\" (a spoon), your child asks you: what did you love when you were little?",
      "de": "Mit einem „Mikrofon“ (einem Löffel) fragt Ihr Kind Sie: Was hast du gern gemocht, als du klein warst?",
      "fr": "Avec un « micro » (une cuillère), votre enfant vous demande : qu'est-ce que tu aimais quand tu étais enfant ?"
@@ -1794,7 +1794,7 @@
     "3-5": {
      "ru": [
       "Дайте ребёнку «микрофон».",
-      "Он спрашивает: что ты любил делать, когда был маленьким?",
+      "Ребёнок спрашивает: что тебе нравилось делать в детстве?",
       "Ответьте одной короткой историей.",
       "Поменяйтесь: теперь вопрос задаёте вы."
      ],
@@ -1812,7 +1812,7 @@
      ],
      "fr": [
       "Donnez le « micro » à votre enfant.",
-      "Il demande : qu'aimais-tu faire quand tu étais petit ?",
+      "Votre enfant demande : qu'aimais-tu faire quand tu étais enfant ?",
       "Répondez par une courte histoire.",
       "Échangez : maintenant, c'est vous qui posez la question."
      ]
@@ -1838,9 +1838,9 @@
      ],
      "fr": [
       "Votre enfant prépare 5 questions sur l'enfance.",
-      "Il mène l'interview en personne ou par téléphone.",
-      "Il peut dessiner ou noter l'essentiel.",
-      "Ensuite, il vous raconte ce qui l'a le plus surpris."
+      "Votre enfant mène l'interview en personne ou par téléphone.",
+      "Votre enfant peut dessiner ou noter l'essentiel.",
+      "Ensuite, votre enfant vous raconte sa plus grande surprise."
      ]
     },
     "9-12": {
@@ -1864,8 +1864,8 @@
      ],
      "fr": [
       "Votre enfant prépare 7 questions sur le métier. La règle : on ne peut pas y répondre par « oui » ou « non ».",
-      "Il mène l'interview et prend des notes.",
-      "En une minute, il vous résume l'essentiel.",
+      "Votre enfant mène l'interview et prend des notes.",
+      "En une minute, votre enfant vous résume l'essentiel.",
       "Demandez : quelle question a le mieux marché ?"
      ]
     }
@@ -2007,9 +2007,9 @@
      ],
      "fr": [
       "Votre enfant trouve dans un livre trois mots inconnus.",
-      "Il devine d'abord leur sens grâce aux phrases voisines.",
-      "Il vérifie dans un dictionnaire ou auprès de vous.",
-      "Il compose sa propre phrase avec chaque mot."
+      "Votre enfant devine d'abord leur sens grâce aux phrases voisines.",
+      "Votre enfant vérifie dans un dictionnaire ou auprès de vous.",
+      "Votre enfant compose sa propre phrase avec chaque mot."
      ]
     }
    },
@@ -2048,7 +2048,7 @@
     "ru": "Ребёнок описывает то, что видит, по порядку и понятно для слушателя. Это навык выступления.",
     "en": "Your child describes what they see, in order and clearly for a listener. That is a presentation skill.",
     "de": "Ihr Kind beschreibt, was es sieht, der Reihe nach und verständlich für Zuhörer. Das ist die Grundlage fürs Vortragen.",
-    "fr": "Votre enfant décrit ce qu'il voit, dans l'ordre et clairement pour celui qui écoute. C'est le savoir-faire de la prise de parole."
+    "fr": "Votre enfant décrit ce qui se passe sous ses yeux, dans l'ordre et clairement pour qui écoute. C'est le savoir-faire de la prise de parole."
    },
    "tip": {
     "ru": "Будьте зрителем: слушайте до конца и задайте один вопрос «из студии».",
@@ -2108,7 +2108,7 @@
       "Тема: ужин или прогулка.",
       "Ребёнок минуту рассказывает: кто, что, где.",
       "Запишите на телефон.",
-      "Послушайте вместе. Что он добавил бы в следующий раз?"
+      "Послушайте вместе. Что стоит добавить в следующий раз?"
      ],
      "en": [
       "The topic: dinner or a walk.",
@@ -2126,7 +2126,7 @@
       "Le sujet : le dîner ou une promenade.",
       "Votre enfant raconte pendant une minute : qui, quoi, où.",
       "Enregistrez avec le téléphone.",
-      "Écoutez ensemble. Qu'ajouterait-il la prochaine fois ?"
+      "Écoutez ensemble. Qu'ajouter la prochaine fois ?"
      ]
     },
     "9-12": {
@@ -2150,8 +2150,8 @@
      ],
      "fr": [
       "Votre enfant choisit trois nouvelles de la famille cette semaine.",
-      "Il ajoute une prévision pour le week-end.",
-      "Il enregistre un journal de deux minutes.",
+      "Votre enfant ajoute une prévision pour le week-end.",
+      "Votre enfant enregistre un journal de deux minutes.",
       "Montrez l'enregistrement à la famille."
      ]
     }
@@ -2194,7 +2194,7 @@
     "fr": "Votre enfant apprend à voir une image dans une forme née du hasard. C'est ainsi que travaille l'imagination en art et en design."
    },
    "tip": {
-    "ru": "Спрашивайте «что ты здесь увидел?», а не «что это?».",
+    "ru": "Спрашивайте «что ты здесь видишь?», а не «что это?».",
     "en": "Ask “what did you see here?” rather than “what is it?”",
     "de": "Fragen Sie „Was hast du hier gesehen?“ und nicht „Was ist das?“.",
     "fr": "Demandez « qu'as-tu vu ici ? » plutôt que « qu'est-ce que c'est ? »."
@@ -2436,9 +2436,9 @@
      ],
      "fr": [
       "Votre enfant choisit une couleur.",
-      "Il photographie 7 objets de cette couleur pour que les images forment une série.",
-      "Il choisit la meilleure photo.",
-      "Il explique pourquoi celle-là."
+      "Votre enfant photographie 7 objets de cette couleur pour que les images forment une série.",
+      "Votre enfant choisit la meilleure photo.",
+      "Votre enfant explique pourquoi celle-là."
      ]
     }
    },
@@ -2553,7 +2553,7 @@
      ],
      "fr": [
       "Mettez une musique sans paroles.",
-      "Votre enfant dessine ce qu'il entend : lignes, taches, couleurs.",
+      "Votre enfant dessine ce que l'on entend : lignes, taches, couleurs.",
       "Après la musique, demandez : où est-ce fort sur le dessin, et où est-ce doux ?",
       "Trouvez un titre au dessin."
      ]
@@ -2697,8 +2697,8 @@
      "fr": [
       "Le thème : un endroit où j'aimerais être.",
       "Votre enfant découpe ou déchire des images dans le magazine.",
-      "Il les dispose d'abord sur la feuille, puis il colle.",
-      "Il vous raconte quel est cet endroit."
+      "Votre enfant les dispose d'abord sur la feuille, puis les colle.",
+      "Votre enfant vous raconte quel est cet endroit."
      ]
     },
     "9-12": {
@@ -2722,9 +2722,9 @@
      ],
      "fr": [
       "Votre enfant compose sur la table un ensemble d'objets, comme une nature morte.",
-      "Il déplace la lampe : de côté, au-dessus, derrière.",
-      "Il observe comment changent les ombres et l'ambiance.",
-      "Il photographie la meilleure version."
+      "Votre enfant déplace la lampe : de côté, au-dessus, derrière.",
+      "Votre enfant observe comment changent les ombres et l'ambiance.",
+      "Votre enfant photographie la meilleure version."
      ]
     }
    },
@@ -2823,7 +2823,7 @@
       "Ребёнок выбирает: узор для футболки или для кружки.",
       "Обводит на листе контур в натуральную величину.",
       "Заполняет его узором.",
-      "Спросите: кому бы он подарил такую вещь?"
+      "Спросите: кому хочется подарить такую вещь?"
      ],
      "en": [
       "Your child chooses: a pattern for a T-shirt or for a mug.",
@@ -2839,9 +2839,9 @@
      ],
      "fr": [
       "Votre enfant choisit : un motif pour un tee-shirt ou pour une tasse.",
-      "Il trace le contour en taille réelle sur la feuille.",
-      "Il le remplit avec un motif.",
-      "Demandez : à qui offrirait-il cet objet ?"
+      "Votre enfant trace le contour en taille réelle sur la feuille.",
+      "Votre enfant le remplit avec un motif.",
+      "Demandez : à qui offrir cet objet ?"
      ]
     },
     "9-12": {
@@ -2867,7 +2867,7 @@
       "Le défi : l'emblème de votre famille.",
       "Trois esquisses rapides, une minute chacune.",
       "Votre enfant en choisit une et dessine la version finale.",
-      "Il explique ce que signifie chaque détail."
+      "Votre enfant explique ce que signifie chaque détail."
      ]
     }
    },
@@ -2896,7 +2896,7 @@
      "fr": "Une liste de 8 trouvailles pour la promenade : une feuille au bord dentelé, une trace, quelque chose de plus vieux que vous, quelque chose qui n'était pas là hier."
     },
     "9-12": {
-     "ru": "Ребёнок сам составляет список из 10 находок для вас и ведёт маршрут. По дороге фотографирует самое странное, что заметит.",
+     "ru": "Ребёнок самостоятельно составляет список из 10 находок для вас и ведёт маршрут. По дороге фотографирует самое странное, что заметит.",
      "en": "Your child writes a list of 10 finds for you and leads the route. On the way they photograph the strangest thing they notice.",
      "de": "Ihr Kind schreibt Ihnen eine Liste mit 10 Fundstücken und führt den Weg an. Unterwegs fotografiert es das Seltsamste, das ihm auffällt.",
      "fr": "Votre enfant vous prépare une liste de 10 trouvailles et guide le parcours. En chemin, votre enfant photographie la chose la plus étrange du trajet."
@@ -2983,15 +2983,15 @@
      "fr": [
       "Écrivez la liste : une feuille dentelée, une trace, quelque chose de plus vieux que vous, quelque chose qui n'était pas là hier, et quatre idées à vous.",
       "En promenade, votre enfant cherche et raye.",
-      "Pour les trouvailles discutables, il doit prouver qu'elles conviennent.",
+      "Pour les trouvailles discutables, il faut prouver qu'elles conviennent.",
       "Quelle trouvaille a été la plus difficile ?"
      ]
     },
     "9-12": {
      "ru": [
-      "Ребёнок сам составляет список из 10 находок для вас.",
+      "Ребёнок самостоятельно составляет список из 10 находок для вас.",
       "Ведёт маршрут, вы ищете.",
-      "По дороге он фотографирует самое странное, что заметит.",
+      "По дороге фотографирует самое странное, что заметит.",
       "Дома посмотрите фото и выберите находку дня."
      ],
      "en": [
@@ -3007,9 +3007,9 @@
       "Schauen Sie zu Hause die Fotos an und wählen Sie den Fund des Tages."
      ],
      "fr": [
-      "Votre enfant établit lui-même une liste de 10 trouvailles pour vous.",
-      "Il guide le parcours, vous cherchez.",
-      "En chemin, il photographie la chose la plus étrange qu'il remarque.",
+      "C'est votre enfant qui établit une liste de 10 trouvailles pour vous.",
+      "Votre enfant guide le parcours, vous cherchez.",
+      "En chemin, votre enfant photographie la chose la plus étrange du trajet.",
       "À la maison, regardez les photos et choisissez la trouvaille du jour."
      ]
     }
@@ -3052,10 +3052,10 @@
     "fr": "Le plan apprend à se représenter un espace vu d'en haut et à le reporter sur le papier."
    },
    "tip": {
-    "ru": "Ищите по карте честно. Если карта неточная, пусть ребёнок сам увидит, где сбой.",
+    "ru": "Ищите по карте честно. Если карта неточная, пусть ребёнок своими глазами увидит, где сбой.",
     "en": "Follow the map honestly. If it’s off, let your child see for themselves where it went wrong.",
     "de": "Suchen Sie ehrlich nach der Karte. Ist sie ungenau, soll Ihr Kind selbst sehen, wo es hakt.",
-    "fr": "Cherchez honnêtement d'après le plan. S'il est imprécis, laissez votre enfant voir lui-même où ça coince."
+    "fr": "Cherchez honnêtement d'après le plan. S'il est imprécis, laissez votre enfant découvrir où ça coince."
    },
    "need": {
     "3-5": {
@@ -3082,7 +3082,7 @@
      "ru": [
       "Спрячьте игрушку в комнате, пока ребёнок не смотрит.",
       "Подсказывайте словами: «рядом с кроватью», «под столом».",
-      "Нашёл? Теперь прячет он, а подсказки говорит вам.",
+      "Игрушка найдена? Теперь прячет ребёнок и подсказывает вам.",
       "Сыграйте три круга."
      ],
      "en": [
@@ -3100,7 +3100,7 @@
      "fr": [
       "Cachez le jouet dans la pièce pendant que votre enfant ne regarde pas.",
       "Donnez des indices avec des mots : « près du lit », « sous la table ».",
-      "Trouvé ? Maintenant, c'est lui qui cache et qui vous donne les indices.",
+      "Trouvé ? Maintenant, c'est votre enfant qui cache et qui vous donne les indices.",
       "Jouez trois manches."
      ]
     },
@@ -3125,7 +3125,7 @@
      ],
      "fr": [
       "Votre enfant dessine la pièce vue d'en haut : le lit, la table, la porte.",
-      "Il cache le trésor et marque une croix sur le plan.",
+      "Votre enfant cache le trésor et marque une croix sur le plan.",
       "Vous cherchez uniquement d'après le plan.",
       "Échangez : c'est vous qui dessinez le plan."
      ]
@@ -3151,7 +3151,7 @@
      ],
      "fr": [
       "Votre enfant dessine de mémoire le trajet de la maison à l'école ou au magasin.",
-      "Il indique les tournants et trois points de repère.",
+      "Votre enfant indique les tournants et trois points de repère.",
       "Faites le trajet ensemble, le plan à la main.",
       "Corrigez sur le plan ce qui ne correspondait pas."
      ]
@@ -3268,9 +3268,9 @@
      ],
      "fr": [
       "Mettez-vous d'accord : 5 minutes de silence et d'observation.",
-      "Chacun retient ce qu'il a remarqué.",
+      "Chacun retient ses observations.",
       "Puis, à tour de rôle, nommez trois choses chacun.",
-      "Gagne celui qui a remarqué ce que l'autre n'a pas vu."
+      "La victoire revient à qui a remarqué ce que l'autre n'a pas vu."
      ]
     },
     "9-12": {
@@ -3294,9 +3294,9 @@
      ],
      "fr": [
       "Votre enfant choisit un lieu et observe pendant 10 minutes.",
-      "Il note ce qui se passe et quand.",
-      "Il cherche une régularité : qu'est-ce qui se répète ?",
-      "Il vous présente sa conclusion et la façon de la vérifier demain."
+      "Votre enfant note ce qui se passe et quand.",
+      "Votre enfant cherche une régularité : qu'est-ce qui se répète ?",
+      "Votre enfant vous présente sa conclusion et la façon de la vérifier demain."
      ]
     }
    },
@@ -3319,7 +3319,7 @@
      "fr": "Triez de grands couvercles, des chaussettes ou des cubes en petits tas : par couleur, puis par taille."
     },
     "6-8": {
-     "ru": "Соберите 10 листьев или камней. Ребёнок сам решает, как их разделить на группы, и объясняет правило.",
+     "ru": "Соберите 10 листьев или камней. Ребёнок самостоятельно решает, как их разделить на группы, и объясняет правило.",
      "en": "Collect 10 leaves or stones. Your child decides how to split them into groups and explains the rule.",
      "de": "Sammeln Sie 10 Blätter oder Steine. Ihr Kind entscheidet, wie sie in Gruppen aufgeteilt werden, und erklärt die Regel.",
      "fr": "Ramassez 10 feuilles ou cailloux. Votre enfant décide comment les répartir en groupes et explique la règle."
@@ -3393,7 +3393,7 @@
     "6-8": {
      "ru": [
       "Разложите находки на столе.",
-      "Ребёнок сам решает, как разделить их на группы.",
+      "Ребёнок самостоятельно решает, как разделить их на группы.",
       "Объясняет правило.",
       "Попросите разделить ещё раз по другому правилу."
      ],
@@ -3411,8 +3411,8 @@
      ],
      "fr": [
       "Étalez les trouvailles sur la table.",
-      "Votre enfant décide lui-même comment les répartir en groupes.",
-      "Il explique la règle.",
+      "C'est votre enfant qui décide comment les répartir en groupes.",
+      "Votre enfant explique la règle.",
       "Demandez-lui de les répartir encore, selon une autre règle."
      ]
     },
@@ -3438,8 +3438,8 @@
      "fr": [
       "Votre enfant choisit le thème d'une collection pour la semaine.",
       "Chaque jour, une trouvaille avec son étiquette : où et quand elle a été trouvée.",
-      "À la fin de la semaine, il en fait une exposition.",
-      "Il offre à la famille une visite guidée de deux minutes."
+      "À la fin de la semaine, votre enfant en fait une exposition.",
+      "Votre enfant offre à la famille une visite guidée de deux minutes."
      ]
     }
    },
@@ -3475,10 +3475,10 @@
     }
    },
    "why": {
-    "ru": "Ребёнок учится искать ответ сам и проверять его.",
+    "ru": "Ребёнок учится самостоятельно искать ответ и проверять его.",
     "en": "Your child learns to find an answer on their own and check it.",
     "de": "Ihr Kind lernt, eine Antwort selbst zu suchen und zu überprüfen.",
-    "fr": "Votre enfant apprend à chercher la réponse lui-même et à la vérifier."
+    "fr": "Votre enfant apprend à chercher la réponse par ses propres moyens et à la vérifier."
    },
    "tip": {
     "ru": "Скажите честно «я не знаю, давай выясним». Это лучший пример для исследователя.",
@@ -3554,8 +3554,8 @@
      ],
      "fr": [
       "Votre enfant choisit un animal.",
-      "Il trouve trois faits que vous ne connaissiez pas.",
-      "Il vous les raconte.",
+      "Votre enfant trouve trois faits que vous ne connaissiez pas.",
+      "Votre enfant vous les raconte.",
       "Dites honnêtement lesquels vous ignoriez vraiment."
      ]
     },
@@ -3580,9 +3580,9 @@
      ],
      "fr": [
       "Votre enfant choisit une question sans réponse rapide.",
-      "Il trouve deux sources différentes.",
-      "Il compare : sur quoi sont-elles d'accord, et sur quoi diffèrent-elles ?",
-      "Il vous dit à laquelle il se fie le plus, et pourquoi."
+      "Votre enfant trouve deux sources différentes.",
+      "Votre enfant compare : sur quoi sont-elles d'accord, et sur quoi diffèrent-elles ?",
+      "Votre enfant vous dit laquelle lui paraît la plus fiable, et pourquoi."
      ]
     }
    },
@@ -3624,10 +3624,10 @@
     "fr": "Votre enfant s'essaie à être responsable des autres : décider, répartir, se mettre d'accord."
    },
    "tip": {
-    "ru": "Слушайтесь всерьёз. Если решение неудачное, пусть увидит результат сам.",
+    "ru": "Слушайтесь всерьёз. Если решение неудачное, пусть результат скажет за себя.",
     "en": "Follow orders for real. If a decision doesn’t work out, let them see the result themselves.",
     "de": "Folgen Sie ernsthaft. Ist eine Entscheidung ungünstig, soll Ihr Kind das Ergebnis selbst sehen.",
-    "fr": "Obéissez pour de vrai. Si une décision est mauvaise, laissez-le en voir lui-même le résultat."
+    "fr": "Obéissez pour de vrai. Si une décision est mauvaise, laissez votre enfant en constater le résultat."
    },
    "need": {
     "3-5": {
@@ -3652,7 +3652,7 @@
    "steps": {
     "3-5": {
      "ru": [
-      "Объявите: 15 минут ты главный.",
+      "Объявите: 15 минут командуешь ты.",
       "Ребёнок выбирает игру.",
       "Говорит, кто что делает. Вы слушаетесь.",
       "Когда таймер прозвенит, поблагодарите «капитана»."
@@ -3670,9 +3670,9 @@
       "Wenn der Timer klingelt, bedanken Sie sich bei Ihrem „Kapitän“."
      ],
      "fr": [
-      "Annoncez : pendant 15 minutes, c'est toi le chef.",
+      "Annoncez : pendant 15 minutes, c'est toi qui décides.",
       "Votre enfant choisit le jeu.",
-      "Il dit qui fait quoi. Vous obéissez.",
+      "Votre enfant dit qui fait quoi. Vous obéissez.",
       "Quand le minuteur sonne, remerciez votre « capitaine »."
      ]
     },
@@ -3681,7 +3681,7 @@
       "Задача: спланировать семейную прогулку на час.",
       "Ребёнок решает, куда идём и что берём.",
       "Назначает, кто за что отвечает.",
-      "Сходите по его плану. Что сработало?"
+      "Сходите по плану ребёнка. Что сработало?"
      ],
      "en": [
       "The task: plan a one-hour family walk.",
@@ -3698,7 +3698,7 @@
      "fr": [
       "La mission : organiser une promenade en famille d'une heure.",
       "Votre enfant décide où l'on va et ce que l'on emporte.",
-      "Il désigne qui s'occupe de quoi.",
+      "Votre enfant désigne qui s'occupe de quoi.",
       "Suivez son plan. Qu'est-ce qui a marché ?"
      ]
     },
@@ -3707,7 +3707,7 @@
       "Ребёнок организует семейный вечер.",
       "Составляет программу и роли для каждого.",
       "Укладывается в бюджет.",
-      "После вечера обсудите: что получилось и что он сделал бы иначе."
+      "После вечера обсудите: что получилось и что стоит сделать иначе."
      ],
      "en": [
       "Your child organizes a family evening.",
@@ -3723,9 +3723,9 @@
      ],
      "fr": [
       "Votre enfant organise une soirée en famille.",
-      "Il prépare un programme et un rôle pour chacun.",
-      "Il respecte le budget.",
-      "Après la soirée, faites le point : qu'est-ce qui a réussi, et que ferait-il autrement ?"
+      "Votre enfant prépare un programme et un rôle pour chacun.",
+      "Votre enfant respecte le budget.",
+      "Après la soirée, faites le point : qu'est-ce qui a réussi, et que faudrait-il changer ?"
      ]
     }
    },
@@ -3767,7 +3767,7 @@
     "fr": "Inventer une règle et l'expliquer aux autres, c'est apprendre à diriger sans crier."
    },
    "tip": {
-    "ru": "Если правило непонятно, не додумывайте за ребёнка. Скажите: «Я не понял. Объясни проще».",
+    "ru": "Если правило непонятно, не додумывайте за ребёнка. Скажите: «Мне непонятно. Объясни проще».",
     "en": "If a rule isn’t clear, don’t fill in the gaps. Say: “I didn’t get it. Can you make it simpler?”",
     "de": "Ist eine Regel unklar, denken Sie nicht für Ihr Kind weiter. Sagen Sie: „Das habe ich nicht verstanden. Erklär es einfacher.“",
     "fr": "Si la règle n'est pas claire, ne la complétez pas à sa place. Dites : « Je n'ai pas compris. Explique plus simplement. »"
@@ -3813,7 +3813,7 @@
       "Spielen Sie nach den neuen Regeln."
      ],
      "fr": [
-      "Inventez un jeu de ballon avec une seule règle. Par exemple : on le fait rouler seulement assis.",
+      "Inventez un jeu de ballon avec une seule règle. Par exemple : on le fait rouler seulement en position assise.",
       "Jouez deux minutes.",
       "Votre enfant ajoute une deuxième règle.",
       "Jouez avec les nouvelles règles."
@@ -3840,7 +3840,7 @@
      ],
      "fr": [
       "Votre enfant invente un jeu avec trois règles.",
-      "Il l'explique à la famille.",
+      "Votre enfant l'explique à la famille.",
       "Quelqu'un n'a pas compris ? Il faut dire la règle plus simplement.",
       "Jouez une manche."
      ]
@@ -3907,13 +3907,13 @@
     "ru": "Ребёнок учится добиваться своего доводами, а не настойчивостью.",
     "en": "Your child learns to get their way with reasons, not with persistence.",
     "de": "Ihr Kind lernt, sich mit Argumenten durchzusetzen statt mit Hartnäckigkeit.",
-    "fr": "Votre enfant apprend à obtenir ce qu'il veut par des arguments, pas par l'insistance."
+    "fr": "Votre enfant apprend à obtenir gain de cause par des arguments, pas par l'insistance."
    },
    "tip": {
     "ru": "Заранее решите, на что вы готовы согласиться. Последнее слово остаётся за вами.",
     "en": "Decide in advance what you’re willing to agree to. The final word stays with you.",
     "de": "Überlegen Sie vorher, worauf Sie sich einlassen würden. Das letzte Wort bleibt bei Ihnen.",
-    "fr": "Décidez à l'avance de ce que vous êtes prêt à accepter. Le dernier mot vous revient."
+    "fr": "Décidez à l'avance de ce que vous pouvez accepter. Le dernier mot vous revient."
    },
    "need": {
     "3-5": {
@@ -3941,7 +3941,7 @@
       "Предложите выбор из двух.",
       "Ребёнок выбирает и говорит почему.",
       "Одной причины достаточно.",
-      "Повторите его довод вслух: «Ты выбрал банан, потому что он сладкий»."
+      "Повторите довод ребёнка вслух: «Ты выбираешь банан, потому что он сладкий»."
      ],
      "en": [
       "Offer a choice of two.",
@@ -3982,8 +3982,8 @@
       "Gute Argumente zählen. Die Entscheidung liegt bei Ihnen, und Sie begründen sie."
      ],
      "fr": [
-      "Votre enfant nomme une chose qu'il aimerait changer à la maison.",
-      "Il donne trois raisons.",
+      "Votre enfant nomme une chose à changer à la maison.",
+      "Votre enfant donne trois raisons.",
       "Vous répondez à chacune sur le fond.",
       "Les bons arguments comptent. La décision vous revient, et vous l'expliquez."
      ]
@@ -4010,7 +4010,7 @@
      "fr": [
       "Choisissez un sujet de débat.",
       "Pendant deux minutes, votre enfant défend son opinion.",
-      "Pendant deux minutes, il défend l'opinion contraire.",
+      "Puis, pendant deux minutes, l'opinion contraire.",
       "Quel camp s'est révélé le plus solide, et pourquoi ?"
      ]
     }
@@ -4028,7 +4028,7 @@
    },
    "task": {
     "3-5": {
-     "ru": "Сегодня главный вы, а ребёнок помощник: вы просите, он делает три дела. Поблагодарите за каждое.",
+     "ru": "Сегодня командуете вы, а ребёнок помогает: по вашей просьбе делает три дела. Поблагодарите за каждое.",
      "en": "Today you are in charge and your child is the helper: you ask, they do three jobs. Thank them for each.",
      "de": "Heute bestimmen Sie, und Ihr Kind hilft: Sie bitten, Ihr Kind erledigt drei Aufgaben. Bedanken Sie sich für jede.",
      "fr": "Aujourd'hui, c'est vous qui dirigez et votre enfant vous aide : vous demandez, votre enfant fait trois tâches. Dites merci pour chacune."
@@ -4050,10 +4050,10 @@
     "ru": "Лидеру важно уметь быть вторым: слушать, помогать и не перехватывать.",
     "en": "A leader also needs to know how to be second: to listen, to help and not to take over.",
     "de": "Wer anführt, muss auch Zweiter sein können: zuhören, helfen und nichts an sich reißen.",
-    "fr": "Pour mener, il faut aussi savoir être second : écouter, aider et ne pas reprendre la main."
+    "fr": "Pour mener, il faut aussi savoir rester au second plan : écouter, aider et ne pas reprendre la main."
    },
    "tip": {
-    "ru": "Благодарите за конкретное дело: «Ты принёс всё сразу, и мы успели».",
+    "ru": "Благодарите за конкретное дело: «Благодаря тебе всё принесено сразу, и мы успели».",
     "en": "Thank them for something specific: “You brought everything at once, so we made it in time.”",
     "de": "Danken Sie für etwas Konkretes: „Du hast alles auf einmal gebracht, so sind wir fertig geworden.“",
     "fr": "Remerciez pour un geste précis : « Tu as tout apporté d'un coup, et nous avons fini à temps. »"
@@ -4081,10 +4081,10 @@
    "steps": {
     "3-5": {
      "ru": [
-      "Объявите: сегодня главный я, а ты помощник.",
+      "Объявите: сегодня командую я, а ты помогаешь.",
       "Попросите о первом деле.",
       "Поблагодарите и назовите второе, потом третье.",
-      "Скажите, чем его помощь вам помогла."
+      "Скажите, чем эта помощь вам пригодилась."
      ],
      "en": [
       "Announce: today I’m in charge and you’re my helper.",
@@ -4099,7 +4099,7 @@
       "Sagen Sie, wobei Ihnen die Hilfe genützt hat."
      ],
      "fr": [
-      "Annoncez : aujourd'hui, c'est moi le chef, et toi, tu m'aides.",
+      "Annoncez : aujourd'hui, c'est moi qui dirige, et toi, tu m'aides.",
       "Demandez la première tâche.",
       "Remerciez et annoncez la deuxième, puis la troisième.",
       "Dites en quoi son aide vous a servi."
@@ -4108,7 +4108,7 @@
     "6-8": {
      "ru": [
       "В игре ребёнок сегодня не водит.",
-      "Он помогает младшему или вам.",
+      "Ребёнок помогает младшему или вам.",
       "Сыграйте 10 минут.",
       "Спросите: что было трудно? Что понравилось?"
      ],
@@ -4126,7 +4126,7 @@
      ],
      "fr": [
       "Aujourd'hui, ce n'est pas votre enfant qui mène le jeu.",
-      "Il aide un plus petit ou vous-même.",
+      "Votre enfant aide un enfant plus jeune ou vous-même.",
       "Jouez 10 minutes.",
       "Demandez : qu'est-ce qui était difficile ? Qu'est-ce qui a plu ?"
      ]
@@ -4151,10 +4151,10 @@
       "Sprechen Sie darüber: In welchem Moment wollte es die Sache auf seine Art machen?"
      ],
      "fr": [
-      "Votre enfant choisit qui il va aider.",
+      "Votre enfant choisit une personne à aider.",
       "La mission : mener l'idée de l'autre jusqu'au bout, sans la remplacer par la sienne.",
-      "Il y travaille 10 minutes.",
-      "Parlez-en : à quel moment a-t-il eu envie de faire à sa façon ?"
+      "Votre enfant y travaille 10 minutes.",
+      "Parlez-en : à quel moment l'envie de faire à sa façon est-elle venue ?"
      ]
     }
    },
@@ -4171,7 +4171,7 @@
    },
    "task": {
     "3-5": {
-     "ru": "Игра в магазин: ребёнок продавец, вы покупатель. Он называет цену и считает «монеты» из бумаги.",
+     "ru": "Игра в магазин: ребёнок продавец, вы покупатель. Продавец называет цену и считает «монеты» из бумаги.",
      "en": "Play store: your child is the seller, you are the customer. They name the price and count the \"coins\" cut from paper.",
      "de": "Kaufladen spielen: Ihr Kind verkauft, Sie kaufen ein. Ihr Kind nennt den Preis und zählt die „Münzen“ aus Papier.",
      "fr": "Jouez à la marchande : votre enfant vend, vous achetez. Votre enfant annonce le prix et compte les « pièces » en papier."
@@ -4196,10 +4196,10 @@
     "fr": "Un petit projet avec un prix et un résultat apprend à compter, à planifier et à penser aux autres."
    },
    "tip": {
-    "ru": "Пусть ребёнок сам считает. Ошибку в расчёте найдите вместе.",
+    "ru": "Пусть ребёнок считает без подсказок. Ошибку в расчёте найдите вместе.",
     "en": "Let your child do the math. Find any mistake together.",
     "de": "Lassen Sie Ihr Kind selbst rechnen. Einen Rechenfehler suchen Sie gemeinsam.",
-    "fr": "Laissez votre enfant compter lui-même. Cherchez ensemble l'erreur de calcul."
+    "fr": "Laissez votre enfant faire les comptes sans aide. Cherchez ensemble l'erreur de calcul."
    },
    "need": {
     "3-5": {
@@ -4225,8 +4225,8 @@
     "3-5": {
      "ru": [
       "Вырежьте заранее 10 бумажных монет.",
-      "Ребёнок раскладывает товары: он продавец.",
-      "Вы покупаете. Он называет цену и считает монеты.",
+      "Ребёнок раскладывает товары в роли продавца.",
+      "Вы покупаете. Продавец называет цену и считает монеты.",
       "Поменяйтесь ролями."
      ],
      "en": [
@@ -4243,8 +4243,8 @@
      ],
      "fr": [
       "Découpez à l'avance 10 pièces en papier.",
-      "Votre enfant installe ses marchandises : c'est lui qui tient la boutique.",
-      "Vous achetez. Il annonce le prix et compte les pièces.",
+      "Votre enfant installe ses marchandises et tient la boutique.",
+      "Vous achetez. Votre enfant annonce le prix et compte les pièces.",
       "Échangez les rôles."
      ]
     },
@@ -4252,8 +4252,8 @@
      "ru": [
       "Ребёнок решает, что сделать для соседей или родных.",
       "Раздаёт задачи семье.",
-      "Делаете вместе по его плану.",
-      "Он сам вручает результат."
+      "Делаете вместе по плану ребёнка.",
+      "Результат вручает ребёнок."
      ],
      "en": [
       "Your child decides what to make for the neighbors or relatives.",
@@ -4269,9 +4269,9 @@
      ],
      "fr": [
       "Votre enfant décide quoi préparer pour les voisins ou la famille.",
-      "Il répartit les tâches entre vous.",
+      "Votre enfant répartit les tâches entre vous.",
       "Vous le faites ensemble selon son plan.",
-      "Il remet lui-même le résultat."
+      "Votre enfant remet le résultat en personne."
      ]
     },
     "9-12": {
@@ -4295,9 +4295,9 @@
      ],
      "fr": [
       "Votre enfant imagine un petit projet pour le week-end.",
-      "Il écrit : ce que l'on fait, pour qui, combien ça coûte.",
-      "Il calcule les dépenses.",
-      "Après le week-end, il fait le bilan."
+      "Votre enfant écrit : ce que l'on fait, pour qui, combien ça coûte.",
+      "Votre enfant calcule les dépenses.",
+      "Après le week-end, votre enfant fait le bilan."
      ]
     }
    },
@@ -4307,7 +4307,7 @@
    "id": "helper-1",
    "scale": "helper",
    "title": {
-    "ru": "Что он чувствует",
+    "ru": "Кто что чувствует",
     "en": "How do they feel",
     "de": "Wie fühlen sich die anderen?",
     "fr": "Qu'est-ce qu'on ressent ?"
@@ -4339,10 +4339,10 @@
     "fr": "Votre enfant apprend à lire les émotions sur un visage et dans une posture. C'est la base de l'empathie."
    },
    "tip": {
-    "ru": "Называйте чувства и про себя тоже: «Я сейчас устал, это видно по плечам».",
+    "ru": "Называйте чувства и про себя тоже: «Я сейчас без сил, это видно по плечам».",
     "en": "Name your own feelings too: “I’m tired right now, you can see it in my shoulders.”",
     "de": "Benennen Sie auch Ihre eigenen Gefühle: „Ich bin gerade müde, das sieht man an meinen Schultern.“",
-    "fr": "Nommez aussi vos propres émotions : « Là, je suis fatigué, ça se voit à mes épaules. »"
+    "fr": "Nommez aussi vos propres émotions : « Là, je sens la fatigue, ça se voit à mes épaules. »"
    },
    "need": {
     "3-5": {
@@ -4370,7 +4370,7 @@
       "Покажите лицом радость. Ребёнок угадывает.",
       "Потом грусть, злость, удивление.",
       "Ребёнок повторяет каждое выражение.",
-      "Теперь показывает он, а угадываете вы."
+      "Теперь показывает ребёнок, а угадываете вы."
      ],
      "en": [
       "Show joy with your face. Your child guesses.",
@@ -4388,7 +4388,7 @@
       "Montrez la joie avec votre visage. Votre enfant devine.",
       "Puis la tristesse, la colère, la surprise.",
       "Votre enfant imite chaque expression.",
-      "Maintenant, c'est lui qui montre et vous qui devinez."
+      "Maintenant, c'est votre enfant qui montre et vous qui devinez."
      ]
     },
     "6-8": {
@@ -4439,7 +4439,7 @@
      "fr": [
       "Lancez une minute de film sans le son.",
       "Votre enfant explique ce que ressentent les personnages.",
-      "Il dit ce qui a probablement été dit.",
+      "Votre enfant dit ce qui a probablement été dit.",
       "Remettez la scène avec le son et comparez."
      ]
     }
@@ -4469,7 +4469,7 @@
      "fr": "Votre enfant choisit une personne et fait pour elle une bonne action, sans qu'elle sache de qui cela vient."
     },
     "9-12": {
-     "ru": "Ребёнок замечает, кому из близких сейчас непросто, и сам придумывает, чем помочь. Вы только обеспечиваете нужное.",
+     "ru": "Ребёнок замечает, кому из близких сейчас непросто, и самостоятельно придумывает, чем помочь. Вы только обеспечиваете нужное.",
      "en": "Your child notices who in the family is having a hard time and decides how to help. You only supply what's needed.",
      "de": "Ihr Kind bemerkt, wer in der Familie es gerade schwer hat, und überlegt selbst, wie es helfen kann. Sie besorgen nur, was gebraucht wird.",
      "fr": "Votre enfant remarque qui, dans la famille, traverse un moment difficile et décide comment aider. Vous fournissez seulement le nécessaire."
@@ -4539,7 +4539,7 @@
       "Ребёнок выбирает человека.",
       "Придумывает одно доброе дело для него.",
       "Делает так, чтобы тот не узнал, кто это сделал.",
-      "Вечером расскажет вам, что почувствовал."
+      "Вечером расскажет вам о своих чувствах."
      ],
      "en": [
       "Your child chooses a person.",
@@ -4555,17 +4555,17 @@
      ],
      "fr": [
       "Votre enfant choisit une personne.",
-      "Il imagine une bonne action pour elle.",
-      "Il la fait sans que la personne sache de qui elle vient.",
-      "Le soir, il vous raconte ce qu'il a ressenti."
+      "Votre enfant imagine une bonne action pour elle.",
+      "Votre enfant la fait sans que la personne sache de qui elle vient.",
+      "Le soir, votre enfant vous raconte ce que cela lui a fait."
      ]
     },
     "9-12": {
      "ru": [
       "Ребёнок замечает, кому из близких сейчас непросто.",
-      "Сам придумывает, чем помочь.",
+      "Самостоятельно придумывает, чем помочь.",
       "Вы только даёте нужное.",
-      "Потом спросите: как он понял, что человеку нужна помощь?"
+      "Потом спросите: как стало понятно, что человеку нужна помощь?"
      ],
      "en": [
       "Your child notices who in the family is having a hard time right now.",
@@ -4581,9 +4581,9 @@
      ],
      "fr": [
       "Votre enfant remarque qui, parmi ses proches, traverse un moment difficile.",
-      "Il trouve lui-même comment aider.",
+      "À votre enfant de trouver comment aider.",
       "Vous fournissez seulement ce qu'il faut.",
-      "Ensuite, demandez : comment a-t-il compris que la personne avait besoin d'aide ?"
+      "Ensuite, demandez : à quoi voyait-on que la personne avait besoin d'aide ?"
      ]
     }
    },
@@ -4600,7 +4600,7 @@
    },
    "task": {
     "3-5": {
-     "ru": "Дайте выбор из двух: какую книгу читаем, какую чашку берём. Ребёнок выбирает сам и вслух.",
+     "ru": "Дайте выбор из двух: какую книгу читаем, какую чашку берём. Ребёнок выбирает без подсказок и вслух.",
      "en": "Offer a choice of two: which book to read, which cup to use. Your child chooses for themselves, out loud.",
      "de": "Bieten Sie zwei Möglichkeiten an: welches Buch, welche Tasse. Ihr Kind wählt selbst und sagt es laut.",
      "fr": "Proposez un choix entre deux choses : quel livre lire, quelle tasse prendre. Votre enfant choisit et le dit à voix haute."
@@ -4622,13 +4622,13 @@
     "ru": "Чуткому ребёнку важно уметь слышать и свои желания, а не только чужие.",
     "en": "A caring child also needs to hear their own wishes, not just other people’s.",
     "de": "Ein einfühlsames Kind sollte auch die eigenen Wünsche hören können, nicht nur die der anderen.",
-    "fr": "Un enfant attentif aux autres a besoin d'entendre aussi ses propres envies."
+    "fr": "Être à l'écoute des autres n'empêche pas d'entendre aussi ses propres envies."
    },
    "tip": {
-    "ru": "Примите его «нет» спокойно. Так он узнаёт, что отказ не рушит отношения.",
+    "ru": "Примите детское «нет» спокойно. Так ребёнок узнаёт, что отказ не рушит отношения.",
     "en": "Take their “no” calmly. That is how they learn that saying no doesn’t break a relationship.",
     "de": "Nehmen Sie sein „Nein“ gelassen an. So erfährt es, dass ein Nein die Beziehung nicht zerstört.",
-    "fr": "Accueillez son « non » calmement. Il découvre ainsi qu'un refus ne brise pas la relation."
+    "fr": "Accueillez son « non » calmement. Votre enfant découvre ainsi qu'un refus ne brise pas la relation."
    },
    "need": {
     "3-5": {
@@ -4654,7 +4654,7 @@
     "3-5": {
      "ru": [
       "Предложите выбор из двух вещей.",
-      "Ребёнок выбирает сам и говорит вслух: «Я хочу эту».",
+      "Ребёнок выбирает без подсказок и говорит вслух: «Я хочу эту».",
       "Повторите выбор три раза за день в разных делах.",
       "Не переспрашивайте и не предлагайте третий вариант."
      ],
@@ -4672,17 +4672,17 @@
      ],
      "fr": [
       "Proposez un choix entre deux choses.",
-      "Votre enfant choisit seul et dit à voix haute : « Je veux celle-ci. »",
+      "Votre enfant choisit sans aide et dit à voix haute : « Je veux celle-ci. »",
       "Répétez ce choix trois fois dans la journée, à des moments différents.",
       "Ne redemandez pas et ne proposez pas de troisième option."
      ]
     },
     "6-8": {
      "ru": [
-      "Сыграйте в игру: вы предлагаете, он отвечает.",
+      "Сыграйте в игру: вы предлагаете, ребёнок отвечает.",
       "Задача: три раза сказать «я хочу…».",
       "И один раз вежливо сказать «нет».",
-      "Скажите, что вам понравилось, как он отказал."
+      "Скажите, что вам понравился такой вежливый отказ."
      ],
      "en": [
       "Play a game: you offer, they answer.",
@@ -4697,7 +4697,7 @@
       "Sagen Sie, dass Ihnen gefallen hat, wie es abgelehnt hat."
      ],
      "fr": [
-      "Jouez à un jeu : vous proposez, il répond.",
+      "Jouez à un jeu : vous proposez, votre enfant répond.",
       "Le défi : dire trois fois « je veux… ».",
       "Et dire une fois « non », poliment.",
       "Dites-lui que vous avez aimé sa façon de refuser."
@@ -4723,7 +4723,7 @@
       "Üben Sie ihn zweimal laut."
      ],
      "fr": [
-      "Rappelez-vous une fois où votre enfant a accepté alors qu'il n'en avait pas envie.",
+      "Rappelez-vous une fois où votre enfant a accepté sans en avoir envie.",
       "Parlez-en : qu'est-ce qui l'empêchait de refuser ?",
       "Trouvez une phrase qui ne blesse pas.",
       "Répétez-la deux fois à voix haute."
@@ -4743,7 +4743,7 @@
    },
    "task": {
     "3-5": {
-     "ru": "Ребёнок рисует открытку человеку, который ему помог. Вы подписываете его словами.",
+     "ru": "Ребёнок рисует открытку человеку, который недавно помог. Вы подписываете словами ребёнка.",
      "en": "Your child draws a card for someone who helped them. You write their words on it.",
      "de": "Ihr Kind malt eine Karte für jemanden, der geholfen hat. Sie schreiben die Worte Ihres Kindes dazu.",
      "fr": "Votre enfant dessine une carte pour une personne qui lui a rendu service. Vous y écrivez ses mots."
@@ -4755,7 +4755,7 @@
      "fr": "Votre enfant écrit trois phrases de remerciement pour quelqu'un de l'école, du club ou du voisinage : pour quoi exactement et ce que cela a changé."
     },
     "9-12": {
-     "ru": "Ребёнок пишет письмо человеку, которого давно не благодарил, и сам решает, как его передать.",
+     "ru": "Ребёнок пишет письмо человеку, которого давно не благодарил, и самостоятельно решает, как его передать.",
      "en": "Your child writes a letter to someone they haven't thanked in a long time and decides how to deliver it.",
      "de": "Ihr Kind schreibt einen Brief an einen Menschen, dem es lange nicht gedankt hat, und entscheidet selbst, wie der Brief ankommt.",
      "fr": "Votre enfant écrit une lettre à une personne qu'on n'a pas remerciée depuis longtemps et décide comment la lui remettre."
@@ -4771,7 +4771,7 @@
     "ru": "Помогите вспомнить конкретное дело: «За что именно спасибо?»",
     "en": "Help them recall something specific: “Thank you for what, exactly?”",
     "de": "Helfen Sie, sich an etwas Konkretes zu erinnern: „Wofür genau danke?“",
-    "fr": "Aidez-le à retrouver un geste précis : « Merci pour quoi, exactement ? »"
+    "fr": "Aidez votre enfant à retrouver un geste précis : « Merci pour quoi, exactement ? »"
    },
    "need": {
     "3-5": {
@@ -4798,7 +4798,7 @@
      "ru": [
       "Спросите: кто тебе недавно помог?",
       "Ребёнок рисует открытку этому человеку.",
-      "Вы подписываете его словами, ничего не меняя.",
+      "Вы подписываете словами ребёнка, ничего не меняя.",
       "Вручите вместе."
      ],
      "en": [
@@ -4814,7 +4814,7 @@
       "Überreichen Sie die Karte gemeinsam."
      ],
      "fr": [
-      "Demandez : qui t'a aidé récemment ?",
+      "Demandez : qui t'a rendu service récemment ?",
       "Votre enfant dessine une carte pour cette personne.",
       "Vous écrivez ses mots sans rien changer.",
       "Remettez-la ensemble."
@@ -4824,8 +4824,8 @@
      "ru": [
       "Ребёнок выбирает: учитель, тренер или сосед.",
       "Пишет три предложения: за что спасибо и что это изменило.",
-      "Вы не правите текст, только ошибки по его просьбе.",
-      "Он сам передаёт записку."
+      "Вы не правите текст, только ошибки, если ребёнок попросит.",
+      "Записку передаёт ребёнок."
      ],
      "en": [
       "Your child chooses: a teacher, a coach or a neighbor.",
@@ -4841,16 +4841,16 @@
      ],
      "fr": [
       "Votre enfant choisit : une personne de l'école, du club de sport ou du voisinage.",
-      "Il écrit trois phrases : merci pour quoi, et ce que cela a changé.",
-      "Vous ne retouchez pas le texte ; les fautes seulement s'il le demande.",
-      "Il remet le mot lui-même."
+      "Votre enfant écrit trois phrases : merci pour quoi, et ce que cela a changé.",
+      "Vous ne retouchez pas le texte ; les fautes, seulement sur demande.",
+      "Votre enfant remet le mot en personne."
      ]
     },
     "9-12": {
      "ru": [
       "Ребёнок вспоминает человека, которого давно не благодарил.",
       "Пишет ему письмо.",
-      "Сам решает, как передать: лично, почтой, сообщением.",
+      "Самостоятельно решает, как передать: лично, почтой, сообщением.",
       "Передаёт на этой неделе."
      ],
      "en": [
@@ -4866,10 +4866,10 @@
       "Es übergibt ihn noch diese Woche."
      ],
      "fr": [
-      "Votre enfant pense à quelqu'un qu'il n'a pas remercié depuis longtemps.",
-      "Il lui écrit une lettre.",
-      "Il décide comment la transmettre : en main propre, par la poste, par message.",
-      "Il la remet cette semaine."
+      "Votre enfant pense à une personne qu'on n'a pas remerciée depuis longtemps.",
+      "Votre enfant lui écrit une lettre.",
+      "Votre enfant décide comment la transmettre : en main propre, par la poste, par message.",
+      "Votre enfant la remet cette semaine."
      ]
     }
    },
@@ -4905,16 +4905,16 @@
     }
    },
    "why": {
-    "ru": "Объясняя другому, ребёнок лучше понимает сам и чувствует себя умелым.",
+    "ru": "Объясняя другим, ребёнок глубже понимает тему и чувствует свою умелость.",
     "en": "By explaining to someone else, your child understands better and feels capable.",
     "de": "Wer anderen etwas erklärt, versteht es selbst besser und fühlt sich kompetent.",
     "fr": "En expliquant à quelqu'un, votre enfant comprend mieux et se sent capable."
    },
    "tip": {
-    "ru": "Будьте старательным учеником и иногда ошибайтесь. Пусть он вас поправит.",
+    "ru": "Будьте старательным учеником и иногда ошибайтесь. Пусть ребёнок вас поправит.",
     "en": "Be an eager student and make a mistake now and then. Let them correct you.",
     "de": "Seien Sie eine fleißige Schülerin oder ein fleißiger Schüler und machen Sie ab und zu einen Fehler. Lassen Sie sich korrigieren.",
-    "fr": "Soyez un élève appliqué et trompez-vous de temps en temps. Laissez-le vous corriger."
+    "fr": "Jouez l'élève modèle et trompez-vous de temps en temps. Votre enfant vous corrigera."
    },
    "need": {
     "3-5": {
@@ -4939,7 +4939,7 @@
    "steps": {
     "3-5": {
      "ru": [
-      "Спросите: что ты умеешь сам?",
+      "Спросите: что ты умеешь без помощи?",
       "Ребёнок учит игрушку или вас: чистить зубы, надевать куртку.",
       "Сделайте ошибку. Пусть покажет, как правильно.",
       "Поблагодарите учителя."
@@ -4957,10 +4957,10 @@
       "Bedanken Sie sich für den Unterricht."
      ],
      "fr": [
-      "Demandez : que sais-tu faire tout seul ?",
+      "Demandez : que sais-tu faire sans aide ?",
       "Votre enfant l'apprend à un jouet ou à vous : se brosser les dents, enfiler une veste.",
-      "Faites une erreur. Laissez-le montrer comment faire.",
-      "Remerciez votre professeur."
+      "Faites une erreur. Votre enfant vous montre comment faire.",
+      "Remerciez votre « prof »."
      ]
     },
     "6-8": {
@@ -4984,7 +4984,7 @@
      ],
      "fr": [
       "Votre enfant choisit un savoir-faire.",
-      "Il vous l'apprend, à vous ou à un plus petit, étape par étape.",
+      "Votre enfant vous l'apprend, à vous ou à un enfant plus jeune, étape par étape.",
       "Vous vous appliquez et vous vous trompez une fois.",
       "À la fin, montrez ce que vous avez appris."
      ]
@@ -5009,10 +5009,10 @@
       "Jeder nennt eine Sache, die er gelernt hat."
      ],
      "fr": [
-      "Votre enfant choisit un sujet qu'il connaît bien.",
-      "Il prépare un cours de 10 minutes : une explication, un exemple, une question de contrôle.",
-      "Il le donne à la famille.",
-      "Chacun cite une chose qu'il a apprise."
+      "Votre enfant choisit un sujet bien connu.",
+      "Votre enfant prépare un cours de 10 minutes : une explication, un exemple, une question de contrôle.",
+      "Votre enfant le donne à la famille.",
+      "Chacun cite une chose apprise."
      ]
     }
    },
@@ -5035,7 +5035,7 @@
      "fr": "Des coussins, une chaise, une corde au sol : enjamber, ramper dessous, marcher sur la ligne. Trois tours."
     },
     "6-8": {
-     "ru": "Ребёнок сам строит дома полосу из 5 препятствий и проходит её на время. Вторая попытка быстрее?",
+     "ru": "Ребёнок самостоятельно строит дома полосу из 5 препятствий и проходит её на время. Вторая попытка быстрее?",
      "en": "Your child builds a 5-obstacle course at home and runs it against the clock. Is the second try faster?",
      "de": "Ihr Kind baut zu Hause einen Parcours mit 5 Hindernissen und läuft ihn auf Zeit. Ist der zweite Versuch schneller?",
      "fr": "Votre enfant construit à la maison un parcours de 5 obstacles et le fait contre la montre. Le deuxième essai est-il plus rapide ?"
@@ -5108,7 +5108,7 @@
     },
     "6-8": {
      "ru": [
-      "Ребёнок сам строит полосу из 5 препятствий.",
+      "Ребёнок самостоятельно строит полосу из 5 препятствий.",
       "Проходит её на время.",
       "Вторая попытка: получится быстрее?",
       "Спросите, какое препятствие самое трудное."
@@ -5126,9 +5126,9 @@
       "Fragen Sie, welches Hindernis am schwersten ist."
      ],
      "fr": [
-      "Votre enfant construit lui-même un parcours de 5 obstacles.",
-      "Il le fait contre la montre.",
-      "Deuxième essai : peut-il aller plus vite ?",
+      "C'est votre enfant qui construit un parcours de 5 obstacles.",
+      "Votre enfant le fait contre la montre.",
+      "Deuxième essai : plus vite, cette fois ?",
       "Demandez quel obstacle est le plus difficile."
      ]
     },
@@ -5153,7 +5153,7 @@
      ],
      "fr": [
       "Votre enfant construit un parcours en 6 étapes.",
-      "Il fixe les pénalités en cas d'erreur.",
+      "Votre enfant fixe les pénalités en cas d'erreur.",
       "Vous le faites tous les deux, trois essais chacun.",
       "Notez les résultats. Qui a le plus progressé ?"
      ]
@@ -5389,7 +5389,7 @@
       "Votre enfant lance la balle en l'air et la rattrape à deux mains.",
       "Cinq fois de suite.",
       "Compliquez : frapper dans les mains pendant que la balle est en l'air.",
-      "Combien de fois a-t-il frappé ?"
+      "Combien de frappes avez-vous comptées ?"
      ]
     },
     "6-8": {
@@ -5439,8 +5439,8 @@
      ],
      "fr": [
       "Votre enfant choisit un défi pour la semaine : jongler, tenir l'équilibre sur les mains contre le mur, jongler au pied.",
-      "Aujourd'hui, première mesure : combien y arrive-t-il maintenant ?",
-      "Il établit un plan : 5 minutes par jour.",
+      "Aujourd'hui, première mesure : combien de réussites pour l'instant ?",
+      "Votre enfant établit un plan : 5 minutes par jour.",
       "Affichez la feuille de résultats bien en vue."
      ]
     }
@@ -5514,7 +5514,7 @@
       "Покажите, как идёт медведь.",
       "Ребёнок угадывает и повторяет.",
       "Потом заяц и змея.",
-      "Теперь зверя загадывает он."
+      "Теперь зверя загадывает ребёнок."
      ],
      "en": [
       "Show how a bear walks.",
@@ -5532,14 +5532,14 @@
       "Montrez comment marche un ours.",
       "Votre enfant devine et imite.",
       "Puis un lapin et un serpent.",
-      "Maintenant, c'est lui qui choisit l'animal."
+      "Maintenant, c'est votre enfant qui choisit l'animal."
      ]
     },
     "6-8": {
      "ru": [
       "Ребёнок показывает телом первую букву своего имени.",
       "Вы угадываете.",
-      "Он показывает остальные буквы.",
+      "Потом показывает остальные буквы.",
       "Покажите короткое слово вдвоём."
      ],
      "en": [
@@ -5557,7 +5557,7 @@
      "fr": [
       "Votre enfant forme avec son corps la première lettre de son prénom.",
       "Vous devinez.",
-      "Il montre les autres lettres.",
+      "Votre enfant montre les autres lettres.",
       "Formez un mot court à deux."
      ]
     },
@@ -5623,7 +5623,7 @@
     "ru": "Ребёнок на себе замечает, что после движения легче сосредоточиться. Этим можно пользоваться каждый день.",
     "en": "Your child notices for themselves that it’s easier to focus after moving. You can use this every day.",
     "de": "Ihr Kind merkt an sich selbst, dass Konzentration nach Bewegung leichter fällt. Das lässt sich jeden Tag nutzen.",
-    "fr": "Votre enfant constate sur lui-même qu'il se concentre mieux après avoir bougé. On peut s'en servir tous les jours."
+    "fr": "Votre enfant constate par l'expérience que la concentration vient mieux après avoir bougé. On peut s'en servir tous les jours."
    },
    "tip": {
     "ru": "Используйте вывод: перед уроками или чтением дайте пять минут подвигаться.",
@@ -5700,14 +5700,14 @@
      "fr": [
       "Cinq minutes de jeu actif.",
       "Cinq minutes d'une activité calme : puzzle ou dessin.",
-      "Demandez : est-ce facile de rester assis maintenant ?",
+      "Demandez : est-ce facile de rester en place maintenant ?",
       "Comparez avec ce qui se passe sans échauffement."
      ]
     },
     "9-12": {
      "ru": [
       "Ребёнок читает 10 минут после разминки.",
-      "Пересказывает, что запомнил.",
+      "Пересказывает, что запомнилось.",
       "На другой день читает 10 минут без разминки.",
       "Сравнивает: когда запомнилось больше?"
      ],
@@ -5725,9 +5725,9 @@
      ],
      "fr": [
       "Votre enfant lit 10 minutes après un échauffement.",
-      "Il raconte ce qu'il a retenu.",
-      "Un autre jour, il lit 10 minutes sans échauffement.",
-      "Il compare : quand a-t-il retenu le plus ?"
+      "Votre enfant en raconte l'essentiel.",
+      "Un autre jour, même lecture de 10 minutes, sans échauffement.",
+      "Comparez : quand reste-t-il le plus de souvenirs ?"
      ]
     }
    },
@@ -5797,7 +5797,7 @@
      "fr": [
       "Froissez ensemble cinq boulettes de papier.",
       "Posez une boulette dans la cuillère et la cuillère au bord de la table. Vous tenez la cuillère au milieu, votre enfant tape sur le manche.",
-      "Placez le saladier à un pas de la table. Arrive-t-il à viser dedans ?",
+      "Placez le saladier à un pas de la table. La boulette tombe-t-elle dedans ?",
       "Comptez les réussites sur cinq essais."
      ]
     },
@@ -5824,7 +5824,7 @@
       "Posez la règle sur le crayon, comme une balançoire. Une boulette sur un bout.",
       "Votre enfant appuie sur l'autre bout et regarde où part la boulette.",
       "Rapprochez le crayon de la boulette, puis éloignez-le. Trois lancers par position.",
-      "Où la boulette va-t-elle le plus loin ? Il l'explique avec ses mots."
+      "Où la boulette va-t-elle le plus loin ? Votre enfant l'explique avec ses mots."
      ]
     },
     "9-12": {
@@ -5849,8 +5849,8 @@
      "fr": [
       "Le défi : trouver la position du point d'appui qui donne le lancer le plus long.",
       "Votre enfant choisit trois positions et fait trois lancers pour chacune.",
-      "Il note les distances dans un tableau.",
-      "Il formule sa conclusion en une phrase et la vérifie avec une quatrième position."
+      "Votre enfant note les distances dans un tableau.",
+      "Votre enfant formule sa conclusion en une phrase et la vérifie avec une quatrième position."
      ]
     }
    },
@@ -5955,7 +5955,7 @@
       "Сначала план: две «комнаты» и вход.",
       "Ребёнок строит по плану из того, что есть дома.",
       "Испытание: пять минут внутри вдвоём, ничего не поправляя.",
-      "Что он изменил бы в плане в следующий раз?"
+      "Что стоит изменить в плане в следующий раз?"
      ],
      "en": [
       "Start with a plan: two “rooms” and an entrance.",
@@ -5973,7 +5973,7 @@
       "D'abord le plan : deux « pièces » et une entrée.",
       "Votre enfant construit selon le plan avec ce qu'il y a à la maison.",
       "L'épreuve : cinq minutes à deux à l'intérieur, sans rien rajuster.",
-      "Que changerait-il au plan la prochaine fois ?"
+      "Que changer au plan la prochaine fois ?"
      ]
     }
    },
@@ -6044,7 +6044,7 @@
       "Pliez lentement un avion en papier sous les yeux de votre enfant.",
       "Votre enfant le lance trois fois.",
       "Mesurez en pas le vol le plus long.",
-      "Il colorie les ailes et le relance."
+      "Votre enfant colorie les ailes et le relance."
      ]
     },
     "6-8": {
@@ -6094,7 +6094,7 @@
      ],
      "fr": [
       "Votre enfant plie un modèle et fait trois lancers témoins.",
-      "Il modifie un détail : un trombone sur le nez ou le bord des ailes relevé.",
+      "Votre enfant modifie un détail : un trombone sur le nez ou le bord des ailes relevé.",
       "Trois nouveaux lancers, résultats dans un tableau.",
       "La conclusion : qu'est-ce qui a aidé, qu'est-ce qui a gêné, et pourquoi ?"
      ]
@@ -6149,7 +6149,7 @@
       "Выключите верхний свет и посветите фонариком на игрушку у стены.",
       "Найдите вместе тень.",
       "Придвиньте фонарик ближе, потом дальше. Что стало с тенью?",
-      "Ребёнок сам делает тень-великана и тень-малыша."
+      "Ребёнок своими руками делает тень-великана и тень-малыша."
      ],
      "en": [
       "Turn off the ceiling light and shine the flashlight on a toy near the wall.",
@@ -6217,9 +6217,9 @@
      ],
      "fr": [
       "Votre enfant place la lampe à trois distances de l'objet.",
-      "Il mesure chaque fois la hauteur de l'ombre et la note.",
-      "Il cherche la règle : que devient l'ombre quand la lumière se rapproche ?",
-      "Il vérifie la règle avec une quatrième distance."
+      "Votre enfant mesure chaque fois la hauteur de l'ombre et la note.",
+      "Votre enfant cherche la règle : que devient l'ombre quand la lumière se rapproche ?",
+      "Votre enfant vérifie la règle avec une quatrième distance."
      ]
     }
    },
@@ -6314,8 +6314,8 @@
      ],
      "fr": [
       "Votre enfant annonce quel glaçon fondra le premier.",
-      "Il sale le premier, verse de l'eau tiède sur le deuxième et ne touche pas au troisième.",
-      "Il observe pendant dix minutes.",
+      "Votre enfant sale le premier, verse de l'eau tiède sur le deuxième et ne touche pas au troisième.",
+      "Votre enfant observe pendant dix minutes.",
       "Quelle prévision était juste ? Qu'est-ce qui a surpris ?"
      ]
     },
@@ -6340,9 +6340,9 @@
      ],
      "fr": [
       "Le défi : conserver un glaçon le plus longtemps possible.",
-      "Votre enfant imagine un emballage avec ce qu'il trouve à la maison.",
-      "Il pose à côté un glaçon sans emballage pour comparer.",
-      "Il chronomètre les deux et explique ce qui a marché."
+      "Votre enfant imagine un emballage avec ce qu'il y a à la maison.",
+      "Votre enfant pose à côté un glaçon sans emballage pour comparer.",
+      "Votre enfant chronomètre les deux et explique ce qui a marché."
      ]
     }
    },
@@ -6437,9 +6437,9 @@
      ],
      "fr": [
       "Votre enfant choisit un objet de tous les jours : cartable, trousse, lit.",
-      "Il dit ce qui n'est pas pratique.",
-      "Il imagine trois améliorations et les dessine.",
-      "Il en choisit une réalisable dès aujourd'hui."
+      "Votre enfant dit ce qui n'est pas pratique.",
+      "Votre enfant imagine trois améliorations et les dessine.",
+      "Votre enfant en choisit une réalisable dès aujourd'hui."
      ]
     },
     "9-12": {
@@ -6447,7 +6447,7 @@
       "Ребёнок находит дома одно неудобство: провода путаются, обувь разбросана.",
       "Придумывает решение и делает пробный образец из картона.",
       "Семья пользуется им три дня.",
-      "Он собирает отзывы и дорабатывает."
+      "Ребёнок собирает отзывы и дорабатывает."
      ],
      "en": [
       "Your child finds one annoyance at home: tangled cords, shoes all over the place.",
@@ -6463,9 +6463,9 @@
      ],
      "fr": [
       "Votre enfant repère un désagrément à la maison : des câbles emmêlés, des chaussures qui traînent.",
-      "Il imagine une solution et fabrique un prototype en carton.",
+      "Votre enfant imagine une solution et fabrique un prototype en carton.",
       "La famille l'utilise pendant trois jours.",
-      "Il recueille les avis et l'améliore."
+      "Votre enfant recueille les avis et l'améliore."
      ]
     }
    },
@@ -6487,10 +6487,10 @@
     "fr": "Votre enfant complète ce qui n'est pas dans le cadre : la cause et la suite. C'est la base d'une intrigue."
    },
    "tip": {
-    "ru": "Спрашивайте «почему ты так решил?», чтобы ребёнок опирался на детали снимка.",
+    "ru": "Спрашивайте «почему ты так думаешь?», чтобы ребёнок опирался на детали снимка.",
     "en": "Ask “what makes you think so?” so your child leans on details in the picture.",
     "de": "Fragen Sie „Woran siehst du das?“, damit sich Ihr Kind auf Details im Bild stützt.",
-    "fr": "Demandez « qu'est-ce qui te fait dire cela ? » pour qu'il s'appuie sur les détails de l'image."
+    "fr": "Demandez « qu'est-ce qui te fait dire cela ? » pour ramener aux détails de l'image."
    },
    "need": {
     "3-5": {
@@ -6544,7 +6544,7 @@
       "Выберите фото с незнакомыми людьми.",
       "Ребёнок рассказывает, что было за минуту до снимка.",
       "И что случится через минуту после.",
-      "Какая деталь на фото подсказала ему это?"
+      "Какая деталь на фото это подсказала?"
      ],
      "en": [
       "Pick a photo of people you don’t know.",
@@ -6586,9 +6586,9 @@
      ],
      "fr": [
       "Votre enfant choisit trois photos sans aucun rapport entre elles.",
-      "Il les aligne : début, milieu, fin.",
-      "Il écrit deux phrases pour chacune, de façon à former une seule histoire.",
-      "Il change l'ordre des photos. Quelle est la nouvelle histoire ?"
+      "Votre enfant les aligne : début, milieu, fin.",
+      "Votre enfant écrit deux phrases pour chacune, de façon à former une seule histoire.",
+      "Votre enfant change l'ordre des photos. Quelle est la nouvelle histoire ?"
      ]
     }
    },
@@ -6641,7 +6641,7 @@
       "Игрушка прилетела с другой планеты и ничего не знает.",
       "Ребёнок объясняет ей, что такое дождь.",
       "Игрушка вашим голосом задаёт один вопрос.",
-      "Потом он объясняет, как едят суп."
+      "Потом объясняет ей, как едят суп."
      ],
      "en": [
       "The toy has arrived from another planet and knows nothing.",
@@ -6659,7 +6659,7 @@
       "La peluche arrive d'une autre planète et ne connaît rien.",
       "Votre enfant lui explique ce qu'est la pluie.",
       "La peluche pose une question avec votre voix.",
-      "Ensuite, il lui explique comment on mange la soupe."
+      "Ensuite, votre enfant lui explique comment on mange la soupe."
      ]
     },
     "6-8": {
@@ -6667,7 +6667,7 @@
       "Вы инопланетянин. Ребёнок объясняет, зачем нужна зубная щётка.",
       "Условие: слово «чистить» говорить нельзя.",
       "Задайте два наивных вопроса.",
-      "Поменяйтесь: объясняете вы, а он переспрашивает."
+      "Поменяйтесь: объясняете вы, а ребёнок переспрашивает."
      ],
      "en": [
       "You’re the alien. Your child explains what a toothbrush is for.",
@@ -6685,7 +6685,7 @@
       "Vous venez d'une autre planète. Votre enfant explique à quoi sert une brosse à dents.",
       "La règle : le mot « brosser » est interdit.",
       "Posez deux questions naïves.",
-      "Échangez : vous expliquez, et il vous relance."
+      "Échangez : vous expliquez, et votre enfant vous relance."
      ]
     },
     "9-12": {
@@ -6693,7 +6693,7 @@
       "Тема на выбор: интернет, деньги или школа.",
       "Ребёнок объясняет её за одну минуту простыми словами.",
       "Вы заранее запрещаете три самых очевидных слова.",
-      "Перескажите, что вы поняли. Совпало с тем, что он хотел сказать?"
+      "Перескажите, что вы поняли. Совпало с тем, что хотелось сказать ребёнку?"
      ],
      "en": [
       "Pick a topic: the internet, money or school.",
@@ -6711,7 +6711,7 @@
       "Un sujet au choix : Internet, l'argent ou l'école.",
       "Votre enfant l'explique en une minute avec des mots simples.",
       "Auparavant, vous interdisez les trois mots les plus évidents.",
-      "Redites ce que vous avez compris. Est-ce bien ce qu'il voulait dire ?"
+      "Redites ce que vous avez compris. Est-ce bien ce que votre enfant voulait dire ?"
      ]
     }
    },
@@ -6807,8 +6807,8 @@
      "fr": [
       "Le thème : le jouet préféré ou un animal de compagnie.",
       "Votre enfant trouve deux paires de mots qui riment.",
-      "Il en fait quatre vers.",
-      "Il récite son poème à la famille en y mettant le ton."
+      "Votre enfant en fait quatre vers.",
+      "Votre enfant récite son poème à la famille en y mettant le ton."
      ]
     },
     "9-12": {
@@ -6832,9 +6832,9 @@
      ],
      "fr": [
       "Votre enfant choisit un objet ou un plat préféré.",
-      "Il lui écrit une publicité de quatre vers rimés.",
-      "Il invente un slogan court.",
-      "Il la lit comme à la radio. Vous dites si vous achèteriez, et pourquoi."
+      "Votre enfant lui écrit une publicité de quatre vers rimés.",
+      "Votre enfant invente un slogan court.",
+      "Votre enfant la lit comme à la radio. Vous dites si vous achèteriez, et pourquoi."
      ]
     }
    },
@@ -6856,7 +6856,7 @@
     "fr": "Pour dessiner un visage, il faut regarder attentivement. C'est ainsi que la main apprend à faire confiance à l'œil."
    },
    "tip": {
-    "ru": "Не оценивайте сходство. Спросите: «Что ты во мне заметил?»",
+    "ru": "Не оценивайте сходство. Спросите: «Что ты во мне замечаешь?»",
     "en": "Don’t judge the likeness. Ask: “What did you notice about me?”",
     "de": "Bewerten Sie nicht die Ähnlichkeit. Fragen Sie: „Was ist dir an mir aufgefallen?“",
     "fr": "Ne jugez pas la ressemblance. Demandez : « Qu'as-tu remarqué chez moi ? »"
@@ -6885,9 +6885,9 @@
     "3-5": {
      "ru": [
       "Сядьте напротив ребёнка.",
-      "Он рисует большой круг: это ваше лицо.",
-      "Называйте по очереди: глаза, нос, рот, волосы. Он добавляет.",
-      "Теперь вы рисуете его, а он подсказывает."
+      "Ребёнок рисует большой круг: это ваше лицо.",
+      "Называйте по очереди: глаза, нос, рот, волосы. Ребёнок добавляет.",
+      "Теперь вы рисуете ребёнка и слушаете подсказки."
      ],
      "en": [
       "Sit facing your child.",
@@ -6903,16 +6903,16 @@
      ],
      "fr": [
       "Asseyez-vous en face de votre enfant.",
-      "Il dessine un grand rond : c'est votre visage.",
-      "Nommez tour à tour : les yeux, le nez, la bouche, les cheveux. Il les ajoute.",
-      "Maintenant, vous le dessinez, et c'est lui qui vous guide."
+      "Votre enfant dessine un grand rond : c'est votre visage.",
+      "Nommez tour à tour : les yeux, le nez, la bouche, les cheveux. Votre enfant les ajoute.",
+      "Maintenant, c'est vous qui dessinez votre enfant, en suivant ses indications."
      ]
     },
     "6-8": {
      "ru": [
       "Условие: рисуем портрет, не отрывая фломастер от бумаги.",
       "Ребёнок рисует вас одной линией.",
-      "Вы так же рисуете его.",
+      "Вы так же рисуете ребёнка.",
       "Найдите на портретах самую удачную деталь."
      ],
      "en": [
@@ -6930,7 +6930,7 @@
      "fr": [
       "La règle : dessiner un portrait sans lever le feutre de la feuille.",
       "Votre enfant vous dessine d'un seul trait.",
-      "Vous le dessinez de la même façon.",
+      "Vous dessinez votre enfant de la même façon.",
       "Trouvez sur chaque portrait le détail le plus réussi."
      ]
     },
@@ -7079,7 +7079,7 @@
      "fr": [
       "Le défi : une figure sans visage qui exprime une émotion.",
       "Votre enfant choisit l'émotion sans vous la dire.",
-      "Il modèle pendant cinq minutes.",
+      "Votre enfant modèle pendant cinq minutes.",
       "Vous devinez. Qu'est-ce qui, dans la pose, vous a mis sur la voie ?"
      ]
     }
@@ -7149,9 +7149,9 @@
      ],
      "fr": [
       "Regardez ensemble par la fenêtre pendant une minute.",
-      "Votre enfant nomme trois choses qu'il voit.",
-      "Il les dessine sur la feuille.",
-      "Demandez laquelle des trois il préfère."
+      "Votre enfant nomme trois choses vues dehors.",
+      "Votre enfant les dessine sur la feuille.",
+      "Demandez laquelle des trois a sa préférence."
      ]
     },
     "6-8": {
@@ -7176,8 +7176,8 @@
      "fr": [
       "Fabriquez un cadre en carton ou avec les doigts.",
       "Votre enfant regarde par la fenêtre à travers le cadre et choisit sa vue.",
-      "Il ne dessine que ce qui est dans le cadre.",
-      "Il donne un titre à son dessin."
+      "Votre enfant ne dessine que ce qui est dans le cadre.",
+      "Votre enfant donne un titre à son dessin."
      ]
     },
     "9-12": {
@@ -7201,8 +7201,8 @@
      ],
      "fr": [
       "Le matin, votre enfant fait un croquis de la vue de la fenêtre, cinq minutes.",
-      "Le soir, il en fait un second, du même endroit.",
-      "Il les pose côte à côte.",
+      "Le soir, second croquis, du même endroit.",
+      "Votre enfant les pose côte à côte.",
       "Qu'a changé la lumière : les couleurs, les ombres, l'ambiance ?"
      ]
     }
@@ -7282,7 +7282,7 @@
       "На прогулке ребёнок делает пять отпечатков разных поверхностей.",
       "Кора, плитка, скамейка, лист, стена дома.",
       "Дома вы угадываете, где что.",
-      "Он подсказывает только «теплее» и «холоднее»."
+      "Ребёнок подсказывает только «теплее» и «холоднее»."
      ],
      "en": [
       "On a walk, your child makes five rubbings of different surfaces.",
@@ -7300,7 +7300,7 @@
       "En promenade, votre enfant relève cinq empreintes de surfaces différentes.",
       "Une écorce, un pavé, un banc, une feuille, un mur.",
       "À la maison, vous devinez d'où vient chacune.",
-      "Il ne vous aide qu'avec « tu chauffes » et « tu refroidis »."
+      "Votre enfant ne vous aide qu'avec « tu chauffes » et « tu refroidis »."
      ]
     },
     "9-12": {
@@ -7324,9 +7324,9 @@
      ],
      "fr": [
       "Votre enfant relève l'empreinte de l'écorce de trois arbres différents.",
-      "Il ramasse une feuille de chacun.",
-      "Il identifie les arbres avec un livre ou une application.",
-      "Il légende les empreintes et compose une page de catalogue."
+      "Votre enfant ramasse une feuille de chacun.",
+      "Votre enfant identifie les arbres avec un livre ou une application.",
+      "Votre enfant légende les empreintes et compose une page de catalogue."
      ]
     }
    },
@@ -7351,7 +7351,7 @@
     "ru": "Прогноз не сбылся? Спросите, какой признак подвёл.",
     "en": "The forecast was off? Ask which sign let them down.",
     "de": "Die Vorhersage stimmt nicht? Fragen Sie, welches Anzeichen getäuscht hat.",
-    "fr": "La prévision était fausse ? Demandez quel indice l'a trompé."
+    "fr": "La prévision était fausse ? Demandez quel indice était trompeur."
    },
    "need": {
     "3-5": {
@@ -7379,7 +7379,7 @@
       "Посмотрите в окно: солнце, облака или дождь?",
       "Качаются ли ветки? Значит, есть ветер.",
       "Ребёнок решает, как сегодня одеть игрушку.",
-      "На прогулке проверьте, угадал ли он."
+      "На прогулке проверьте, подошла ли одежда."
      ],
      "en": [
       "Look out the window: sun, clouds or rain?",
@@ -7397,7 +7397,7 @@
       "Regardez par la fenêtre : soleil, nuages ou pluie ?",
       "Les branches bougent-elles ? Alors il y a du vent.",
       "Votre enfant décide comment habiller le jouet aujourd'hui.",
-      "En promenade, vérifiez s'il avait vu juste."
+      "En promenade, vérifiez si le choix était le bon."
      ]
     },
     "6-8": {
@@ -7422,7 +7422,7 @@
      "fr": [
       "Le soir, regardez le ciel ensemble.",
       "Votre enfant note sa prévision pour demain : soleil, nuages ou pluie.",
-      "Le matin, il vérifie.",
+      "Le matin, votre enfant vérifie.",
       "Trois jours de suite. Combien de prévisions étaient justes ?"
      ]
     },
@@ -7447,9 +7447,9 @@
      ],
      "fr": [
       "Pendant une semaine, à heure fixe, votre enfant note la température, les nuages et le vent.",
-      "Chaque soir, il écrit sa propre prévision pour le lendemain.",
-      "Il la compare avec la météo du téléphone et avec le temps qu'il a vraiment fait.",
-      "À la fin de la semaine, il compte qui a été le plus précis."
+      "Chaque soir, votre enfant écrit sa propre prévision pour le lendemain.",
+      "Votre enfant la compare avec la météo du téléphone et avec le temps qu'il a vraiment fait.",
+      "À la fin de la semaine : quelles prévisions étaient les plus justes ?"
      ]
     }
    },
@@ -7527,7 +7527,7 @@
      "ru": [
       "Ребёнок минуту рассматривает комнату и выходит.",
       "Вы меняете три вещи: переставляете, убираете, переворачиваете.",
-      "Он ищет изменения.",
+      "Ребёнок ищет изменения.",
       "Поменяйтесь ролями."
      ],
      "en": [
@@ -7545,7 +7545,7 @@
      "fr": [
       "Votre enfant observe la pièce pendant une minute, puis sort.",
       "Vous changez trois choses : déplacer, enlever, retourner.",
-      "Il cherche les changements.",
+      "Votre enfant cherche les changements.",
       "Échangez les rôles."
      ]
     },
@@ -7554,7 +7554,7 @@
       "Ребёнок одну минуту рассматривает картинку.",
       "Уберите её и задайте десять вопросов о деталях.",
       "Посчитайте верные ответы.",
-      "Теперь он готовит десять вопросов для вас."
+      "Теперь десять вопросов для вас готовит ребёнок."
      ],
      "en": [
       "Your child studies the picture for one minute.",
@@ -7572,7 +7572,7 @@
       "Votre enfant observe l'image pendant une minute.",
       "Retirez-la et posez dix questions sur les détails.",
       "Comptez les bonnes réponses.",
-      "À son tour, il prépare dix questions pour vous."
+      "À son tour, votre enfant prépare dix questions pour vous."
      ]
     }
    },
@@ -7594,10 +7594,10 @@
     "fr": "Votre enfant apprend à écouter chacun et à mener une discussion jusqu'à une décision."
    },
    "tip": {
-    "ru": "Говорите только в свою очередь. Так он увидит, что правила совета действуют на всех.",
+    "ru": "Говорите только в свою очередь. Так ребёнок увидит, что правила совета действуют на всех.",
     "en": "Speak only when it’s your turn. They’ll see that the council rules apply to everyone.",
     "de": "Sprechen Sie nur, wenn Sie an der Reihe sind. So sieht Ihr Kind, dass die Regeln des Rats für alle gelten.",
-    "fr": "Ne parlez qu'à votre tour. Il verra que les règles du conseil valent pour tout le monde."
+    "fr": "Ne parlez qu'à votre tour. Votre enfant verra que les règles du conseil valent pour tout le monde."
    },
    "need": {
     "3-5": {
@@ -7623,7 +7623,7 @@
     "3-5": {
      "ru": [
       "Назовите ребёнку два варианта.",
-      "Он спрашивает каждого в семье, что тот выбирает.",
+      "Ребёнок спрашивает каждого в семье, что тот выбирает.",
       "Считает голоса на пальцах.",
       "Объявляет результат."
      ],
@@ -7641,9 +7641,9 @@
      ],
      "fr": [
       "Donnez deux possibilités à votre enfant.",
-      "Il demande à chacun dans la famille laquelle il choisit.",
-      "Il compte les voix sur ses doigts.",
-      "Il annonce le résultat."
+      "Votre enfant demande à chaque membre de la famille sa préférence.",
+      "Votre enfant compte les voix sur ses doigts.",
+      "Votre enfant annonce le résultat."
      ]
     },
     "6-8": {
@@ -7668,8 +7668,8 @@
      "fr": [
       "La question du conseil : que fait-on ce week-end ?",
       "Votre enfant donne la parole à chacun, à tour de rôle.",
-      "Il répète toutes les propositions à voix haute.",
-      "Il organise le vote et annonce la décision."
+      "Votre enfant répète toutes les propositions à voix haute.",
+      "Votre enfant organise le vote et annonce la décision."
      ]
     },
     "9-12": {
@@ -7693,9 +7693,9 @@
      ],
      "fr": [
       "Votre enfant prépare trois sujets de discussion.",
-      "Il mène le conseil : trois minutes par sujet.",
-      "Il note les décisions et qui s'occupe de quoi.",
-      "Une semaine plus tard, il vérifie ce qui a été fait."
+      "Votre enfant mène le conseil : trois minutes par sujet.",
+      "Votre enfant note les décisions et qui s'occupe de quoi.",
+      "Une semaine plus tard, votre enfant vérifie ce qui a été fait."
      ]
     }
    },
@@ -7764,7 +7764,7 @@
      ],
      "fr": [
       "La mission : sauver les jouets et les ramener chez eux.",
-      "Votre enfant dirige : il dit quel jouet va où.",
+      "Votre enfant dirige et dit quel jouet va où.",
       "Vous exécutez et vous annoncez : « L'ours est rentré ! »",
       "Fêtez la fin de la mission."
      ]
@@ -7791,8 +7791,8 @@
      "fr": [
       "La mission : une chambre rangée en 10 minutes.",
       "Votre enfant découpe la chambre en zones et les attribue.",
-      "Il surveille le temps et aide celui qui prend du retard.",
-      "À la fin, il remercie l'équipe."
+      "Votre enfant surveille le temps et aide la personne qui prend du retard.",
+      "À la fin, votre enfant remercie l'équipe."
      ]
     },
     "9-12": {
@@ -7800,7 +7800,7 @@
       "Миссия: завтрак для семьи за 20 минут.",
       "Ребёнок пишет список задач и порядок.",
       "Раздаёт задачи. У плиты и с ножом работает взрослый.",
-      "После завтрака разбор: что он поручил бы иначе?"
+      "После завтрака разбор: что стоило поручить иначе?"
      ],
      "en": [
       "The mission: breakfast for the family in 20 minutes.",
@@ -7817,8 +7817,8 @@
      "fr": [
       "La mission : un petit-déjeuner pour la famille en 20 minutes.",
       "Votre enfant écrit la liste des tâches et leur ordre.",
-      "Il les distribue. C'est un adulte qui s'occupe des plaques de cuisson et du couteau.",
-      "Après le petit-déjeuner, le bilan : que confierait-il autrement ?"
+      "Votre enfant les distribue. C'est un adulte qui s'occupe des plaques de cuisson et du couteau.",
+      "Après le petit-déjeuner, le bilan : que faudrait-il confier autrement ?"
      ]
     }
    },
@@ -7840,7 +7840,7 @@
     "fr": "Votre enfant apprend à écouter les deux parties et à trouver une solution acceptée par tous."
    },
    "tip": {
-    "ru": "Примите его решение, даже если оно не в вашу пользу.",
+    "ru": "Примите решение судьи, даже если оно не в вашу пользу.",
     "en": "Accept the ruling, even if it doesn’t go your way.",
     "de": "Nehmen Sie die Entscheidung an, auch wenn sie nicht zu Ihren Gunsten ausfällt.",
     "fr": "Acceptez sa décision, même si elle n'est pas en votre faveur."
@@ -7869,8 +7869,8 @@
     "3-5": {
      "ru": [
       "Ребёнок следит за очередью.",
-      "Он говорит: «Теперь твой ход».",
-      "Нарушьте очередь один раз. Он должен заметить.",
+      "И говорит: «Теперь твой ход».",
+      "Нарушьте очередь один раз. Ребёнок должен это заметить.",
       "Поблагодарите за честную игру."
      ],
      "en": [
@@ -7887,17 +7887,17 @@
      ],
      "fr": [
       "Votre enfant surveille l'ordre des tours.",
-      "Il dit : « Maintenant, c'est à toi. »",
-      "Passez une fois avant votre tour. Il doit le remarquer.",
-      "Remerciez-le pour ce jeu loyal."
+      "Votre enfant dit : « Maintenant, c'est à toi. »",
+      "Passez une fois avant votre tour. Votre enfant doit le remarquer.",
+      "Remerciez votre enfant pour ce jeu loyal."
      ]
     },
     "6-8": {
      "ru": [
       "Сегодня ребёнок судья.",
-      "Перед игрой он объявляет правила.",
-      "Устройте небольшой спор. Он решает, кто прав.",
-      "Спросите, почему он решил именно так."
+      "Перед игрой судья объявляет правила.",
+      "Устройте небольшой спор. Судья решает, кто прав.",
+      "Спросите, почему решение именно такое."
      ],
      "en": [
       "Today your child is the referee.",
@@ -7913,9 +7913,9 @@
      ],
      "fr": [
       "Aujourd'hui, c'est votre enfant qui arbitre.",
-      "Avant la partie, il annonce les règles.",
-      "Provoquez un petit désaccord. Il décide qui a raison.",
-      "Demandez pourquoi il a tranché ainsi."
+      "Avant la partie, votre enfant annonce les règles.",
+      "Provoquez un petit désaccord. Votre enfant décide qui a raison.",
+      "Demandez les raisons de cette décision."
      ]
     },
     "9-12": {
@@ -7940,8 +7940,8 @@
      "fr": [
       "Prenez un vrai petit désaccord dans la famille.",
       "Votre enfant écoute les deux parties sans interrompre.",
-      "Il reformule chaque point de vue jusqu'à ce que la personne soit d'accord.",
-      "Il propose une solution qui convient aux deux."
+      "Votre enfant reformule chaque point de vue jusqu'à ce que la personne soit d'accord.",
+      "Votre enfant propose une solution qui convient aux deux."
      ]
     }
    },
@@ -7960,7 +7960,7 @@
     "ru": "Регулярная забота о растении или питомце учит ответственности за того, кто от тебя зависит.",
     "en": "Regular care for a plant or a pet teaches responsibility for someone who depends on you.",
     "de": "Regelmäßige Pflege einer Pflanze oder eines Haustiers lehrt Verantwortung für jemanden, der auf einen angewiesen ist.",
-    "fr": "S'occuper régulièrement d'une plante ou d'un animal apprend la responsabilité envers celui qui dépend de vous."
+    "fr": "S'occuper régulièrement d'une plante ou d'un animal apprend la responsabilité envers un être qui dépend de vous."
    },
    "tip": {
     "ru": "Не напоминайте сразу. Спросите: «Как там твой цветок?»",
@@ -7991,7 +7991,7 @@
    "steps": {
     "3-5": {
      "ru": [
-      "Выберите вместе цветок: теперь он «его».",
+      "Выберите вместе цветок: теперь это цветок ребёнка.",
       "Ребёнок поливает понемногу.",
       "Протирает один лист тряпочкой.",
       "Спросите: что цветку нравится?"
@@ -8011,15 +8011,15 @@
      "fr": [
       "Choisissez ensemble une plante : c'est désormais « la sienne ».",
       "Votre enfant l'arrose un peu.",
-      "Il essuie une feuille avec le chiffon.",
+      "Votre enfant essuie une feuille avec le chiffon.",
       "Demandez : qu'est-ce que la plante aime ?"
      ]
     },
     "6-8": {
      "ru": [
       "Ребёнок выбирает, о ком заботится неделю.",
-      "Вы вместе выясняете, что ему нужно и как часто.",
-      "Он отмечает сделанное в календаре каждый день.",
+      "Вы вместе выясняете, что нужно подопечному и как часто.",
+      "Каждый день ребёнок отмечает сделанное в календаре.",
       "В конце недели: что изменилось?"
      ],
      "en": [
@@ -8035,15 +8035,15 @@
       "Am Ende der Woche: Was hat sich verändert?"
      ],
      "fr": [
-      "Votre enfant choisit de qui il s'occupe pendant une semaine.",
+      "Votre enfant choisit de qui s'occuper pendant une semaine.",
       "Vous cherchez ensemble ce qu'il lui faut et à quelle fréquence.",
-      "Il coche chaque jour ce qui est fait sur le calendrier.",
+      "Votre enfant coche chaque jour ce qui est fait sur le calendrier.",
       "À la fin de la semaine : qu'est-ce qui a changé ?"
      ]
     },
     "9-12": {
      "ru": [
-      "Ребёнок выясняет, что нужно его подопечному: свет, вода, корм.",
+      "Ребёнок выясняет, что нужно подопечному: свет, вода, корм.",
       "Составляет памятку для семьи.",
       "Отвечает за уход неделю.",
       "Потом рассказывает, что было труднее всего."
@@ -8062,9 +8062,9 @@
      ],
      "fr": [
       "Votre enfant se renseigne sur les besoins de son protégé : lumière, eau, nourriture.",
-      "Il rédige un mémo pour la famille.",
-      "Il est responsable des soins pendant une semaine.",
-      "Ensuite, il raconte ce qui a été le plus difficile."
+      "Votre enfant rédige un mémo pour la famille.",
+      "Votre enfant est responsable des soins pendant une semaine.",
+      "Ensuite, votre enfant raconte ce qui a été le plus difficile."
      ]
     }
    },
@@ -8089,7 +8089,7 @@
     "ru": "Говорите коротко и о настоящем. Ребёнок чувствует, когда история выдумана.",
     "en": "Keep it short and real. A child can tell when a story is made up.",
     "de": "Erzählen Sie kurz und von Echtem. Kinder spüren, wenn eine Geschichte erfunden ist.",
-    "fr": "Faites court et parlez de choses vraies. Un enfant sent quand une histoire est inventée."
+    "fr": "Faites court et parlez de choses vraies. Les enfants sentent quand une histoire est inventée."
    },
    "need": {
     "3-5": {
@@ -8117,7 +8117,7 @@
       "Расскажите в трёх фразах, как прошёл ваш день.",
       "Ребёнок повторяет: «Ты сегодня…»",
       "Спросите: как думаешь, мне было весело или грустно?",
-      "Поменяйтесь: рассказывает он."
+      "Поменяйтесь: рассказывает ребёнок."
      ],
      "en": [
       "Tell them about your day in three sentences.",
@@ -8134,8 +8134,8 @@
      "fr": [
       "Racontez votre journée en trois phrases.",
       "Votre enfant répète : « Aujourd'hui, tu as… »",
-      "Demandez : à ton avis, j'étais content ou triste ?",
-      "Échangez : c'est lui qui raconte."
+      "Demandez : à ton avis, je ressentais de la joie ou de la tristesse ?",
+      "Échangez : à votre enfant de raconter."
      ]
     },
     "6-8": {
@@ -8143,7 +8143,7 @@
       "Вы две минуты рассказываете о своём дне.",
       "Ребёнок слушает, не перебивая.",
       "Задаёт один вопрос.",
-      "Пересказывает главное. Скажите, верно ли он понял."
+      "Пересказывает главное. Скажите, всё ли понято верно."
      ],
      "en": [
       "You talk about your day for two minutes.",
@@ -8160,16 +8160,16 @@
      "fr": [
       "Vous racontez votre journée pendant deux minutes.",
       "Votre enfant écoute sans interrompre.",
-      "Il pose une question.",
-      "Il redit l'essentiel. Dites-lui s'il a bien compris."
+      "Votre enfant pose une question.",
+      "Votre enfant redit l'essentiel. Dites-lui si c'est bien compris."
      ]
     },
     "9-12": {
      "ru": [
       "Ребёнок спрашивает кого-то из семьи, как прошёл день.",
       "Задаёт три уточняющих вопроса.",
-      "Называет чувство: «Похоже, ты был раздосадован».",
-      "Спрашивает, угадал ли."
+      "Называет чувство: «Похоже, тебе было досадно».",
+      "Спрашивает, верно ли."
      ],
      "en": [
       "Your child asks someone in the family how their day went.",
@@ -8185,9 +8185,9 @@
      ],
      "fr": [
       "Votre enfant demande à quelqu'un de la famille comment s'est passée sa journée.",
-      "Il pose trois questions pour préciser.",
-      "Il nomme l'émotion : « On dirait que ça t'a contrarié. »",
-      "Il demande s'il a vu juste."
+      "Votre enfant pose trois questions pour préciser.",
+      "Votre enfant nomme l'émotion : « On dirait que ça t'a fait de la peine. »",
+      "Votre enfant demande si c'est bien cela."
      ]
     }
    },
@@ -8209,10 +8209,10 @@
     "fr": "Votre enfant apprend à remarquer ce qu'il y a de bien chez les autres et à le dire avec précision."
    },
    "tip": {
-    "ru": "Покажите пример: скажите ребёнку, что именно сегодня он сделал хорошо.",
+    "ru": "Покажите пример: скажите ребёнку, что именно сегодня получилось хорошо.",
     "en": "Set the example: tell your child exactly what they did well today.",
     "de": "Machen Sie es vor: Sagen Sie Ihrem Kind, was genau ihm heute gut gelungen ist.",
-    "fr": "Montrez l'exemple : dites à votre enfant ce qu'il a bien fait aujourd'hui, précisément."
+    "fr": "Montrez l'exemple : dites précisément à votre enfant ce que vous avez apprécié aujourd'hui."
    },
    "need": {
     "3-5": {
@@ -8240,7 +8240,7 @@
       "За ужином ребёнок говорит каждому одно доброе слово.",
       "Подскажите начало: «Мне нравится, как ты…»",
       "Каждый отвечает «спасибо».",
-      "В конце доброе слово говорят ему."
+      "В конце доброе слово говорят ребёнку."
      ],
      "en": [
       "At dinner, your child says one kind thing to each person.",
@@ -8258,13 +8258,13 @@
       "Au dîner, votre enfant dit un mot gentil à chacun.",
       "Soufflez-lui le début : « J'aime bien quand tu… »",
       "Chacun répond « merci ».",
-      "À la fin, c'est à lui que l'on dit un mot gentil."
+      "À la fin, c'est votre enfant qui reçoit un mot gentil."
      ]
     },
     "6-8": {
      "ru": [
       "Ребёнок пишет каждому в семье записку.",
-      "В каждой одно конкретное дело: «Спасибо, что починил мой велосипед».",
+      "В каждой одно конкретное дело: «Спасибо за починенный велосипед».",
       "Прячет записки там, где их найдут.",
       "Вечером обсудите, кто что нашёл."
      ],
@@ -8283,7 +8283,7 @@
      "fr": [
       "Votre enfant écrit un mot à chaque membre de la famille.",
       "Chaque mot cite un geste précis : « Merci d'avoir réparé mon vélo. »",
-      "Il cache les mots là où ils seront trouvés.",
+      "Votre enfant cache les mots là où ils seront trouvés.",
       "Le soir, racontez-vous qui a trouvé quoi."
      ]
     },
@@ -8308,8 +8308,8 @@
      ],
      "fr": [
       "Dans la journée, votre enfant repère trois bonnes actions faites par d'autres.",
-      "Il note qui a fait quoi.",
-      "Le soir, il le dit ou l'écrit à chacun.",
+      "Votre enfant note qui a fait quoi.",
+      "Le soir, votre enfant le dit ou l'écrit à chacun.",
       "Parlez-en : comment les gens ont-ils réagi ?"
      ]
     }
@@ -8335,7 +8335,7 @@
     "ru": "Встаньте рядом на одну ногу. Вместе шататься веселее.",
     "en": "Stand on one leg next to them. Wobbling is more fun together.",
     "de": "Stellen Sie sich daneben auf ein Bein. Gemeinsam wackeln macht mehr Spaß.",
-    "fr": "Mettez-vous sur un pied à côté de lui. Vaciller à deux, c'est plus drôle."
+    "fr": "Mettez-vous sur un pied à côté de votre enfant. Vaciller à deux, c'est plus drôle."
    },
    "need": {
     "3-5": {
@@ -8381,7 +8381,7 @@
       "Tracez une ligne au sol.",
       "Votre enfant marche dessus, les bras écartés.",
       "Maintenant, avec la peluche sur la tête.",
-      "Passez après lui et faites tomber la peluche. Laissez-le rire."
+      "Passez à votre tour et faites tomber la peluche. Laissez votre enfant rire."
      ]
     },
     "6-8": {
@@ -8432,8 +8432,8 @@
      "fr": [
       "Votre enfant traverse la pièce avec un livre sur la tête.",
       "Plus difficile : s'accroupir et se relever sans le faire tomber.",
-      "Il invente un trajet avec un virage.",
-      "Trois essais chronométrés. Il note le record."
+      "Votre enfant invente un trajet avec un virage.",
+      "Trois essais chronométrés. Votre enfant note le record."
      ]
     }
    },
@@ -8511,7 +8511,7 @@
      "ru": [
       "Отметьте три линии: близко, средне, далеко.",
       "Попадание с каждой стоит 1, 2 и 3 очка.",
-      "У каждого по шесть бросков. Линию выбираешь сам.",
+      "У каждого по шесть бросков. Линию можно выбрать любую.",
       "Посчитайте очки. Какая линия выгоднее?"
      ],
      "en": [
@@ -8537,7 +8537,7 @@
      "ru": [
       "Ребёнок придумывает турнир: правила, очки, число раундов.",
       "Один раунд бросаете слабой рукой.",
-      "Он ведёт таблицу.",
+      "Ребёнок ведёт таблицу.",
       "После турнира меняет одно правило, чтобы стало интереснее."
      ],
      "en": [
@@ -8555,8 +8555,8 @@
      "fr": [
       "Votre enfant invente un tournoi : règles, points, nombre de manches.",
       "Une manche se joue avec la main la moins habile.",
-      "Il tient le tableau des scores.",
-      "Après le tournoi, il change une règle pour le rendre plus amusant."
+      "Votre enfant tient le tableau des scores.",
+      "Après le tournoi, votre enfant change une règle pour le rendre plus amusant."
      ]
     }
    },
@@ -8581,7 +8581,7 @@
     "ru": "Двигайтесь медленно. Задача не запутать, а дать повторить.",
     "en": "Move slowly. The point is to be copied, not to trip them up.",
     "de": "Bewegen Sie sich langsam. Es geht ums Nachmachen, nicht ums Verwirren.",
-    "fr": "Bougez lentement. Le but n'est pas de le piéger, mais de lui permettre de suivre."
+    "fr": "Bougez lentement. Le but n'est pas de piéger votre enfant, mais de lui permettre de suivre."
    },
    "need": {
     "3-5": {
@@ -8607,9 +8607,9 @@
     "3-5": {
      "ru": [
       "Встаньте напротив ребёнка.",
-      "Медленно поднимите руку. Он повторяет, как зеркало.",
+      "Медленно поднимите руку. Ребёнок повторяет, как зеркало.",
       "Добавьте наклон, шаг, приседание.",
-      "Теперь он ведёт, а зеркало вы."
+      "Теперь ведёт ребёнок, а зеркало вы."
      ],
      "en": [
       "Stand facing your child.",
@@ -8625,16 +8625,16 @@
      ],
      "fr": [
       "Placez-vous face à votre enfant.",
-      "Levez lentement un bras. Il fait pareil, comme un miroir.",
+      "Levez lentement un bras. Votre enfant fait pareil, comme un miroir.",
       "Ajoutez une inclinaison, un pas, une flexion.",
-      "Maintenant, c'est lui qui mène et vous qui êtes le miroir."
+      "Maintenant, c'est votre enfant qui mène et vous qui êtes le miroir."
      ]
     },
     "6-8": {
      "ru": [
       "Покажите связку из четырёх движений.",
       "Ребёнок повторяет по памяти.",
-      "Он добавляет пятое движение, вы повторяете всю связку.",
+      "Затем добавляет пятое движение, вы повторяете всю связку.",
       "Продолжайте, пока кто-то не собьётся."
      ],
      "en": [
@@ -8652,8 +8652,8 @@
      "fr": [
       "Montrez un enchaînement de quatre mouvements.",
       "Votre enfant le refait de mémoire.",
-      "Il ajoute un cinquième mouvement, et vous refaites tout l'enchaînement.",
-      "Continuez jusqu'à ce que l'un de vous se trompe."
+      "Votre enfant ajoute un cinquième mouvement, et vous refaites tout l'enchaînement.",
+      "Continuez jusqu'à la première erreur."
      ]
     },
     "9-12": {
@@ -8677,9 +8677,9 @@
      ],
      "fr": [
       "Votre enfant compose un échauffement de six exercices en trois minutes.",
-      "Il choisit la musique qui va avec.",
-      "Il l'anime pour la famille.",
-      "Il demande quel exercice garder et lequel remplacer."
+      "Votre enfant choisit la musique qui va avec.",
+      "Votre enfant l'anime pour la famille.",
+      "Votre enfant demande quel exercice garder et lequel remplacer."
      ]
     }
    },

@@ -8,7 +8,7 @@
  "types": {
   "builder": {
    "about": {
-    "ru": "{name} думает руками. Ему проще понять вещь, когда он её собрал, разобрал или построил сам. Он видит, как из частей получается целое, и не успокаивается, пока конструкция не встанет ровно.",
+    "ru": "{name} думает руками. Понять вещь проще всего, если собрать, разобрать или построить её своими руками. Здесь сразу видно, как из частей получается целое, и покоя нет, пока конструкция не встанет ровно.",
     "en": "{name} thinks with their hands. Things make sense once they have built them, taken them apart or put them together. They see how parts become a whole and keep going until the structure stands.",
     "de": "{name} denkt mit den Händen. Dinge werden verständlich, sobald sie gebaut, zerlegt oder zusammengesetzt sind. Kinder mit diesem Profil sehen, wie aus Teilen ein Ganzes wird, und bleiben dran, bis die Konstruktion steht.",
     "fr": "{name} pense avec ses mains. Les choses deviennent claires une fois construites, démontées ou assemblées. Les enfants de ce profil voient comment des pièces forment un tout et persévèrent jusqu'à ce que la construction tienne debout."
@@ -40,14 +40,14 @@
     }
    ],
    "grow": {
-    "ru": "Объяснять словами, что и зачем он делает. Просите рассказать о постройке, как экскурсовода.",
+    "ru": "Объяснять словами свои действия: что и зачем. Просите рассказать о постройке, как экскурсовода.",
     "en": "Putting into words what they are doing and why. Ask for a guided tour of what they built.",
     "de": "In Worte fassen, was gerade entsteht und warum. Bitten Sie um eine Führung durch das Gebaute.",
     "fr": "Mettre des mots sur ce qui se construit et pourquoi. Demandez une visite guidée de la construction."
    },
    "say": [
     {
-     "ru": "«Расскажи, как ты это придумал»",
+     "ru": "«Расскажи, как тебе пришла эта идея»",
      "en": "\"Tell me how you figured this out\"",
      "de": "„Erzähl mir, wie du darauf gekommen bist“",
      "fr": "« Raconte-moi comment tu as trouvé ça »"
@@ -114,7 +114,7 @@
   },
   "inventor": {
    "about": {
-    "ru": "{name} хочет знать, как всё устроено, и проверяет это сам. Готовый ответ ему менее интересен, чем собственный опыт. Он пробует, ошибается и пробует иначе.",
+    "ru": "{name} хочет знать, как всё устроено, и проверяет это на деле. Готовый ответ здесь менее интересен, чем собственный опыт: попробовать, ошибиться и попробовать иначе.",
     "en": "{name} wants to know how everything works and has to test it for themselves. A ready answer interests them less than their own experiment. They try, get it wrong and try another way.",
     "de": "{name} will wissen, wie alles funktioniert, und prüft es selbst nach. Eine fertige Antwort ist weniger spannend als das eigene Experiment. Kinder mit diesem Profil probieren aus, irren sich und versuchen es auf einem anderen Weg.",
     "fr": "{name} veut savoir comment tout fonctionne et veut le vérifier par l'expérience. Une réponse toute faite intéresse moins que sa propre expérience. Les enfants de ce profil essaient, se trompent et cherchent une autre voie."
@@ -146,7 +146,7 @@
     }
    ],
    "grow": {
-    "ru": "Заканчивать начатое. Идей у него больше, чем доведённых дел. Договаривайтесь об одном маленьком финише.",
+    "ru": "Заканчивать начатое. Идей пока больше, чем доведённых дел. Договаривайтесь об одном маленьком финише.",
     "en": "Finishing. They have more ideas than finished projects. Agree on one small finish line at a time.",
     "de": "Dinge zu Ende bringen. Es gibt mehr Ideen als fertige Projekte. Vereinbaren Sie immer nur ein kleines Ziel auf einmal.",
     "fr": "Aller jusqu'au bout. Les idées sont plus nombreuses que les projets terminés. Fixez ensemble un seul petit objectif à la fois."
@@ -199,7 +199,7 @@
      "fr": "Semaine 1. Une expérience de 10 minutes par jour : ce qui coule, ce qui colle à l'aimant, ce qui se dissout."
     },
     {
-     "ru": "Неделя 2. Дневник «я думал, а оказалось»: предположение до опыта и результат после.",
+     "ru": "Неделя 2. Дневник «казалось, а оказалось»: предположение до опыта и результат после.",
      "en": "Week 2. An \"I thought… but it turned out…\" journal: a guess before, the result after.",
      "de": "Woche 2. Ein Tagebuch „Ich dachte, aber es kam so“: vorher die Vermutung, danach das Ergebnis.",
      "fr": "Semaine 2. Un carnet « Je pensais, mais en fait » : l'hypothèse avant, le résultat après."
@@ -220,10 +220,10 @@
   },
   "storyteller": {
    "about": {
-    "ru": "{name} мыслит словами и историями. Он запоминает то, что рассказано как сюжет, и сам превращает обычный день в рассказ. Ему важно, чтобы его слушали.",
+    "ru": "{name} мыслит словами и историями. Лучше всего запоминается то, что рассказано как сюжет, а обычный день легко превращается в рассказ. И очень важно, чтобы этот рассказ слушали.",
     "en": "{name} thinks in words and stories. They remember what is told as a story and turn an ordinary day into one. Being listened to matters to them.",
     "de": "{name} denkt in Wörtern und Geschichten. Was als Geschichte erzählt wird, bleibt im Gedächtnis, und aus einem gewöhnlichen Tag wird eine Erzählung. Kindern mit diesem Profil ist es wichtig, dass man ihnen zuhört.",
-    "fr": "{name} pense en mots et en histoires. Ce qui est raconté comme une histoire reste en mémoire, et une journée ordinaire devient un récit. Pour les enfants de ce profil, être écouté compte beaucoup."
+    "fr": "{name} pense en mots et en histoires. Ce qui est raconté comme une histoire reste en mémoire, et une journée ordinaire devient un récit. Pour les enfants de ce profil, trouver une oreille attentive compte beaucoup."
    },
    "hooks": {
     "ru": "Увлекает: книги, разговоры, роли, выступления. Быстро надоедает: молчаливая работа в одиночку и задания без истории и героя.",
@@ -252,7 +252,7 @@
     }
    ],
    "grow": {
-    "ru": "Слушать других так же охотно, как говорить. Играйте в «интервью», где он задаёт вопросы.",
+    "ru": "Слушать других так же охотно, как говорить. Играйте в «интервью», где вопросы задаёт ребёнок.",
     "en": "Listening as willingly as talking. Play \"interviewer\", where they ask the questions.",
     "de": "Genauso gern zuhören wie reden. Spielen Sie „Interview“: Ihr Kind stellt die Fragen.",
     "fr": "Écouter avec autant de plaisir que parler. Jouez à « l'interview » : c'est votre enfant qui pose les questions."
@@ -265,7 +265,7 @@
      "fr": "« Raconte-moi la suite »"
     },
     {
-     "ru": "«Мне нравится, какое слово ты подобрал»",
+     "ru": "«Какое точное слово, мне очень нравится»",
      "en": "\"I love the word you chose there\"",
      "de": "„Das Wort, das du da gewählt hast, gefällt mir“",
      "fr": "« J'aime beaucoup le mot que tu as choisi »"
@@ -326,7 +326,7 @@
   },
   "artist": {
    "about": {
-    "ru": "{name} замечает то, что другие пропускают: цвет, форму, звук, настроение. Он думает образами и хочет делать по-своему, а не как в образце.",
+    "ru": "{name} замечает то, что другие пропускают: цвет, форму, звук, настроение. Думает образами и хочет делать по-своему, а не как в образце.",
     "en": "{name} notices what others miss: color, shape, sound, mood. They think in images and want to do it their own way, not like the example.",
     "de": "{name} bemerkt, was anderen entgeht: Farbe, Form, Klang, Stimmung. Kinder mit diesem Profil denken in Bildern und wollen es auf ihre eigene Art machen, nicht wie in der Vorlage.",
     "fr": "{name} remarque ce qui échappe aux autres : la couleur, la forme, le son, l'ambiance. Les enfants de ce profil pensent en images et veulent faire à leur façon, pas comme le modèle."
@@ -351,14 +351,14 @@
      "fr": "Des idées originales"
     },
     {
-     "ru": "Способен надолго погрузиться в своё дело",
+     "ru": "Умеет надолго погрузиться в своё дело",
      "en": "Can stay absorbed in their work for a long time",
      "de": "Kann lange in die eigene Arbeit vertieft bleiben",
      "fr": "Peut se plonger longtemps dans son travail"
     }
    ],
    "grow": {
-    "ru": "Показывать работу другим и спокойно принимать замечания. Начните с вопроса «что тебе самому здесь нравится?».",
+    "ru": "Показывать работу другим и спокойно принимать замечания. Начните с вопроса «а что здесь нравится именно тебе?».",
     "en": "Showing work to others and taking comments calmly. Start with \"what do you like about it yourself?\"",
     "de": "Die eigene Arbeit anderen zeigen und Anmerkungen ruhig annehmen. Beginnen Sie mit: „Was gefällt dir selbst daran?“",
     "fr": "Montrer son travail aux autres et accueillir les remarques avec calme. Commencez par : « Qu'est-ce qui te plaît, à toi ? »"
@@ -371,13 +371,13 @@
      "fr": "« Raconte-moi ce qui se passe ici »"
     },
     {
-     "ru": "«Я вижу, сколько труда ты вложил в эти детали»",
+     "ru": "«Я вижу, сколько труда вложено в эти детали»",
      "en": "\"I can see how much work went into these details\"",
      "de": "„Ich sehe, wie viel Arbeit in diesen Details steckt“",
      "fr": "« Je vois tout le travail qu'il y a dans ces détails »"
     },
     {
-     "ru": "«Как ты выбрал эти цвета?»",
+     "ru": "«Как ты подбираешь цвета?»",
      "en": "\"How did you choose these colors?\"",
      "de": "„Wie hast du diese Farben ausgesucht?“",
      "fr": "« Comment as-tu choisi ces couleurs ? »"
@@ -432,7 +432,7 @@
   },
   "explorer": {
    "about": {
-    "ru": "{name} сначала смотрит, потом действует. Он собирает факты, замечает закономерности и помнит удивительные подробности о животных, планетах или динозаврах.",
+    "ru": "{name} сначала смотрит, потом действует. Собирает факты, замечает закономерности и помнит удивительные подробности о животных, планетах или динозаврах.",
     "en": "{name} looks first and acts second. They collect facts, spot patterns and remember amazing details about animals, planets or dinosaurs.",
     "de": "{name} schaut erst und handelt dann. Kinder mit diesem Profil sammeln Fakten, erkennen Muster und merken sich erstaunliche Einzelheiten über Tiere, Planeten oder Dinosaurier.",
     "fr": "{name} observe d'abord et agit ensuite. Les enfants de ce profil collectionnent les faits, repèrent ce qui se répète et retiennent des détails étonnants sur les animaux, les planètes ou les dinosaures."
@@ -464,20 +464,20 @@
     }
    ],
    "grow": {
-    "ru": "Входить в новую компанию. Ему нужно время, чтобы осмотреться. Не торопите, дайте 10 минут понаблюдать.",
+    "ru": "Входить в новую компанию. Сначала нужно время, чтобы осмотреться. Не торопите, дайте 10 минут понаблюдать.",
     "en": "Joining a new group. They need time to look around. Don't rush them, give them 10 minutes to watch.",
     "de": "In eine neue Gruppe hineinfinden. Dafür braucht es Zeit zum Umschauen. Drängen Sie Ihr Kind nicht. Geben Sie ihm 10 Minuten zum Zuschauen.",
     "fr": "Entrer dans un nouveau groupe. Il faut du temps pour regarder autour de soi. Ne brusquez pas votre enfant : laissez-lui 10 minutes pour observer."
    },
    "say": [
     {
-     "ru": "«Что ты сегодня заметил нового?»",
+     "ru": "«Что нового удалось заметить сегодня?»",
      "en": "\"What did you notice today that was new?\"",
      "de": "„Was hast du heute Neues bemerkt?“",
      "fr": "« Qu'as-tu remarqué de nouveau aujourd'hui ? »"
     },
     {
-     "ru": "«Покажи, что ты нашёл»",
+     "ru": "«Покажи свою находку»",
      "en": "\"Show me what you found\"",
      "de": "„Zeig mir, was du gefunden hast“",
      "fr": "« Montre-moi ce que tu as trouvé »"
@@ -529,7 +529,7 @@
      "fr": "Semaine 3. Observation : un seul sujet pendant une semaine (une plante, les oiseaux, la météo) avec une note par jour."
     },
     {
-     "ru": "Неделя 4. Экспедиция: спланировать семейную вылазку и быть в ней проводником.",
+     "ru": "Неделя 4. Экспедиция: спланировать семейную вылазку и вести всех по маршруту.",
      "en": "Week 4. An expedition: plan a family outing and act as the guide.",
      "de": "Woche 4. Eine Expedition: einen Familienausflug planen und die Führung übernehmen.",
      "fr": "Semaine 4. Une expédition : préparer une sortie en famille et jouer le rôle de guide."
@@ -538,20 +538,20 @@
   },
   "leader": {
    "about": {
-    "ru": "{name} быстро понимает, что нужно сделать, и собирает для этого людей. Он предлагает правила, распределяет роли и переживает за общий результат.",
+    "ru": "{name} быстро понимает, что нужно сделать, и собирает для этого людей. Предлагает правила, распределяет роли и переживает за общий результат.",
     "en": "{name} quickly sees what needs doing and gets people together to do it. They suggest the rules, hand out roles and care about the shared result.",
     "de": "{name} erkennt schnell, was zu tun ist, und holt dafür andere zusammen. Kinder mit diesem Profil schlagen Regeln vor, verteilen Rollen und achten auf das gemeinsame Ergebnis.",
     "fr": "{name} voit vite ce qu'il faut faire et rassemble les autres pour y arriver. Les enfants de ce profil proposent les règles, distribuent les rôles et tiennent au résultat commun."
    },
    "hooks": {
-    "ru": "Увлекает: цель, команда и возможность решать. Быстро надоедает: задания без выбора и ситуации, где от него ничего не зависит.",
+    "ru": "Увлекает: цель, команда и возможность решать. Быстро надоедает: задания без выбора и ситуации, где от ребёнка ничего не зависит.",
     "en": "Pulls them in: a goal, a team and a say in decisions. Gets boring fast: tasks with no choice and situations where nothing depends on them.",
     "de": "Das fesselt: ein Ziel, ein Team und Mitsprache bei Entscheidungen. Das langweilt schnell: Aufgaben ohne Wahl und Situationen, in denen nichts vom eigenen Beitrag abhängt.",
     "fr": "Ce qui passionne : un but, une équipe et un mot à dire dans les décisions. Ce qui lasse vite : les tâches sans choix et les situations où rien ne dépend de soi."
    },
    "strengths": [
     {
-     "ru": "Инициатива: начинает первым",
+     "ru": "Инициатива: начинает раньше других",
      "en": "Initiative: goes first",
      "de": "Initiative: macht den ersten Schritt",
      "fr": "Esprit d'initiative : fait le premier pas"
@@ -570,14 +570,14 @@
     }
    ],
    "grow": {
-    "ru": "Уступать и проигрывать. Давайте иногда роль «помощника капитана», где главный другой.",
+    "ru": "Уступать и проигрывать. Давайте иногда роль «помощника капитана», где командует кто-то другой.",
     "en": "Giving way and losing. Sometimes give them the \"first mate\" role, with someone else in charge.",
     "de": "Nachgeben und verlieren können. Lassen Sie Ihr Kind ab und zu die „rechte Hand“ sein, während jemand anderes das Sagen hat.",
     "fr": "Céder et savoir perdre. Confiez-lui parfois le rôle de « bras droit », quand une autre personne dirige."
    },
    "say": [
     {
-     "ru": "«Как ты решил, кто что делает?»",
+     "ru": "«Как ты решаешь, кто что делает?»",
      "en": "\"How did you decide who does what?\"",
      "de": "„Wie hast du entschieden, wer was macht?“",
      "fr": "« Comment as-tu décidé qui fait quoi ? »"
@@ -589,7 +589,7 @@
      "fr": "« Qu'en pensent les autres ? Demande-leur »"
     },
     {
-     "ru": "«Сегодня ты отвечаешь за это сам»",
+     "ru": "«Сегодня за это отвечаешь только ты»",
      "en": "\"Today this one is yours to run\"",
      "de": "„Heute leitest du das“",
      "fr": "« Aujourd'hui, c'est toi qui diriges »"
@@ -617,7 +617,7 @@
    },
    "plan": [
     {
-     "ru": "Неделя 1. Одно своё дело дома: отвечает за него сам всю неделю.",
+     "ru": "Неделя 1. Одно своё дело дома: полная ответственность на всю неделю.",
      "en": "Week 1. One job at home that is fully theirs for the week.",
      "de": "Woche 1. Eine Aufgabe zu Hause, für die Ihr Kind eine Woche lang allein zuständig ist.",
      "fr": "Semaine 1. Une tâche à la maison confiée entièrement à votre enfant pour la semaine."
@@ -635,7 +635,7 @@
      "fr": "Semaine 3. Un mini-projet : organiser une sortie ou une fête pour deux ou trois personnes."
     },
     {
-     "ru": "Неделя 4. Смена ролей: неделя, когда он помогает и следует чужому плану.",
+     "ru": "Неделя 4. Смена ролей: неделя, когда ребёнок помогает и следует чужому плану.",
      "en": "Week 4. Switching roles: a week of helping and following someone else's plan.",
      "de": "Woche 4. Rollentausch: eine Woche lang helfen und dem Plan von jemand anderem folgen.",
      "fr": "Semaine 4. Changement de rôle : une semaine pour aider et suivre le plan de quelqu'un d'autre."
@@ -644,7 +644,7 @@
   },
   "helper": {
    "about": {
-    "ru": "{name} считывает настроение людей раньше, чем они что-то скажут. Ему важны отношения: он помнит, кто что любит, и старается, чтобы всем было хорошо.",
+    "ru": "{name} считывает настроение людей раньше, чем они что-то скажут. Главное здесь отношения: помнить, кто что любит, и стараться, чтобы всем было хорошо.",
     "en": "{name} reads people's moods before they say a word. Relationships matter to them: they remember who likes what and try to make sure everyone is okay.",
     "de": "{name} spürt die Stimmung anderer, bevor sie ein Wort sagen. Kindern mit diesem Profil sind Beziehungen wichtig: Sie merken sich, wer was mag, und sorgen dafür, dass es allen gut geht.",
     "fr": "{name} perçoit l'humeur des autres avant qu'ils aient dit un mot. Pour les enfants de ce profil, les relations comptent : ils retiennent ce que chacun aime et veillent à ce que tout le monde aille bien."
@@ -683,7 +683,7 @@
    },
    "say": [
     {
-     "ru": "«Ты заметил, что ему грустно. Это ценно»",
+     "ru": "«Ты замечаешь, когда кому-то грустно. Это ценно»",
      "en": "\"You noticed someone was sad. That matters\"",
      "de": "„Du hast gemerkt, dass jemand traurig war. Das ist wichtig“",
      "fr": "« Tu as remarqué que quelqu'un était triste. C'est important »"
@@ -695,7 +695,7 @@
      "fr": "« Et toi, qu'est-ce que tu aimerais ? »"
     },
     {
-     "ru": "«Можно отказаться, и ты останешься хорошим другом»",
+     "ru": "«Можно отказаться, и дружба от этого не пострадает»",
      "en": "\"You can say no and still be a good friend\"",
      "de": "„Du kannst Nein sagen und trotzdem befreundet bleiben“",
      "fr": "« Tu peux dire non et garder tes amis »"
@@ -735,7 +735,7 @@
      "fr": "Semaine 2. Prendre soin du vivant : arroser une plante ou nourrir un animal devient sa tâche quotidienne, et vous vérifiez."
     },
     {
-     "ru": "Неделя 3. Мои желания: каждый день один выбор делает только он (ужин, игра, маршрут).",
+     "ru": "Неделя 3. Мои желания: каждый день один выбор делает только ребёнок (ужин, игра, маршрут).",
      "en": "Week 3. My wishes: one choice each day is theirs alone (dinner, the game, the route).",
      "de": "Woche 3. Meine Wünsche: Jeden Tag gehört eine Entscheidung allein Ihrem Kind (Abendessen, Spiel, Weg).",
      "fr": "Semaine 3. Mes envies : chaque jour, un choix revient à votre enfant (le dîner, le jeu, le trajet)."
@@ -750,7 +750,7 @@
   },
   "mover": {
    "about": {
-    "ru": "{name} думает в движении. Ему легче понять и запомнить, когда тело участвует: показать, попробовать, повторить. Энергии у него больше, чем требует обычный день.",
+    "ru": "{name} думает в движении. Понять и запомнить легче, когда участвует тело: показать, попробовать, повторить. Энергии здесь больше, чем требует обычный день.",
     "en": "{name} thinks on the move. Understanding and remembering come easier when the body joins in: show it, try it, do it again. They have more energy than an ordinary day asks for.",
     "de": "{name} denkt in Bewegung. Verstehen und Merken fallen leichter, wenn der Körper mitmacht: zeigen, ausprobieren, wiederholen. Kinder mit diesem Profil haben mehr Energie, als ein gewöhnlicher Tag verlangt.",
     "fr": "{name} pense en mouvement. Comprendre et retenir est plus facile quand le corps participe : montrer, essayer, recommencer. Les enfants de ce profil ont plus d'énergie que n'en demande une journée ordinaire."
@@ -795,7 +795,7 @@
      "fr": "« Montre-moi comment tu fais »"
     },
     {
-     "ru": "«Вижу, сколько раз ты пробовал, прежде чем получилось»",
+     "ru": "«Вижу, сколько было попыток, прежде чем получилось»",
      "en": "\"I saw how many times you tried before it worked\"",
      "de": "„Ich habe gesehen, wie oft du es versucht hast, bis es geklappt hat“",
      "fr": "« J'ai vu combien de fois tu as essayé avant d'y arriver »"

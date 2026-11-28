@@ -53,7 +53,10 @@ export function dailyPlan(order) {
   const mix = [...strong2, ...other2].filter(Boolean), out2 = [];
   const st2 = mix.slice(0, strong2.filter(Boolean).length), ot2 = mix.slice(st2.length);
   while (st2.length || ot2.length) { if (st2.length && (out2.length % 4 === 0 || !ot2.length)) out2.push(st2.shift()); else out2.push(ot2.shift()); }
-  return [...out, ...left, ...out2];
+  // Остаток первого месяца не идёт десятью днями подряд: после первой оплаты продления сразу новые задания ведущих шкал
+  const tail = [];
+  for (let i = 0, j = 0; i < out2.length || j < left.length;) { if (i < out2.length) tail.push(out2[i++]); if (i < out2.length) tail.push(out2[i++]); if (j < left.length) tail.push(left[j++]); }
+  return [...out, ...tail];
 }
 
 // Номер дня подписки (с 1) по местным календарным дням

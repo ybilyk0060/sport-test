@@ -1,7 +1,7 @@
 /* Мини-тест «Ребёнок и вы»: своя гамма (бирюза и коралл), два круга как знак пары, карточки с цветной полосой */
 body.t-duo { --bg: #eefaf8; --card: #ffffff; --ink: #10312f; --muted: #5d7a77; --line: #cfe9e5; --accent: #0f9d8f; --accent-soft: #d5f3ef; --r: 14px; background: var(--bg); }
 html:has(body.t-duo) { background: #eefaf8; }
-.t-duo h1 { font-size: clamp(30px, 9vw, 38px); line-height: 1.1; letter-spacing: -.02em; }
+.t-duo h1 { font-size: clamp(30px, 9vw, 38px); line-height: 1.1; letter-spacing: -.02em; overflow-wrap: break-word; hyphens: auto; }
 .t-duo .promise { font-size: 18px; }
 .t-duo .btn { border-radius: 12px; background: #ff6b5e; box-shadow: none; text-transform: uppercase; letter-spacing: .04em; font-size: 16px; }
 .t-duo .btn:active { transform: none; background: #e9574a; box-shadow: none; }

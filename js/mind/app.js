@@ -55,7 +55,8 @@ const fresh = () => ({ step: 'landing', i: 0, intro: {}, name: '', answers: {}, 
 let st = fresh();
 try { const v = JSON.parse(localStorage.getItem(KEY) || 'null'); if (v && typeof v === 'object') st = { ...fresh(), ...v }; } catch { /* нет доступа */ }
 const set = (patch) => { Object.assign(st, patch); try { localStorage.setItem(KEY, JSON.stringify(st)); } catch { /* нет доступа */ } if (patch.step) screenView('mind', patch.step, LANG); return st; };
-const track = (name, props = {}) => trackRaw(`mind_${name}`, { app: 'mind', lang: LANG, ...props });
+// У подписчика каждое событие несёт номер дня подписки: по нему видно удержание по дням и день отмены
+const track = (name, props = {}) => trackRaw(`mind_${name}`, { app: 'mind', lang: LANG, ...(st && st.sub && st.sub.startedAt ? { day: dayNumber(st.sub.startedAt) } : {}), ...props });
 
 // --- Экран ---
 let timer = 0;
@@ -64,6 +65,7 @@ let onBack = null;
 window.addEventListener('popstate', () => { if (onBack) onBack(); });
 // Картинка задания не загрузилась: остаётся плашка с эмодзи
 document.addEventListener('error', (e) => { const el = e.target; if (el && el.matches && el.matches('.dart img')) { el.parentNode.classList.remove('pic'); el.remove(); } }, true);
+const AGE_ART = { 'artist-7': { age: '3-5', en: 'Clay animal', de: 'Knet-Tier', fr: 'Un animal en pâte à modeler', ru: 'Зверь из пластилина' }, 'inventor-5': { age: '3-5' } };
 function screen(html, handlers = {}) {
   clearInterval(timer);
   onBack = null;
@@ -263,7 +265,7 @@ function restore() {
     back: () => route(),
     send: async (b) => {
       const email = app.querySelector('[data-el=email]').value.trim();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { toast(T.pay.emailBad); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { toast(T.pay.emailPlain); return; }
       b.disabled = true;
       try { await subapi.restore(email, LANG); } catch { /* ответ одинаковый: по нему нельзя узнать, есть ли подписка */ }
       track('sub_restore_asked'); toast(T.pay.restoreSent); route();
@@ -296,7 +298,7 @@ function claim(orderId) {
     <div class="grow"></div><button class="btn" data-act="send">${esc(T.pay.claimSend)}</button><button class="link center" data-act="skip">${esc(T.common.skip)}</button>`, {
     send: async (b) => {
       const email = app.querySelector('[data-el=email]').value.trim();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { toast(T.pay.emailBad); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { toast(T.pay.emailPlain); return; }
       b.disabled = true;
       const paid = await payment.verify(orderId, 5);
       if (paid) { set({ email, orderId, payAmount: null }); if (await activateServer()) { track('paid_claimed'); return report(); } }
@@ -323,6 +325,7 @@ function report() {
   set({ step: 'report' });
   const R = T.report, x = D.report[r.primary], age = st.intro.age || '6-8';
   const sec = (title, body) => `<h2 class="sec-title">${esc(title)}</h2>${body}`;
+  const fold = (title, body) => `<details class="fold"><summary>${esc(title)}</summary>${body}</details>`; // длинные разделы свёрнуты, чтобы отчёт читался за минуту
   const x2 = D.report[r.secondary];
   screen(`<span class="badge">${esc(R.badge)}</span><div class="ph-no-capture rep-body">${typeCard(r)}
     <p class="lead">${esc(fill(x.about))}</p>
@@ -332,9 +335,9 @@ function report() {
     ${sec(R.strengths, `<ul class="points">${x.strengths.map((s) => `<li>${esc(s)}</li>`).join('')}</ul>`)}
     ${sec(R.grow, `<p>${esc(x.grow)}</p>`)}
     ${sec(R.say, `<div class="says">${x.say.map((s) => `<p>${esc(s)}</p>`).join('')}</div>`)}
-    ${sec(R.acts(age), `<p>${esc(x.ages[age])}</p>`)}
-    ${sec(R.plan, `<ol class="plan">${x.plan.map((s) => `<li>${esc(s)}</li>`).join('')}</ol>`)}
-    ${x2 ? sec(`${ICON[r.secondary]} ${typeName(r.secondary)}`, `<p>${esc(fill(x2.about))}</p><ul class="points">${x2.strengths.map((s) => `<li>${esc(s)}</li>`).join('')}</ul><p><b>${esc(R.acts(age))}:</b> ${esc(x2.ages[age])}</p>`) : ''}</div>
+    ${sec(R.acts(age), `<p>${esc(x.ages[age].charAt(0).toUpperCase() + x.ages[age].slice(1))}</p>`)}
+    <details class="fold"><summary>${esc(R.plan)}</summary><ol class="plan">${x.plan.map((s) => `<li>${esc(s)}</li>`).join('')}</ol></details>
+    ${x2 ? fold(`${ICON[r.secondary]} ${typeName(r.secondary)}`, `<p>${esc(fill(x2.about))}</p><ul class="points">${x2.strengths.map((s) => `<li>${esc(s)}</li>`).join('')}</ul><p><b>${esc(R.acts(age))}:</b> ${esc(x2.ages[age])}</p>`) : ''}</div>
     <div class="box duo-cta"><b>${esc(R.duo)}</b><span class="small muted">${esc(R.duoLead)}</span><a class="btn line" href="duo.html">${esc(R.duoCta)}</a></div>
     ${CONFIG.appAccess === 'soon' ? `<p class="box small">${esc(R.appsSoon)}</p>` : ''}
     <p class="fine">${esc(D.disclaimer)}</p>
@@ -344,7 +347,7 @@ function report() {
     <button class="link center" data-act="again">${esc(T.result.again)}</button>
     ${legalLinks()}`, {
     daily: () => daily(),
-    manage: () => manage(),
+    manage: () => { track('sub_manage_open'); manage(); },
     share: () => share(r),
     again: () => retake(),
   });
@@ -352,7 +355,7 @@ function report() {
 }
 
 // --- Задание дня ---
-function daily(showDay = 0) {
+function daily(showDay = 0, quiet = false) {
   if (!subActive() || !st.result) return route();
   set({ step: 'daily' });
   // Отметки «сделано» относятся к одной подписке: у новой подписки отсчёт дней начинается заново
@@ -362,29 +365,34 @@ function daily(showDay = 0) {
   const day = showDay && showDay <= today ? showDay : today;
   const card = D.cards.find((c) => c.id === plan[(day - 1) % plan.length]);
   const age = st.intro.age || '6-8';
+  // У двух заданий вариант для 3–5 лет другой по сути: своя картинка и название
+  const pic = AGE_ART[card.id] && AGE_ART[card.id].age === age ? `${card.id}-${age}` : card.id;
+  const cardTitle = AGE_ART[card.id] && AGE_ART[card.id].age === age && AGE_ART[card.id][LANG] ? AGE_ART[card.id][LANG] : card.title;
   const doneDays = Object.keys(st.done).map(Number);
   const isDone = !!st.done[day];
   const earlier = [];
   for (let n = today; n >= Math.max(1, today - 6); n--) if (n !== day) earlier.push(n);
   screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.daily.back)}">←</button><b>${esc(T.report.daily)}</b></div>
     <div class="dcard"><div class="row"><span class="tag">${esc(T.daily.title(day))}</span><span class="tag-ok">${esc(T.daily.forAge(age))}</span></div>
-      ${card.art ? `<div class="dart pic s-${card.scale}" aria-hidden="true"><img src="img/mind/cards/${esc(card.id)}.webp" alt="" width="800" height="447" decoding="async">${[...new Intl.Segmenter().segment(card.art)].map((x) => `<span>${x.segment}</span>`).join('')}</div>` : ''}
-      <h1 class="qtitle">${esc(card.title)}</h1>
+      ${card.art ? `<div class="dart pic s-${card.scale}" aria-hidden="true"><img src="img/mind/cards/${esc(pic)}.webp" alt="" width="800" height="447" decoding="async">${[...new Intl.Segmenter().segment(card.art)].map((x) => `<span>${x.segment}</span>`).join('')}</div>` : ''}
+      <h1 class="qtitle">${esc(cardTitle)}</h1>
       ${card.steps && card.steps[age] ? `${card.need && card.need[age] ? `<p class="need"><b>${esc(T.daily.need)}</b> ${esc(card.need[age])}</p>` : ''}
         <ol class="dsteps">${card.steps[age].map((s) => `<li>${esc(s)}</li>`).join('')}</ol>
         ${card.why ? `<p class="dnote"><b>${esc(T.daily.why)}</b> ${esc(card.why)}</p>` : ''}${card.tip ? `<p class="dnote tip"><b>${esc(T.daily.tip)}</b> ${esc(card.tip)}</p>` : ''}`
       : `<p class="task">${esc((card.task || {})[age] || '')}</p>`}
       <p class="small muted">${esc(D.safety)}</p></div>
-    ${isDone ? `<p class="box center"><b>✓ ${esc(T.daily.doneMsg)}</b></p>` : `<button class="btn" data-act="done">${esc(T.daily.done)}</button>`}
-    <div class="row stats"><span>🔥 ${esc(T.daily.streak(streak(doneDays, today)))}</span><span>${esc(T.daily.total(doneDays.length))}</span></div>
+    ${isDone ? `<p class="box center" id="done-box"><b>✓ ${esc(day === today ? T.daily.doneMsg : T.daily.doneOld)}</b></p>` : `<button class="btn" data-act="done">${esc(T.daily.done)}</button>`}
+    ${day !== today ? `<button class="btn line" data-act="today">${esc(T.daily.today)}</button>` : ''}
+    ${doneDays.length ? `<div class="row stats"><span>🔥 ${esc(T.daily.streak(streak(doneDays, today)))}</span><span>${esc(T.daily.total(doneDays.length))}</span></div>` : ''}
     ${today > plan.length ? `<p class="small muted">${esc(T.daily.finished)}</p>` : ''}
     ${earlier.length ? `<h2 class="sec-title">${esc(T.daily.earlier)}</h2><div class="days">${earlier.map((n) => { const c = D.cards.find((y) => y.id === plan[(n - 1) % plan.length]); return `<button class="day" data-act="open" data-n="${n}"><span>${esc(T.daily.title(n))}</span><b>${esc(c.title)}</b><em>${st.done[n] ? '✓' : esc(T.daily.missed)}</em></button>`; }).join('')}</div>` : ''}
     <div class="grow"></div><button class="btn ghost" data-act="back">${esc(T.daily.back)}</button>`, {
     back: () => report(),
-    done: () => { set({ done: { ...st.done, [day]: card.id } }); track('daily_done', { n: day, key: card.id }); daily(day); },
+    done: () => { set({ done: { ...st.done, [day]: card.id } }); track('daily_done', { n: day, key: card.id, age, streak: streak([...doneDays, day], today) }); daily(day, true); const box = document.getElementById('done-box'); if (box) box.scrollIntoView({ block: 'center' }); },
     open: (b) => daily(Number(b.dataset.n)),
+    today: () => daily(),
   });
-  track('daily_open', { n: day, key: card.id });
+  if (!quiet) track('daily_open', { n: day, key: card.id, age, src: day === today ? 'today' : 'earlier', done: isDone });
 }
 
 // --- Моя подписка ---
@@ -408,7 +416,7 @@ function manage(confirm = false) {
     ${sub.status === 'active' ? (confirm ? `<p><b>${esc(S.cancelAsk)}</b></p><button class="btn" data-act="yes">${esc(S.cancelYes)}</button><button class="btn ghost" data-act="no">${esc(S.cancelNo)}</button>`
       : `<button class="btn line" data-act="cancel">${esc(S.cancel)}</button>`) : `<button class="btn" data-act="resume">${esc(S.resume)}</button>`}`, {
     back: () => report(),
-    cancel: () => manage(true),
+    cancel: () => { track('sub_cancel_ask'); manage(true); },
     no: () => manage(),
     yes: async () => { if (await change('cancel')) { track('sub_cancelled', { test: !!sub.test }); toast(S.cancelDone); manage(); } },
     resume: async () => { if (await change('resume')) { track('sub_resumed'); toast(S.resumeDone); manage(); } },
@@ -425,7 +433,7 @@ function cancelForm() {
     back: () => route(),
     send: async (b) => {
       const email = app.querySelector('[data-el=email]').value.trim();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { toast(T.pay.emailBad); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { toast(T.pay.emailPlain); return; }
       b.disabled = true;
       try { await subapi.cancelReq(email, LANG); } catch { b.disabled = false; toast(S.error); return; }
       track('sub_cancel_form');

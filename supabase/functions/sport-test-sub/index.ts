@@ -140,21 +140,21 @@ function mindMail(kind: "terms" | "d3" | "d7" | "retest", lang: string, s: Recor
       terms: { subject: "You’re subscribed: “What kind of thinker is your child?”", text: `Thank you! Your subscription is active.\n\nFirst payment: ${first} for ${PERIOD_DAYS} days.\nThen ${regular} every ${PERIOD_DAYS} days, starting ${until}, until you cancel.\n\nOpen the full report, today’s activity and your subscription settings (cancel in two taps) on any device:\n${link}${appsLine("en")}` },
       d3: { subject: "Today’s 10 minutes together", text: `Three days in. Each day there is one short activity picked for your child’s thinking style: 5 to 10 minutes together, no screen, with things you already have at home.\n\nOpen today’s activity:\n${link}` },
       d7: { subject: "One week in: what did you notice?", text: `A week of short activities is enough to see what pulls your child in and what doesn’t. The report has phrases that build confidence: try one today.\n\nOpen the report and today’s activity:\n${link}${appsLine("en")}` },
-      retest: { subject: "A month has passed: take the test again", text: `Children change fast. Answer the questions again (3 minutes) and see what has shifted in your child’s interests and strengths.\n\nOpen:\n${link}` },
+      retest: { subject: "A month has passed: take the test again", text: `Children change fast. Open the report, tap “Take the test again” at the bottom (3 minutes) and get a fresh report for your child today.\n\nOpen:\n${link}` },
       q: "Questions",
     },
     de: {
       terms: { subject: "Abo abgeschlossen: „Welcher Denktyp ist Ihr Kind?“", text: `Danke! Ihr Abo ist aktiv.\n\nErste Zahlung: ${first} für ${PERIOD_DAYS} Tage.\nDanach ${regular} alle ${PERIOD_DAYS} Tage, erstmals am ${until}, bis Sie kündigen.\n\nBericht, Spielidee des Tages und „Mein Abo“ (Kündigung mit zwei Klicks) auf jedem Gerät öffnen:\n${link}${appsLine("de")}` },
       d3: { subject: "Ihre 10 Minuten für heute", text: `Drei Tage sind vorbei. Jeden Tag gibt es eine kurze Spielidee passend zum Denkstil Ihres Kindes: 5 bis 10 Minuten gemeinsam, ohne Bildschirm, mit Dingen, die Sie zu Hause haben.\n\nIdee für heute öffnen:\n${link}` },
       d7: { subject: "Eine Woche ist geschafft: Was ist Ihnen aufgefallen?", text: `Eine Woche mit kurzen Spielideen reicht, um zu sehen, was Ihr Kind fesselt und was nicht. Im Bericht stehen Sätze, die Selbstvertrauen stärken: Probieren Sie heute einen aus.\n\nBericht und Idee für heute öffnen:\n${link}${appsLine("de")}` },
-      retest: { subject: "Ein Monat ist vorbei: Machen Sie den Test noch einmal", text: `Kinder verändern sich schnell. Beantworten Sie die Fragen noch einmal (3 Minuten) und sehen Sie, was sich bei Interessen und Stärken Ihres Kindes verschoben hat.\n\nÖffnen:\n${link}` },
+      retest: { subject: "Ein Monat ist vorbei: Machen Sie den Test noch einmal", text: `Kinder verändern sich schnell. Öffnen Sie den Bericht, tippen Sie unten auf „Test noch einmal machen“ (3 Minuten) und erhalten Sie einen aktuellen Bericht.\n\nÖffnen:\n${link}` },
       q: "Fragen",
     },
     fr: {
       terms: { subject: "Abonnement confirmé : « Quel est le style de pensée de votre enfant ? »", text: `Merci ! Votre abonnement est actif.\n\nPremier paiement : ${first} pour ${PERIOD_DAYS} jours.\nEnsuite ${regular} tous les ${PERIOD_DAYS} jours, à partir du ${until}, jusqu’à la résiliation.\n\nOuvrez le rapport complet, l’activité du jour et la gestion de l’abonnement (résiliation en deux clics) sur n’importe quel appareil :\n${link}${appsLine("fr")}` },
       d3: { subject: "Les 10 minutes d’aujourd’hui", text: `Trois jours déjà. Chaque jour, une courte activité est choisie selon le style de pensée de votre enfant : 5 à 10 minutes ensemble, sans écran, avec ce que vous avez à la maison.\n\nOuvrir l’activité du jour :\n${link}` },
       d7: { subject: "Une semaine déjà : qu’avez-vous remarqué ?", text: `Une semaine de courtes activités suffit pour voir ce qui passionne votre enfant et ce qui l’ennuie. Le rapport propose des phrases qui donnent confiance : essayez-en une aujourd’hui.\n\nOuvrir le rapport et l’activité du jour :\n${link}` },
-      retest: { subject: "Un mois a passé : refaites le test", text: `Les enfants changent vite. Répondez de nouveau aux questions (3 minutes) et voyez ce qui a évolué dans les centres d’intérêt et les points forts de votre enfant.\n\nOuvrir :\n${link}` },
+      retest: { subject: "Un mois a passé : refaites le test", text: `Les enfants changent vite. Ouvrez le rapport, touchez « Refaire le test » en bas (3 minutes) et obtenez un rapport à jour.\n\nOuvrir :\n${link}` },
       q: "Questions",
     },
   } as const;
@@ -259,10 +259,10 @@ Deno.serve(async (req) => {
         const m = s.lang === "uk"
           ? { subject: `Через 3 дні продовження підписки: ${price}`, text: `${date} підписка продовжиться за ${price} на наступні ${PERIOD_DAYS} днів.\n\nЯкщо не хочете продовжувати — скасуйте в один дотик:\n${link}\n\nПитання: ${FROM}` }
           : s.lang === "fr"
-          ? { subject: `Votre abonnement se renouvelle dans 3 jours\u00a0: ${price}`, text: `Le ${date}, votre abonnement se renouvelle pour ${price} pour ${PERIOD_DAYS} jours de plus.\n\nSi vous ne souhaitez pas continuer, résiliez en un clic\u00a0:\n${link}\n\nQuestions\u00a0: ${FROM}` }
+          ? { subject: `Votre abonnement se renouvelle dans 3 jours\u00a0: ${price}`, text: `Le ${date}, votre abonnement se renouvelle pour ${price} pour ${PERIOD_DAYS} jours de plus.\n\nSi vous ne souhaitez pas continuer, ouvrez le lien et résiliez dans «\u00a0Mon abonnement\u00a0»\u00a0:\n${link}\n\nQuestions\u00a0: ${FROM}` }
           : s.lang === "de"
-          ? { subject: `In 3 Tagen verlängert sich Ihr Abo: ${price}`, text: `Am ${date} verlängert sich Ihr Abo für ${price} um weitere ${PERIOD_DAYS} Tage.\n\nWenn Sie nicht verlängern möchten, kündigen Sie mit einem Klick:\n${link}\n\nFragen: ${FROM}` }
-          : { subject: `Your subscription renews in 3 days: ${price}`, text: `On ${date} your subscription renews for ${price} for another ${PERIOD_DAYS} days.\n\nIf you don't want to continue, cancel in one tap:\n${link}\n\nQuestions: ${FROM}` };
+          ? { subject: `In 3 Tagen verlängert sich Ihr Abo: ${price}`, text: `Am ${date} verlängert sich Ihr Abo für ${price} um weitere ${PERIOD_DAYS} Tage.\n\nWenn Sie nicht verlängern möchten, öffnen Sie den Link und kündigen Sie unter „Mein Abo“:\n${link}\n\nFragen: ${FROM}` }
+          : { subject: `Your subscription renews in 3 days: ${price}`, text: `On ${date} your subscription renews for ${price} for another ${PERIOD_DAYS} days.\n\nIf you don't want to continue, open the link and cancel in “My subscription”:\n${link}\n\nQuestions: ${FROM}` };
         if (await mail(s.email, m.subject, m.text, senderFor(s))) { await db.from("sport_test_subscriptions").update({ reminded_for: s.paid_until }).eq("id", s.id); sent++; }
       }
       // Цепочка: день 3 и 7 (onboard_step 1, 2), повторный тест раз в 30 дней. Пропущенные шаги не досылаем: только самый свежий.

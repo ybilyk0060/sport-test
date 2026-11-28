@@ -65,7 +65,7 @@
    "block": "interests",
    "type": "single",
    "text": {
-    "ru": "Чем ребёнок занимается, когда его никто не занимает?",
+    "ru": "Чем ребёнок занимается, когда никто не предлагает занятий?",
     "en": "What does your child do when nobody is entertaining them?",
     "de": "Was macht Ihr Kind, wenn niemand es beschäftigt?",
     "fr": "Que fait votre enfant quand personne n'est là pour l'occuper ?"
@@ -150,7 +150,7 @@
    "block": "interests",
    "type": "single",
    "text": {
-    "ru": "Какие игрушки занимают его дольше всего?",
+    "ru": "Какие игрушки занимают ребёнка дольше всего?",
     "en": "Which toys keep your child busy the longest?",
     "de": "Welche Spielsachen beschäftigen Ihr Kind am längsten?",
     "fr": "Quels jouets occupent votre enfant le plus longtemps ?"
@@ -235,7 +235,7 @@
    "block": "interests",
    "type": "single",
    "text": {
-    "ru": "О чём он чаще всего спрашивает «почему»?",
+    "ru": "О чём ребёнок чаще всего спрашивает «почему»?",
     "en": "What does your child ask \"why\" about most often?",
     "de": "Worüber stellt Ihr Kind die meisten Warum-Fragen?",
     "fr": "Sur quoi portent le plus souvent les « pourquoi » de votre enfant ?"
@@ -284,7 +284,7 @@
    "block": "interests",
    "type": "single",
    "text": {
-    "ru": "Что он выбирает на экране, если можно выбрать самому?",
+    "ru": "Что ребёнок выбирает на экране, когда выбор свободный?",
     "en": "What does your child pick on a screen when the choice is theirs?",
     "de": "Was wählt Ihr Kind am Bildschirm, wenn es selbst entscheiden darf?",
     "fr": "Que choisit votre enfant sur un écran quand le choix lui revient ?"
@@ -333,7 +333,7 @@
    "block": "interests",
    "type": "single",
    "text": {
-    "ru": "Что он делает на детской площадке?",
+    "ru": "Что ребёнок делает на детской площадке?",
     "en": "What does your child do at the playground?",
     "de": "Was macht Ihr Kind auf dem Spielplatz?",
     "fr": "Que fait votre enfant à l'aire de jeux ?"
@@ -382,7 +382,7 @@
    "block": "interests",
    "type": "single",
    "text": {
-    "ru": "Какие книги и истории он любит?",
+    "ru": "Какие книги и истории любит ребёнок?",
     "en": "Which books and stories does your child like?",
     "de": "Welche Bücher und Geschichten mag Ihr Kind?",
     "fr": "Quels livres et histoires plaisent à votre enfant ?"
@@ -409,7 +409,7 @@
     {
      "scale": "artist",
      "text": {
-      "ru": "Где красивые картинки, сам их разглядывает",
+      "ru": "Где красивые картинки, любит их разглядывать",
       "en": "Ones with beautiful pictures to study",
       "de": "Solche mit schönen Bildern zum Anschauen",
       "fr": "Ceux avec de belles images à regarder"
@@ -431,7 +431,7 @@
    "block": "interests",
    "type": "single",
    "text": {
-    "ru": "Какой подарок он выберет сам?",
+    "ru": "Какой подарок ребёнок выберет для себя?",
     "en": "Which gift would your child choose?",
     "de": "Welches Geschenk würde Ihr Kind selbst wählen?",
     "fr": "Quel cadeau choisirait votre enfant ?"
@@ -480,7 +480,7 @@
    "block": "interests",
    "type": "single",
    "text": {
-    "ru": "Чем он гордится больше всего?",
+    "ru": "Чем ребёнок гордится больше всего?",
     "en": "What makes your child most proud?",
     "de": "Worauf ist Ihr Kind am meisten stolz?",
     "fr": "Qu'est-ce qui donne le plus de fierté à votre enfant ?"
@@ -489,7 +489,7 @@
     {
      "scale": "leader",
      "text": {
-      "ru": "Победил или был главным",
+      "ru": "Победа или главная роль",
       "en": "Winning or being in charge",
       "de": "Gewonnen oder das Sagen gehabt zu haben",
       "fr": "Avoir gagné ou avoir dirigé"
@@ -498,7 +498,7 @@
     {
      "scale": "helper",
      "text": {
-      "ru": "Кому-то помог",
+      "ru": "Помощь кому-то",
       "en": "Helping someone",
       "de": "Jemandem geholfen zu haben",
       "fr": "Avoir aidé quelqu'un"
@@ -507,7 +507,7 @@
     {
      "scale": "storyteller",
      "text": {
-      "ru": "Выступил, рассказал, рассмешил",
+      "ru": "Выступление, рассказ, удачная шутка",
       "en": "Performing, telling a story, making people laugh",
       "de": "Etwas vorgetragen, erzählt oder andere zum Lachen gebracht zu haben",
       "fr": "Avoir présenté, raconté ou fait rire"
@@ -516,7 +516,7 @@
     {
      "scale": "explorer",
      "text": {
-      "ru": "Нашёл или узнал что-то новое",
+      "ru": "Находка или новое знание",
       "en": "Finding or discovering something new",
       "de": "Etwas Neues gefunden oder entdeckt zu haben",
       "fr": "Avoir trouvé ou découvert quelque chose"
@@ -529,7 +529,7 @@
    "block": "situations",
    "type": "single",
    "text": {
-    "ru": "Сломалась любимая игрушка. Что он сделает?",
+    "ru": "Сломалась любимая игрушка. Что сделает ребёнок?",
     "en": "A toy your child loves breaks. What do they do?",
     "de": "Ein Lieblingsspielzeug geht kaputt. Was macht Ihr Kind?",
     "fr": "Son jouet préféré se casse. Que fait votre enfant ?"
@@ -578,7 +578,7 @@
    "block": "situations",
    "type": "single",
    "text": {
-    "ru": "Новая компания детей. Как он себя ведёт?",
+    "ru": "Новая компания детей. Как ведёт себя ребёнок?",
     "en": "A new group of kids. How does your child act?",
     "de": "Eine neue Kindergruppe. Wie verhält sich Ihr Kind?",
     "fr": "Un nouveau groupe d'enfants. Comment réagit votre enfant ?"
@@ -627,7 +627,7 @@
    "block": "situations",
    "type": "single",
    "text": {
-    "ru": "Задача не получается. Что он делает?",
+    "ru": "Задача не получается. Что делает ребёнок?",
     "en": "A task isn't working out. What does your child do?",
     "de": "Eine Aufgabe klappt nicht. Was macht Ihr Kind?",
     "fr": "Quelque chose ne marche pas. Que fait votre enfant ?"
@@ -676,7 +676,7 @@
    "block": "situations",
    "type": "single",
    "text": {
-    "ru": "Проиграл в игре. Что дальше?",
+    "ru": "Проигрыш в игре. Что дальше?",
     "en": "Your child loses a game. What happens next?",
     "de": "Ihr Kind verliert ein Spiel. Was passiert dann?",
     "fr": "Votre enfant perd à un jeu. Que se passe-t-il ?"
@@ -725,7 +725,7 @@
    "block": "situations",
    "type": "single",
    "text": {
-    "ru": "Свободный день. Что он выберет?",
+    "ru": "Свободный день. Что выберет ребёнок?",
     "en": "A free day. What would your child choose?",
     "de": "Ein freier Tag. Was würde Ihr Kind wählen?",
     "fr": "Une journée libre. Que choisirait votre enfant ?"
@@ -774,7 +774,7 @@
    "block": "situations",
    "type": "single",
    "text": {
-    "ru": "Рядом кто-то плачет. Что он делает?",
+    "ru": "Рядом кто-то плачет. Что делает ребёнок?",
     "en": "Someone nearby is crying. What does your child do?",
     "de": "Jemand in der Nähe weint. Was macht Ihr Kind?",
     "fr": "Quelqu'un pleure à côté. Que fait votre enfant ?"
@@ -823,7 +823,7 @@
    "block": "situations",
    "type": "single",
    "text": {
-    "ru": "Собираетесь в поездку. Как он собирается?",
+    "ru": "Собираетесь в поездку. Как собирается ребёнок?",
     "en": "You're packing for a trip. How does your child get ready?",
     "de": "Sie packen für einen Ausflug. Wie bereitet sich Ihr Kind vor?",
     "fr": "Vous préparez une sortie. Comment se prépare votre enfant ?"
@@ -872,7 +872,7 @@
    "block": "situations",
    "type": "single",
    "text": {
-    "ru": "Ему дали коробку с разными деталями. Что он сделает?",
+    "ru": "Ребёнку дали коробку с разными деталями. Что будет дальше?",
     "en": "Your child gets a box of random parts. What do they do?",
     "de": "Ihr Kind bekommt eine Kiste mit verschiedenen Teilen. Was macht es?",
     "fr": "Votre enfant reçoit une boîte de pièces diverses. Que se passe-t-il ?"
@@ -952,7 +952,7 @@
    {
     "id": "energy",
     "text": {
-     "ru": "У ребёнка много энергии, ему трудно усидеть на месте",
+     "ru": "У ребёнка много энергии, трудно усидеть на месте",
      "en": "My child prefers active play to sitting activities",
      "de": "Mein Kind spielt lieber in Bewegung als im Sitzen",
      "fr": "Mon enfant préfère les jeux actifs aux activités assises"
@@ -1027,7 +1027,7 @@
    {
     "id": "strengths",
     "text": {
-     "ru": "В чём он сильнее всего",
+     "ru": "В чём ребёнок сильнее всего",
      "en": "What my child is strongest at",
      "de": "Worin mein Kind am stärksten ist",
      "fr": "Les points forts de mon enfant"
@@ -1045,7 +1045,7 @@
    {
     "id": "character",
     "text": {
-     "ru": "Как найти к нему подход",
+     "ru": "Как найти подход к ребёнку",
      "en": "How to get through to my child",
      "de": "Wie ich mein Kind besser erreiche",
      "fr": "Comment mieux m'y prendre avec mon enfant"
@@ -1270,7 +1270,7 @@
     "fr": "Grand cœur"
    },
    "tagline": {
-    "ru": "Чувствует других и первым приходит на помощь",
+    "ru": "Чувствует других и раньше всех приходит на помощь",
     "en": "Senses how others feel and is first to help",
     "de": "Spürt, wie es anderen geht, und ist sofort zur Stelle",
     "fr": "Sent ce que vivent les autres et aide tout de suite"
