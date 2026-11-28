@@ -1,9 +1,9 @@
 // Юридические страницы: подставляют реквизиты продавца и цены из js/config.js, чтобы они были в одном месте.
-import { CONFIG } from './config.js?v=3ac479c-mx0jviv6';
+import { CONFIG } from './config.js?v=ec06824-mx0kgt9k';
 const U = CONFIG.subscription.prices.USD, E = CONFIG.subscription.prices.EUR;
 const S = CONFIG.seller, P = CONFIG.subscription.prices.UAH, D = CONFIG.subscription.periodDays;
 const en = document.documentElement.lang !== 'uk';
-const val = { name: en ? S.nameEn : S.name, address: en ? S.addressEn : S.address, rnokpp: S.rnokpp, email: S.email, phone: S.phone, edr: S.edrRecord,
+const val = { name: en ? S.nameEn : S.name, address: en ? S.addressEn : S.address, rnokpp: S.rnokpp, email: S.email, phone: S.phone, edr: en ? S.edrRecord.replace(' від ', ', ') : S.edrRecord,
   first: `${P.first} грн`, regular: `${P.regular} грн`, days: String(D),
   usd: `$${U.first} → $${U.regular}`, eur: `${E.first} € → ${E.regular} €`,
   usdFirst: `$${U.first}`, usdRegular: `$${U.regular}`, eurFirst: `${E.first} €`, eurRegular: `${E.regular} €`,

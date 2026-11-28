@@ -4,13 +4,13 @@
 // Имя ребёнка никуда не отправляется: оно остаётся в localStorage и подставляется в текст на устройстве.
 // События аналитики идут с префиксом mind_ (воронка теста спорта не смешивается), см. analytics.js.
 
-import { CONFIG } from '../config.js?v=3ac479c-mx0jviv6';
-import { payment, newOrderId, loadPaddle } from '../payment.js?v=3ac479c-mx0jviv6';
-import { track as trackRaw, state as visitor } from '../store.js?v=3ac479c-mx0jviv6';
-import { initConsent, sendLead, screenView } from '../analytics.js?v=3ac479c-mx0jviv6';
-import * as subapi from '../subapi.js?v=3ac479c-mx0jviv6';
-import { UI } from './texts.js?v=3ac479c-mx0jviv6';
-import { score, dailyPlan, dayNumber, streak } from './scoring.js?v=3ac479c-mx0jviv6';
+import { CONFIG } from '../config.js?v=ec06824-mx0kgt9k';
+import { payment, newOrderId, loadPaddle } from '../payment.js?v=ec06824-mx0kgt9k';
+import { track as trackRaw, state as visitor } from '../store.js?v=ec06824-mx0kgt9k';
+import { initConsent, sendLead, screenView } from '../analytics.js?v=ec06824-mx0kgt9k';
+import * as subapi from '../subapi.js?v=ec06824-mx0kgt9k';
+import { UI } from './texts.js?v=ec06824-mx0kgt9k';
+import { score, dailyPlan, dayNumber, streak } from './scoring.js?v=ec06824-mx0kgt9k';
 
 const app = document.getElementById('app');
 const params = new URLSearchParams(location.search);
@@ -33,7 +33,7 @@ function pickLang() {
 }
 const LANG = pickLang();
 const T = UI[LANG];
-const loadData = () => (LANG === 'de' ? import('./data-de.js?v=3ac479c-mx0jviv6') : LANG === 'fr' ? import('./data-fr.js?v=3ac479c-mx0jviv6') : LANG === 'ru' ? import('./data-ru.js?v=3ac479c-mx0jviv6') : import('./data-en.js?v=3ac479c-mx0jviv6')).then((m) => m.default);
+const loadData = () => (LANG === 'de' ? import('./data-de.js?v=ec06824-mx0kgt9k') : LANG === 'fr' ? import('./data-fr.js?v=ec06824-mx0kgt9k') : LANG === 'ru' ? import('./data-ru.js?v=ec06824-mx0kgt9k') : import('./data-en.js?v=ec06824-mx0kgt9k')).then((m) => m.default);
 let D = null;
 
 // --- Валюта и цены: en → USD, de и fr → EUR. Проверка: ?cur=USD|EUR ---
@@ -248,7 +248,8 @@ function result_(note = '') {
   if (!st.shown) { track('result_shown'); track('paywall_shown', { amount: first, currency: CUR }); set({ shown: true }); }
 }
 function retake() {
-  const keep = { sub: st.sub, subToken: st.subToken, email: st.email, orderId: st.orderId, payAmount: st.payAmount, done: st.done, doneFor: st.doneFor };
+  const keep = { sub: st.sub, subToken: st.subToken, email: st.email, orderId: st.orderId, payAmount: st.payAmount, done: st.done, doneFor: st.doneFor,
+    ...(subActive() ? { result: st.result, intro: st.intro, reportShown: st.reportShown } : {}) }; // у подписчика старый отчёт живёт, пока новый тест не пройден до конца
   st = fresh(); set(keep); track('restart'); set({ step: 'quiz', i: 0 }); quiz();
 }
 function share(r) {
@@ -267,7 +268,7 @@ function restore() {
       const email = app.querySelector('[data-el=email]').value.trim();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { toast(T.pay.emailPlain); return; }
       b.disabled = true;
-      try { await subapi.restore(email, LANG); } catch { /* ответ одинаковый: по нему нельзя узнать, есть ли подписка */ }
+      try { await subapi.restore(email, LANG); } catch { b.disabled = false; toast(T.sub.error); return; } // сеть не ответила: не обещаем письмо
       track('sub_restore_asked'); toast(T.pay.restoreSent); route();
     },
   });
@@ -302,6 +303,7 @@ function claim(orderId) {
       b.disabled = true;
       const paid = await payment.verify(orderId, 5);
       if (paid) { set({ email, orderId, payAmount: null }); if (await activateServer()) { track('paid_claimed'); return report(); } }
+      set({ orderId: null, orderAt: 0 }); // чужой или неподтверждённый заказ не остаётся за этим устройством
       b.disabled = false; toast(T.pay.claimFail);
     },
     skip: () => route(),
@@ -474,7 +476,6 @@ async function boot() {
   // Ссылка доступа из письма (?sub=…): подписка и ответы приезжают с сервера, на любом устройстве
   if (params.get('sub') && subapi.subOn()) {
     const token = params.get('sub');
-    cleanUrl();
     try {
       const s = (await subapi.status(token)).sub;
       const patch = { subToken: token, sub: subapi.fromServer(s) };
@@ -482,13 +483,13 @@ async function boot() {
         Object.assign(patch, { intro: s.quiz.intro || {}, answers: s.quiz.answers, sliders: s.quiz.sliders || {}, goal: s.quiz.goal || null });
         patch.result = score(patch.answers, patch.sliders);
       }
-      set(patch); track('sub_restored');
+      set(patch); cleanUrl(); track('sub_restored');
       return report();
-    } catch { return route(); }
+    } catch { cleanUrl(); route(); toast(T.sub.error); return; }
   }
   // Статус подписки с сервера (отмена на другом устройстве или из письма)
   // Ждём ответ до 4 секунд: иначе продлившийся подписчик увидел бы экран продажи по устаревшей локальной дате.
-  if (st.subToken && subapi.subOn()) await Promise.race([subapi.status(st.subToken).then((r) => set({ sub: { ...st.sub, ...subapi.fromServer(r.sub) } })).catch(() => {}), new Promise((res) => setTimeout(res, 4000))]);
+  if (st.subToken && subapi.subOn()) await Promise.race([subapi.status(st.subToken).then((r) => { set({ sub: { ...st.sub, ...subapi.fromServer(r.sub) } }); if (subActive() && st.step === 'result' && app.querySelector('#paywall')) report(); }).catch(() => {}), new Promise((res) => setTimeout(res, 4000))]);
   // Активация на сервере не прошла в прошлый раз (сеть): повторяем
   if (st.sub && !st.subToken && !st.sub.test) activateServer();
   // Ссылка оплаты из Paddle (?_ptxn=…): Paddle.js сам откроет окно оплаты
@@ -509,10 +510,10 @@ async function boot() {
     if (await payment.verify(st.pending, back ? 15 : 2)) { startSub(st.pending); return report(); }
     if (back) track('pay_unconfirmed', { provider: payment.name });
     if (back || st.result) return st.result ? result_(T.pay.pending) : landing(); // и после перезагрузки во время проверки предупреждаем не платить второй раз
-  } else if (st.orderId && !st.sub && Date.now() - (st.orderAt || 0) < 2 * DAY) {
+  } else if (st.orderId && !subActive() && Date.now() - (st.orderAt || 0) < 2 * DAY) {
     // Оплата могла пройти, а возврата на сайт не было (закрыли вкладку или браузер соцсети): тихо проверяем последний заказ
     const oid = st.orderId;
-    Promise.resolve(payment.verify(oid, 1)).then((ok) => { if (ok && !st.sub && st.orderId === oid) { startSub(oid); report(); } }).catch(() => {});
+    Promise.resolve(payment.verify(oid, 1)).then((ok) => { if (ok && !subActive() && st.orderId === oid) { startSub(oid); report(); } }).catch(() => {});
   }
   if (params.get('cancel')) { cleanUrl(); return cancelForm(); }
   track('open', { ref: document.referrer ? new URL(document.referrer).hostname : '', utm: params.get('utm_source') || '' });
