@@ -24,6 +24,7 @@ export const consentRegion = (() => {
 if (!consent && !consentRegion) consent = 'all';
 let phMode = null; // null | 'full' (согласие) | 'cookieless' (нет согласия)
 let pixelOn = false;
+let ttOn = false;
 
 // Шаги воронки, которые уходят наружу (остальные события — только на устройстве)
 const FUNNEL = new Set(['open', 'camera_blocked_shown', 'open_in_chrome_click', 'open_in_safari_click', 'fallback_start', 'quiz_start', 'quiz_answer', 'prep_shown', 'link_form_open', 'link_requested', 'camera_granted', 'camera_denied', 'test_start', 'exercise_done', 'test_done',
@@ -38,6 +39,15 @@ function loadPixel(id) {
   /* eslint-enable */
   window.fbq('init', id);
   window.fbq('track', 'PageView');
+}
+// TikTok Pixel (28.11): те же правила, что и у Meta — только после согласия, только шаги воронки, сумма и валюта.
+// В кабинете TikTok выключены «автоматический поиск совпадений» и «улучшенный постбэк» (сбор содержимого страницы и нажатий).
+function loadTikTok(id) {
+  /* eslint-disable */
+  !function (w, d, t) { w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)}; }(window, document, 'ttq');
+  /* eslint-enable */
+  window.ttq.load(id);
+  window.ttq.page();
 }
 const stripUrl = (u) => { try { const x = new URL(u, location.href); for (const k of ['sub', 's', 'order', 'orderReference']) x.searchParams.delete(k); return x.toString(); } catch { return u; } };
 function loadPosthog(key, host, full) {
@@ -74,6 +84,7 @@ function start() {
     loadPosthog(CONFIG.analytics.posthogKey, CONFIG.analytics.posthogHost, phMode === 'full');
   }
   if (!pixelOn && consent === 'all' && CONFIG.analytics.metaPixelId) { pixelOn = true; loadPixel(CONFIG.analytics.metaPixelId); }
+  if (!ttOn && consent === 'all' && CONFIG.analytics.tiktokPixelId) { ttOn = true; loadTikTok(CONFIG.analytics.tiktokPixelId); }
 }
 
 // Метки для сервера (покупка в Meta через Conversions API): клик из рекламы, браузер, UTM, согласие.
@@ -113,9 +124,19 @@ export const recording = {
 
 // Вызывается из store.track для каждого события. В PostHog — все события (воронка по каждому шагу), в Meta — только шаги воронки.
 export function send(name, props = {}) {
-  if (!phMode && !pixelOn) return;
+  if (!phMode && !pixelOn && !ttOn) return;
   const p = clean(props);
   try {
+    // TikTok: те же шаги, что и в Meta. ViewContent (начало анкеты) — событие, на которое учится реклама TikTok.
+    if (ttOn && window.ttq && FUNNEL.has(name)) {
+      const money = p.amount ? { value: p.amount, currency: p.currency } : {};
+      if (name === 'quiz_start') window.ttq.track('ViewContent', { content_name: 'quiz' });
+      if (name === 'test_done') window.ttq.track('CompleteRegistration', { content_name: 'test_done' });
+      if (name === 'paywall_shown') window.ttq.track('InitiateCheckout', money);
+      if (name === 'pay_click') window.ttq.track('AddPaymentInfo', money);
+      let promoT = false; try { promoT = !!sessionStorage.getItem('sporttest.code'); } catch { /* нет */ }
+      if (name === 'paid' && !p.test && !promoT) window.ttq.track('Purchase', money, p.order ? { event_id: `purchase-${p.order}` } : undefined);
+    }
     if (window.fbq && FUNNEL.has(name)) {
       if (name === 'quiz_start') window.fbq('track', 'ViewContent', { content_name: 'quiz' });
       if (name === 'test_done') window.fbq('track', 'CompleteRegistration', { content_name: 'test_done' });
@@ -178,6 +199,7 @@ export function sendLead(sid) {
   try { if (localStorage.getItem(key)) return; localStorage.setItem(key, '1'); } catch { /* нет */ }
   const eventId = `lead-${sid}`;
   try { if (window.fbq) window.fbq('track', 'Lead', { content_name: 'quiz_complete' }, { eventID: eventId }); } catch { /* нет */ }
+  try { if (ttOn && window.ttq) window.ttq.track('Lead', { content_name: 'quiz_complete' }, { event_id: eventId }); } catch { /* нет */ }
   try {
     const body = JSON.stringify({ action: 'lead', event_id: eventId, ...adContext(), country: leadCountry() });
     fetch(LEAD_FN, { method: 'POST', headers: { 'content-type': 'application/json' }, body, keepalive: true }).catch(() => {});

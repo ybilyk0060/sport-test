@@ -512,7 +512,7 @@ export default {
   },
 
   consent: {
-    text: 'Wir verwenden Cookies für Statistik und zur Messung unserer Werbung (Meta Pixel). Das Kameravideo wird nie hochgeladen.',
+    text: 'Wir verwenden Cookies für Statistik und zur Messung unserer Werbung (Meta Pixel, TikTok Pixel). Das Kameravideo wird nie hochgeladen.',
     accept: 'Akzeptieren',
     decline: 'Nur notwendige',
     more: 'Datenschutzerklärung',

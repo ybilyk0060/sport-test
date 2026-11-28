@@ -513,7 +513,7 @@ export default {
   },
 
   consent: {
-    text: 'We use cookies for analytics and to measure our ads (Meta Pixel). Camera video is never uploaded.',
+    text: 'We use cookies for analytics and to measure our ads (Meta Pixel, TikTok Pixel). Camera video is never uploaded.',
     accept: 'Accept',
     decline: 'Only necessary',
     more: 'Privacy policy',
