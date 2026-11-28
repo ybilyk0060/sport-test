@@ -16,7 +16,7 @@ const secret = Deno.env.get("WFP_SECRET") || TEST.secret;
 const domain = Deno.env.get("WFP_DOMAIN") || TEST.domain;
 const mode = Deno.env.get("WFP_MERCHANT") ? "live" : "test";
 const PRICE = Number(Deno.env.get("SPORT_TEST_PRICE_UAH") || "210");
-const ALLOWED_RETURN = (Deno.env.get("SPORT_TEST_RETURN_HOSTS") || "kids-test.com,www.kids-test.com,ybilyk0060.github.io,localhost,127.0.0.1").split(",");
+const ALLOWED_RETURN = (Deno.env.get("SPORT_TEST_RETURN_HOSTS") || "kids-test.com,www.kids-test.com,ybilyk0060.github.io,localhost,127.0.0.1").split(",").concat(["kids-mind.com", "www.kids-mind.com"]);
 
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
 const FN_URL = `${Deno.env.get("SUPABASE_URL")}/functions/v1/sport-test-pay`;

@@ -27,7 +27,7 @@ async function paddle(path: string, method: string, body?: unknown) {
   if (!r.ok) throw new Error(`paddle ${r.status} ${(await r.text()).slice(0, 200)}`);
   return r.json();
 }
-const SITE_HOSTS = (Deno.env.get("SPORT_TEST_RETURN_HOSTS") || "kids-test.com,www.kids-test.com,ybilyk0060.github.io,localhost,127.0.0.1").split(",");
+const SITE_HOSTS = (Deno.env.get("SPORT_TEST_RETURN_HOSTS") || "kids-test.com,www.kids-test.com,ybilyk0060.github.io,localhost,127.0.0.1").split(",").concat(["kids-mind.com", "www.kids-mind.com"]);
 const BREVO = Deno.env.get("BREVO_API_KEY");
 const FROM = Deno.env.get("SPORT_TEST_MAIL_FROM") || "support@kids-test.com";
 const PERIOD_DAYS = 30;
