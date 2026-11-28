@@ -79,7 +79,7 @@ async function mail(to: string, subject: string, text: string) {
 let lastMailError = "";
 
 // Цена и дата так, как их пишут носители: $14.99 / 14,99 € / 629 грн; «December 26, 2026» / «26. Dezember 2026»
-const LOC: Record<string, string> = { en: "en-US", de: "de-DE", uk: "uk-UA" };
+const LOC: Record<string, string> = { en: "en-US", de: "de-DE", uk: "uk-UA", fr: "fr-FR" };
 const money = (n: number, cur: string, lang = "en") => new Intl.NumberFormat(LOC[lang] || "en-US", { style: "currency", currency: cur || "USD", minimumFractionDigits: Number.isInteger(n) ? 0 : 2 }).format(n);
 const fmtDate = (d: unknown, lang = "en") => new Intl.DateTimeFormat(LOC[lang] || "en-US", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(String(d)));
 // Строка про приложения в письмах
@@ -93,6 +93,39 @@ function appsLine(lang: string) {
   return "";
 }
 // Цепочка после оплаты: день 3, день 7, затем раз в 30 дней приглашение на повторный тест
+// Тест «Как думает ваш ребёнок» (страница /mind): подписка та же, письма свои (en, de, fr). Признак — quiz.product === "mind".
+const isMind = (s: Record<string, any>) => !!(s && s.quiz && s.quiz.product === "mind");
+function mindMail(kind: "terms" | "d3" | "d7" | "retest", lang: string, s: Record<string, unknown>, link: string) {
+  const L = lang === "de" || lang === "fr" ? lang : "en";
+  const first = money(Number(s.first_amount), String(s.currency), L), regular = money(Number(s.regular_amount), String(s.currency), L);
+  const until = fmtDate(s.paid_until, L);
+  const M = {
+    en: {
+      terms: { subject: "You’re subscribed: “How does your child think?”", text: `Thank you! Your subscription is active.\n\nFirst payment: ${first} for ${PERIOD_DAYS} days.\nThen ${regular} every ${PERIOD_DAYS} days, starting ${until}, until you cancel.\n\nOpen the full report, today’s activity and your subscription settings (cancel in two taps) on any device:\n${link}${appsLine("en")}` },
+      d3: { subject: "Today’s 10 minutes together", text: `Three days in. Each day there is one short activity picked for your child’s thinking style: 5 to 10 minutes together, no screen, with things you already have at home.\n\nOpen today’s activity:\n${link}` },
+      d7: { subject: "One week in: what did you notice?", text: `A week of short activities is enough to see what pulls your child in and what doesn’t. The report has phrases that build confidence: try one today.\n\nOpen the report and today’s activity:\n${link}${appsLine("en")}` },
+      retest: { subject: "A month has passed: take the test again", text: `Children change fast. Answer the questions again (3 minutes) and see what has shifted in your child’s interests and strengths.\n\nOpen:\n${link}` },
+      q: "Questions",
+    },
+    de: {
+      terms: { subject: "Abo abgeschlossen: „Wie denkt Ihr Kind?“", text: `Danke! Ihr Abo ist aktiv.\n\nErste Zahlung: ${first} für ${PERIOD_DAYS} Tage.\nDanach ${regular} alle ${PERIOD_DAYS} Tage, erstmals am ${until}, bis Sie kündigen.\n\nBericht, Aufgabe des Tages und Abo-Verwaltung (Kündigung mit zwei Klicks) auf jedem Gerät öffnen:\n${link}${appsLine("de")}` },
+      d3: { subject: "Die 10 Minuten von heute", text: `Drei Tage sind vorbei. Jeden Tag gibt es eine kurze Aufgabe passend zum Denkstil Ihres Kindes: 5 bis 10 Minuten gemeinsam, ohne Bildschirm, mit Dingen, die Sie zu Hause haben.\n\nHeutige Aufgabe öffnen:\n${link}` },
+      d7: { subject: "Eine Woche ist geschafft: Was ist Ihnen aufgefallen?", text: `Eine Woche mit kurzen Aufgaben reicht, um zu sehen, was Ihr Kind fesselt und was nicht. Im Bericht stehen Sätze, die Selbstvertrauen stärken: Probieren Sie heute einen aus.\n\nBericht und heutige Aufgabe öffnen:\n${link}${appsLine("de")}` },
+      retest: { subject: "Ein Monat ist vorbei: Machen Sie den Test noch einmal", text: `Kinder verändern sich schnell. Beantworten Sie die Fragen noch einmal (3 Minuten) und sehen Sie, was sich bei Interessen und Stärken Ihres Kindes verschoben hat.\n\nÖffnen:\n${link}` },
+      q: "Fragen",
+    },
+    fr: {
+      terms: { subject: "Abonnement confirmé : « Comment pense votre enfant ? »", text: `Merci ! Votre abonnement est actif.\n\nPremier paiement : ${first} pour ${PERIOD_DAYS} jours.\nEnsuite ${regular} tous les ${PERIOD_DAYS} jours, à partir du ${until}, jusqu’à la résiliation.\n\nOuvrez le rapport complet, l’activité du jour et la gestion de l’abonnement (résiliation en deux clics) sur n’importe quel appareil :\n${link}` },
+      d3: { subject: "Les 10 minutes d’aujourd’hui", text: `Trois jours déjà. Chaque jour, une courte activité est choisie selon le style de pensée de votre enfant : 5 à 10 minutes ensemble, sans écran, avec ce que vous avez à la maison.\n\nOuvrir l’activité du jour :\n${link}` },
+      d7: { subject: "Une semaine déjà : qu’avez-vous remarqué ?", text: `Une semaine de courtes activités suffit pour voir ce qui passionne votre enfant et ce qui le lasse. Le rapport propose des phrases qui donnent confiance : essayez-en une aujourd’hui.\n\nOuvrir le rapport et l’activité du jour :\n${link}` },
+      retest: { subject: "Un mois a passé : refaites le test", text: `Les enfants changent vite. Répondez de nouveau aux questions (3 minutes) et voyez ce qui a évolué dans les centres d’intérêt et les points forts de votre enfant.\n\nOuvrir :\n${link}` },
+      q: "Questions",
+    },
+  } as const;
+  const nb = (t: string) => (L === "fr" ? t.replace(/« /g, "«\u00a0").replace(/ »/g, "\u00a0»").replace(/ ([:;?!])/g, "\u00a0$1") : t);
+  const m = M[L][kind];
+  return { subject: nb(m.subject), text: `${nb(m.text)}\n\n${M[L].q}${L === "fr" ? "\u00a0" : ""}: ${FROM}` };
+}
 function nurtureMail(kind: "d3" | "d7" | "retest", lang: string, link: string) {
   const L = lang === "uk" || lang === "de" ? lang : "en";
   const M = {
@@ -155,7 +188,7 @@ Deno.serve(async (req) => {
           order_ref: orderRef, email, mode: subMode, currency: String(b.currency || "USD").slice(0, 3), provider_sub: order?.provider_sub || null,
           first_amount: Number(b.first) || 0, regular_amount: Number(b.regular) || 0, period_days: PERIOD_DAYS,
           started_at: new Date(now).toISOString(), paid_until: new Date(now + PERIOD_DAYS * 86400000).toISOString(),
-          quiz: clip(b.quiz), results: clip(b.results), lang: ["en", "de", "uk"].includes(String(b.lang)) ? String(b.lang) : "en",
+          quiz: clip(b.quiz), results: clip(b.results), lang: ["en", "de", "uk", "fr"].includes(String(b.lang)) ? String(b.lang) : "en",
           site: safeSite(String(b.returnTo || "")),
         }).select("*").single();
         if (error) return json({ error: error.message }, 500);
@@ -164,7 +197,7 @@ Deno.serve(async (req) => {
       const token = await issueToken(sub.id);
       const site = safeSite(String(b.returnTo || ""));
       let mailed: boolean | null = null;
-      if (site && !existing) { const m = termsMail(String(b.lang || "en"), sub, `${site}?sub=${token}`); mailed = await mail(email, m.subject, m.text); }
+      if (site && !existing) { const m = isMind(sub) ? mindMail("terms", String(sub.lang || "en"), sub, `${site}?sub=${token}`) : termsMail(String(b.lang || "en"), sub, `${site}?sub=${token}`); mailed = await mail(email, m.subject, m.text); }
       return json({ token, sub: view(sub), mailed, mailError: mailed === false ? (BREVO ? lastMailError : "no BREVO_API_KEY") : undefined, from: FROM });
     }
 
@@ -184,6 +217,8 @@ Deno.serve(async (req) => {
         const date = fmtDate(s.paid_until, String(s.lang));
         const m = s.lang === "uk"
           ? { subject: `Через 3 дні продовження підписки: ${price}`, text: `${date} підписка продовжиться за ${price} на наступні ${PERIOD_DAYS} днів.\n\nЯкщо не хочете продовжувати — скасуйте в один дотик:\n${link}\n\nПитання: ${FROM}` }
+          : s.lang === "fr"
+          ? { subject: `Votre abonnement se renouvelle dans 3 jours\u00a0: ${price}`, text: `Le ${date}, votre abonnement se renouvelle pour ${price} pour ${PERIOD_DAYS} jours de plus.\n\nSi vous ne souhaitez pas continuer, résiliez en un clic\u00a0:\n${link}\n\nQuestions\u00a0: ${FROM}` }
           : s.lang === "de"
           ? { subject: `In 3 Tagen verlängert sich Ihr Abo: ${price}`, text: `Am ${date} verlängert sich Ihr Abo für ${price} um weitere ${PERIOD_DAYS} Tage.\n\nWenn Sie nicht verlängern möchten, kündigen Sie mit einem Klick:\n${link}\n\nFragen: ${FROM}` }
           : { subject: `Your subscription renews in 3 days: ${price}`, text: `On ${date} your subscription renews for ${price} for another ${PERIOD_DAYS} days.\n\nIf you don't want to continue, cancel in one tap:\n${link}\n\nQuestions: ${FROM}` };
@@ -202,7 +237,7 @@ Deno.serve(async (req) => {
         const kind = retestDue ? "retest" : due > step && age < 10 ? (due === 2 ? "d7" : "d3") : null;
         if (!kind) { if (due > step) await db.from("sport_test_subscriptions").update({ onboard_step: due }).eq("id", s.id); continue; }
         const token = await issueToken(s.id);
-        const m = nurtureMail(kind, String(s.lang), `${s.site}?sub=${token}`);
+        const m = isMind(s) ? mindMail(kind, String(s.lang), s, `${s.site}?sub=${token}`) : nurtureMail(kind, String(s.lang), `${s.site}?sub=${token}`);
         if (await mail(s.email, m.subject, m.text)) {
           await db.from("sport_test_subscriptions").update(kind === "retest" ? { retest_mailed_at: new Date(now).toISOString(), onboard_step: Math.max(step, due) } : { onboard_step: due }).eq("id", s.id);
           nurtured++;
@@ -247,8 +282,8 @@ Deno.serve(async (req) => {
         await db.from("sport_test_subscriptions").update({ last_restore_at: new Date().toISOString() }).eq("id", sub.id);
         const lang = String(b.lang || "en");
         const link = `${site}?sub=${token}`;
-        const subject = lang === "uk" ? "Доступ до підписки" : lang === "de" ? "Zugang zu Ihrem Abo" : "Access to your subscription";
-        const text = lang === "uk" ? `Відкрийте програму на цьому пристрої:\n${link}` : lang === "de" ? `Öffnen Sie das Programm auf diesem Gerät:\n${link}` : `Open the program on this device:\n${link}`;
+        const subject = lang === "uk" ? "Доступ до підписки" : lang === "de" ? "Zugang zu Ihrem Abo" : lang === "fr" ? "Accès à votre abonnement" : "Access to your subscription";
+        const text = lang === "uk" ? `Відкрийте програму на цьому пристрої:\n${link}` : lang === "de" ? `Öffnen Sie das Programm auf diesem Gerät:\n${link}` : lang === "fr" ? `Ouvrez votre accès sur cet appareil\u00a0:\n${link}` : `Open the program on this device:\n${link}`;
         await mail(email, subject, text);
       }
       return json({ ok: true }); // одинаковый ответ — по email нельзя узнать, есть ли подписка

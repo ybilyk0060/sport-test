@@ -1,0 +1,34 @@
+/* Тест «Как думает ваш ребёнок»: дополнения к css/app.css (те же цвета и кнопки) */
+.mind .hero .tag { align-self: flex-start; }
+.mind h3 { font-size: 17px; margin-top: 6px; }
+.mind .lead { font-size: 18px; line-height: 1.45; }
+.mind .calc { padding: 30vh 0 0; display: grid; gap: 18px; }
+.type-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.type-chips span { background: var(--card); border-radius: 999px; padding: 6px 12px; font-size: 14px; font-weight: 600; box-shadow: inset 0 0 0 1.5px var(--line); }
+.opts.scale .opt { min-height: 52px; padding: 12px 16px; }
+.mind-type { gap: 8px; }
+.mind-type .tag { background: rgba(255,255,255,.22); color: #fff; }
+.mind .second { font-size: 16px; }
+.mbars { display: grid; gap: 10px; }
+.mbar { display: grid; grid-template-columns: minmax(96px, 34%) 1fr 44px; align-items: center; gap: 10px; font-size: 15px; }
+.mbar span { font-weight: 600; overflow-wrap: anywhere; }
+.mbar i { height: 12px; border-radius: 12px; background: var(--line); overflow: hidden; }
+.mbar i b { display: block; height: 100%; border-radius: 12px; background: var(--accent); }
+.mbar em { font-style: normal; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.mbar.locked i b { background: var(--l0); filter: blur(3px); }
+.mbar.locked span { color: var(--muted); }
+.mind .paywall { display: grid; gap: 14px; margin-top: 8px; }
+.says { display: grid; gap: 8px; }
+.says p { background: var(--card); border-radius: 14px; padding: 12px 14px; font-weight: 600; box-shadow: inset 0 0 0 1.5px var(--line); }
+.mind ol.plan { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.mind ol.plan li { background: var(--card); border-radius: 14px; padding: 12px 14px; box-shadow: inset 0 0 0 1.5px var(--line); }
+.daily-cta { background: var(--accent-soft); box-shadow: none; }
+.dcard { background: var(--card); border-radius: var(--r); padding: 18px; box-shadow: inset 0 0 0 1.5px var(--line); display: grid; gap: 12px; }
+.dcard .task { font-size: 19px; line-height: 1.45; }
+.mind .row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.mind .row.stats { justify-content: space-between; font-weight: 600; font-size: 15px; }
+.days { display: grid; gap: 8px; }
+.day { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; text-align: left; background: var(--card); border-radius: 14px; padding: 12px 14px; box-shadow: inset 0 0 0 1.5px var(--line); font-size: 15px; }
+.day span { color: var(--muted); }
+.day em { font-style: normal; color: var(--muted); font-size: 13px; }
+.mind .qhead b { font-size: 17px; }

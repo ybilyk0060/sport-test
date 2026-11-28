@@ -565,8 +565,9 @@ function boot() {
     screen(`<div class="center" style="padding:48px 0"><div class="spinner"></div></div>`);
     subapi.status(token).then((r) => {
       const s = r.sub;
-      setState({ subToken: token, sub: subapi.fromServer(s), paid: true, quiz: s.quiz || state.quiz, results: s.results || state.results, workouts: Array.isArray(s.workouts) && s.workouts.length ? s.workouts : (state.workouts || []), step: 'report' });
+      setState({ subToken: token, sub: subapi.fromServer(s), paid: true, quiz: (s.quiz && s.quiz.product !== 'mind' && s.quiz) || state.quiz, results: (s.results && s.results.product !== 'mind' && s.results) || state.results, workouts: Array.isArray(s.workouts) && s.workouts.length ? s.workouts : (state.workouts || []), step: 'report' });
       track('sub_restored');
+      if (!state.results) return landing(); // подписка оформлена на тесте «Как думает ваш ребёнок»: этот тест ещё не пройден
       return fullReport();
     }).catch(() => landing());
     return;

@@ -1,0 +1,1253 @@
+{
+ "version": "0.2",
+ "languages": [
+  "en",
+  "de",
+  "fr"
+ ],
+ "review_language": "ru",
+ "intro": [
+  {
+   "id": "age",
+   "type": "single",
+   "text": {
+    "ru": "Сколько лет ребёнку?",
+    "en": "How old is your child?",
+    "de": "Wie alt ist Ihr Kind?",
+    "fr": "Quel âge a votre enfant ?"
+   },
+   "options": [
+    "3-5",
+    "6-8",
+    "9-12"
+   ]
+  },
+  {
+   "id": "gender",
+   "type": "single",
+   "text": {
+    "ru": "Это мальчик или девочка?",
+    "en": "Is your child a boy or a girl?",
+    "de": "Ist Ihr Kind ein Junge oder ein Mädchen?",
+    "fr": "Votre enfant est un garçon ou une fille ?"
+   },
+   "options": [
+    {
+     "ru": "Мальчик",
+     "en": "Boy",
+     "de": "Junge",
+     "fr": "Garçon"
+    },
+    {
+     "ru": "Девочка",
+     "en": "Girl",
+     "de": "Mädchen",
+     "fr": "Fille"
+    }
+   ]
+  },
+  {
+   "id": "name",
+   "type": "text",
+   "optional": true,
+   "storage": "device_only",
+   "text": {
+    "ru": "Как зовут ребёнка? (можно пропустить)",
+    "en": "What's your child's first name? (optional)",
+    "de": "Wie heißt Ihr Kind? (optional)",
+    "fr": "Quel est le prénom de votre enfant ? (facultatif)"
+   }
+  }
+ ],
+ "questions": [
+  {
+   "id": "q1",
+   "block": "interests",
+   "type": "single",
+   "text": {
+    "ru": "Чем ребёнок занимается, когда его никто не занимает?",
+    "en": "What does your child do when nobody is entertaining them?",
+    "de": "Was macht Ihr Kind, wenn niemand es beschäftigt?",
+    "fr": "Que fait votre enfant quand personne ne s'occupe de lui ?"
+   },
+   "options": [
+    {
+     "scale": "builder",
+     "text": {
+      "ru": "Что-то строит или собирает",
+      "en": "Builds or assembles something",
+      "de": "Baut etwas oder setzt etwas zusammen",
+      "fr": "Construit ou assemble quelque chose"
+     }
+    },
+    {
+     "scale": "storyteller",
+     "text": {
+      "ru": "Придумывает истории, говорит за игрушки",
+      "en": "Makes up stories, talks for the toys",
+      "de": "Erfindet Geschichten, spricht für die Spielfiguren",
+      "fr": "Invente des histoires, fait parler ses jouets"
+     }
+    },
+    {
+     "scale": "mover",
+     "text": {
+      "ru": "Бегает, лазает, прыгает",
+      "en": "Runs, climbs, jumps",
+      "de": "Rennt, klettert, springt",
+      "fr": "Court, grimpe, saute"
+     }
+    },
+    {
+     "scale": "artist",
+     "text": {
+      "ru": "Рисует, лепит, вырезает",
+      "en": "Draws, sculpts, cuts things out",
+      "de": "Malt, knetet, schneidet aus",
+      "fr": "Dessine, fait de la pâte à modeler, découpe"
+     }
+    }
+   ]
+  },
+  {
+   "id": "q2",
+   "block": "interests",
+   "type": "single",
+   "text": {
+    "ru": "Какие игрушки занимают его дольше всего?",
+    "en": "Which toys keep your child busy the longest?",
+    "de": "Welche Spielsachen beschäftigen Ihr Kind am längsten?",
+    "fr": "Quels jouets occupent votre enfant le plus longtemps ?"
+   },
+   "options": [
+    {
+     "scale": "inventor",
+     "text": {
+      "ru": "Головоломки, наборы для опытов",
+      "en": "Puzzles and experiment kits",
+      "de": "Knobelspiele und Experimentierkästen",
+      "fr": "Casse-têtes et kits d'expériences"
+     }
+    },
+    {
+     "scale": "helper",
+     "text": {
+      "ru": "Куклы, зверушки, игры в «дочки-матери» и доктора",
+      "en": "Dolls, stuffed animals, playing house or doctor",
+      "de": "Puppen, Kuscheltiere, Familie oder Arzt spielen",
+      "fr": "Poupées, peluches, jouer au papa et à la maman ou au docteur"
+     }
+    },
+    {
+     "scale": "leader",
+     "text": {
+      "ru": "Игры с правилами, в которые играют с другими",
+      "en": "Games with rules played with others",
+      "de": "Spiele mit Regeln, die man mit anderen spielt",
+      "fr": "Jeux avec des règles, à jouer avec d'autres"
+     }
+    },
+    {
+     "scale": "explorer",
+     "text": {
+      "ru": "Находки с улицы: камни, жуки, палки",
+      "en": "Finds from outside: stones, bugs, sticks",
+      "de": "Fundstücke von draußen: Steine, Käfer, Stöcke",
+      "fr": "Trésors ramassés dehors : cailloux, insectes, bâtons"
+     }
+    }
+   ]
+  },
+  {
+   "id": "q3",
+   "block": "interests",
+   "type": "single",
+   "text": {
+    "ru": "О чём он чаще всего спрашивает «почему»?",
+    "en": "What does your child ask \"why\" about most often?",
+    "de": "Worüber stellt Ihr Kind die meisten Warum-Fragen?",
+    "fr": "À propos de quoi votre enfant demande-t-il le plus souvent « pourquoi » ?"
+   },
+   "options": [
+    {
+     "scale": "inventor",
+     "text": {
+      "ru": "Как устроены вещи и механизмы",
+      "en": "How things and machines work",
+      "de": "Wie Dinge und Maschinen funktionieren",
+      "fr": "Comment fonctionnent les objets et les machines"
+     }
+    },
+    {
+     "scale": "explorer",
+     "text": {
+      "ru": "Про животных, природу, космос",
+      "en": "Animals, nature, space",
+      "de": "Tiere, Natur, Weltall",
+      "fr": "Les animaux, la nature, l'espace"
+     }
+    },
+    {
+     "scale": "storyteller",
+     "text": {
+      "ru": "Что значат слова, чем кончилась история",
+      "en": "What words mean, how a story ends",
+      "de": "Was Wörter bedeuten, wie eine Geschichte ausgeht",
+      "fr": "Ce que veulent dire les mots, comment finit une histoire"
+     }
+    },
+    {
+     "scale": "helper",
+     "text": {
+      "ru": "Почему люди грустят, злятся, радуются",
+      "en": "Why people feel sad, angry or happy",
+      "de": "Warum Menschen traurig, wütend oder froh sind",
+      "fr": "Pourquoi les gens sont tristes, fâchés ou contents"
+     }
+    }
+   ]
+  },
+  {
+   "id": "q4",
+   "block": "interests",
+   "type": "single",
+   "text": {
+    "ru": "Что он выбирает на экране, если можно выбрать самому?",
+    "en": "What does your child pick on a screen when the choice is theirs?",
+    "de": "Was wählt Ihr Kind am Bildschirm, wenn es selbst entscheiden darf?",
+    "fr": "Que choisit votre enfant sur un écran quand il décide seul ?"
+   },
+   "options": [
+    {
+     "scale": "builder",
+     "text": {
+      "ru": "Игры, где строят миры и города",
+      "en": "Games where you build worlds and cities",
+      "de": "Spiele, in denen man Welten und Städte baut",
+      "fr": "Des jeux où l'on construit des mondes et des villes"
+     }
+    },
+    {
+     "scale": "artist",
+     "text": {
+      "ru": "Рисование, музыку, как что-то мастерят",
+      "en": "Drawing, music, craft videos",
+      "de": "Malen, Musik, Bastelvideos",
+      "fr": "Dessin, musique, vidéos de bricolage"
+     }
+    },
+    {
+     "scale": "mover",
+     "text": {
+      "ru": "Спорт, танцы, трюки",
+      "en": "Sports, dancing, tricks",
+      "de": "Sport, Tanzen, Tricks",
+      "fr": "Sport, danse, acrobaties"
+     }
+    },
+    {
+     "scale": "leader",
+     "text": {
+      "ru": "Соревнования и челленджи",
+      "en": "Competitions and challenges",
+      "de": "Wettkämpfe und Challenges",
+      "fr": "Compétitions et défis"
+     }
+    }
+   ]
+  },
+  {
+   "id": "q5",
+   "block": "interests",
+   "type": "single",
+   "text": {
+    "ru": "Что он делает на детской площадке?",
+    "en": "What does your child do at the playground?",
+    "de": "Was macht Ihr Kind auf dem Spielplatz?",
+    "fr": "Que fait votre enfant à l'aire de jeux ?"
+   },
+   "options": [
+    {
+     "scale": "mover",
+     "text": {
+      "ru": "Сразу лезет на самое высокое",
+      "en": "Goes straight for the highest climb",
+      "de": "Klettert sofort ganz nach oben",
+      "fr": "Grimpe tout de suite au plus haut"
+     }
+    },
+    {
+     "scale": "leader",
+     "text": {
+      "ru": "Собирает детей и придумывает игру",
+      "en": "Gathers kids and sets up a game",
+      "de": "Holt Kinder zusammen und denkt sich ein Spiel aus",
+      "fr": "Rassemble les enfants et lance un jeu"
+     }
+    },
+    {
+     "scale": "explorer",
+     "text": {
+      "ru": "Обходит все углы, что-то находит",
+      "en": "Checks every corner and finds things",
+      "de": "Erkundet jede Ecke und findet etwas",
+      "fr": "Explore chaque recoin et trouve des choses"
+     }
+    },
+    {
+     "scale": "helper",
+     "text": {
+      "ru": "Опекает младших, делится",
+      "en": "Looks after younger kids, shares",
+      "de": "Kümmert sich um Kleinere, teilt",
+      "fr": "S'occupe des plus petits, partage"
+     }
+    }
+   ]
+  },
+  {
+   "id": "q6",
+   "block": "interests",
+   "type": "single",
+   "text": {
+    "ru": "Какие книги и истории он любит?",
+    "en": "Which books and stories does your child like?",
+    "de": "Welche Bücher und Geschichten mag Ihr Kind?",
+    "fr": "Quels livres et histoires votre enfant aime-t-il ?"
+   },
+   "options": [
+    {
+     "scale": "storyteller",
+     "text": {
+      "ru": "Сказки и приключения с героями",
+      "en": "Tales and adventures with heroes",
+      "de": "Märchen und Abenteuer mit Helden",
+      "fr": "Contes et aventures avec des héros"
+     }
+    },
+    {
+     "scale": "inventor",
+     "text": {
+      "ru": "Энциклопедии и «как это работает»",
+      "en": "Fact books and \"how things work\"",
+      "de": "Sachbücher und „Wie funktioniert das?“",
+      "fr": "Livres documentaires et « comment ça marche »"
+     }
+    },
+    {
+     "scale": "artist",
+     "text": {
+      "ru": "Где красивые картинки, сам их разглядывает",
+      "en": "Ones with beautiful pictures to study",
+      "de": "Solche mit schönen Bildern zum Anschauen",
+      "fr": "Ceux avec de belles images à regarder"
+     }
+    },
+    {
+     "scale": "builder",
+     "text": {
+      "ru": "Про машины, технику, стройку",
+      "en": "About vehicles, machines, building sites",
+      "de": "Über Fahrzeuge, Technik, Baustellen",
+      "fr": "Sur les véhicules, les machines, les chantiers"
+     }
+    }
+   ]
+  },
+  {
+   "id": "q7",
+   "block": "interests",
+   "type": "single",
+   "text": {
+    "ru": "Какой подарок он выберет сам?",
+    "en": "Which gift would your child choose?",
+    "de": "Welches Geschenk würde Ihr Kind selbst wählen?",
+    "fr": "Quel cadeau votre enfant choisirait-il ?"
+   },
+   "options": [
+    {
+     "scale": "builder",
+     "text": {
+      "ru": "Конструктор",
+      "en": "A construction set",
+      "de": "Einen Baukasten",
+      "fr": "Un jeu de construction"
+     }
+    },
+    {
+     "scale": "artist",
+     "text": {
+      "ru": "Набор для творчества или инструмент",
+      "en": "An art set or a musical instrument",
+      "de": "Ein Kreativset oder ein Instrument",
+      "fr": "Un kit créatif ou un instrument"
+     }
+    },
+    {
+     "scale": "inventor",
+     "text": {
+      "ru": "Набор юного учёного",
+      "en": "A science kit",
+      "de": "Einen Experimentierkasten",
+      "fr": "Un kit scientifique"
+     }
+    },
+    {
+     "scale": "mover",
+     "text": {
+      "ru": "Мяч, самокат, велосипед",
+      "en": "A ball, scooter or bike",
+      "de": "Einen Ball, Roller oder ein Fahrrad",
+      "fr": "Un ballon, une trottinette ou un vélo"
+     }
+    }
+   ]
+  },
+  {
+   "id": "q8",
+   "block": "interests",
+   "type": "single",
+   "text": {
+    "ru": "Чем он гордится больше всего?",
+    "en": "What makes your child most proud?",
+    "de": "Worauf ist Ihr Kind am meisten stolz?",
+    "fr": "De quoi votre enfant est-il le plus fier ?"
+   },
+   "options": [
+    {
+     "scale": "leader",
+     "text": {
+      "ru": "Победил или был главным",
+      "en": "Winning or being in charge",
+      "de": "Gewonnen oder das Sagen gehabt zu haben",
+      "fr": "Avoir gagné ou avoir été le chef"
+     }
+    },
+    {
+     "scale": "helper",
+     "text": {
+      "ru": "Кому-то помог",
+      "en": "Helping someone",
+      "de": "Jemandem geholfen zu haben",
+      "fr": "Avoir aidé quelqu'un"
+     }
+    },
+    {
+     "scale": "storyteller",
+     "text": {
+      "ru": "Выступил, рассказал, рассмешил",
+      "en": "Performing, telling a story, making people laugh",
+      "de": "Etwas vorgetragen, erzählt oder andere zum Lachen gebracht zu haben",
+      "fr": "Avoir présenté, raconté ou fait rire"
+     }
+    },
+    {
+     "scale": "explorer",
+     "text": {
+      "ru": "Нашёл или узнал что-то новое",
+      "en": "Finding or discovering something new",
+      "de": "Etwas Neues gefunden oder entdeckt zu haben",
+      "fr": "Avoir trouvé ou découvert quelque chose"
+     }
+    }
+   ]
+  },
+  {
+   "id": "q9",
+   "block": "situations",
+   "type": "single",
+   "text": {
+    "ru": "Сломалась любимая игрушка. Что он сделает?",
+    "en": "A toy your child loves breaks. What do they do?",
+    "de": "Ein Lieblingsspielzeug geht kaputt. Was macht Ihr Kind?",
+    "fr": "Son jouet préféré se casse. Que fait votre enfant ?"
+   },
+   "options": [
+    {
+     "scale": "builder",
+     "text": {
+      "ru": "Пытается починить",
+      "en": "Tries to fix it",
+      "de": "Versucht, es zu reparieren",
+      "fr": "Essaie de le réparer"
+     }
+    },
+    {
+     "scale": "inventor",
+     "text": {
+      "ru": "Разбирает, чтобы посмотреть, что внутри",
+      "en": "Takes it apart to see what's inside",
+      "de": "Nimmt es auseinander, um hineinzuschauen",
+      "fr": "Le démonte pour voir l'intérieur"
+     }
+    },
+    {
+     "scale": "artist",
+     "text": {
+      "ru": "Превращает во что-то другое",
+      "en": "Turns it into something else",
+      "de": "Macht etwas anderes daraus",
+      "fr": "En fait autre chose"
+     }
+    },
+    {
+     "scale": "storyteller",
+     "text": {
+      "ru": "Придумывает историю, что с ней случилось",
+      "en": "Makes up a story about what happened",
+      "de": "Erfindet eine Geschichte dazu, was passiert ist",
+      "fr": "Invente une histoire sur ce qui est arrivé"
+     }
+    }
+   ]
+  },
+  {
+   "id": "q10",
+   "block": "situations",
+   "type": "single",
+   "text": {
+    "ru": "Новая компания детей. Как он себя ведёт?",
+    "en": "A new group of kids. How does your child act?",
+    "de": "Eine neue Kindergruppe. Wie verhält sich Ihr Kind?",
+    "fr": "Un nouveau groupe d'enfants. Comment réagit votre enfant ?"
+   },
+   "options": [
+    {
+     "scale": "leader",
+     "text": {
+      "ru": "Предлагает, во что играть",
+      "en": "Suggests what to play",
+      "de": "Schlägt vor, was gespielt wird",
+      "fr": "Propose à quoi jouer"
+     }
+    },
+    {
+     "scale": "helper",
+     "text": {
+      "ru": "Находит одного ребёнка и дружит с ним",
+      "en": "Finds one child and makes friends",
+      "de": "Sucht sich ein Kind und freundet sich mit ihm an",
+      "fr": "Trouve un enfant et devient son ami"
+     }
+    },
+    {
+     "scale": "explorer",
+     "text": {
+      "ru": "Сначала наблюдает и осматривается",
+      "en": "Watches and looks around first",
+      "de": "Beobachtet erst und schaut sich um",
+      "fr": "Observe d'abord et regarde autour de lui"
+     }
+    },
+    {
+     "scale": "mover",
+     "text": {
+      "ru": "Сразу включается в беготню",
+      "en": "Jumps straight into the running around",
+      "de": "Rennt sofort mit",
+      "fr": "Se lance tout de suite dans la course"
+     }
+    }
+   ]
+  },
+  {
+   "id": "q11",
+   "block": "situations",
+   "type": "single",
+   "text": {
+    "ru": "Задача не получается. Что он делает?",
+    "en": "A task isn't working out. What does your child do?",
+    "de": "Eine Aufgabe klappt nicht. Was macht Ihr Kind?",
+    "fr": "Votre enfant n'arrive pas à faire quelque chose. Que fait-il ?"
+   },
+   "options": [
+    {
+     "scale": "inventor",
+     "text": {
+      "ru": "Пробует другой способ",
+      "en": "Tries a different way",
+      "de": "Probiert einen anderen Weg",
+      "fr": "Essaie une autre méthode"
+     }
+    },
+    {
+     "scale": "builder",
+     "text": {
+      "ru": "Делает шаг за шагом, пока не получится",
+      "en": "Goes step by step until it works",
+      "de": "Macht Schritt für Schritt weiter, bis es klappt",
+      "fr": "Avance pas à pas jusqu'à réussir"
+     }
+    },
+    {
+     "scale": "leader",
+     "text": {
+      "ru": "Зовёт других делать вместе",
+      "en": "Gets others to do it together",
+      "de": "Holt andere dazu",
+      "fr": "Appelle les autres pour le faire ensemble"
+     }
+    },
+    {
+     "scale": "storyteller",
+     "text": {
+      "ru": "Рассуждает вслух, обсуждает",
+      "en": "Talks it through out loud",
+      "de": "Denkt laut und bespricht es",
+      "fr": "Réfléchit à voix haute, en discute"
+     }
+    }
+   ]
+  },
+  {
+   "id": "q12",
+   "block": "situations",
+   "type": "single",
+   "text": {
+    "ru": "Проиграл в игре. Что дальше?",
+    "en": "Your child loses a game. What happens next?",
+    "de": "Ihr Kind verliert ein Spiel. Was passiert dann?",
+    "fr": "Votre enfant perd à un jeu. Que se passe-t-il ?"
+   },
+   "options": [
+    {
+     "scale": "mover",
+     "text": {
+      "ru": "Требует реванш прямо сейчас",
+      "en": "Wants a rematch right now",
+      "de": "Will sofort eine Revanche",
+      "fr": "Veut une revanche tout de suite"
+     }
+    },
+    {
+     "scale": "leader",
+     "text": {
+      "ru": "Спорит о правилах, договаривается",
+      "en": "Argues about the rules, negotiates",
+      "de": "Diskutiert über die Regeln, verhandelt",
+      "fr": "Discute les règles, négocie"
+     }
+    },
+    {
+     "scale": "helper",
+     "text": {
+      "ru": "Поздравляет, переживает за других",
+      "en": "Congratulates, cares how others feel",
+      "de": "Gratuliert, achtet auf die anderen",
+      "fr": "Félicite, se soucie des autres"
+     }
+    },
+    {
+     "scale": "artist",
+     "text": {
+      "ru": "Уходит заниматься своим делом",
+      "en": "Goes off to do their own thing",
+      "de": "Geht und macht sein eigenes Ding",
+      "fr": "Part faire autre chose de son côté"
+     }
+    }
+   ]
+  },
+  {
+   "id": "q13",
+   "block": "situations",
+   "type": "single",
+   "text": {
+    "ru": "Свободный день. Что он выберет?",
+    "en": "A free day. What would your child choose?",
+    "de": "Ein freier Tag. Was würde Ihr Kind wählen?",
+    "fr": "Une journée libre. Que choisirait votre enfant ?"
+   },
+   "options": [
+    {
+     "scale": "explorer",
+     "text": {
+      "ru": "Лес, зоопарк, музей",
+      "en": "Forest, zoo or museum",
+      "de": "Wald, Zoo oder Museum",
+      "fr": "Forêt, zoo ou musée"
+     }
+    },
+    {
+     "scale": "mover",
+     "text": {
+      "ru": "Бассейн, батуты, спорт",
+      "en": "Pool, trampolines, sports",
+      "de": "Schwimmbad, Trampolin, Sport",
+      "fr": "Piscine, trampolines, sport"
+     }
+    },
+    {
+     "scale": "artist",
+     "text": {
+      "ru": "Мастерить, рисовать, музыку",
+      "en": "Crafting, drawing, music",
+      "de": "Basteln, Malen, Musik",
+      "fr": "Bricolage, dessin, musique"
+     }
+    },
+    {
+     "scale": "storyteller",
+     "text": {
+      "ru": "Театр, кино, книги",
+      "en": "A play, a movie or books",
+      "de": "Theater, Kino, Bücher",
+      "fr": "Théâtre, cinéma, livres"
+     }
+    }
+   ]
+  },
+  {
+   "id": "q14",
+   "block": "situations",
+   "type": "single",
+   "text": {
+    "ru": "Рядом кто-то плачет. Что он делает?",
+    "en": "Someone nearby is crying. What does your child do?",
+    "de": "Jemand in der Nähe weint. Was macht Ihr Kind?",
+    "fr": "Quelqu'un pleure à côté. Que fait votre enfant ?"
+   },
+   "options": [
+    {
+     "scale": "helper",
+     "text": {
+      "ru": "Подходит утешить",
+      "en": "Goes over to comfort them",
+      "de": "Geht hin und tröstet",
+      "fr": "Va consoler la personne"
+     }
+    },
+    {
+     "scale": "leader",
+     "text": {
+      "ru": "Зовёт взрослого, берёт дело в свои руки",
+      "en": "Fetches an adult, takes charge",
+      "de": "Holt einen Erwachsenen, übernimmt die Führung",
+      "fr": "Va chercher un adulte, prend les choses en main"
+     }
+    },
+    {
+     "scale": "storyteller",
+     "text": {
+      "ru": "Расспрашивает, что случилось",
+      "en": "Asks what happened",
+      "de": "Fragt nach, was passiert ist",
+      "fr": "Demande ce qui s'est passé"
+     }
+    },
+    {
+     "scale": "inventor",
+     "text": {
+      "ru": "Пытается устранить причину",
+      "en": "Tries to fix the cause",
+      "de": "Versucht, die Ursache zu beheben",
+      "fr": "Essaie de régler le problème"
+     }
+    }
+   ]
+  },
+  {
+   "id": "q15",
+   "block": "situations",
+   "type": "single",
+   "text": {
+    "ru": "Собираетесь в поездку. Как он собирается?",
+    "en": "You're packing for a trip. How does your child get ready?",
+    "de": "Sie packen für einen Ausflug. Wie bereitet sich Ihr Kind vor?",
+    "fr": "Vous préparez un voyage. Comment votre enfant se prépare-t-il ?"
+   },
+   "options": [
+    {
+     "scale": "builder",
+     "text": {
+      "ru": "Складывает вещи по порядку",
+      "en": "Packs things in order",
+      "de": "Packt alles ordentlich ein",
+      "fr": "Prépare ses affaires avec méthode"
+     }
+    },
+    {
+     "scale": "explorer",
+     "text": {
+      "ru": "Расспрашивает, куда едем и что там есть",
+      "en": "Asks where you're going and what's there",
+      "de": "Fragt, wohin es geht und was es dort gibt",
+      "fr": "Demande où l'on va et ce qu'il y a là-bas"
+     }
+    },
+    {
+     "scale": "artist",
+     "text": {
+      "ru": "Выбирает наряд и любимые мелочи",
+      "en": "Picks an outfit and a few treasured little things",
+      "de": "Sucht Outfit und Lieblingssachen aus",
+      "fr": "Choisit sa tenue et ses petits objets préférés"
+     }
+    },
+    {
+     "scale": "mover",
+     "text": {
+      "ru": "Не может усидеть, уже у двери",
+      "en": "Can't sit still, already at the door",
+      "de": "Kann nicht stillsitzen, steht schon an der Tür",
+      "fr": "Ne tient pas en place, attend déjà à la porte"
+     }
+    }
+   ]
+  },
+  {
+   "id": "q16",
+   "block": "situations",
+   "type": "single",
+   "text": {
+    "ru": "Ему дали коробку с разными деталями. Что он сделает?",
+    "en": "Your child gets a box of random parts. What do they do?",
+    "de": "Ihr Kind bekommt eine Kiste mit verschiedenen Teilen. Was macht es?",
+    "fr": "Votre enfant reçoit une boîte de pièces diverses. Que fait-il ?"
+   },
+   "options": [
+    {
+     "scale": "builder",
+     "text": {
+      "ru": "Сразу что-то строит",
+      "en": "Builds something right away",
+      "de": "Baut sofort etwas",
+      "fr": "Construit quelque chose tout de suite"
+     }
+    },
+    {
+     "scale": "inventor",
+     "text": {
+      "ru": "Сортирует и проверяет, что для чего",
+      "en": "Sorts them and tests what each does",
+      "de": "Sortiert und testet, wofür was ist",
+      "fr": "Trie et teste à quoi sert chaque pièce"
+     }
+    },
+    {
+     "scale": "helper",
+     "text": {
+      "ru": "Придумывает, кому из этого сделать подарок",
+      "en": "Thinks of a present to make for someone",
+      "de": "Überlegt, wem es daraus ein Geschenk basteln kann",
+      "fr": "Imagine un cadeau à fabriquer pour quelqu'un"
+     }
+    },
+    {
+     "scale": "explorer",
+     "text": {
+      "ru": "Рассматривает каждую и спрашивает, откуда она",
+      "en": "Studies each one and asks where it's from",
+      "de": "Betrachtet jedes Teil und fragt, woher es kommt",
+      "fr": "Examine chaque pièce et demande d'où elle vient"
+     }
+    }
+   ]
+  }
+ ],
+ "sliders": {
+  "scale_labels": {
+   "ru": [
+    "Редко",
+    "Иногда",
+    "Часто",
+    "Почти всегда",
+    "Всегда"
+   ],
+   "en": [
+    "Rarely",
+    "Sometimes",
+    "Often",
+    "Almost always",
+    "Always"
+   ],
+   "de": [
+    "Selten",
+    "Manchmal",
+    "Oft",
+    "Fast immer",
+    "Immer"
+   ],
+   "fr": [
+    "Rarement",
+    "Parfois",
+    "Souvent",
+    "Presque toujours",
+    "Toujours"
+   ]
+  },
+  "items": [
+   {
+    "id": "energy",
+    "text": {
+     "ru": "У ребёнка много энергии, ему трудно усидеть на месте",
+     "en": "My child has lots of energy and finds it hard to sit still",
+     "de": "Mein Kind hat viel Energie und kann schwer stillsitzen",
+     "fr": "Mon enfant a beaucoup d'énergie et a du mal à rester assis"
+    }
+   },
+   {
+    "id": "boldness",
+    "text": {
+     "ru": "Смело идёт в новое: место, люди, занятие",
+     "en": "Walks boldly into new places, people and activities",
+     "de": "Geht mutig auf Neues zu: Orte, Menschen, Aktivitäten",
+     "fr": "Va avec assurance vers la nouveauté : lieux, personnes, activités"
+    }
+   },
+   {
+    "id": "persistence",
+    "text": {
+     "ru": "Доводит начатое до конца, даже когда трудно",
+     "en": "Finishes what they start, even when it's hard",
+     "de": "Bringt Angefangenes zu Ende, auch wenn es schwer ist",
+     "fr": "Finit ce qu'il commence, même quand c'est difficile"
+    }
+   },
+   {
+    "id": "sensitivity",
+    "text": {
+     "ru": "Тонко чувствует настроение других и остро переживает",
+     "en": "Picks up on others' moods and feels things deeply",
+     "de": "Spürt die Stimmung anderer und empfindet intensiv",
+     "fr": "Perçoit l'humeur des autres et ressent les choses fortement"
+    }
+   },
+   {
+    "id": "sociability",
+    "text": {
+     "ru": "Легко заводит знакомства и любит быть среди людей",
+     "en": "Makes friends easily and loves being around people",
+     "de": "Findet leicht Anschluss und ist gern unter Menschen",
+     "fr": "Se fait facilement des amis et aime être entouré"
+    }
+   },
+   {
+    "id": "pace",
+    "text": {
+     "ru": "Любит, когда всё быстро, и не любит ждать",
+     "en": "Likes things fast and doesn't like waiting",
+     "de": "Mag es schnell und wartet ungern",
+     "fr": "Aime que ça aille vite et n'aime pas attendre"
+    }
+   }
+  ]
+ },
+ "goal": {
+  "id": "goal",
+  "type": "single",
+  "text": {
+   "ru": "Что вам важнее всего узнать?",
+   "en": "What do you most want to find out?",
+   "de": "Was möchten Sie vor allem herausfinden?",
+   "fr": "Que souhaitez-vous savoir avant tout ?"
+  },
+  "options": [
+   {
+    "id": "activity",
+    "text": {
+     "ru": "Какой кружок или секцию выбрать",
+     "en": "Which club or activity to choose",
+     "de": "Welcher Kurs oder Verein passt",
+     "fr": "Quelle activité ou quel club choisir"
+    }
+   },
+   {
+    "id": "strengths",
+    "text": {
+     "ru": "В чём он сильнее всего",
+     "en": "What my child is strongest at",
+     "de": "Worin mein Kind am stärksten ist",
+     "fr": "Les points forts de mon enfant"
+    }
+   },
+   {
+    "id": "future",
+    "text": {
+     "ru": "Кем он может стать",
+     "en": "What my child might become",
+     "de": "Was aus meinem Kind werden könnte",
+     "fr": "Ce que mon enfant pourrait devenir"
+    }
+   },
+   {
+    "id": "character",
+    "text": {
+     "ru": "Как найти к нему подход",
+     "en": "How to get through to my child",
+     "de": "Wie ich mein Kind besser erreiche",
+     "fr": "Comment mieux m'y prendre avec mon enfant"
+    }
+   }
+  ]
+ },
+ "scoring": {
+  "choice_points": 2,
+  "slider_modifier": "(value-3)*0.5 added to listed scales",
+  "slider_map": {
+   "energy": [
+    "mover"
+   ],
+   "boldness": [
+    "leader",
+    "explorer"
+   ],
+   "persistence": [
+    "builder",
+    "inventor"
+   ],
+   "sensitivity": [
+    "helper",
+    "artist"
+   ],
+   "sociability": [
+    "leader",
+    "helper",
+    "storyteller"
+   ],
+   "pace": []
+  },
+  "percent": "round(100*max(score,0)/16), capped 100",
+  "primary_type": "highest score",
+  "secondary_type": "second highest",
+  "tie_break": [
+   "slider-linked scale with higher slider value",
+   "earlier answer order"
+  ],
+  "shade": {
+   "rule": "avg(energy,pace)>=3.5 -> swift; <=2.5 -> calm; else none",
+   "swift": {
+    "ru": "быстрый",
+    "en": "swift",
+    "de": "flink",
+    "fr": "vif",
+    "fr_f": "vive"
+   },
+   "calm": {
+    "ru": "вдумчивый",
+    "en": "thoughtful",
+    "de": "bedacht",
+    "fr": "posé",
+    "fr_f": "posée"
+   },
+   "display": "separate tag next to the type name, not an adjective before it (avoids declension)"
+  }
+ },
+ "types": {
+  "builder": {
+   "name": {
+    "ru": "Строитель",
+    "en": "Builder",
+    "de": "Baumeister",
+    "fr": "Bâtisseur"
+   },
+   "tagline": {
+    "ru": "Думает руками и видит, как собрать целое из частей",
+    "en": "Thinks with their hands and sees how parts make a whole",
+    "de": "Denkt mit den Händen und sieht, wie aus Teilen ein Ganzes wird",
+    "fr": "Pense avec ses mains et voit comment les pièces forment un tout"
+   },
+   "careers": {
+    "ru": "инженер, архитектор, механик, столяр",
+    "en": "engineer, architect, mechanic, carpenter",
+    "de": "Ingenieurwesen, Architektur, Mechanik, Schreinerei",
+    "fr": "ingénierie, architecture, mécanique, menuiserie"
+   },
+   "name_f": {
+    "ru": "Строитель",
+    "en": "Builder",
+    "de": "Baumeisterin",
+    "fr": "Bâtisseuse"
+   }
+  },
+  "inventor": {
+   "name": {
+    "ru": "Изобретатель",
+    "en": "Inventor",
+    "de": "Erfinder",
+    "fr": "Inventeur"
+   },
+   "tagline": {
+    "ru": "Хочет знать, как всё устроено, и пробует по-своему",
+    "en": "Wants to know how everything works and tries it their own way",
+    "de": "Will wissen, wie alles funktioniert, und probiert es auf eigene Art",
+    "fr": "Veut savoir comment tout fonctionne et essaie à sa façon"
+   },
+   "careers": {
+    "ru": "учёный, программист, аналитик, врач-исследователь",
+    "en": "scientist, software developer, analyst, medical researcher",
+    "de": "Wissenschaft, Softwareentwicklung, Datenanalyse, Forschung",
+    "fr": "sciences, développement logiciel, analyse de données, recherche"
+   },
+   "name_f": {
+    "ru": "Изобретатель",
+    "en": "Inventor",
+    "de": "Erfinderin",
+    "fr": "Inventrice"
+   }
+  },
+  "storyteller": {
+   "name": {
+    "ru": "Рассказчик",
+    "en": "Storyteller",
+    "de": "Erzähler",
+    "fr": "Conteur"
+   },
+   "tagline": {
+    "ru": "Мыслит словами и историями, легко увлекает других",
+    "en": "Thinks in words and stories and draws others in",
+    "de": "Denkt in Worten und Geschichten und zieht andere in den Bann",
+    "fr": "Pense en mots et en histoires et captive les autres"
+   },
+   "careers": {
+    "ru": "журналист, писатель, юрист, актёр",
+    "en": "journalist, writer, lawyer, actor",
+    "de": "Journalismus, Schreiben, Jura, Schauspiel",
+    "fr": "journalisme, écriture, droit, théâtre"
+   },
+   "name_f": {
+    "ru": "Рассказчик",
+    "en": "Storyteller",
+    "de": "Erzählerin",
+    "fr": "Conteuse"
+   }
+  },
+  "artist": {
+   "name": {
+    "ru": "Художник",
+    "en": "Artist",
+    "de": "Künstler",
+    "fr": "Artiste"
+   },
+   "tagline": {
+    "ru": "Замечает красоту и детали, создаёт своё",
+    "en": "Notices beauty and detail and creates something of their own",
+    "de": "Sieht Schönheit und Details und erschafft Eigenes",
+    "fr": "Remarque la beauté et les détails et crée à sa manière"
+   },
+   "careers": {
+    "ru": "дизайнер, иллюстратор, музыкант, архитектор",
+    "en": "designer, illustrator, musician, architect",
+    "de": "Design, Illustration, Musik, Architektur",
+    "fr": "design, illustration, musique, architecture"
+   },
+   "name_f": {
+    "ru": "Художник",
+    "en": "Artist",
+    "de": "Künstlerin",
+    "fr": "Artiste"
+   }
+  },
+  "explorer": {
+   "name": {
+    "ru": "Исследователь",
+    "en": "Explorer",
+    "de": "Entdecker",
+    "fr": "Explorateur"
+   },
+   "tagline": {
+    "ru": "Наблюдает, собирает факты и идёт смотреть, что за углом",
+    "en": "Observes, collects facts and goes to see what's around the corner",
+    "de": "Beobachtet, sammelt Fakten und schaut nach, was hinter der Ecke liegt",
+    "fr": "Observe, rassemble des faits et va voir ce qu'il y a plus loin"
+   },
+   "careers": {
+    "ru": "биолог, ветеринар, географ, эколог",
+    "en": "biologist, vet, geographer, environmental scientist",
+    "de": "Biologie, Tiermedizin, Geografie, Umweltwissenschaft",
+    "fr": "biologie, médecine vétérinaire, géographie, écologie"
+   },
+   "name_f": {
+    "ru": "Исследователь",
+    "en": "Explorer",
+    "de": "Entdeckerin",
+    "fr": "Exploratrice"
+   }
+  },
+  "leader": {
+   "name": {
+    "ru": "Лидер",
+    "en": "Leader",
+    "de": "Anführer",
+    "fr": "Meneur"
+   },
+   "tagline": {
+    "ru": "Берёт инициативу, договаривается и ведёт за собой",
+    "en": "Takes the initiative, negotiates and brings others along",
+    "de": "Ergreift die Initiative, verhandelt und nimmt andere mit",
+    "fr": "Prend l'initiative, négocie et entraîne les autres"
+   },
+   "careers": {
+    "ru": "предприниматель, менеджер, организатор, тренер",
+    "en": "entrepreneur, manager, event planner, coach",
+    "de": "Unternehmertum, Management, Eventorganisation, Coaching",
+    "fr": "entrepreneuriat, management, événementiel, coaching"
+   },
+   "name_f": {
+    "ru": "Лидер",
+    "en": "Leader",
+    "de": "Anführerin",
+    "fr": "Meneuse"
+   }
+  },
+  "helper": {
+   "name": {
+    "ru": "Помощник",
+    "en": "Helper",
+    "de": "Helfer",
+    "fr": "Grand cœur"
+   },
+   "tagline": {
+    "ru": "Чувствует других и первым приходит на помощь",
+    "en": "Senses how others feel and is first to help",
+    "de": "Spürt, wie es anderen geht, und ist sofort zur Stelle",
+    "fr": "Sent ce que vivent les autres et aide tout de suite"
+   },
+   "careers": {
+    "ru": "врач, учитель, психолог, ветеринар",
+    "en": "doctor, teacher, psychologist, vet",
+    "de": "Medizin, Lehramt, Psychologie, Tiermedizin",
+    "fr": "médecine, enseignement, psychologie, médecine vétérinaire"
+   },
+   "name_f": {
+    "ru": "Помощник",
+    "en": "Helper",
+    "de": "Helferin",
+    "fr": "Grand cœur"
+   }
+  },
+  "mover": {
+   "name": {
+    "ru": "Непоседа",
+    "en": "Mover",
+    "de": "Wirbelwind",
+    "fr": "Fonceur"
+   },
+   "tagline": {
+    "ru": "Думает в движении: сначала попробует телом, потом объяснит",
+    "en": "Thinks on the move: tries it with their body first, explains later",
+    "de": "Denkt in Bewegung: probiert erst mit dem Körper, erklärt später",
+    "fr": "Pense en mouvement : essaie d'abord avec son corps, explique ensuite"
+   },
+   "careers": {
+    "ru": "спортсмен, тренер, хореограф, спасатель",
+    "en": "athlete, coach, choreographer, rescue worker",
+    "de": "Leistungssport, Training, Choreografie, Rettungsdienst",
+    "fr": "sport de haut niveau, entraînement, chorégraphie, secourisme"
+   },
+   "name_f": {
+    "ru": "Непоседа",
+    "en": "Mover",
+    "de": "Wirbelwind",
+    "fr": "Fonceuse"
+   }
+  }
+ },
+ "disclaimer": {
+  "ru": "Основано на наблюдениях родителя. Это не психологическая и не медицинская оценка.",
+  "en": "Based on a parent's observations. Not a psychological or medical assessment.",
+  "de": "Beruht auf Beobachtungen der Eltern. Keine psychologische oder medizinische Beurteilung.",
+  "fr": "Fondé sur les observations du parent. Ce n'est pas une évaluation psychologique ou médicale."
+ },
+ "types_note": "Use name for boys and name_f for girls (DE and FR nouns are gendered). careers are fields of work, gender-neutral."
+}

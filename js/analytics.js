@@ -126,27 +126,30 @@ export const recording = {
 export function send(name, props = {}) {
   if (!phMode && !pixelOn && !ttOn) return;
   const p = clean(props);
+  // Тест «Как думает ваш ребёнок» шлёт события с префиксом mind_ (своя воронка в PostHog); в рекламные кабинеты они уходят
+  // теми же стандартными событиями, что и у теста спорта (ViewContent, InitiateCheckout, AddPaymentInfo, Purchase)
+  const std = name.startsWith('mind_') ? name.slice(5) : name;
   try {
     // TikTok: те же шаги, что и в Meta. ViewContent (начало анкеты) — событие, на которое учится реклама TikTok.
-    if (ttOn && window.ttq && FUNNEL.has(name)) {
+    if (ttOn && window.ttq && FUNNEL.has(std)) {
       const money = p.amount ? { value: p.amount, currency: p.currency } : {};
-      if (name === 'quiz_start') window.ttq.track('ViewContent', { content_name: 'quiz' });
-      if (name === 'test_done') window.ttq.track('CompleteRegistration', { content_name: 'test_done' });
-      if (name === 'paywall_shown') window.ttq.track('InitiateCheckout', money);
-      if (name === 'pay_click') window.ttq.track('AddPaymentInfo', money);
+      if (std === 'quiz_start') window.ttq.track('ViewContent', { content_name: 'quiz' });
+      if (std === 'test_done') window.ttq.track('CompleteRegistration', { content_name: 'test_done' });
+      if (std === 'paywall_shown') window.ttq.track('InitiateCheckout', money);
+      if (std === 'pay_click') window.ttq.track('AddPaymentInfo', money);
       let promoT = false; try { promoT = !!sessionStorage.getItem('sporttest.code'); } catch { /* нет */ }
-      if (name === 'paid' && !p.test && !promoT) window.ttq.track('Purchase', money, p.order ? { event_id: `purchase-${p.order}` } : undefined);
+      if (std === 'paid' && !p.test && !promoT) window.ttq.track('Purchase', money, p.order ? { event_id: `purchase-${p.order}` } : undefined);
     }
-    if (window.fbq && FUNNEL.has(name)) {
-      if (name === 'quiz_start') window.fbq('track', 'ViewContent', { content_name: 'quiz' });
-      if (name === 'test_done') window.fbq('track', 'CompleteRegistration', { content_name: 'test_done' });
+    if (window.fbq && FUNNEL.has(std)) {
+      if (std === 'quiz_start') window.fbq('track', 'ViewContent', { content_name: 'quiz' });
+      if (std === 'test_done') window.fbq('track', 'CompleteRegistration', { content_name: 'test_done' });
       // Схема событий для рекламы (тред Meta 25.11): ViewContent — старт, CompleteRegistration — камера пройдена,
       // InitiateCheckout — пейвол, AddPaymentInfo — нажал «Оплатить», Purchase (+Subscribe) — оплата.
-      if (name === 'paywall_shown') window.fbq('track', 'InitiateCheckout', { value: p.amount, currency: p.currency });
-      if (name === 'pay_click') window.fbq('track', 'AddPaymentInfo', { value: p.amount, currency: p.currency });
+      if (std === 'paywall_shown') window.fbq('track', 'InitiateCheckout', { value: p.amount, currency: p.currency });
+      if (std === 'pay_click') window.fbq('track', 'AddPaymentInfo', { value: p.amount, currency: p.currency });
       // Покупка уходит в Meta только настоящая: тестовая оплата рекламу не обучает
       let promo = false; try { promo = !!sessionStorage.getItem('sporttest.code'); } catch { /* нет */ }
-      if (name === 'paid' && !p.test && !promo) { // оплата по промокоду (проверка 100%) рекламу не обучает
+      if (std === 'paid' && !p.test && !promo) { // оплата по промокоду (проверка 100%) рекламу не обучает
         window.fbq('track', 'Purchase', { value: p.amount, currency: p.currency }, p.order ? { eventID: `purchase-${p.order}` } : undefined); // eventID — для склейки с Conversions API
         window.fbq('track', 'Subscribe', { value: p.amount, currency: p.currency, predicted_ltv: p.amount }, p.order ? { eventID: `subscribe-${p.order}` } : undefined);
       }
