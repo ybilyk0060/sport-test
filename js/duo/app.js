@@ -58,9 +58,10 @@ function quiz() {
   const i = Math.min(st.i, QUESTIONS.length - 1), q = QUESTIONS[i];
   screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(t('back'))}">←</button><div class="steps">${QUESTIONS.map((_, n) => `<i class="${n < i ? 'done' : n === i ? 'now' : ''}"></i>`).join('')}</div><span class="small muted">${esc(t('count', { n: i + 1, t: QUESTIONS.length }))}</span></div>
     <h1 class="qtitle">${esc(p(q.t))}</h1>
-    <div class="opts">${q.o.map((o, n) => `<button class="opt${st.answers[i] === n ? ' sel' : ''}" data-act="pick" data-n="${n}"><span class="let">${'ABCD'[n]}</span>${esc(p(o[1]))}</button>`).join('')}</div>`, {
+    <div class="opts ph-no-capture">${q.o.map((o, n) => `<button class="opt${st.answers[i] === n ? ' sel' : ''}" data-act="pick" data-n="${n}"><span class="let">${'ABCD'[n]}</span>${esc(p(o[1]))}</button>`).join('')}</div>`, {
     back: () => { if (i === 0) return landing(); set({ i: i - 1 }); quiz(); },
     pick: (b) => {
+      if (b.parentElement.dataset.busy) return; b.parentElement.dataset.busy = '1';
       const a = [...st.answers]; a[i] = Number(b.dataset.n); b.classList.add('sel');
       setTimeout(() => {
         if (i + 1 < QUESTIONS.length) { set({ answers: a, i: i + 1 }); return quiz(); }
@@ -75,7 +76,7 @@ function quiz() {
 function child() {
   set({ step: 'child' });
   screen(`${rings}<h1 class="qtitle">${esc(t('childQ'))}</h1>
-    <div class="opts two">${Object.keys(TYPES).map((k) => `<button class="opt" data-act="pick" data-k="${k}">${ICON[k]}<br>${esc(TYPES[k].name)}</button>`).join('')}</div>
+    <div class="opts two ph-no-capture">${Object.keys(TYPES).map((k) => `<button class="opt" data-act="pick" data-k="${k}">${ICON[k]}<br>${esc(childName(k))}</button>`).join('')}</div>
     <a class="btn line" href="mind.html">${esc(t('childTest'))}</a>`, {
     pick: (b) => { set({ child: b.dataset.k }); result(); },
   });
@@ -86,7 +87,7 @@ function result() {
   set({ step: 'result' });
   const P = st.parent, C = st.child, open = subscribed();
   const card = (cls, title, body) => `<div class="dcard2 ${cls}"><small>${esc(title)}</small><p>${esc(body)}</p></div>`;
-  screen(`<div class="pair"><div class="who"><span class="ic">${ICON[P]}</span><small>${esc(t('yourStyle'))}</small><b>${esc(p(STYLE[P]))}</b></div>
+  screen(`<div class="pair ph-no-capture"><div class="who"><span class="ic">${ICON[P]}</span><small>${esc(t('yourStyle'))}</small><b>${esc(p(STYLE[P]))}</b></div>
       <div class="who"><span class="ic">${ICON[C]}</span><small>${esc(t('childStyle'))}</small><b>${esc(childName(C))}</b></div></div>
     <p class="lead">${esc(t(P === C ? 'same' : 'diff'))}</p>
     ${open ? `${card('c1', t('give'), p(GIVE[P]))}${card('c2', t('watch'), p(WATCH[P]))}${card('c3', t('needs'), p(NEEDS[C]))}${card('c4', t('together'), p(TOGETHER[C]))}
@@ -102,7 +103,7 @@ function result() {
 async function boot() {
   document.title = t('title');
   document.documentElement.lang = LANG;
-  try { TYPES = await loadTypes(); } catch { app.textContent = 'Please reload the page.'; return; }
+  try { TYPES = await loadTypes(); } catch { app.textContent = { de: 'Bitte laden Sie die Seite neu.', fr: 'Veuillez recharger la page.', ru: 'Обновите страницу.' }[LANG] || 'Please reload the page.'; return; }
   initConsent();
   track('open');
   if (st.step === 'quiz') return quiz();

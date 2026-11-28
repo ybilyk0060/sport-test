@@ -58,8 +58,8 @@ const wayforpayProvider = {
     return p.get('pay') === 'check' ? { status: 'check', orderId: p.get('order') } : { status: null, orderId: null };
   },
   // Ждём подтверждения до ~20 секунд (callback иногда приходит чуть позже возврата).
-  async verify(orderId) {
-    for (let i = 0; i < 10; i++) {
+  async verify(orderId, tries = 10) {
+    for (let i = 0; i < tries; i++) {
       try {
         const r = await fetch(CONFIG.payFn, { method: 'POST', headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ action: 'status', orderRef: orderId }) }).then((x) => x.json());
@@ -159,8 +159,8 @@ const paddleProvider = {
   },
   readReturn: wayforpayProvider.readReturn,
   // Ждём вебхук Paddle (обычно секунды): сервер отвечает, оплачен ли заказ
-  async verify(orderId) {
-    for (let i = 0; i < 15; i++) {
+  async verify(orderId, tries = 15) {
+    for (let i = 0; i < tries; i++) {
       try {
         const r = await fetch(CONFIG.subFn, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'order', orderRef: orderId }) }).then((x) => x.json());
         if (r.paid) return true;

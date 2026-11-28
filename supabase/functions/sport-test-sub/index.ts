@@ -181,6 +181,8 @@ Deno.serve(async (req) => {
         if (!order || order.status !== "paid") return json({ error: "order not paid" }, 402);
       } else if (!b.test) return json({ error: "test mode only" }, 400);
       const { data: existing } = await db.from("sport_test_subscriptions").select("*").eq("order_ref", orderRef).maybeSingle();
+      // Заказ уже активирован: токен получает только тот же email (иначе по номеру заказа можно было бы управлять чужой подпиской)
+      if (existing && String(existing.email || "").toLowerCase() !== email) return json({ error: "forbidden" }, 403);
       let sub = existing;
       if (!sub) {
         const now = Date.now();
