@@ -1,6 +1,6 @@
-import { STUDIO } from './engine/specs-studio.js?v=40f6e24-mx057znb';
-import { GREEN } from './green-boxes.js?v=40f6e24-mx057znb';
-import { GREEN_STUDIO } from './engine/green-studio.js?v=40f6e24-mx057znb';
+import { STUDIO } from './engine/specs-studio.js?v=a1fd879-mx05ixtg';
+import { GREEN } from './green-boxes.js?v=a1fd879-mx05ixtg';
+import { GREEN_STUDIO } from './engine/green-studio.js?v=a1fd879-mx05ixtg';
 // ЕДИНЫЕ НАСТРОЙКИ. Всё, что владелец может захотеть поменять без программиста, — здесь.
 
 export const CONFIG = {

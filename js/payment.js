@@ -11,9 +11,9 @@
 //   2) подтверждение оплаты брать из серверного callback провайдера, а не из адреса возврата;
 //   3) поменять CONFIG.paymentProvider.
 
-import { CONFIG } from './config.js?v=40f6e24-mx057znb';
-import { track } from './store.js?v=40f6e24-mx057znb';
-import { adContext } from './analytics.js?v=40f6e24-mx057znb';
+import { CONFIG } from './config.js?v=a1fd879-mx05ixtg';
+import { track } from './store.js?v=a1fd879-mx05ixtg';
+import { adContext } from './analytics.js?v=a1fd879-mx05ixtg';
 
 const testProvider = {
   name: 'test',
