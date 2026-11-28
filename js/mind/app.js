@@ -95,11 +95,14 @@ const subActive = () => !!(st.sub && Date.now() < st.sub.paidUntil);
 // --- Первый экран ---
 function landing() {
   set({ step: 'landing' });
-  screen(`<div class="hero"><span class="tag">${esc(T.land.kicker)}</span><h1>${esc(T.land.h1)}</h1><p class="promise">${esc(T.land.sub)}</p></div>
-    <ul class="points">${T.land.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>
-    <div class="type-chips">${Object.keys(D.types).map((k) => `<span>${ICON[k]} ${esc(D.types[k].name)}</span>`).join('')}</div>
-    <div class="grow"></div>
-    <button class="btn" data-act="start">${esc(T.land.cta)}</button>
+  const cta = (cls = '') => `<button class="btn${cls}" data-act="start">${esc(T.land.cta)}</button>`;
+  screen(`<div class="hero land-hero"><div class="land-art"><img src="img/mind/hero.webp" width="1200" height="670" alt="" fetchpriority="high" decoding="async"></div>
+      <span class="tag">${esc(T.land.kicker)}</span><h1>${esc(T.land.h1)}</h1><p class="promise">${esc(T.land.sub)}</p></div>
+    ${cta()}
+    <ul class="facts">${T.land.facts.map(([b, t]) => `<li><b>${esc(b)}</b><span>${esc(t)}</span></li>`).join('')}</ul>
+    <h2 class="land-h2">${esc(T.land.typesH)}</h2>
+    <div class="type-grid">${Object.keys(D.types).map((k) => `<div class="s-${k}"><i aria-hidden="true">${ICON[k]}</i><b>${esc(D.types[k].name)}</b></div>`).join('')}</div>
+    ${cta(' line')}
     <p class="small muted center">${esc(T.land.note)}</p>
     <button class="link center" data-act="restore">${esc(T.pay.restore)}</button>
     ${legalLinks()}`, {
