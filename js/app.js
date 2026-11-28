@@ -8,7 +8,8 @@ import { state, setState, resetState, track, importHandoff, exportHandoff, store
 import { detectEnv } from './env.js?v=7a4e716-mx078zpq';
 import { prefetchPose, preloadPose } from './pose.js?v=7a4e716-mx078zpq';
 import { unlockAudio } from './audio.js?v=7a4e716-mx078zpq';
-import { startStage, startFallback, toast, prefetchVideos } from './stage.js?v=7a4e716-mx078zpq';
+import { toast } from './toast.js?v=7a4e716-mx078zpq';
+import { landingHtml, esc } from './landing-html.js?v=7a4e716-mx078zpq';
 import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=7a4e716-mx078zpq';
 import { payment, newOrderId, loadPaddle } from './payment.js?v=7a4e716-mx078zpq';
 import { ART } from './art.js?v=7a4e716-mx078zpq';
@@ -21,7 +22,6 @@ import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './prog
 const env = detectEnv();
 const app = document.getElementById('app');
 const params = new URLSearchParams(location.search);
-const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const paywallMode = ['teaser', 'hard'].includes(params.get('paywall')) ? params.get('paywall') : CONFIG.paywallMode;
 // Рост и вес убраны (аудит 27.11: шаг терял 27% начавших). Без них — как при «Пропустить»: поправки на телосложение нет.
 const QUIZ = ['age', 'sex', 'now', 'likes', 'temper', 'goal', 'screen'];
@@ -31,6 +31,22 @@ const privacyUrl = LANG === 'uk' ? 'privacy.html' : `privacy-${LANG}.html`;
 const LEGAL = { uk: ['oferta.html', 'povernennya.html', 'kontakty.html', 'ciny.html'], en: ['terms-en.html', 'refund-en.html', 'contact-en.html', 'pricing-en.html'], de: ['agb-de.html', 'refund-de.html', 'impressum-de.html', 'pricing-de.html'] }[LANG] || ['terms-en.html', 'refund-en.html', 'contact-en.html', 'pricing-en.html'];
 const legalLinks = () => `<nav class="legal-links"><a href="${LEGAL[3]}">${esc(T.common.pricing)}</a><a href="${LEGAL[0]}">${esc(T.common.offer)}</a><a href="${LEGAL[1]}">${esc(T.common.refund)}</a><a href="${privacyUrl}">${esc(T.common.privacy)}</a><a href="${LEGAL[2]}">${esc(T.common.contacts)}</a></nav>`;
 const DAY = 86400000;
+
+// Код камеры и упражнений (stage.js и всё, что он тянет: движок, спеки, камера — около трети программы) на первом экране
+// не нужен. Грузим его после нажатия Start, пока родитель отвечает на вопросы (замер 28.11: первый экран 1,2–3,6 с).
+let stageMod = null, stageLoading = null;
+function loadStage() {
+  if (!stageLoading) stageLoading = import('./stage.js?v=7a4e716-mx078zpq').then((m) => (stageMod = m)).catch((e) => { stageLoading = null; throw e; });
+  return stageLoading;
+}
+// Запуск экрана камеры. Если код уже загружен — сразу, в том же нажатии (звук и камера на iPhone требуют жеста);
+// если ещё нет (слабая сеть) — звук разблокируем сейчас, экран откроется, как только код догрузится.
+function runStage(opts, onFail) {
+  if (stageMod) return stageMod.startStage(opts);
+  unlockAudio();
+  app.innerHTML = '<section class="screen"><div class="center" style="padding:48px 0"><div class="spinner"></div></div></section>';
+  loadStage().then((m) => m.startStage(opts)).catch(() => { toast(T.common.retry || '…'); onFail(); });
+}
 
 document.title = T.meta.title;
 document.documentElement.lang = T.meta.lang;
@@ -49,13 +65,8 @@ const cleanUrl = () => { try { history.replaceState(null, '', location.pathname 
 // ---------- 1. Первый экран ----------
 function landing() {
   setState({ step: 'landing' });
-  // Выбор языка вверху: внизу его закрывала панель Safari (прогон 26.11)
-  const langs = Object.keys(LOCALES).length > 1 ? `<div class="langs top">${Object.entries({ en: 'English', de: 'Deutsch', uk: 'Українська' }).filter(([k]) => LOCALES[k] && (k === LANG || !(CONFIG.linkOnlyLanguages || []).includes(k))).map(([k, v]) => `<a href="?lang=${k}" class="${k === LANG ? 'on' : ''}">${v}</a>`).join('')}</div>` : '';
-  screen(`${langs}${LANG === 'en' ? `<div class="hero hero-vid"><div class="hero-vwrap"><video class="hero-video" src="assets/landing/hero-moves.mp4" poster="assets/landing/hero-moves.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video><span class="hv-badge">🔒 ${esc(T.landing.videoBadge)}</span></div><div class="hv-text"><h1>${esc(T.landing.title)}</h1><p class="promise">${esc(T.landing.promise)}</p></div></div>` : `<div class="hero"><div class="hero-art">${ART.hero}</div><h1>${esc(T.landing.title)}</h1><p class="promise">${esc(T.landing.promise)}</p></div>`}
-    <!-- Кнопка сразу под обещанием (реклама 27.11: в окне Facebook её закрывал баннер cookie, на iPhone SE она была ниже края) -->
-    <button class="btn" data-act="start">${esc(T.landing.cta)}</button>
-    <ul class="points">${T.landing.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul><div class="trust-box"><span class="tb-ic" aria-hidden="true">🏅</span><span>${esc(T.landing.trustShort)}</span></div><div class="grow"></div>
-    <p class="small muted center land-note">${esc(T.landing.note)} ${esc(T.result.shortNote)}</p><p class="small muted center land-note">${esc(T.landing.trustNote)}</p>
+  // Разметка общая с вшитым в index.html первым экраном (js/landing-html.js)
+  screen(`${landingHtml({ T, lang: LANG, langs: Object.keys(LOCALES), linkOnly: CONFIG.linkOnlyLanguages || [], heroArt: ART.hero })}
     ${subapi.subOn() ? `<button class="link center" data-act="restore">${esc(T.paywall.restore)}</button>` : ''}
     ${legalLinks()}`, {
     restore: async () => {
@@ -64,7 +75,7 @@ function landing() {
       try { await subapi.restore(email, LANG); } catch { /* ответ одинаковый */ }
       track('sub_restore_asked'); toast(T.paywall.restoreSent);
     },
-    start: () => { unlockAudio(); track('quiz_start', { lang: LANG }); prefetchPose(); quiz(0); },
+    start: () => { unlockAudio(); track('quiz_start', { lang: LANG }); prefetchPose(); quiz(0); loadStage().catch(() => {}); },
   });
 }
 
@@ -143,7 +154,7 @@ function bodyStep(i, q) {
 function prep() {
   setState({ step: 'prep' });
   prefetchPose();
-  prefetchVideos();
+  loadStage().then((m) => m.prefetchVideos()).catch(() => {});
   const P = T.prep;
   screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button><div class="progress"><i style="width:100%"></i></div></div><h1 class="qtitle">${esc(P.title)}</h1>
     <!-- Демо (реклама 28.11: 15 из 22 ушли с этого экрана, ничего не нажав): 5 секунд, как камера считает движения -->
@@ -164,7 +175,7 @@ function prep() {
       try { await subapi.sendLink(email, exportHandoff(), LANG); track('link_requested'); app.querySelector('[data-el=later]').innerHTML = `<p class="tip">${esc(P.laterSent)}</p>`; }
       catch { btn.disabled = false; toast(P.laterFail); }
     },
-    cam: () => { app.onclick = null; startStage({ done: testDone, exit: prep }); },
+    cam: () => { app.onclick = null; runStage({ done: testDone, exit: prep }, prep); },
     back: () => quiz(QUIZ.length - 1),
   });
   track('prep_shown');
@@ -509,7 +520,7 @@ function startWorkout(program) {
   if (doneToday()) return fullReport();
   track('workout_start', { id: w.id });
   app.onclick = null;
-  startStage({ list: w.items, mode: 'workout', exit: fullReport, done: (results) => {
+  runStage({ list: w.items, mode: 'workout', exit: fullReport, done: (results) => {
     const rec = { id: w.id, at: Date.now(), done: results.map((r) => ({ key: r.key, done: r.done, target: r.target, skipped: !!r.skipped })) };
     setState({ workouts: [...(state.workouts || []), rec] });
     if (state.subToken) subapi.sync(state.subToken, state.workouts);
@@ -518,7 +529,7 @@ function startWorkout(program) {
     screen(`<div class="grow"></div><h1 class="rtitle center">${esc(G.resultTitle)}</h1><p class="center">${esc(G.resultLead)}</p>
       <ul class="facts">${rec.done.map((r) => `<li>${esc(T.ex[r.key].name)}: ${r.skipped ? esc(T.result.facts.skipped('').replace(/^: /, '')) : `${r.done} / ${r.target}`}</li>`).join('')}</ul>
       <div class="grow"></div><button class="btn" data-act="back">${esc(G.toProgram)}</button>`, { back: () => fullReport() });
-  } });
+  } }, fullReport);
 }
 
 // ---------- 10. Моя подписка ----------
@@ -618,6 +629,8 @@ function boot() {
   if (state.step === 'prep' && state.quiz.age) return prep();
   if (state.step === 'quiz') return quiz(Math.min(state.quizIndex || 0, QUIZ.length - 1));
   landing();
+  // Кнопку Start могли нажать на вшитом первом экране ещё до загрузки программы (index.html ставит отметку) — продолжаем сразу
+  if (window.__ktStart) { window.__ktStart = 0; const b = app.querySelector('[data-act="start"]'); if (b) b.click(); }
 }
 boot();
 

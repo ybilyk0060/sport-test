@@ -567,3 +567,8 @@ body.has-consent .screen { padding-bottom: 150px; }
 .prep-demo .prep-why { margin: 0; text-align: left; }
 .btn.later-btn { margin-top: 8px; padding-top: 11px; padding-bottom: 11px; font-size: 15px; }
 @media (max-height: 640px) { .prep-demo video { width: 56px; } .btn.later-btn { padding-top: 8px; padding-bottom: 8px; font-size: 14px; } }
+
+/* Вшитый первый экран (index.html): кнопку нажали до загрузки программы — показываем, что нажатие принято */
+.btn.wait { opacity: .75; pointer-events: none; }
+.btn.wait::after { content: ""; display: inline-block; width: 16px; height: 16px; margin-left: 10px; vertical-align: -2px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: ktspin .7s linear infinite; }
+@keyframes ktspin { to { transform: rotate(360deg); } }

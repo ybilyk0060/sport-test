@@ -32,3 +32,5 @@ for (const f of readdirSync(root).filter((f) => f.endsWith('.html'))) {
   save(p, s, t);
 }
 console.log(`stamp ${stamp}: ${changed} files`);
+// Вшитый первый экран в index.html — из тех же текстов и разметки, что и программа
+execSync('node tools/build-shell.mjs', { cwd: root, stdio: 'inherit' });

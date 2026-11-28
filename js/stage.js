@@ -14,6 +14,7 @@ import { demoSvg } from './demos.js?v=7a4e716-mx078zpq';
 import { EX_QUALITY } from './scoring.js?v=7a4e716-mx078zpq';
 import { greenOverlay } from './greenkey.js?v=7a4e716-mx078zpq';
 import { createVisCoach } from './viscoach.js?v=7a4e716-mx078zpq';
+import { toast } from './toast.js?v=7a4e716-mx078zpq';
 // Подсказки видимости: новые фразы (vis_*) озвучиваются после записи голоса; пока их нет — ближайшая записанная
 const VIS_FALLBACK = { vis_cant_see: 'hint_show_full_body', vis_head: 'frame_step_back', vis_contrast: 'hint_show_full_body', vis_light_behind: 'hint_show_full_body', vis_more_light: null };
 const sayVis = (k) => { const c = exists(k) ? k : VIS_FALLBACK[k]; if (c) say(c, { interrupt: false }); };
@@ -481,9 +482,7 @@ function showBlocked(kind) {
   };
 }
 
-export function toast(text) {
-  const t = document.createElement('div'); t.className = 'toast'; t.textContent = text; document.body.appendChild(t); setTimeout(() => t.remove(), 2200);
-}
+export { toast };
 
 // ---------- Запасной путь: запись обычной камерой телефона, разбор в браузере ----------
 export async function startFallback({ done, exit }) {
