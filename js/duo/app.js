@@ -1,9 +1,9 @@
 // Мини-тест «Ребёнок и вы» (страница /duo). Родитель отвечает о себе, результат сопоставляется с типом ребёнка
 // из теста «Как думает ваш ребёнок» (читается с устройства: mindtest.v1.state). Полный результат открыт подписчикам;
 // без подписки видны стиль родителя и общий вывод, остальное ведёт к тесту ребёнка. Своей оплаты здесь нет.
-import { track as trackRaw } from '../store.js?v=7a4e716-mx078zpq';
-import { initConsent, screenView } from '../analytics.js?v=7a4e716-mx078zpq';
-import { LANGS, pick, QUESTIONS, STYLE, GIVE, WATCH, NEEDS, TOGETHER, UI } from './data.js?v=7a4e716-mx078zpq';
+import { track as trackRaw } from '../store.js?v=3ac479c-mx0jviv6';
+import { initConsent, screenView } from '../analytics.js?v=3ac479c-mx0jviv6';
+import { LANGS, pick, QUESTIONS, STYLE, GIVE, WATCH, NEEDS, TOGETHER, UI } from './data.js?v=3ac479c-mx0jviv6';
 
 const app = document.getElementById('app');
 const params = new URLSearchParams(location.search);
@@ -20,7 +20,7 @@ function pickLang() {
 const LANG = pickLang();
 const t = (k, vars = {}) => pick(UI[k], LANG).replace(/\{(\w+)\}/g, (m, v) => vars[v] ?? m);
 const p = (arr) => pick(arr, LANG);
-const loadTypes = () => (LANG === 'de' ? import('../mind/data-de.js?v=7a4e716-mx078zpq') : LANG === 'fr' ? import('../mind/data-fr.js?v=7a4e716-mx078zpq') : LANG === 'ru' ? import('../mind/data-ru.js?v=7a4e716-mx078zpq') : import('../mind/data-en.js?v=7a4e716-mx078zpq')).then((m) => m.default.types);
+const loadTypes = () => (LANG === 'de' ? import('../mind/data-de.js?v=3ac479c-mx0jviv6') : LANG === 'fr' ? import('../mind/data-fr.js?v=3ac479c-mx0jviv6') : LANG === 'ru' ? import('../mind/data-ru.js?v=3ac479c-mx0jviv6') : import('../mind/data-en.js?v=3ac479c-mx0jviv6')).then((m) => m.default.types);
 let TYPES = null;
 const ICON = { builder: '🧱', inventor: '💡', storyteller: '📖', artist: '🎨', explorer: '🧭', leader: '🚩', helper: '🤝', mover: '⚡' };
 

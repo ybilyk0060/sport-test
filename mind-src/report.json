@@ -14,9 +14,9 @@
     "fr": "{name} pense avec ses mains. Les choses deviennent claires une fois construites, démontées ou assemblées. Les enfants de ce profil voient comment des pièces forment un tout et persévèrent jusqu'à ce que la construction tienne debout."
    },
    "hooks": {
-    "ru": "Затягивает: задачи с понятным результатом, который можно потрогать. Быстро надоедает: долгие объяснения без дела и занятия, где «нечего строить».",
+    "ru": "Увлекает: задачи с понятным результатом, который можно потрогать. Быстро надоедает: долгие объяснения без дела и занятия, где «нечего строить».",
     "en": "Pulls them in: tasks with a clear result you can touch. Gets boring fast: long explanations with nothing to do and activities with nothing to build.",
-    "de": "Das fesselt: Aufgaben mit einem klaren Ergebnis zum Anfassen. Das langweilt schnell: lange Erklärungen, bei denen es nichts zu tun gibt und Beschäftigungen, bei denen nichts entsteht.",
+    "de": "Das fesselt: Aufgaben mit einem klaren Ergebnis zum Anfassen. Das langweilt schnell: lange Erklärungen, bei denen es nichts zu tun gibt, und Beschäftigungen, bei denen nichts entsteht.",
     "fr": "Ce qui passionne : les tâches avec un résultat concret, que l'on peut toucher. Ce qui lasse vite : les longues explications sans rien à faire et les activités où l'on ne fabrique rien."
    },
    "strengths": [
@@ -40,10 +40,10 @@
     }
    ],
    "grow": {
-    "ru": "Чему стоит помочь: объяснять словами, что и зачем он делает. Просите рассказать о постройке, как экскурсовода.",
-    "en": "Worth supporting: putting into words what they are doing and why. Ask for a guided tour of what they built.",
-    "de": "Hier lohnt sich Unterstützung: in Worte fassen, was gerade entsteht und warum. Bitten Sie um eine Führung durch das Gebaute.",
-    "fr": "À encourager : mettre des mots sur ce qui se construit et pourquoi. Demandez une visite guidée de la construction."
+    "ru": "Объяснять словами, что и зачем он делает. Просите рассказать о постройке, как экскурсовода.",
+    "en": "Putting into words what they are doing and why. Ask for a guided tour of what they built.",
+    "de": "In Worte fassen, was gerade entsteht und warum. Bitten Sie um eine Führung durch das Gebaute.",
+    "fr": "Mettre des mots sur ce qui se construit et pourquoi. Demandez une visite guidée de la construction."
    },
    "say": [
     {
@@ -120,7 +120,7 @@
     "fr": "{name} veut savoir comment tout fonctionne et veut le vérifier par l'expérience. Une réponse toute faite intéresse moins que sa propre expérience. Les enfants de ce profil essaient, se trompent et cherchent une autre voie."
    },
    "hooks": {
-    "ru": "Затягивает: загадки, опыты, вопрос «а что будет, если…». Быстро надоедает: повторять одно и то же и делать «потому что так надо».",
+    "ru": "Увлекает: загадки, опыты, вопрос «а что будет, если…». Быстро надоедает: повторять одно и то же и делать «потому что так надо».",
     "en": "Pulls them in: puzzles, experiments, the question \"what happens if…\". Gets boring fast: repeating the same thing and doing it \"because that's the rule\".",
     "de": "Das fesselt: Rätsel, Experimente, die Frage „Was passiert, wenn …?“. Das langweilt schnell: immer das Gleiche wiederholen und etwas tun, „weil man das eben so macht“.",
     "fr": "Ce qui passionne : les énigmes, les expériences, la question « que se passe-t-il si… ? ». Ce qui lasse vite : répéter la même chose et faire « parce que c'est la règle »."
@@ -146,10 +146,10 @@
     }
    ],
    "grow": {
-    "ru": "Чему стоит помочь: заканчивать начатое. Идей у него больше, чем доведённых дел. Договаривайтесь об одном маленьком финише.",
-    "en": "Worth supporting: finishing. They have more ideas than finished projects. Agree on one small finish line at a time.",
-    "de": "Hier lohnt sich Unterstützung: Dinge zu Ende bringen. Es gibt mehr Ideen als fertige Projekte. Vereinbaren Sie immer nur ein kleines Ziel auf einmal.",
-    "fr": "À encourager : aller jusqu'au bout. Les idées sont plus nombreuses que les projets terminés. Fixez ensemble un seul petit objectif à la fois."
+    "ru": "Заканчивать начатое. Идей у него больше, чем доведённых дел. Договаривайтесь об одном маленьком финише.",
+    "en": "Finishing. They have more ideas than finished projects. Agree on one small finish line at a time.",
+    "de": "Dinge zu Ende bringen. Es gibt mehr Ideen als fertige Projekte. Vereinbaren Sie immer nur ein kleines Ziel auf einmal.",
+    "fr": "Aller jusqu'au bout. Les idées sont plus nombreuses que les projets terminés. Fixez ensemble un seul petit objectif à la fois."
    },
    "say": [
     {
@@ -173,9 +173,9 @@
    ],
    "ages": {
     "3-5": {
-     "ru": "игры с водой и большие магниты для холодильника, сортировка, простые головоломки",
-     "en": "water play and large fridge magnets, sorting games, simple puzzles",
-     "de": "Wasserspiele und große Kühlschrankmagnete, Sortierspiele, einfache Puzzles",
+     "ru": "игры с водой, воронки и стаканчики, сортировка, простые головоломки",
+     "en": "water play with funnels and cups, sorting games, simple puzzles",
+     "de": "Wasserspiele mit Trichtern und Bechern, Sortierspiele, einfache Puzzles",
      "fr": "jeux d'eau et gros aimants de frigo, jeux de tri, puzzles simples"
     },
     "6-8": {
@@ -193,9 +193,9 @@
    },
    "plan": [
     {
-     "ru": "Неделя 1. Один опыт в день на 10 минут: что тонет, что притягивается, что растворяется.",
-     "en": "Week 1. One 10-minute experiment a day: what sinks, what sticks to a magnet, what dissolves.",
-     "de": "Woche 1. Jeden Tag ein Experiment von 10 Minuten: was sinkt, was am Magneten haftet, was sich auflöst.",
+     "ru": "Неделя 1. Один опыт в день на 10 минут: что тонет, что катится, что растворяется.",
+     "en": "Week 1. One 10-minute experiment a day: what sinks, what rolls, what dissolves.",
+     "de": "Woche 1. Jeden Tag ein Experiment von 10 Minuten: was sinkt, was rollt, was sich auflöst.",
      "fr": "Semaine 1. Une expérience de 10 minutes par jour : ce qui coule, ce qui colle à l'aimant, ce qui se dissout."
     },
     {
@@ -226,10 +226,10 @@
     "fr": "{name} pense en mots et en histoires. Ce qui est raconté comme une histoire reste en mémoire, et une journée ordinaire devient un récit. Pour les enfants de ce profil, être écouté compte beaucoup."
    },
    "hooks": {
-    "ru": "Затягивает: книги, разговоры, роли, выступления. Быстро надоедает: молчаливая работа в одиночку и задания без смысла и героя.",
+    "ru": "Увлекает: книги, разговоры, роли, выступления. Быстро надоедает: молчаливая работа в одиночку и задания без истории и героя.",
     "en": "Pulls them in: books, conversations, role play, performing. Gets boring fast: silent solo work and tasks with no story or characters.",
-    "de": "Das fesselt: Bücher, Gespräche, Rollenspiele, Auftritte. Das langweilt schnell: stille Einzelarbeit und Aufgaben ohne Sinn und ohne Figuren.",
-    "fr": "Ce qui passionne : les livres, les conversations, les jeux de rôle, la scène. Ce qui lasse vite : le travail silencieux en solitaire et les tâches sans sens ni personnages."
+    "de": "Das fesselt: Bücher, Gespräche, Rollenspiele, Auftritte. Das langweilt schnell: stille Einzelarbeit und Aufgaben ohne Geschichte und ohne Figuren.",
+    "fr": "Ce qui passionne : les livres, les conversations, les jeux de rôle, la scène. Ce qui lasse vite : le travail silencieux en solitaire et les tâches sans histoire ni personnages."
    },
    "strengths": [
     {
@@ -252,10 +252,10 @@
     }
    ],
    "grow": {
-    "ru": "Чему стоит помочь: слушать других так же охотно, как говорить. Играйте в «интервью», где он задаёт вопросы.",
-    "en": "Worth supporting: listening as willingly as talking. Play \"interviewer\", where they ask the questions.",
-    "de": "Hier lohnt sich Unterstützung: genauso gern zuhören wie reden. Spielen Sie „Interview“: Ihr Kind stellt die Fragen.",
-    "fr": "À encourager : écouter avec autant de plaisir que parler. Jouez à « l'interview » : c'est votre enfant qui pose les questions."
+    "ru": "Слушать других так же охотно, как говорить. Играйте в «интервью», где он задаёт вопросы.",
+    "en": "Listening as willingly as talking. Play \"interviewer\", where they ask the questions.",
+    "de": "Genauso gern zuhören wie reden. Spielen Sie „Interview“: Ihr Kind stellt die Fragen.",
+    "fr": "Écouter avec autant de plaisir que parler. Jouez à « l'interview » : c'est votre enfant qui pose les questions."
    },
    "say": [
     {
@@ -332,7 +332,7 @@
     "fr": "{name} remarque ce qui échappe aux autres : la couleur, la forme, le son, l'ambiance. Les enfants de ce profil pensent en images et veulent faire à leur façon, pas comme le modèle."
    },
    "hooks": {
-    "ru": "Затягивает: свобода выбрать материал и результат. Быстро надоедает: раскраски «по номерам», спешка и оценка «правильно или неправильно».",
+    "ru": "Увлекает: свобода выбрать материал и результат. Быстро надоедает: раскраски «по номерам», спешка и оценка «правильно или неправильно».",
     "en": "Pulls them in: freedom to choose the material and the result. Gets boring fast: paint-by-numbers tasks, rushing and being judged right or wrong.",
     "de": "Das fesselt: die Freiheit, Material und Ergebnis selbst zu wählen. Das langweilt schnell: Aufgaben nach Schablone, Eile und Bewertungen nach „richtig“ oder „falsch“.",
     "fr": "Ce qui passionne : la liberté de choisir la matière et le résultat. Ce qui lasse vite : les tâches à suivre à la lettre, la précipitation et les jugements « juste » ou « faux »."
@@ -358,10 +358,10 @@
     }
    ],
    "grow": {
-    "ru": "Чему стоит помочь: показывать работу другим и спокойно принимать замечания. Начните с вопроса «что тебе самому здесь нравится?».",
-    "en": "Worth supporting: showing work to others and taking comments calmly. Start with \"what do you like about it yourself?\"",
-    "de": "Hier lohnt sich Unterstützung: die eigene Arbeit anderen zeigen und Anmerkungen ruhig annehmen. Beginnen Sie mit: „Was gefällt dir selbst daran?“",
-    "fr": "À encourager : montrer son travail aux autres et accueillir les remarques avec calme. Commencez par : « Qu'est-ce qui te plaît, à toi ? »"
+    "ru": "Показывать работу другим и спокойно принимать замечания. Начните с вопроса «что тебе самому здесь нравится?».",
+    "en": "Showing work to others and taking comments calmly. Start with \"what do you like about it yourself?\"",
+    "de": "Die eigene Arbeit anderen zeigen und Anmerkungen ruhig annehmen. Beginnen Sie mit: „Was gefällt dir selbst daran?“",
+    "fr": "Montrer son travail aux autres et accueillir les remarques avec calme. Commencez par : « Qu'est-ce qui te plaît, à toi ? »"
    },
    "say": [
     {
@@ -438,7 +438,7 @@
     "fr": "{name} observe d'abord et agit ensuite. Les enfants de ce profil collectionnent les faits, repèrent ce qui se répète et retiennent des détails étonnants sur les animaux, les planètes ou les dinosaures."
    },
    "hooks": {
-    "ru": "Затягивает: всё новое, живое и настоящее, коллекции и карты. Быстро надоедает: сидеть в четырёх стенах и учить то, что нельзя увидеть.",
+    "ru": "Увлекает: всё новое, живое и настоящее, коллекции и карты. Быстро надоедает: сидеть в четырёх стенах и учить то, что нельзя увидеть.",
     "en": "Pulls them in: anything new, living and real, collections and maps. Gets boring fast: staying indoors and learning what they can't see.",
     "de": "Das fesselt: alles Neue, Lebendige und Echte, Sammlungen und Karten. Das langweilt schnell: drinnen bleiben und Dinge lernen, die man nicht sehen kann.",
     "fr": "Ce qui passionne : tout ce qui est nouveau, vivant et réel, les collections et les cartes. Ce qui lasse vite : rester à l'intérieur et apprendre ce que l'on ne peut pas voir."
@@ -464,10 +464,10 @@
     }
    ],
    "grow": {
-    "ru": "Чему стоит помочь: входить в новую компанию. Ему нужно время, чтобы осмотреться. Не торопите, дайте 10 минут понаблюдать.",
-    "en": "Worth supporting: joining a new group. They need time to look around. Don't rush them, give them 10 minutes to watch.",
-    "de": "Hier lohnt sich Unterstützung: in eine neue Gruppe hineinfinden. Dafür braucht es Zeit zum Umschauen. Drängen Sie Ihr Kind nicht. Geben Sie ihm 10 Minuten zum Zuschauen.",
-    "fr": "À encourager : entrer dans un nouveau groupe. Il faut du temps pour regarder autour de soi. Ne brusquez pas votre enfant : laissez-lui 10 minutes pour observer."
+    "ru": "Входить в новую компанию. Ему нужно время, чтобы осмотреться. Не торопите, дайте 10 минут понаблюдать.",
+    "en": "Joining a new group. They need time to look around. Don't rush them, give them 10 minutes to watch.",
+    "de": "In eine neue Gruppe hineinfinden. Dafür braucht es Zeit zum Umschauen. Drängen Sie Ihr Kind nicht. Geben Sie ihm 10 Minuten zum Zuschauen.",
+    "fr": "Entrer dans un nouveau groupe. Il faut du temps pour regarder autour de soi. Ne brusquez pas votre enfant : laissez-lui 10 minutes pour observer."
    },
    "say": [
     {
@@ -544,7 +544,7 @@
     "fr": "{name} voit vite ce qu'il faut faire et rassemble les autres pour y arriver. Les enfants de ce profil proposent les règles, distribuent les rôles et tiennent au résultat commun."
    },
    "hooks": {
-    "ru": "Затягивает: цель, команда и возможность решать. Быстро надоедает: задания без выбора и ситуации, где от него ничего не зависит.",
+    "ru": "Увлекает: цель, команда и возможность решать. Быстро надоедает: задания без выбора и ситуации, где от него ничего не зависит.",
     "en": "Pulls them in: a goal, a team and a say in decisions. Gets boring fast: tasks with no choice and situations where nothing depends on them.",
     "de": "Das fesselt: ein Ziel, ein Team und Mitsprache bei Entscheidungen. Das langweilt schnell: Aufgaben ohne Wahl und Situationen, in denen nichts vom eigenen Beitrag abhängt.",
     "fr": "Ce qui passionne : un but, une équipe et un mot à dire dans les décisions. Ce qui lasse vite : les tâches sans choix et les situations où rien ne dépend de soi."
@@ -570,10 +570,10 @@
     }
    ],
    "grow": {
-    "ru": "Чему стоит помочь: уступать и проигрывать. Давайте иногда роль «помощника капитана», где главный другой.",
-    "en": "Worth supporting: giving way and losing. Sometimes give them the \"first mate\" role, with someone else in charge.",
-    "de": "Hier lohnt sich Unterstützung: nachgeben und verlieren können. Lassen Sie Ihr Kind ab und zu die „rechte Hand“ sein, während jemand anderes das Sagen hat.",
-    "fr": "À encourager : céder et savoir perdre. Confiez-lui parfois le rôle de « bras droit », quand une autre personne dirige."
+    "ru": "Уступать и проигрывать. Давайте иногда роль «помощника капитана», где главный другой.",
+    "en": "Giving way and losing. Sometimes give them the \"first mate\" role, with someone else in charge.",
+    "de": "Nachgeben und verlieren können. Lassen Sie Ihr Kind ab und zu die „rechte Hand“ sein, während jemand anderes das Sagen hat.",
+    "fr": "Céder et savoir perdre. Confiez-lui parfois le rôle de « bras droit », quand une autre personne dirige."
    },
    "say": [
     {
@@ -650,7 +650,7 @@
     "fr": "{name} perçoit l'humeur des autres avant qu'ils aient dit un mot. Pour les enfants de ce profil, les relations comptent : ils retiennent ce que chacun aime et veillent à ce que tout le monde aille bien."
    },
    "hooks": {
-    "ru": "Затягивает: дела вместе с кем-то и для кого-то. Быстро надоедает: соперничество и занятия, где каждый сам за себя.",
+    "ru": "Увлекает: дела вместе с кем-то и для кого-то. Быстро надоедает: соперничество и занятия, где каждый сам за себя.",
     "en": "Pulls them in: doing things with someone and for someone. Gets boring fast: rivalry and activities where everyone is on their own.",
     "de": "Das fesselt: etwas mit jemandem und für jemanden tun. Das langweilt schnell: Konkurrenz und Beschäftigungen, bei denen alle für sich allein sind.",
     "fr": "Ce qui passionne : faire les choses avec quelqu'un et pour quelqu'un. Ce qui lasse vite : la rivalité et les activités où chacun reste dans son coin."
@@ -676,10 +676,10 @@
     }
    ],
    "grow": {
-    "ru": "Чему стоит помочь: говорить «нет» и называть свои желания. Спрашивайте чаще «а чего хочешь ты?».",
-    "en": "Worth supporting: saying no and naming what they want. Ask more often, \"and what do you want?\"",
-    "de": "Hier lohnt sich Unterstützung: Nein sagen und die eigenen Wünsche benennen. Fragen Sie öfter: „Und was möchtest du?“",
-    "fr": "À encourager : dire non et exprimer ses envies. Demandez plus souvent : « Et toi, de quoi as-tu envie ? »"
+    "ru": "Говорить «нет» и называть свои желания. Спрашивайте чаще «а чего хочешь ты?».",
+    "en": "Saying no and naming what they want. Ask more often, \"and what do you want?\"",
+    "de": "Nein sagen und die eigenen Wünsche benennen. Fragen Sie öfter: „Und was möchtest du?“",
+    "fr": "Dire non et exprimer ses envies. Demandez plus souvent : « Et toi, de quoi as-tu envie ? »"
    },
    "say": [
     {
@@ -756,7 +756,7 @@
     "fr": "{name} pense en mouvement. Comprendre et retenir est plus facile quand le corps participe : montrer, essayer, recommencer. Les enfants de ce profil ont plus d'énergie que n'en demande une journée ordinaire."
    },
    "hooks": {
-    "ru": "Затягивает: скорость, вызов, новые трюки. Быстро надоедает: долго сидеть и слушать без возможности встать.",
+    "ru": "Увлекает: скорость, вызов, новые трюки. Быстро надоедает: долго сидеть и слушать без возможности встать.",
     "en": "Pulls them in: speed, a challenge, new tricks. Gets boring fast: sitting and listening for a long time with no chance to get up.",
     "de": "Das fesselt: Tempo, Herausforderung, neue Tricks. Das langweilt schnell: lange sitzen und zuhören, ohne aufstehen zu dürfen.",
     "fr": "Ce qui passionne : la vitesse, le défi, les nouvelles figures. Ce qui lasse vite : rester longtemps sur une chaise à écouter sans pouvoir se lever."
@@ -782,10 +782,10 @@
     }
    ],
    "grow": {
-    "ru": "Чему стоит помочь: спокойным занятиям. Давайте подвигаться перед ними: 10 минут активности помогают потом усидеть.",
-    "en": "Worth supporting: quiet activities. Let them move first: 10 active minutes make sitting still easier afterwards.",
-    "de": "Hier lohnt sich Unterstützung: ruhige Beschäftigungen. Erst darf sich Ihr Kind bewegen: Nach 10 aktiven Minuten fällt das Stillsitzen leichter.",
-    "fr": "À encourager : les activités calmes. Laissez d'abord votre enfant bouger : après 10 minutes d'activité, il est plus facile de rester en place."
+    "ru": "Спокойным занятиям. Давайте подвигаться перед ними: 10 минут активности помогают потом усидеть.",
+    "en": "Quiet activities. Let them move first: 10 active minutes make sitting still easier afterwards.",
+    "de": "Ruhige Beschäftigungen. Erst darf sich Ihr Kind bewegen: Nach 10 aktiven Minuten fällt das Stillsitzen leichter.",
+    "fr": "Les activités calmes. Laissez d'abord votre enfant bouger : après 10 minutes d'activité, il est plus facile de rester en place."
    },
    "say": [
     {
@@ -847,18 +847,12 @@
      "fr": "Semaine 3. Un essai : une séance découverte dans un nouveau club."
     },
     {
-     "ru": "Неделя 4. Повторный замер: пройти тест движений и сравнить с первым результатом.",
-     "en": "Week 4. Re-check: take the movement test again and compare with the first result.",
-     "de": "Woche 4. Zweiter Durchgang: den Bewegungstest noch einmal machen und mit dem ersten Ergebnis vergleichen.",
-     "fr": "Semaine 4. Deuxième essai : refaire le test de mouvement et comparer avec le premier résultat."
+     "ru": "Неделя 4. Показ: ребёнок показывает семье навык и выбирает следующий.",
+     "en": "Week 4. Show time: your child shows the family the skill and picks the next one.",
+     "de": "Woche 4. Vorführung: Ihr Kind zeigt der Familie das Gelernte und wählt die nächste Fertigkeit.",
+     "fr": "Semaine 4. Démonstration : votre enfant montre son geste à la famille et choisit le suivant."
     }
-   ],
-   "extra": {
-    "ru": "Для этого типа в отчёте есть кнопка «Проверить физические сильные стороны»: 3 минуты упражнений перед камерой телефона.",
-    "en": "This type's report has a \"Check physical strengths\" button: 3 minutes of exercises in front of the phone camera.",
-    "de": "Für diesen Typ gibt es im Bericht die Schaltfläche „Körperliche Stärken prüfen“: 3 Minuten Übungen vor der Handykamera.",
-    "fr": "Pour ce type, le rapport propose le bouton « Découvrir ses points forts physiques » : 3 minutes d'exercices devant la caméra du téléphone."
-   }
+   ]
   }
  }
 }

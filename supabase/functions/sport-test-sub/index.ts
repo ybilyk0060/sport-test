@@ -263,7 +263,7 @@ Deno.serve(async (req) => {
           : s.lang === "de"
           ? { subject: `In 3 Tagen verlängert sich Ihr Abo: ${price}`, text: `Am ${date} verlängert sich Ihr Abo für ${price} um weitere ${PERIOD_DAYS} Tage.\n\nWenn Sie nicht verlängern möchten, kündigen Sie mit einem Klick:\n${link}\n\nFragen: ${FROM}` }
           : { subject: `Your subscription renews in 3 days: ${price}`, text: `On ${date} your subscription renews for ${price} for another ${PERIOD_DAYS} days.\n\nIf you don't want to continue, cancel in one tap:\n${link}\n\nQuestions: ${FROM}` };
-        if (await mail(s.email, m.subject, m.text)) { await db.from("sport_test_subscriptions").update({ reminded_for: s.paid_until }).eq("id", s.id); sent++; }
+        if (await mail(s.email, m.subject, m.text, senderFor(s))) { await db.from("sport_test_subscriptions").update({ reminded_for: s.paid_until }).eq("id", s.id); sent++; }
       }
       // Цепочка: день 3 и 7 (onboard_step 1, 2), повторный тест раз в 30 дней. Пропущенные шаги не досылаем: только самый свежий.
       const now = Date.now();
@@ -279,7 +279,7 @@ Deno.serve(async (req) => {
         if (!kind) { if (due > step) await db.from("sport_test_subscriptions").update({ onboard_step: due }).eq("id", s.id); continue; }
         const token = await issueToken(s.id);
         const m = isMind(s) ? mindMail(kind, String(s.lang), s, `${s.site}?sub=${token}`) : nurtureMail(kind, String(s.lang), `${s.site}?sub=${token}`);
-        if (await mail(s.email, m.subject, m.text)) {
+        if (await mail(s.email, m.subject, m.text, senderFor(s))) {
           await db.from("sport_test_subscriptions").update(kind === "retest" ? { retest_mailed_at: new Date(now).toISOString(), onboard_step: Math.max(step, due) } : { onboard_step: due }).eq("id", s.id);
           nurtured++;
         }
@@ -316,7 +316,7 @@ Deno.serve(async (req) => {
       const email = String(b.email || "").trim().toLowerCase();
       const site = safeSite(String(b.returnTo || ""));
       if (!emailOk(email) || !site) return json({ ok: true });
-      const { data: subs } = await db.from("sport_test_subscriptions").select("*").eq("email", email).order("created_at", { ascending: false }).limit(1);
+      const { data: subs } = await db.from("sport_test_subscriptions").select("*").eq("email", email).order("paid_until", { ascending: false }).limit(1);
       const sub = subs && subs[0];
       if (sub && (!sub.last_restore_at || Date.now() - Date.parse(sub.last_restore_at) > 60000)) {
         const token = await issueToken(sub.id);
@@ -324,8 +324,8 @@ Deno.serve(async (req) => {
         const lang = String(b.lang || "en");
         const link = `${site}?sub=${token}`;
         const subject = lang === "uk" ? "Доступ до підписки" : lang === "de" ? "Zugang zu Ihrem Abo" : lang === "fr" ? "Accès à votre abonnement" : "Access to your subscription";
-        const text = lang === "uk" ? `Відкрийте програму на цьому пристрої:\n${link}` : lang === "de" ? `Öffnen Sie das Programm auf diesem Gerät:\n${link}` : lang === "fr" ? `Ouvrez votre accès sur cet appareil\u00a0:\n${link}` : `Open the program on this device:\n${link}`;
-        await mail(email, subject, text);
+        const text = lang === "uk" ? `Відкрийте програму на цьому пристрої:\n${link}` : lang === "de" ? `${isMind(sub) ? "Öffnen Sie Ihren Bericht" : "Öffnen Sie das Programm"} auf diesem Gerät:\n${link}` : lang === "fr" ? `Ouvrez votre accès sur cet appareil\u00a0:\n${link}` : `${isMind(sub) ? "Open your report" : "Open the program"} on this device:\n${link}`;
+        await mail(email, subject, text, senderFor(sub));
       }
       return json({ ok: true }); // одинаковый ответ — по email нельзя узнать, есть ли подписка
     }

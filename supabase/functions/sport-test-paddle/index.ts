@@ -41,7 +41,7 @@ async function sendCapi(d: Record<string, any>, orderRef: string, value: number,
   if (!CAPI_TOKEN) return "no token";
   const c = d.custom_data || {};
   const country = str(c.country, 2).toUpperCase();
-  if (CONSENT_COUNTRIES.has(country) && c.consent !== "all") return "no consent";
+  if (c.consent !== "all") return "no consent";
   if (!(value > 0) && !CAPI_TEST) return "zero amount";
   const user_data: Record<string, unknown> = {};
   if (/^[a-f0-9]{64}$/.test(str(c.em))) user_data.em = [c.em];
@@ -81,7 +81,7 @@ async function sendLeadCapi(c: Record<string, any>, ip: string) {
   const eventId = str(c.event_id, 120);
   if (!/^lead-[A-Za-z0-9_-]{4,100}$/.test(eventId)) return "bad id";
   const country = str(c.country, 2).toUpperCase();
-  if ((CONSENT_COUNTRIES.has(country) || !country) && c.consent !== "all") return "no consent";
+  if (c.consent !== "all") return "no consent"; // страны без баннера и так присылают all
   const user_data: Record<string, unknown> = {};
   if (/^[A-Z]{2}$/.test(country)) user_data.country = [sha(country)];
   if (str(c.fbc)) user_data.fbc = str(c.fbc);
@@ -89,7 +89,7 @@ async function sendLeadCapi(c: Record<string, any>, ip: string) {
   if (str(c.ua)) user_data.client_user_agent = str(c.ua);
   if (/^[0-9a-fA-F:.]{3,45}$/.test(ip)) user_data.client_ip_address = ip; // Meta требует IP или другие данные для событий сайта
   const body: Record<string, unknown> = { data: [{ event_name: "Lead", event_id: eventId, event_time: Math.floor(Date.now() / 1000), action_source: "website",
-    event_source_url: str(c.url) || "https://kids-test.com/", user_data, custom_data: { content_name: "quiz_complete" } }] };
+    event_source_url: str(c.url) || "https://kids-test.com/", user_data, custom_data: { content_name: c.content_name === "mind_quiz_complete" ? "mind_quiz_complete" : "quiz_complete" } }] };
   if (CAPI_TEST) body.test_event_code = CAPI_TEST;
   const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 4000);
   try {

@@ -24,6 +24,7 @@ const walk = (file) => {
 };
 walk(join(root, 'js/mind/app.js'));
 walk(join(root, 'js/duo/app.js'));
+walk(join(root, 'js/legal.js')); // юр. страницы подставляют продавца, email и цены этим модулем
 for (const rel of seen) copy(rel);
 
 for (const f of ['css/app.css', 'css/mind.css', 'legal.css', 'img/mind']) copy(f);

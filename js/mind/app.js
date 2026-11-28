@@ -4,13 +4,13 @@
 // Имя ребёнка никуда не отправляется: оно остаётся в localStorage и подставляется в текст на устройстве.
 // События аналитики идут с префиксом mind_ (воронка теста спорта не смешивается), см. analytics.js.
 
-import { CONFIG } from '../config.js?v=7a4e716-mx078zpq';
-import { payment, newOrderId, loadPaddle } from '../payment.js?v=7a4e716-mx078zpq';
-import { track as trackRaw, state as visitor } from '../store.js?v=7a4e716-mx078zpq';
-import { initConsent, sendLead, screenView } from '../analytics.js?v=7a4e716-mx078zpq';
-import * as subapi from '../subapi.js?v=7a4e716-mx078zpq';
-import { UI } from './texts.js?v=7a4e716-mx078zpq';
-import { score, dailyPlan, dayNumber, streak } from './scoring.js?v=7a4e716-mx078zpq';
+import { CONFIG } from '../config.js?v=3ac479c-mx0jviv6';
+import { payment, newOrderId, loadPaddle } from '../payment.js?v=3ac479c-mx0jviv6';
+import { track as trackRaw, state as visitor } from '../store.js?v=3ac479c-mx0jviv6';
+import { initConsent, sendLead, screenView } from '../analytics.js?v=3ac479c-mx0jviv6';
+import * as subapi from '../subapi.js?v=3ac479c-mx0jviv6';
+import { UI } from './texts.js?v=3ac479c-mx0jviv6';
+import { score, dailyPlan, dayNumber, streak } from './scoring.js?v=3ac479c-mx0jviv6';
 
 const app = document.getElementById('app');
 const params = new URLSearchParams(location.search);
@@ -33,7 +33,7 @@ function pickLang() {
 }
 const LANG = pickLang();
 const T = UI[LANG];
-const loadData = () => (LANG === 'de' ? import('./data-de.js?v=7a4e716-mx078zpq') : LANG === 'fr' ? import('./data-fr.js?v=7a4e716-mx078zpq') : LANG === 'ru' ? import('./data-ru.js?v=7a4e716-mx078zpq') : import('./data-en.js?v=7a4e716-mx078zpq')).then((m) => m.default);
+const loadData = () => (LANG === 'de' ? import('./data-de.js?v=3ac479c-mx0jviv6') : LANG === 'fr' ? import('./data-fr.js?v=3ac479c-mx0jviv6') : LANG === 'ru' ? import('./data-ru.js?v=3ac479c-mx0jviv6') : import('./data-en.js?v=3ac479c-mx0jviv6')).then((m) => m.default);
 let D = null;
 
 // --- Валюта и цены: en → USD, de и fr → EUR. Проверка: ?cur=USD|EUR ---
@@ -147,7 +147,7 @@ function finish() {
   const result = score(st.answers, st.sliders);
   set({ result, step: 'result' });
   track('quiz_done');
-  sendLead(visitor.sid + '-m'); // «анкета завершена» для обучения рекламы; отдельный ключ, чтобы не склеиваться с тестом спорта
+  sendLead(visitor.sid + '-m', 'mind_quiz_complete'); // «анкета завершена» для обучения рекламы; отдельный ключ, чтобы не склеиваться с тестом спорта
   screen(`<div class="center calc"><div class="spinner"></div><h2>${esc(T.calc)}</h2></div>`);
   setTimeout(result_, 1800);
 }
@@ -191,10 +191,10 @@ function result_(note = '') {
   const P = T.pay, on = discountOn(), first = firstPrice(), d = offerDeadline();
   const renewAt = Date.now() + SUB.periodDays * DAY;
   screen(`${typeCard(r)}
+    <p class="lead ph-no-capture">${esc(fill(D.report[r.primary].about))}</p>
     <h2 class="sec-title">${esc(T.result.top)}</h2>
     <div class="mbars ph-no-capture">${r.order.slice(0, 3).map((k) => bar(k, r.percent[k])).join('')}</div>
     <div class="type-chips locked-chips ph-no-capture">${r.order.slice(3).map((k) => `<span>🔒 ${esc(typeName(k))}</span>`).join('')}</div>
-    <p class="lead ph-no-capture">${esc(fill(D.report[r.primary].about))}</p>
     <div class="paywall" id="paywall"><h2>${esc(P.title)}</h2>${note ? `<p class="err">${esc(note)}</p>` : ''}
     <ul class="points checks-list">${T.result.locked.filter((_, i) => [0, 1, 4, 5].includes(i)).map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
     <div class="price-card${on ? '' : ' no-disc'}">${on ? `<span class="disc">${esc(P.discount(pct()))}</span><div class="timer" data-el="offer-timer">${esc(P.timer(mmss(d - Date.now())))}</div>` : `<div class="timer over">${esc(P.timerOver)}</div>`}
@@ -207,7 +207,7 @@ function result_(note = '') {
       <p class="trust small center">🔒 ${esc(P.trust)}</p></div>
     <p class="fine">${esc(D.disclaimer)}</p>
     ${legalLinks()}</div>
-    <button class="btn line" data-act="share">${esc(T.result.share)}</button>
+    <button class="link center" data-act="share">${esc(T.result.share)}</button>
     <button class="link center" data-act="restore">${esc(P.restore)}</button>
     <button class="link center" data-act="again">${esc(T.result.again)}</button>`, {
     pay: (btn) => {
@@ -218,7 +218,7 @@ function result_(note = '') {
       btn.disabled = true; setTimeout(() => { btn.disabled = false; }, 4000); // двойное нажатие не создаёт два заказа
       const orderId = newOrderId(visitor.sid);
       const amount = firstPrice();
-      set({ email, orderId, payAmount: amount, waiver: needWithdrawal() }); // сумма фиксируется в момент нажатия: таймер может истечь, пока открыто окно оплаты
+      set({ email, orderId, orderAt: Date.now(), payAmount: amount, waiver: needWithdrawal() }); // сумма фиксируется в момент нажатия: таймер может истечь, пока открыто окно оплаты
       track('pay_click', { provider: payment.name, amount, discount: amount < PRICE.regular, plan: 'sub', currency: CUR });
       const ret = new URL(location.href); ret.search = ''; ret.hash = '';
       Promise.resolve(payment.startCheckout({ orderId, amount, currency: CUR, lang: LANG, email, discount: amount < PRICE.regular, description: T.title, returnUrl: ret.toString() }))
@@ -285,7 +285,7 @@ function activateServer() {
 }
 function startSub(orderId) {
   const now = Date.now(), first = st.payAmount ?? firstPrice(), test = !!payment.isTest;
-  set({ orderId, pending: null, sub: { status: 'active', startedAt: now, paidUntil: now + SUB.periodDays * DAY, orderId, test }, shown: false });
+  set({ orderId, pending: null, subToken: null, sub: { status: 'active', startedAt: now, paidUntil: now + SUB.periodDays * DAY, orderId, test }, shown: false });
   track('paid', { provider: payment.name, amount: first, currency: CUR, plan: 'sub', test, order: orderId });
   activateServer();
 }
@@ -334,7 +334,7 @@ function report() {
     ${sec(R.say, `<div class="says">${x.say.map((s) => `<p>${esc(s)}</p>`).join('')}</div>`)}
     ${sec(R.acts(age), `<p>${esc(x.ages[age])}</p>`)}
     ${sec(R.plan, `<ol class="plan">${x.plan.map((s) => `<li>${esc(s)}</li>`).join('')}</ol>`)}
-    ${x2 ? sec(`${ICON[r.secondary]} ${typeName(r.secondary)}`, `<p>${esc(fill(x2.about))}</p><ul class="points">${x2.strengths.map((s) => `<li>${esc(s)}</li>`).join('')}</ul><p>${esc(x2.ages[age])}</p>`) : ''}</div>
+    ${x2 ? sec(`${ICON[r.secondary]} ${typeName(r.secondary)}`, `<p>${esc(fill(x2.about))}</p><ul class="points">${x2.strengths.map((s) => `<li>${esc(s)}</li>`).join('')}</ul><p><b>${esc(R.acts(age))}:</b> ${esc(x2.ages[age])}</p>`) : ''}</div>
     <div class="box duo-cta"><b>${esc(R.duo)}</b><span class="small muted">${esc(R.duoLead)}</span><a class="btn line" href="duo.html">${esc(R.duoCta)}</a></div>
     ${CONFIG.appAccess === 'soon' ? `<p class="box small">${esc(R.appsSoon)}</p>` : ''}
     <p class="fine">${esc(D.disclaimer)}</p>
@@ -446,6 +446,7 @@ function localizeConsent() {
   const el = document.querySelector('.consent');
   if (!el || !T.consent) return;
   const a = el.querySelector('a'), p = el.querySelector('p'), bs = el.querySelectorAll('button');
+  if (a) a.href = LEGAL.privacy; // на своём домене общих privacy-страниц нет
   if (p && a) { p.firstChild.textContent = T.consent.text + ' '; a.textContent = T.consent.more; }
   if (bs[0]) bs[0].textContent = T.consent.decline;
   if (bs[1]) bs[1].textContent = T.consent.accept;
@@ -498,7 +499,12 @@ async function boot() {
   if (st.pending) {
     screen(`<div class="center calc"><div class="spinner"></div><h2>${esc(T.pay.checking)}</h2></div>`);
     if (await payment.verify(st.pending, back ? 15 : 2)) { startSub(st.pending); return report(); }
-    if (back) { track('pay_unconfirmed', { provider: payment.name }); return st.result ? result_(T.pay.pending) : landing(); }
+    if (back) track('pay_unconfirmed', { provider: payment.name });
+    if (back || st.result) return st.result ? result_(T.pay.pending) : landing(); // и после перезагрузки во время проверки предупреждаем не платить второй раз
+  } else if (st.orderId && !st.sub && Date.now() - (st.orderAt || 0) < 2 * DAY) {
+    // Оплата могла пройти, а возврата на сайт не было (закрыли вкладку или браузер соцсети): тихо проверяем последний заказ
+    const oid = st.orderId;
+    Promise.resolve(payment.verify(oid, 1)).then((ok) => { if (ok && !st.sub && st.orderId === oid) { startSub(oid); report(); } }).catch(() => {});
   }
   if (params.get('cancel')) { cleanUrl(); return cancelForm(); }
   track('open', { ref: document.referrer ? new URL(document.referrer).hostname : '', utm: params.get('utm_source') || '' });

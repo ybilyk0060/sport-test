@@ -4,8 +4,8 @@
 // ничего не пишется в браузер, человек анонимен и не склеивается между визитами, записей сессий нет. Видео, точки тела и ответы о ребёнке наружу не уходят:
 // в события идут только имя шага, номер вопроса, ключ упражнения, сумма и валюта.
 
-import { CONFIG } from './config.js?v=7a4e716-mx078zpq';
-import { T } from './i18n/index.js?v=7a4e716-mx078zpq';
+import { CONFIG } from './config.js?v=3ac479c-mx0jviv6';
+import { T } from './i18n/index.js?v=3ac479c-mx0jviv6';
 
 const KEY = 'sporttest.consent';
 let consent = null;
@@ -196,15 +196,16 @@ function leadCountry() {
     return '';
   } catch { return ''; }
 }
-export function sendLead(sid) {
+export function sendLead(sid, name = 'quiz_complete') {
   if (!sid) return;
   const key = 'sporttest.lead.' + sid;
   try { if (localStorage.getItem(key)) return; localStorage.setItem(key, '1'); } catch { /* нет */ }
   const eventId = `lead-${sid}`;
-  try { if (window.fbq) window.fbq('track', 'Lead', { content_name: 'quiz_complete' }, { eventID: eventId }); } catch { /* нет */ }
-  try { if (ttOn && window.ttq) window.ttq.track('Lead', { content_name: 'quiz_complete' }, { event_id: eventId }); } catch { /* нет */ }
+  try { if (window.fbq) window.fbq('track', 'Lead', { content_name: name }, { eventID: eventId }); } catch { /* нет */ }
+  try { if (ttOn && window.ttq) window.ttq.track('Lead', { content_name: name }, { event_id: eventId }); } catch { /* нет */ }
+  if (consent !== 'all') return; // без согласия на сервер рекламы ничего не уходит
   try {
-    const body = JSON.stringify({ action: 'lead', event_id: eventId, ...adContext(), country: leadCountry() });
+    const body = JSON.stringify({ action: 'lead', content_name: name, event_id: eventId, ...adContext(), country: leadCountry() });
     fetch(LEAD_FN, { method: 'POST', headers: { 'content-type': 'application/json' }, body, keepalive: true }).catch(() => {});
   } catch { /* нет */ }
 }

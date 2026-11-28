@@ -485,10 +485,10 @@
    },
    "need": {
     "3-5": {
-     "ru": "картонка или большая книга, мячик, машинка",
-     "en": "a piece of cardboard or a big book, a ball, a toy car",
-     "de": "ein Stück Pappe oder ein großes Buch, ein Ball, ein Spielzeugauto",
-     "fr": "un morceau de carton ou un grand livre, une balle, une petite voiture"
+     "ru": "картонка или большая книга, мяч крупнее кулака ребёнка, машинка",
+     "en": "a piece of cardboard or a big book, a ball bigger than your child’s fist, a toy car",
+     "de": "ein Stück Pappe oder ein großes Buch, ein Ball, größer als die Faust Ihres Kindes, ein Spielzeugauto",
+     "fr": "un morceau de carton ou un grand livre, une balle plus grosse que le poing de votre enfant, une petite voiture"
     },
     "6-8": {
      "ru": "картонные трубки от рулонов, бумажный скотч, мячик или шарик из фольги",
@@ -615,10 +615,10 @@
     }
    },
    "why": {
-    "ru": "Ребёнок чувствует, что его руки могут починить настоящую вещь. Это даёт уверенность сильнее любой похвалы.",
-    "en": "Your child feels that their own hands can fix a real thing. That builds more confidence than any praise.",
-    "de": "Ihr Kind spürt, dass seine Hände etwas Echtes reparieren können. Das gibt mehr Selbstvertrauen als jedes Lob.",
-    "fr": "Votre enfant sent que ses mains peuvent réparer un vrai objet. Cela donne plus de confiance que tous les compliments."
+    "ru": "Ребёнок чувствует, что его руки могут починить настоящую вещь. Это добавляет уверенности.",
+    "en": "Your child feels that their own hands can fix a real thing. That builds confidence.",
+    "de": "Ihr Kind spürt, dass seine Hände etwas Echtes reparieren können. Das stärkt das Selbstvertrauen.",
+    "fr": "Votre enfant sent que ses mains peuvent réparer un vrai objet. Cela donne confiance."
    },
    "tip": {
     "ru": "Руки держите за спиной. Помогайте словами, а не делом.",
@@ -3475,10 +3475,10 @@
     }
    },
    "why": {
-    "ru": "Ребёнок учится искать ответ сам и проверять его. Это навык на всю учёбу.",
-    "en": "Your child learns to find an answer on their own and check it. That skill lasts through all of school.",
-    "de": "Ihr Kind lernt, eine Antwort selbst zu suchen und zu überprüfen. Das hilft durch die ganze Schulzeit.",
-    "fr": "Votre enfant apprend à chercher la réponse lui-même et à la vérifier. Cela sert pendant toute la scolarité."
+    "ru": "Ребёнок учится искать ответ сам и проверять его.",
+    "en": "Your child learns to find an answer on their own and check it.",
+    "de": "Ihr Kind lernt, eine Antwort selbst zu suchen und zu überprüfen.",
+    "fr": "Votre enfant apprend à chercher la réponse lui-même et à la vérifier."
    },
    "tip": {
     "ru": "Скажите честно «я не знаю, давай выясним». Это лучший пример для исследователя.",
@@ -5477,10 +5477,10 @@
     }
    },
    "why": {
-    "ru": "Движение помогает запоминать: буквы и числа, прожитые телом, держатся дольше.",
-    "en": "Movement helps memory: letters and numbers that the body has acted out stick longer.",
-    "de": "Bewegung hilft beim Merken: Buchstaben und Zahlen, die der Körper erlebt hat, bleiben länger.",
-    "fr": "Le mouvement aide à mémoriser : les lettres et les nombres vécus avec le corps restent plus longtemps."
+    "ru": "Буквы и числа, показанные телом, учить веселее.",
+    "en": "Acting out letters and numbers makes practice livelier.",
+    "de": "Buchstaben und Zahlen mit dem Körper darzustellen macht das Üben lebendiger.",
+    "fr": "Mimer les lettres et les nombres rend l’entraînement plus vivant."
    },
    "tip": {
     "ru": "Смейтесь вместе. Чем смешнее поза, тем лучше запомнится.",
@@ -5756,10 +5756,10 @@
    },
    "need": {
     "3-5": {
-     "ru": "столовая ложка, комочки бумаги, миска",
-     "en": "a tablespoon, paper balls, a bowl",
-     "de": "ein Esslöffel, Papierkugeln, eine Schüssel",
-     "fr": "une cuillère à soupe, des boulettes de papier, un saladier"
+     "ru": "пластиковая или деревянная ложка, комочки бумаги, миска",
+     "en": "a plastic or wooden spoon, paper balls, a bowl",
+     "de": "ein Plastik- oder Holzlöffel, Papierkugeln, eine Schüssel",
+     "fr": "une cuillère en plastique ou en bois, des boulettes de papier, un saladier"
     },
     "6-8": {
      "ru": "линейка, карандаш, комочки бумаги, листок",
@@ -5778,25 +5778,25 @@
     "3-5": {
      "ru": [
       "Скомкайте вместе пять бумажных шариков.",
-      "Положите шарик в ложку, ложку на край стола. Ребёнок хлопает по ручке.",
+      "Положите шарик в ложку, ложку на край стола. Вы придерживаете ложку посередине, ребёнок хлопает по ручке.",
       "Поставьте миску в шаге от стола. Получится попасть?",
       "Посчитайте попадания из пяти."
      ],
      "en": [
       "Crumple five paper balls together.",
-      "Put a ball in the spoon and the spoon on the edge of the table. Your child slaps the handle.",
+      "Put a ball in the spoon and the spoon on the edge of the table. You hold the spoon in the middle, your child slaps the handle.",
       "Set the bowl one step from the table. Can they land a ball in it?",
       "Count the hits out of five."
      ],
      "de": [
       "Knüllen Sie gemeinsam fünf Papierkugeln.",
-      "Legen Sie eine Kugel in den Löffel und den Löffel an die Tischkante. Ihr Kind schlägt auf den Stiel.",
+      "Legen Sie eine Kugel in den Löffel und den Löffel an die Tischkante. Sie halten den Löffel in der Mitte fest, Ihr Kind schlägt auf den Stiel.",
       "Stellen Sie die Schüssel einen Schritt vom Tisch entfernt auf. Trifft es hinein?",
       "Zählen Sie die Treffer von fünf Versuchen."
      ],
      "fr": [
       "Froissez ensemble cinq boulettes de papier.",
-      "Posez une boulette dans la cuillère et la cuillère au bord de la table. Votre enfant tape sur le manche.",
+      "Posez une boulette dans la cuillère et la cuillère au bord de la table. Vous tenez la cuillère au milieu, votre enfant tape sur le manche.",
       "Placez le saladier à un pas de la table. Arrive-t-il à viser dedans ?",
       "Comptez les réussites sur cinq essais."
      ]
@@ -6272,25 +6272,25 @@
       "Положите по кубику льда на две тарелки.",
       "Одну поставьте в тёплое место, другую в прохладное.",
       "Спросите: какой растает первым?",
-      "Проверяйте каждые пять минут. Лёд ребёнок в рот не берёт."
+      "Проверьте через пять и десять минут: какой стал меньше? Лёд ребёнок в рот не берёт."
      ],
      "en": [
       "Put one ice cube on each plate.",
       "Put one plate somewhere warm and the other somewhere cool.",
       "Ask: which one will melt first?",
-      "Check every five minutes. The ice doesn’t go in the mouth."
+      "Check after five and ten minutes: which one is smaller? The ice doesn’t go in the mouth."
      ],
      "de": [
       "Legen Sie auf jeden Teller einen Eiswürfel.",
       "Stellen Sie einen an einen warmen, den anderen an einen kühlen Platz.",
       "Fragen Sie: Welcher schmilzt zuerst?",
-      "Schauen Sie alle fünf Minuten nach. Das Eis nimmt Ihr Kind nicht in den Mund."
+      "Schauen Sie nach fünf und nach zehn Minuten: Welcher ist kleiner? Das Eis nimmt Ihr Kind nicht in den Mund."
      ],
      "fr": [
       "Posez un glaçon sur chaque assiette.",
       "Placez-en une dans un endroit chaud et l'autre dans un endroit frais.",
       "Demandez : lequel fondra le premier ?",
-      "Vérifiez toutes les cinq minutes. Votre enfant ne met pas le glaçon dans sa bouche."
+      "Vérifiez après cinq et dix minutes : lequel est le plus petit ? Votre enfant ne met pas le glaçon dans sa bouche."
      ]
     },
     "6-8": {
