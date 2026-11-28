@@ -281,6 +281,7 @@ Deno.serve(async (req) => {
         .lte("started_at", new Date(now - 3 * 86400000).toISOString()).not("site", "is", null).limit(500);
       let nurtured = 0;
       for (const s of act || []) {
+        if (isMind(s)) continue; // решение Юрия 28.11: подписчику теста мышления писем после подписки не шлём (только подтверждение, отмена, ссылка доступа)
         const age = (now - Date.parse(String(s.started_at))) / 86400000;
         const step = Number(s.onboard_step || 0);
         const due = age >= 7 ? 2 : age >= 3 ? 1 : 0;
