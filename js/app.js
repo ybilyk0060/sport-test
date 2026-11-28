@@ -1,23 +1,23 @@
 // Главный файл: путь пользователя от первого экрана до полного отчёта.
 
-import { T } from './i18n/index.js?v=7a4e716-mx078zpq';
-import { CONFIG } from './config.js?v=7a4e716-mx078zpq';
-import { money, PRICE, CUR, fmtDate, } from './locale.js?v=7a4e716-mx078zpq';
-import { LANG, LOCALES } from './i18n/index.js?v=7a4e716-mx078zpq';
-import { state, setState, resetState, track, importHandoff, exportHandoff, store } from './store.js?v=7a4e716-mx078zpq';
-import { detectEnv } from './env.js?v=7a4e716-mx078zpq';
-import { prefetchPose, preloadPose } from './pose.js?v=7a4e716-mx078zpq';
-import { unlockAudio } from './audio.js?v=7a4e716-mx078zpq';
-import { toast } from './toast.js?v=7a4e716-mx078zpq';
-import { landingHtml, esc } from './landing-html.js?v=7a4e716-mx078zpq';
-import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=7a4e716-mx078zpq';
-import { payment, newOrderId, loadPaddle } from './payment.js?v=7a4e716-mx078zpq';
-import { ART } from './art.js?v=7a4e716-mx078zpq';
-import { initDebug } from './debug.js?v=7a4e716-mx078zpq';
-import { initConsent, sendLead } from './analytics.js?v=7a4e716-mx078zpq';
-import * as subapi from './subapi.js?v=7a4e716-mx078zpq';
-import { drawShareCard } from './sharecard.js?v=7a4e716-mx078zpq';
-import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=7a4e716-mx078zpq';
+import { T } from './i18n/index.js?v=b17bd53-mx0m9pxl';
+import { CONFIG } from './config.js?v=b17bd53-mx0m9pxl';
+import { money, PRICE, CUR, fmtDate, } from './locale.js?v=b17bd53-mx0m9pxl';
+import { LANG, LOCALES } from './i18n/index.js?v=b17bd53-mx0m9pxl';
+import { state, setState, resetState, track, importHandoff, exportHandoff, store } from './store.js?v=b17bd53-mx0m9pxl';
+import { detectEnv } from './env.js?v=b17bd53-mx0m9pxl';
+import { prefetchPose, preloadPose } from './pose.js?v=b17bd53-mx0m9pxl';
+import { unlockAudio } from './audio.js?v=b17bd53-mx0m9pxl';
+import { toast } from './toast.js?v=b17bd53-mx0m9pxl';
+import { landingHtml, esc } from './landing-html.js?v=b17bd53-mx0m9pxl';
+import { buildReport, QUALITIES, qualitiesOf, bodyBuild } from './scoring.js?v=b17bd53-mx0m9pxl';
+import { payment, newOrderId, loadPaddle } from './payment.js?v=b17bd53-mx0m9pxl';
+import { ART } from './art.js?v=b17bd53-mx0m9pxl';
+import { initDebug } from './debug.js?v=b17bd53-mx0m9pxl';
+import { initConsent, sendLead } from './analytics.js?v=b17bd53-mx0m9pxl';
+import * as subapi from './subapi.js?v=b17bd53-mx0m9pxl';
+import { drawShareCard } from './sharecard.js?v=b17bd53-mx0m9pxl';
+import { buildProgram, nextWorkout, currentMonth, WEEKS, PER_WEEK } from './program.js?v=b17bd53-mx0m9pxl';
 
 const env = detectEnv();
 const app = document.getElementById('app');
@@ -36,7 +36,7 @@ const DAY = 86400000;
 // не нужен. Грузим его после нажатия Start, пока родитель отвечает на вопросы (замер 28.11: первый экран 1,2–3,6 с).
 let stageMod = null, stageLoading = null;
 function loadStage() {
-  if (!stageLoading) stageLoading = import('./stage.js?v=7a4e716-mx078zpq').then((m) => (stageMod = m)).catch((e) => { stageLoading = null; throw e; });
+  if (!stageLoading) stageLoading = import('./stage.js?v=b17bd53-mx0m9pxl').then((m) => (stageMod = m)).catch((e) => { stageLoading = null; throw e; });
   return stageLoading;
 }
 // Запуск экрана камеры. Если код уже загружен — сразу, в том же нажатии (звук и камера на iPhone требуют жеста);

@@ -1,20 +1,20 @@
 // Экран камеры: разрешение → проверка кадра → 4 упражнения. И запасной путь: разбор записи.
 
-import { T } from './i18n/index.js?v=7a4e716-mx078zpq';
-import { CONFIG } from './config.js?v=7a4e716-mx078zpq';
-import { state, setState, track, exportHandoff } from './store.js?v=7a4e716-mx078zpq';
-import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=7a4e716-mx078zpq';
-import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=7a4e716-mx078zpq';
-import { preloadPose, poseSupported, poseStatus, resetPersonLock, diag } from './pose.js?v=7a4e716-mx078zpq';
-import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=7a4e716-mx078zpq';
-import { framingCheck, frameLoop, createRun } from './session.js?v=7a4e716-mx078zpq';
-import { createRaiseHand, createPlankHold } from './gesture.js?v=7a4e716-mx078zpq';
-import { recording } from './analytics.js?v=7a4e716-mx078zpq';
-import { demoSvg } from './demos.js?v=7a4e716-mx078zpq';
-import { EX_QUALITY } from './scoring.js?v=7a4e716-mx078zpq';
-import { greenOverlay } from './greenkey.js?v=7a4e716-mx078zpq';
-import { createVisCoach } from './viscoach.js?v=7a4e716-mx078zpq';
-import { toast } from './toast.js?v=7a4e716-mx078zpq';
+import { T } from './i18n/index.js?v=b17bd53-mx0m9pxl';
+import { CONFIG } from './config.js?v=b17bd53-mx0m9pxl';
+import { state, setState, track, exportHandoff } from './store.js?v=b17bd53-mx0m9pxl';
+import { detectEnv, chromeIntentUrl, safariUrl } from './env.js?v=b17bd53-mx0m9pxl';
+import { openCamera, stopCamera, keepAwake, camStatus } from './camera.js?v=b17bd53-mx0m9pxl';
+import { preloadPose, poseSupported, poseStatus, resetPersonLock, diag } from './pose.js?v=b17bd53-mx0m9pxl';
+import { unlockAudio, preloadClips, say, sayQueue, stopVoice, exists } from './audio.js?v=b17bd53-mx0m9pxl';
+import { framingCheck, frameLoop, createRun } from './session.js?v=b17bd53-mx0m9pxl';
+import { createRaiseHand, createPlankHold } from './gesture.js?v=b17bd53-mx0m9pxl';
+import { recording } from './analytics.js?v=b17bd53-mx0m9pxl';
+import { demoSvg } from './demos.js?v=b17bd53-mx0m9pxl';
+import { EX_QUALITY } from './scoring.js?v=b17bd53-mx0m9pxl';
+import { greenOverlay } from './greenkey.js?v=b17bd53-mx0m9pxl';
+import { createVisCoach } from './viscoach.js?v=b17bd53-mx0m9pxl';
+import { toast } from './toast.js?v=b17bd53-mx0m9pxl';
 // Подсказки видимости: новые фразы (vis_*) озвучиваются после записи голоса; пока их нет — ближайшая записанная
 const VIS_FALLBACK = { vis_cant_see: 'hint_show_full_body', vis_head: 'frame_step_back', vis_contrast: 'hint_show_full_body', vis_light_behind: 'hint_show_full_body', vis_more_light: null };
 const sayVis = (k) => { const c = exists(k) ? k : VIS_FALLBACK[k]; if (c) say(c, { interrupt: false }); };
