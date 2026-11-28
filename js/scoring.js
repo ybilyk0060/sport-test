@@ -2,7 +2,7 @@
 // Чистые функции без браузера (проверяются в tests/rules.test.mjs). Тексты — по ключам из js/i18n.
 // Важно: возрастных норм нет. Все оценки — «выполнено задание / нет» и «ровно / неровно», пороги рабочие.
 
-import { CONFIG } from './config.js?v=79e9bda-mx0ku0rq';
+import { CONFIG } from './config.js?v=2d68ee4-mx0m15ly';
 
 const clamp01 = (x) => Math.max(0, Math.min(1, x));
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);

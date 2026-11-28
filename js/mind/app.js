@@ -4,13 +4,13 @@
 // Имя ребёнка никуда не отправляется: оно остаётся в localStorage и подставляется в текст на устройстве.
 // События аналитики идут с префиксом mind_ (воронка теста спорта не смешивается), см. analytics.js.
 
-import { CONFIG } from '../config.js?v=79e9bda-mx0ku0rq';
-import { payment, newOrderId, loadPaddle } from '../payment.js?v=79e9bda-mx0ku0rq';
-import { track as trackRaw, state as visitor } from '../store.js?v=79e9bda-mx0ku0rq';
-import { initConsent, sendLead, screenView } from '../analytics.js?v=79e9bda-mx0ku0rq';
-import * as subapi from '../subapi.js?v=79e9bda-mx0ku0rq';
-import { UI } from './texts.js?v=79e9bda-mx0ku0rq';
-import { score, dailyPlan, dayNumber, streak } from './scoring.js?v=79e9bda-mx0ku0rq';
+import { CONFIG } from '../config.js?v=2d68ee4-mx0m15ly';
+import { payment, newOrderId, loadPaddle } from '../payment.js?v=2d68ee4-mx0m15ly';
+import { track as trackRaw, state as visitor } from '../store.js?v=2d68ee4-mx0m15ly';
+import { initConsent, sendLead, screenView } from '../analytics.js?v=2d68ee4-mx0m15ly';
+import * as subapi from '../subapi.js?v=2d68ee4-mx0m15ly';
+import { UI } from './texts.js?v=2d68ee4-mx0m15ly';
+import { score, dailyPlan, dayNumber, streak } from './scoring.js?v=2d68ee4-mx0m15ly';
 
 const app = document.getElementById('app');
 const params = new URLSearchParams(location.search);
@@ -33,7 +33,7 @@ function pickLang() {
 }
 const LANG = pickLang();
 const T = UI[LANG];
-const loadData = () => (LANG === 'de' ? import('./data-de.js?v=79e9bda-mx0ku0rq') : LANG === 'fr' ? import('./data-fr.js?v=79e9bda-mx0ku0rq') : LANG === 'ru' ? import('./data-ru.js?v=79e9bda-mx0ku0rq') : import('./data-en.js?v=79e9bda-mx0ku0rq')).then((m) => m.default);
+const loadData = () => (LANG === 'de' ? import('./data-de.js?v=2d68ee4-mx0m15ly') : LANG === 'fr' ? import('./data-fr.js?v=2d68ee4-mx0m15ly') : LANG === 'ru' ? import('./data-ru.js?v=2d68ee4-mx0m15ly') : import('./data-en.js?v=2d68ee4-mx0m15ly')).then((m) => m.default);
 let D = null;
 
 // --- Валюта и цены: en → USD, de и fr → EUR. Проверка: ?cur=USD|EUR ---
