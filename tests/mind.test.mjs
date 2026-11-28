@@ -94,4 +94,17 @@ ok('данные: полные на всех языках, типографик�
   }
 });
 
+// Мини-тест «Ребёнок и вы»
+const duo = await import('../js/duo/data.js');
+ok('duo: 10 вопросов, каждая шкала 5 раз, тексты на 4 языках', () => {
+  assert.equal(duo.QUESTIONS.length, 10);
+  const cnt = {};
+  for (const q of duo.QUESTIONS) { assert.equal(q.t.length, 4); assert.equal(new Set(q.o.map((o) => o[0])).size, 4); for (const [s, tx] of q.o) { cnt[s] = (cnt[s] || 0) + 1; assert.equal(tx.length, 4); assert.ok(tx.every((x) => x.trim())); } }
+  for (const s of SCALES) assert.equal(cnt[s], 5, s);
+  for (const M of [duo.STYLE, duo.GIVE, duo.WATCH, duo.NEEDS, duo.TOGETHER]) { assert.deepEqual(Object.keys(M).sort(), [...SCALES].sort()); for (const v of Object.values(M)) { assert.equal(v.length, 4); assert.ok(v.every((x) => x.trim() && !x.includes('—'))); } }
+  for (const [k, v] of Object.entries(duo.UI)) { assert.equal(v.length, 4, k); assert.ok(v.every((x) => x.trim()), k); }
+  const all = [...duo.QUESTIONS.flatMap((q) => [q.t, ...q.o.map((o) => o[1])]), ...Object.values(duo.UI), ...[duo.GIVE, duo.WATCH, duo.NEEDS, duo.TOGETHER].flatMap((M) => Object.values(M))];
+  for (const v of all) { assert.ok(!/ [:;?!»]|« /.test(duo.pick(v, 'fr')), 'fr: ' + v[2]); assert.ok(!/"/.test(v[1]), 'de: ' + v[1]); }
+});
+
 console.log(`mind: ${n} проверок пройдено`);

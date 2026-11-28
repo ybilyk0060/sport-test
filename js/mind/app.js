@@ -79,6 +79,7 @@ const girl = () => st.intro.gender === 1;
 const childName = () => st.name || T.child;
 const typeName = (k) => (girl() ? D.types[k].nameF : D.types[k].name);
 const shadeTag = (r) => (r.shade ? `<span class="tag">${esc(girl() ? D.shade[r.shade].f : D.shade[r.shade].m)}</span>` : '');
+const ICON = { builder: '🧱', inventor: '💡', storyteller: '📖', artist: '🎨', explorer: '🧭', leader: '🚩', helper: '🤝', mover: '⚡' };
 const subActive = () => !!(st.sub && Date.now() < st.sub.paidUntil);
 
 // --- Первый экран ---
@@ -86,7 +87,7 @@ function landing() {
   set({ step: 'landing' });
   screen(`<div class="hero"><span class="tag">${esc(T.land.kicker)}</span><h1>${esc(T.land.h1)}</h1><p class="promise">${esc(T.land.sub)}</p></div>
     <ul class="points">${T.land.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>
-    <div class="type-chips">${Object.keys(D.types).map((k) => `<span>${esc(D.types[k].name)}</span>`).join('')}</div>
+    <div class="type-chips">${Object.keys(D.types).map((k) => `<span>${ICON[k]} ${esc(D.types[k].name)}</span>`).join('')}</div>
     <div class="grow"></div>
     <button class="btn" data-act="start">${esc(T.land.cta)}</button>
     <p class="small muted center">${esc(T.land.note)}</p>
@@ -160,7 +161,7 @@ function needWithdrawal() {
 
 const bar = (k, p, locked = false) => `<div class="mbar${locked ? ' locked' : ''}"><span>${esc(typeName(k))}</span><i><b style="width:${locked ? 60 : Math.max(4, p)}%"></b></i><em>${locked ? '🔒' : p + '%'}</em></div>`;
 function typeCard(r) {
-  return `<div class="strong mind-type"><small>${esc(T.result.kicker(st.name))}</small><b>${esc(typeName(r.primary))}</b><span>${esc(D.types[r.primary].tagline)}</span>${shadeTag(r)}</div>
+  return `<div class="strong mind-type"><span class="ic" aria-hidden="true">${ICON[r.primary]}</span><small>${esc(T.result.kicker(st.name))}</small><b>${esc(typeName(r.primary))}</b><span>${esc(D.types[r.primary].tagline)}</span>${shadeTag(r)}</div>
     <p class="second"><span class="muted">${esc(T.result.second)}${LANG === 'fr' ? '\u00a0' : ''}:</span> <b>${esc(typeName(r.secondary))}</b></p>`;
 }
 
@@ -284,6 +285,7 @@ function report() {
     ${sec(R.acts(age), `<p>${esc(x.ages[age])}</p>`)}
     ${sec(R.fields, `<p>${esc(D.types[r.primary].careers)}</p><p class="small muted">${esc(R.fieldsNote)}</p>`)}
     ${sec(R.plan, `<ol class="plan">${x.plan.map((s) => `<li>${esc(s)}</li>`).join('')}</ol>`)}
+    <div class="box duo-cta"><b>${esc(R.duo)}</b><span class="small muted">${esc(R.duoLead)}</span><a class="btn line" href="duo.html">${esc(R.duoCta)}</a></div>
     ${CONFIG.appAccess === 'soon' ? `<p class="box small">${esc(R.appsSoon)}</p>` : ''}
     <p class="fine">${esc(D.disclaimer)}</p>
     <p class="small">${esc(subLine())}</p>
