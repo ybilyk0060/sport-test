@@ -261,7 +261,7 @@ Deno.serve(async (req) => {
       const { data: subs } = await db.from("sport_test_subscriptions").select("*").eq("status", "active").lte("paid_until", soon).gt("paid_until", new Date().toISOString()).limit(200);
       let sent = 0;
       for (const s of subs || []) {
-        if (s.reminded_for === s.paid_until || !s.site) continue;
+        if (s.reminded_for === s.paid_until || !s.site || isMind(s)) continue; // тест мышления: напоминание о списании не шлём (решение Юрия 28.11)
         const token = await issueToken(s.id);
         const link = `${s.site}?sub=${token}`;
         const price = money(Number(s.regular_amount), String(s.currency), String(s.lang));
