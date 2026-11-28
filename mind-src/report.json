@@ -87,10 +87,10 @@
    },
    "plan": [
     {
-     "ru": "Неделя 1. Постройка по образцу: одна модель по инструкции от начала до конца.",
-     "en": "Week 1. Build from a plan: one model from instructions, start to finish.",
-     "de": "Woche 1. Bauen nach Plan: ein Modell nach Anleitung, von Anfang bis Ende.",
-     "fr": "Semaine 1. Construire d'après un plan : un modèle avec notice, du début à la fin."
+     "en": "Week 1. Build from a plan: copy one model from a picture, start to finish.",
+     "de": "Woche 1. Bauen nach Plan: ein Modell nach einem Bild nachbauen, von Anfang bis Ende.",
+     "fr": "Semaine 1. Construire d'après un plan : refaire un modèle d'après une image, du début à la fin.",
+     "ru": "Неделя 1. Постройка по образцу: одна модель по картинке от начала до конца."
     },
     {
      "ru": "Неделя 2. Своя версия: изменить модель так, чтобы она стала лучше.",
@@ -110,7 +110,103 @@
      "de": "Woche 4. Ein Familienprojekt: etwas Nützliches für zu Hause bauen und vorstellen.",
      "fr": "Semaine 4. Un projet en famille : fabriquer un objet utile pour la maison et le présenter."
     }
-   ]
+   ],
+   "say_age": {
+    "3-5": [
+     {
+      "en": "\"Show me how you built this\"",
+      "de": "„Zeig mir, wie du das gebaut hast“",
+      "fr": "« Montre-moi comment tu as construit ça »",
+      "ru": "«Покажи, как ты это строишь»"
+     },
+     {
+      "en": "\"Which piece was the trickiest to put on?\"",
+      "de": "„Welches Teil war am schwierigsten?“",
+      "fr": "« Quel morceau a été le plus difficile à poser ? »",
+      "ru": "«Какую деталь было труднее всего поставить?»"
+     },
+     {
+      "en": "\"What will you build tomorrow?\"",
+      "de": "„Und was möchtest du morgen bauen?“",
+      "fr": "« Et demain, qu'est-ce que tu vas construire ? »",
+      "ru": "«А что ты построишь завтра?»"
+     }
+    ],
+    "9-12": [
+     {
+      "en": "\"Walk me through your design\"",
+      "de": "„Erklär mir, wie dein Entwurf funktioniert“",
+      "fr": "« Explique-moi comment ton projet fonctionne »",
+      "ru": "«Объясни, как устроена твоя конструкция»"
+     },
+     {
+      "en": "\"Which problem took the longest to solve?\"",
+      "de": "„Welches Problem hat am längsten gedauert?“",
+      "fr": "« Quel problème t'a pris le plus de temps à résoudre ? »",
+      "ru": "«Какая задача отняла больше всего времени?»"
+     },
+     {
+      "en": "\"What would version two look like?\"",
+      "de": "„Wie würde Version zwei aussehen?“",
+      "fr": "« À quoi ressemblerait la version deux ? »",
+      "ru": "«Какой будет вторая версия?»"
+     }
+    ]
+   },
+   "plan_age": {
+    "3-5": [
+     {
+      "en": "Week 1. Build a tall tower from big blocks or boxes. Start with today's activity.",
+      "de": "Woche 1. Ein Turm aus großen Klötzen oder Kartons. Starten Sie mit der heutigen Spielidee.",
+      "fr": "Semaine 1. Une tour en gros cubes ou en boîtes en carton. Commencez par l'activité du jour.",
+      "ru": "Неделя 1. Башня из больших кубиков или коробок. Начните с сегодняшнего задания."
+     },
+     {
+      "en": "Week 2. Copy me: you stack three blocks, your child builds the same.",
+      "de": "Woche 2. Nachbauen: Sie stapeln drei Klötze, Ihr Kind baut es nach.",
+      "fr": "Semaine 2. Comme moi : vous posez trois cubes, votre enfant fait pareil.",
+      "ru": "Неделя 2. Повтори за мной: вы ставите три кубика, ребёнок повторяет."
+     },
+     {
+      "en": "Week 3. A pillow bridge: build one that a soft toy can cross.",
+      "de": "Woche 3. Eine Brücke aus Kissen, über die ein Kuscheltier laufen kann.",
+      "fr": "Semaine 3. Un pont en coussins sur lequel une peluche peut passer.",
+      "ru": "Неделя 3. Мост из подушек, по которому пройдёт мягкая игрушка."
+     },
+     {
+      "en": "Week 4. A house for a toy: build it together and show the family.",
+      "de": "Woche 4. Ein Haus für ein Spielzeug: zusammen bauen und der Familie zeigen.",
+      "fr": "Semaine 4. Une maison pour un jouet : la construire ensemble et la montrer à la famille.",
+      "ru": "Неделя 4. Домик для игрушки: построить вместе и показать семье."
+     }
+    ],
+    "9-12": [
+     {
+      "en": "Week 1. Sketch first, then build it from cardboard. Start with today's activity.",
+      "de": "Woche 1. Erst skizzieren, dann aus Karton bauen. Starten Sie mit der heutigen Spielidee.",
+      "fr": "Semaine 1. Un croquis d'abord, puis la maquette en carton. Commencez par l'activité du jour.",
+      "ru": "Неделя 1. Сначала чертёж, потом модель из картона. Начните с сегодняшнего задания."
+     },
+     {
+      "en": "Week 2. Version two: test the model, find its weak spot, fix it.",
+      "de": "Woche 2. Version zwei: das Modell testen, die Schwachstelle finden, verbessern.",
+      "fr": "Semaine 2. Version deux : tester la maquette, trouver le point faible, le corriger.",
+      "ru": "Неделя 2. Вторая версия: испытать модель, найти слабое место, исправить."
+     },
+     {
+      "en": "Week 3. A challenge with limits: the tallest tower from ten sheets, no tape.",
+      "de": "Woche 3. Aufgabe mit Vorgaben: der höchste Turm aus zehn Blatt Papier, ohne Kleber.",
+      "fr": "Semaine 3. Un défi avec contraintes : la plus haute tour avec dix feuilles, sans colle.",
+      "ru": "Неделя 3. Задача с ограничением: самая высокая башня из десяти листов без клея."
+     },
+     {
+      "en": "Week 4. A real fix at home: your child picks a problem and builds a solution.",
+      "de": "Woche 4. Ein echtes Problem zu Hause: Ihr Kind wählt es aus und baut eine Lösung.",
+      "fr": "Semaine 4. Un vrai problème à la maison : votre enfant le choisit et construit une solution.",
+      "ru": "Неделя 4. Настоящая задача дома: ребёнок выбирает проблему и строит решение."
+     }
+    ]
+   }
   },
   "inventor": {
    "about": {
@@ -176,7 +272,7 @@
      "ru": "игры с водой, воронки и стаканчики, сортировка, простые головоломки",
      "en": "water play with funnels and cups, sorting games, simple puzzles",
      "de": "Wasserspiele mit Trichtern und Bechern, Sortierspiele, einfache Puzzles",
-     "fr": "jeux d'eau et gros aimants de frigo, jeux de tri, puzzles simples"
+     "fr": "jeux d'eau avec entonnoirs et gobelets, jeux de tri, puzzles simples"
     },
     "6-8": {
      "ru": "наборы юного учёного, шахматы, логические игры, первые шаги в программировании",
@@ -196,7 +292,7 @@
      "ru": "Неделя 1. Один опыт в день на 10 минут: что тонет, что катится, что растворяется.",
      "en": "Week 1. One 10-minute experiment a day: what sinks, what rolls, what dissolves.",
      "de": "Woche 1. Jeden Tag ein Experiment von 10 Minuten: was sinkt, was rollt, was sich auflöst.",
-     "fr": "Semaine 1. Une expérience de 10 minutes par jour : ce qui coule, ce qui colle à l'aimant, ce qui se dissout."
+     "fr": "Semaine 1. Une expérience de 10 minutes par jour : ce qui coule, ce qui roule, ce qui se dissout."
     },
     {
      "ru": "Неделя 2. Дневник «казалось, а оказалось»: предположение до опыта и результат после.",
@@ -216,7 +312,103 @@
      "de": "Woche 4. Das eigene Experiment: eine Frage wählen, sie prüfen und der Familie vorstellen.",
      "fr": "Semaine 4. Sa propre expérience : choisir une question, la tester et la présenter à la famille."
     }
-   ]
+   ],
+   "say_age": {
+    "3-5": [
+     {
+      "en": "\"What do you think will happen?\"",
+      "de": "„Was glaubst du, was passiert?“",
+      "fr": "« À ton avis, que va-t-il se passer ? »",
+      "ru": "«Как думаешь, что будет?»"
+     },
+     {
+      "en": "\"Good question! Let's try it and see\"",
+      "de": "„Gute Frage! Das probieren wir gleich aus“",
+      "fr": "« Bonne question ! On essaie pour voir »",
+      "ru": "«Хороший вопрос! Давай попробуем»"
+     },
+     {
+      "en": "\"Oops, that was a surprise! Let's try again\"",
+      "de": "„Hoppla, das war eine Überraschung! Noch einmal?“",
+      "fr": "« Oh, quelle surprise ! On essaie encore une fois, autrement ? »",
+      "ru": "«Ой, вот это сюрприз! Попробуем ещё раз?»"
+     }
+    ],
+    "9-12": [
+     {
+      "en": "\"What would prove you wrong?\"",
+      "de": "„Womit ließe sich das widerlegen?“",
+      "fr": "« Qu'est-ce qui prouverait le contraire ? »",
+      "ru": "«Как это опровергнуть?»"
+     },
+     {
+      "en": "\"I don't know either. Where could we look?\"",
+      "de": "„Das weiß ich auch nicht. Wo schauen wir nach?“",
+      "fr": "« Je ne sais pas non plus. Où chercher ? »",
+      "ru": "«Я тоже не знаю. Где можно это выяснить?»"
+     },
+     {
+      "en": "\"That result was unexpected. What explains it?\"",
+      "de": "„Das Ergebnis kam unerwartet. Wie erklärst du es dir?“",
+      "fr": "« Ce résultat est inattendu. Comment l'expliques-tu ? »",
+      "ru": "«Результат неожиданный. Как это объяснить?»"
+     }
+    ]
+   },
+   "plan_age": {
+    "3-5": [
+     {
+      "en": "Week 1. What rolls and what slides down a pillow ramp? Start with today's activity.",
+      "de": "Woche 1. Was rollt und was rutscht von einer Kissenrampe? Starten Sie mit der heutigen Spielidee.",
+      "fr": "Semaine 1. Qu'est-ce qui roule et qu'est-ce qui glisse sur une pente en coussins ? Commencez par l'activité du jour.",
+      "ru": "Неделя 1. Что катится, а что скользит с горки из подушек? Начните с сегодняшнего задания."
+     },
+     {
+      "en": "Week 2. Guess first: \"Will it roll?\" Your child says it, then you both check.",
+      "de": "Woche 2. Erst raten: „Rollt es?“ Ihr Kind sagt es laut, dann prüfen Sie es zusammen.",
+      "fr": "Semaine 2. Deviner d'abord : « Ça roule ? » Votre enfant répond, puis vous vérifiez ensemble.",
+      "ru": "Неделя 2. Сначала угадать: «Покатится?» Ребёнок отвечает, потом проверяете вместе."
+     },
+     {
+      "en": "Week 3. Sorting toys: big and small, soft and hard, into two boxes.",
+      "de": "Woche 3. Spielzeug sortieren: groß und klein, weich und hart, in zwei Kisten.",
+      "fr": "Semaine 3. Trier les jouets : grand et petit, mou et dur, dans deux boîtes.",
+      "ru": "Неделя 3. Сортировка игрушек: большие и маленькие, мягкие и твёрдые, в две коробки."
+     },
+     {
+      "en": "Week 4. Their own question: your child asks, you test it together with toys.",
+      "de": "Woche 4. Die eigene Frage: Ihr Kind fragt, Sie probieren es zusammen mit Spielzeug aus.",
+      "fr": "Semaine 4. Sa propre question : votre enfant la pose, vous la testez ensemble avec des jouets.",
+      "ru": "Неделя 4. Свой вопрос: ребёнок спрашивает, вы вместе проверяете на игрушках."
+     }
+    ],
+    "9-12": [
+     {
+      "en": "Week 1. One question a day, one quick test at home. Start with today's activity.",
+      "de": "Woche 1. Jeden Tag eine Frage und ein kurzer Test zu Hause. Starten Sie mit der heutigen Spielidee.",
+      "fr": "Semaine 1. Une question par jour et un test rapide à la maison. Commencez par l'activité du jour.",
+      "ru": "Неделя 1. Один вопрос в день и быстрая проверка дома. Начните с сегодняшнего задания."
+     },
+     {
+      "en": "Week 2. A lab notebook: hypothesis, method, result, and what to change next time.",
+      "de": "Woche 2. Ein Laborheft: Vermutung, Vorgehen, Ergebnis und was beim nächsten Mal anders wird.",
+      "fr": "Semaine 2. Un carnet de labo : hypothèse, méthode, résultat et ce qu'il faudra changer.",
+      "ru": "Неделя 2. Лабораторный журнал: гипотеза, метод, результат и что изменить дальше."
+     },
+     {
+      "en": "Week 3. Logic: your child invents a puzzle or code for the family to crack.",
+      "de": "Woche 3. Logik: Ihr Kind erfindet ein Rätsel oder einen Code für die Familie.",
+      "fr": "Semaine 3. Logique : votre enfant invente une énigme ou un code que la famille doit percer.",
+      "ru": "Неделя 3. Логика: ребёнок придумывает головоломку или шифр для всей семьи."
+     },
+     {
+      "en": "Week 4. A fair test: change one thing, measure it three times, report the result.",
+      "de": "Woche 4. Ein fairer Test: nur eine Sache ändern, dreimal messen, das Ergebnis vorstellen.",
+      "fr": "Semaine 4. Un test rigoureux : changer un seul élément, mesurer trois fois, présenter le résultat.",
+      "ru": "Неделя 4. Честный опыт: менять одно условие, измерить трижды, показать результат."
+     }
+    ]
+   }
   },
   "storyteller": {
    "about": {
@@ -322,7 +514,103 @@
      "de": "Woche 4. Ein Auftritt: die Geschichte der Familie vorführen, mit Rollen oder Puppen.",
      "fr": "Semaine 4. Un spectacle : présenter l'histoire à la famille, avec des rôles ou des marionnettes."
     }
-   ]
+   ],
+   "say_age": {
+    "3-5": [
+     {
+      "en": "\"And then what happened?\"",
+      "de": "„Und was ist dann passiert?“",
+      "fr": "« Et ensuite ? Raconte ! »",
+      "ru": "«А что случилось потом?»"
+     },
+     {
+      "en": "\"What a funny word! Say it again\"",
+      "de": "„Was für ein lustiges Wort! Sag es noch mal“",
+      "fr": "« Quel drôle de mot ! Redis-le encore »",
+      "ru": "«Какое смешное слово! Скажи ещё раз»"
+     },
+     {
+      "en": "\"Is the bunny happy or sad?\"",
+      "de": "„Ist der Hase froh oder traurig?“",
+      "fr": "« Le lapin est content ou triste ? »",
+      "ru": "«Зайка радуется или грустит?»"
+     }
+    ],
+    "9-12": [
+     {
+      "en": "\"I want to know how it ends\"",
+      "de": "„Ich will wissen, wie es ausgeht“",
+      "fr": "« J'ai hâte de lire la suite »",
+      "ru": "«Хочу узнать, чем всё закончится»"
+     },
+     {
+      "en": "\"That line stuck with me. Read it again\"",
+      "de": "„Dieser Satz ist mir im Kopf geblieben“",
+      "fr": "« Cette phrase m'est restée en tête »",
+      "ru": "«Эта фраза мне запомнилась. Прочти ещё»"
+     },
+     {
+      "en": "\"Why did the character do that?\"",
+      "de": "„Warum handelt die Figur so?“",
+      "fr": "« Pourquoi le personnage fait-il ça ? »",
+      "ru": "«Почему герой так поступает?»"
+     }
+    ]
+   },
+   "plan_age": {
+    "3-5": [
+     {
+      "en": "Week 1. A bedtime chat: what was the best bit of the day? Start with today's activity.",
+      "de": "Woche 1. Abends erzählen: Was war heute am schönsten? Starten Sie mit der heutigen Spielidee.",
+      "fr": "Semaine 1. Le soir, raconter le meilleur moment du jour. Commencez par l'activité du jour.",
+      "ru": "Неделя 1. Вечерний рассказ: что было лучшим за день? Начните с сегодняшнего задания."
+     },
+     {
+      "en": "Week 2. A picture book: three drawings and a story told aloud.",
+      "de": "Woche 2. Ein Bilderbuch: drei Bilder malen und dazu erzählen.",
+      "fr": "Semaine 2. Un livre d'images : trois dessins et une histoire racontée.",
+      "ru": "Неделя 2. Книжка в картинках: три рисунка и рассказ вслух."
+     },
+     {
+      "en": "Week 3. Tell it again: your child tells a soft toy what happened today.",
+      "de": "Woche 3. Weitererzählen: Ihr Kind erzählt einem Kuscheltier, was heute los war.",
+      "fr": "Semaine 3. Raconter encore : votre enfant raconte sa journée à une peluche.",
+      "ru": "Неделя 3. Пересказ: ребёнок рассказывает мягкой игрушке, как прошёл день."
+     },
+     {
+      "en": "Week 4. A toy show: act out a favorite story with soft toys for the family.",
+      "de": "Woche 4. Ein Auftritt: ein Lieblingsmärchen mit Kuscheltieren der Familie vorspielen.",
+      "fr": "Semaine 4. Un spectacle : jouer une histoire préférée avec des peluches devant la famille.",
+      "ru": "Неделя 4. Выступление: показать семье любимую сказку с мягкими игрушками."
+     }
+    ],
+    "9-12": [
+     {
+      "en": "Week 1. A story a day in five sentences. Start with today's activity.",
+      "de": "Woche 1. Jeden Tag eine Geschichte in fünf Sätzen. Starten Sie mit der heutigen Spielidee.",
+      "fr": "Semaine 1. Une histoire par jour en cinq phrases. Commencez par l'activité du jour.",
+      "ru": "Неделя 1. История дня в пяти предложениях. Начните с сегодняшнего задания."
+     },
+     {
+      "en": "Week 2. A short story or comic: a first draft, then one rewrite.",
+      "de": "Woche 2. Kurzgeschichte oder Comic: Entwurf und Überarbeitung.",
+      "fr": "Semaine 2. Une nouvelle ou une BD : un premier jet, puis une réécriture.",
+      "ru": "Неделя 2. Рассказ или комикс: черновик и одна переработка."
+     },
+     {
+      "en": "Week 3. A real interview: prepare five questions, record it, write it up.",
+      "de": "Woche 3. Ein echtes Interview: fünf Fragen vorbereiten, aufnehmen, aufschreiben.",
+      "fr": "Semaine 3. Une vraie interview : préparer cinq questions, enregistrer, puis rédiger.",
+      "ru": "Неделя 3. Настоящее интервью: подготовить пять вопросов, записать и оформить."
+     },
+     {
+      "en": "Week 4. Going public: a podcast episode, short film or reading for the family.",
+      "de": "Woche 4. Vor Publikum: eine Podcastfolge, ein Kurzfilm oder eine Lesung für die Familie.",
+      "fr": "Semaine 4. Devant un public : un épisode de podcast, un court-métrage ou une lecture en famille.",
+      "ru": "Неделя 4. Перед публикой: выпуск подкаста, короткий фильм или чтение для семьи."
+     }
+    ]
+   }
   },
   "artist": {
    "about": {
@@ -428,7 +716,103 @@
      "de": "Woche 4. Eine Ausstellung zu Hause: die besten Arbeiten auswählen, beschriften und die Familie einladen.",
      "fr": "Semaine 4. Une exposition à la maison : choisir les meilleures œuvres, les légender et inviter la famille."
     }
-   ]
+   ],
+   "say_age": {
+    "3-5": [
+     {
+      "en": "\"Tell me about your picture\"",
+      "de": "„Erzähl mir von deinem Bild“",
+      "fr": "« Parle-moi de ton dessin »",
+      "ru": "«Расскажи про свой рисунок»"
+     },
+     {
+      "en": "\"You filled the whole page with color!\"",
+      "de": "„Du hast das ganze Blatt mit Farbe gefüllt!“",
+      "fr": "« Tu as rempli toute la feuille de couleurs ! »",
+      "ru": "«Весь лист в красках! Вот это работа»"
+     },
+     {
+      "en": "\"Which color do you like best?\"",
+      "de": "„Welche Farbe magst du am liebsten?“",
+      "fr": "« Quelle couleur tu préfères ? »",
+      "ru": "«Какой цвет тебе нравится?»"
+     }
+    ],
+    "9-12": [
+     {
+      "en": "\"What were you going for here?\"",
+      "de": "„Was wolltest du hier ausdrücken?“",
+      "fr": "« Qu'as-tu voulu exprimer ici ? »",
+      "ru": "«Какой здесь был замысел?»"
+     },
+     {
+      "en": "\"I can see the choices you made in the details\"",
+      "de": "„Man sieht, wie bewusst du die Details gewählt hast“",
+      "fr": "« On voit que chaque détail est un vrai choix »",
+      "ru": "«Видно, что каждая деталь здесь выбрана не случайно»"
+     },
+     {
+      "en": "\"What made you pick this style?\"",
+      "de": "„Warum hast du diesen Stil gewählt?“",
+      "fr": "« Pourquoi as-tu choisi ce style ? »",
+      "ru": "«Почему именно такой стиль?»"
+     }
+    ]
+   },
+   "plan_age": {
+    "3-5": [
+     {
+      "en": "Week 1. One material a day: crayons, paper, play dough. Start with today's activity.",
+      "de": "Woche 1. Jeden Tag ein Material: Wachsstifte, Papier, Knete. Starten Sie mit der heutigen Spielidee.",
+      "fr": "Semaine 1. Une matière par jour : gros crayons, papier, pâte à modeler. Commencez par l'activité du jour.",
+      "ru": "Неделя 1. Один материал в день: мелки, бумага, пластилин. Начните с сегодняшнего задания."
+     },
+     {
+      "en": "Week 2. One theme, three ways: draw a cat, shape one from dough, act like a cat.",
+      "de": "Woche 2. Ein Thema, drei Wege: eine Katze malen, kneten und als Katze spielen.",
+      "fr": "Semaine 2. Un thème, trois façons : dessiner un chat, le modeler, puis jouer au chat.",
+      "ru": "Неделя 2. Одна тема, три способа: нарисовать кошку, слепить и сыграть кошку."
+     },
+     {
+      "en": "Week 3. A big picture: one large sheet on the floor, a little each day.",
+      "de": "Woche 3. Ein großes Bild: ein großes Blatt auf dem Boden, jeden Tag ein bisschen.",
+      "fr": "Semaine 3. Un grand dessin : une grande feuille au sol, un petit peu chaque jour.",
+      "ru": "Неделя 3. Большая картина: большой лист на полу, каждый день понемногу."
+     },
+     {
+      "en": "Week 4. A home exhibition: your child picks the pictures and shows the family.",
+      "de": "Woche 4. Eine Ausstellung zu Hause: Ihr Kind wählt Bilder aus und zeigt sie der Familie.",
+      "fr": "Semaine 4. Une exposition à la maison : votre enfant choisit ses dessins et les montre à la famille.",
+      "ru": "Неделя 4. Домашняя выставка: ребёнок выбирает рисунки и показывает семье."
+     }
+    ],
+    "9-12": [
+     {
+      "en": "Week 1. A sketch a day from real life, 10 minutes. Start with today's activity.",
+      "de": "Woche 1. Jeden Tag eine Skizze nach der Natur, 10 Minuten. Starten Sie mit der heutigen Spielidee.",
+      "fr": "Semaine 1. Un croquis par jour d'après nature, 10 minutes. Commencez par l'activité du jour.",
+      "ru": "Неделя 1. Набросок с натуры каждый день, 10 минут. Начните с сегодняшнего задания."
+     },
+     {
+      "en": "Week 2. One subject, five techniques: line, shading, collage, photo, digital.",
+      "de": "Woche 2. Ein Motiv, fünf Techniken: Linie, Schattierung, Collage, Foto, digital.",
+      "fr": "Semaine 2. Un sujet, cinq techniques : trait, ombre et lumière, collage, photo, numérique.",
+      "ru": "Неделя 2. Один сюжет, пять техник: линия, штриховка, коллаж, фото, цифровой рисунок."
+     },
+     {
+      "en": "Week 3. A series: three pieces on one idea, planned by your child.",
+      "de": "Woche 3. Eine Serie: drei Arbeiten zu einer Idee, von Ihrem Kind geplant.",
+      "fr": "Semaine 3. Une série : trois œuvres autour d'une idée, planifiées par votre enfant.",
+      "ru": "Неделя 3. Серия: три работы на одну идею, план составляет ребёнок."
+     },
+     {
+      "en": "Week 4. A portfolio: select the strongest pieces, title them and present them.",
+      "de": "Woche 4. Eine Mappe: die stärksten Arbeiten auswählen, betiteln und der Familie präsentieren.",
+      "fr": "Semaine 4. Un portfolio : sélectionner les œuvres les plus fortes, les titrer et les présenter.",
+      "ru": "Неделя 4. Портфолио: отобрать самые сильные работы, дать названия и представить."
+     }
+    ]
+   }
   },
   "explorer": {
    "about": {
@@ -534,7 +918,103 @@
      "de": "Woche 4. Eine Expedition: einen Familienausflug planen und die Führung übernehmen.",
      "fr": "Semaine 4. Une expédition : préparer une sortie en famille et jouer le rôle de guide."
     }
-   ]
+   ],
+   "say_age": {
+    "3-5": [
+     {
+      "en": "\"What did you see on our walk today?\"",
+      "de": "„Was hast du heute draußen gesehen?“",
+      "fr": "« Qu'as-tu vu dehors aujourd'hui ? »",
+      "ru": "«Что интересного было на прогулке?»"
+     },
+     {
+      "en": "\"Show me your treasure\"",
+      "de": "„Zeig mir mal deinen Schatz“",
+      "fr": "« Montre-moi ton petit trésor »",
+      "ru": "«Покажи своё сокровище»"
+     },
+     {
+      "en": "\"Let's go and take a look\"",
+      "de": "„Komm, wir schauen mal nach“",
+      "fr": "« Viens, on va regarder »",
+      "ru": "«Пойдём посмотрим вместе»"
+     }
+    ],
+    "9-12": [
+     {
+      "en": "\"What caught your attention today?\"",
+      "de": "„Was ist dir heute aufgefallen?“",
+      "fr": "« Qu'est-ce qui a retenu ton attention aujourd'hui ? »",
+      "ru": "«Что сегодня привлекло твоё внимание?»"
+     },
+     {
+      "en": "\"Show me what you found out\"",
+      "de": "„Zeig mir, was du herausgefunden hast“",
+      "fr": "« Montre-moi ce que tu as découvert »",
+      "ru": "«Что удалось выяснить?»"
+     },
+     {
+      "en": "\"How could we check the source?\"",
+      "de": "„Wie können wir die Quelle prüfen?“",
+      "fr": "« Comment vérifier la source ? »",
+      "ru": "«Как проверить этот источник?»"
+     }
+    ]
+   },
+   "plan_age": {
+    "3-5": [
+     {
+      "en": "Week 1. A color hunt: find three red things on your walk. Start with today's activity.",
+      "de": "Woche 1. Farbenjagd: drei rote Dinge beim Spaziergang finden. Starten Sie mit der heutigen Spielidee.",
+      "fr": "Semaine 1. Chasse aux couleurs : trouver trois choses rouges en promenade. Commencez par l'activité du jour.",
+      "ru": "Неделя 1. Охота за цветом: найти на прогулке три красные вещи. Начните с сегодняшнего задания."
+     },
+     {
+      "en": "Week 2. A treasure box: five leaves or cones, sorted by size.",
+      "de": "Woche 2. Eine Schatzkiste: fünf Blätter oder Zapfen, nach Größe geordnet.",
+      "fr": "Semaine 2. Une boîte à trésors : cinq feuilles ou pommes de pin, triées par taille.",
+      "ru": "Неделя 2. Коробка сокровищ: пять листьев или шишек, разложить по размеру."
+     },
+     {
+      "en": "Week 3. Window watch: look out together each day and say what the weather is doing.",
+      "de": "Woche 3. Fensterblick: jeden Tag zusammen hinausschauen und sagen, wie das Wetter ist.",
+      "fr": "Semaine 3. Observation à la fenêtre : regarder dehors ensemble chaque jour et dire le temps qu'il fait.",
+      "ru": "Неделя 3. Наблюдение у окна: каждый день вместе смотреть и говорить, какая погода."
+     },
+     {
+      "en": "Week 4. A little expedition: your child leads the way to the park.",
+      "de": "Woche 4. Eine kleine Expedition: Ihr Kind führt alle auf dem Weg zum Park.",
+      "fr": "Semaine 4. Une petite expédition : votre enfant montre le chemin jusqu'au parc.",
+      "ru": "Неделя 4. Маленькая экспедиция: ребёнок ведёт всех по дороге в парк."
+     }
+    ],
+    "9-12": [
+     {
+      "en": "Week 1. Map your neighborhood: add one new detail a day. Start with today's activity.",
+      "de": "Woche 1. Eine Karte der Umgebung: jeden Tag ein neues Detail. Starten Sie mit der heutigen Spielidee.",
+      "fr": "Semaine 1. Une carte du quartier : un nouveau détail par jour. Commencez par l'activité du jour.",
+      "ru": "Неделя 1. Карта своего района: каждый день новая деталь. Начните с сегодняшнего задания."
+     },
+     {
+      "en": "Week 2. A field guide: photograph and identify 10 local species.",
+      "de": "Woche 2. Ein Bestimmungsheft: 10 Arten vor Ort fotografieren und benennen.",
+      "fr": "Semaine 2. Un guide de terrain : photographier et identifier 10 espèces locales.",
+      "ru": "Неделя 2. Свой определитель: сфотографировать и определить 10 местных видов."
+     },
+     {
+      "en": "Week 3. A data week: track one thing daily (weather, birds, traffic) and chart it.",
+      "de": "Woche 3. Eine Datenwoche: täglich eine Sache erfassen (Wetter, Vögel, Verkehr) und als Diagramm zeichnen.",
+      "fr": "Semaine 3. Une semaine de données : relever une chose par jour (météo, oiseaux, circulation) et tracer un graphique.",
+      "ru": "Неделя 3. Неделя данных: каждый день замерять одно (погода, птицы, машины) и построить график."
+     },
+     {
+      "en": "Week 4. An expedition: your child plans the route, budget and timing.",
+      "de": "Woche 4. Eine Expedition: Ihr Kind plant Route, Budget und Zeitplan des Ausflugs.",
+      "fr": "Semaine 4. Une expédition : votre enfant prépare l'itinéraire, le budget et les horaires.",
+      "ru": "Неделя 4. Экспедиция: ребёнок планирует маршрут, бюджет и время вылазки."
+     }
+    ]
+   }
   },
   "leader": {
    "about": {
@@ -640,7 +1120,103 @@
      "de": "Woche 4. Rollentausch: eine Woche lang helfen und dem Plan von jemand anderem folgen.",
      "fr": "Semaine 4. Changement de rôle : une semaine pour aider et suivre le plan de quelqu'un d'autre."
     }
-   ]
+   ],
+   "say_age": {
+    "3-5": [
+     {
+      "en": "\"Who goes first? You decide\"",
+      "de": "„Wer fängt an? Du darfst bestimmen“",
+      "fr": "« Qui commence ? C'est toi qui décides »",
+      "ru": "«Кто начинает игру? Решай ты»"
+     },
+     {
+      "en": "\"Ask your friend what they want to play\"",
+      "de": "„Frag mal, was die anderen spielen wollen“",
+      "fr": "« Demande aux autres à quoi ils veulent jouer »",
+      "ru": "«Спроси, во что хотят играть другие»"
+     },
+     {
+      "en": "\"Today you show us the way\"",
+      "de": "„Heute gehst du voran“",
+      "fr": "« Aujourd'hui, c'est toi qui nous guides »",
+      "ru": "«Сегодня ты ведёшь нас за собой»"
+     }
+    ],
+    "9-12": [
+     {
+      "en": "\"How did you split up the work?\"",
+      "de": "„Wie hast du die Aufgaben verteilt?“",
+      "fr": "« Comment as-tu réparti les tâches ? »",
+      "ru": "«Как распределяются задачи в команде?»"
+     },
+     {
+      "en": "\"Whose opinion haven't you heard yet?\"",
+      "de": "„Wessen Meinung fehlt dir noch?“",
+      "fr": "« Quel avis n'as-tu pas encore entendu ? »",
+      "ru": "«Чьё мнение ещё не прозвучало?»"
+     },
+     {
+      "en": "\"This is your call. I'll back you\"",
+      "de": "„Das entscheidest du“",
+      "fr": "« C'est ta décision, je te soutiens »",
+      "ru": "«Это твоё решение, я поддержу»"
+     }
+    ]
+   },
+   "plan_age": {
+    "3-5": [
+     {
+      "en": "Week 1. One tiny daily job is theirs. Start with today's activity.",
+      "de": "Woche 1. Eine kleine tägliche Aufgabe gehört Ihrem Kind. Starten Sie mit der heutigen Spielidee.",
+      "fr": "Semaine 1. Une petite tâche quotidienne rien que pour votre enfant. Commencez par l'activité du jour.",
+      "ru": "Неделя 1. Одно маленькое своё дело на каждый день. Начните с сегодняшнего задания."
+     },
+     {
+      "en": "Week 2. Follow the leader: your child shows a move, everyone copies.",
+      "de": "Woche 2. Alle mir nach: Ihr Kind macht eine Bewegung vor, alle machen sie nach.",
+      "fr": "Semaine 2. Suivez le guide : votre enfant montre un geste, tout le monde l'imite.",
+      "ru": "Неделя 2. Делай как я: ребёнок показывает движение, все повторяют."
+     },
+     {
+      "en": "Week 3. A toy picnic: your child chooses the guests and where each one sits.",
+      "de": "Woche 3. Ein Picknick für Kuscheltiere: Ihr Kind wählt die Gäste und die Sitzplätze.",
+      "fr": "Semaine 3. Un pique-nique des peluches : votre enfant choisit les invités et leurs places.",
+      "ru": "Неделя 3. Пикник для игрушек: ребёнок выбирает гостей и решает, кто где сидит."
+     },
+     {
+      "en": "Week 4. Taking turns: now you lead the game and your child follows your moves.",
+      "de": "Woche 4. Abwechseln: Jetzt führen Sie das Spiel, und Ihr Kind macht es Ihnen nach.",
+      "fr": "Semaine 4. Chacun son tour : cette fois, vous menez le jeu et votre enfant vous imite.",
+      "ru": "Неделя 4. По очереди: теперь игру ведёте вы, а ребёнок повторяет за вами."
+     }
+    ],
+    "9-12": [
+     {
+      "en": "Week 1. One area of home is theirs to run. Start with today's activity.",
+      "de": "Woche 1. Ein Bereich zu Hause, den Ihr Kind selbst führt. Starten Sie mit der heutigen Spielidee.",
+      "fr": "Semaine 1. Un domaine de la maison géré par votre enfant. Commencez par l'activité du jour.",
+      "ru": "Неделя 1. Одна зона дома в управлении ребёнка. Начните с сегодняшнего задания."
+     },
+     {
+      "en": "Week 2. A family meeting: your child sets the agenda and chairs it.",
+      "de": "Woche 2. Familienrat: Ihr Kind legt die Themen fest und leitet das Gespräch.",
+      "fr": "Semaine 2. Conseil de famille : votre enfant fixe l'ordre du jour et anime la réunion.",
+      "ru": "Неделя 2. Семейный совет: ребёнок готовит темы и ведёт встречу."
+     },
+     {
+      "en": "Week 3. A real project: plan a family evening with a budget and assigned roles.",
+      "de": "Woche 3. Ein echtes Projekt: einen Familienabend mit Budget und verteilten Rollen planen.",
+      "fr": "Semaine 3. Un vrai projet : préparer une soirée en famille avec un budget et des rôles.",
+      "ru": "Неделя 3. Настоящий проект: семейный вечер с бюджетом и распределением ролей."
+     },
+     {
+      "en": "Week 4. Switching roles: your child joins someone else's project as a teammate.",
+      "de": "Woche 4. Rollentausch: Ihr Kind arbeitet im Projekt von jemand anderem als Teammitglied mit.",
+      "fr": "Semaine 4. Changement de rôle : votre enfant rejoint le projet de quelqu'un d'autre et suit son plan.",
+      "ru": "Неделя 4. Смена ролей: ребёнок работает в чужом проекте как участник команды."
+     }
+    ]
+   }
   },
   "helper": {
    "about": {
@@ -746,7 +1322,103 @@
      "de": "Woche 4. Ein selbst gemachtes Geschenk: für einen nahen Menschen planen und anfertigen.",
      "fr": "Semaine 4. Un cadeau fait main : le préparer et le fabriquer pour un proche."
     }
-   ]
+   ],
+   "say_age": {
+    "3-5": [
+     {
+      "en": "\"You gave Teddy a hug. That was kind\"",
+      "de": "„Du hast den Teddy getröstet. Das war lieb von dir“",
+      "fr": "« Tu as fait un câlin à ton doudou. C'est gentil »",
+      "ru": "«Ты обнимаешь мишку. Это очень по-доброму»"
+     },
+     {
+      "en": "\"Which one do you want?\"",
+      "de": "„Und welches willst du?“",
+      "fr": "« Et toi, lequel veux-tu choisir ? »",
+      "ru": "«А что выбираешь ты?»"
+     },
+     {
+      "en": "\"It's okay to say: not now, later\"",
+      "de": "„Du darfst auch sagen: jetzt nicht, später“",
+      "fr": "« Tu peux dire : pas maintenant »",
+      "ru": "«Можно сказать: не сейчас, давай потом»"
+     }
+    ],
+    "9-12": [
+     {
+      "en": "\"You noticed what they needed. That takes skill\"",
+      "de": "„Du hast gemerkt, was gebraucht wurde. Das kann nicht jeder“",
+      "fr": "« Tu as vu ce dont l'autre avait besoin. C'est une vraie force »",
+      "ru": "«Ты замечаешь, что нужно другим. Это редкое умение»"
+     },
+     {
+      "en": "\"What do you need right now?\"",
+      "de": "„Und was brauchst du?“",
+      "fr": "« Et toi, de quoi as-tu besoin ? »",
+      "ru": "«А что сейчас нужно тебе?»"
+     },
+     {
+      "en": "\"Saying no to a friend is not letting them down\"",
+      "de": "„Nein sagen heißt nicht, jemanden im Stich zu lassen“",
+      "fr": "« Dire non, ce n'est pas laisser tomber »",
+      "ru": "«Отказать не значит подвести близкого человека»"
+     }
+    ]
+   },
+   "plan_age": {
+    "3-5": [
+     {
+      "en": "Week 1. One helping job a day, done together. Start with today's activity.",
+      "de": "Woche 1. Jeden Tag gemeinsam einmal helfen. Starten Sie mit der heutigen Spielidee.",
+      "fr": "Semaine 1. Un petit coup de main par jour, fait ensemble. Commencez par l'activité du jour.",
+      "ru": "Неделя 1. Одно доброе дело в день вместе с вами. Начните с сегодняшнего задания."
+     },
+     {
+      "en": "Week 2. Caring for something living: your child helps you water a plant each day and looks at it with you.",
+      "de": "Woche 2. Etwas Lebendiges versorgen: Ihr Kind hilft Ihnen jeden Tag, eine Pflanze zu gießen, und schaut sie mit Ihnen an.",
+      "fr": "Semaine 2. Prendre soin du vivant : votre enfant vous aide chaque jour à arroser une plante et la regarde avec vous.",
+      "ru": "Неделя 2. Забота о живом: ребёнок каждый день помогает вам поливать растение и рассматривает его вместе с вами."
+     },
+     {
+      "en": "Week 3. My wishes: each day your child picks one of two (which cup, which book).",
+      "de": "Woche 3. Meine Wünsche: Jeden Tag wählt Ihr Kind eins von zweien (Becher, Buch).",
+      "fr": "Semaine 3. Mes envies : chaque jour, votre enfant choisit entre deux (le gobelet, le livre).",
+      "ru": "Неделя 3. Мои желания: каждый день ребёнок выбирает одно из двух (чашка, книжка)."
+     },
+     {
+      "en": "Week 4. A gift: a drawing made for someone close and handed over.",
+      "de": "Woche 4. Ein Geschenk: ein Bild für einen nahen Menschen malen und selbst überreichen.",
+      "fr": "Semaine 4. Un cadeau : un dessin pour un proche, offert en mains propres.",
+      "ru": "Неделя 4. Подарок: рисунок для близкого человека, вручить лично."
+     }
+    ],
+    "9-12": [
+     {
+      "en": "Week 1. One useful act a day, chosen by your child. Start with today's activity.",
+      "de": "Woche 1. Jeden Tag eine hilfreiche Tat nach eigener Wahl. Starten Sie mit der heutigen Spielidee.",
+      "fr": "Semaine 1. Un geste utile par jour, choisi par votre enfant. Commencez par l'activité du jour.",
+      "ru": "Неделя 1. Одно полезное дело в день по выбору ребёнка. Начните с сегодняшнего задания."
+     },
+     {
+      "en": "Week 2. Real responsibility: a pet, a plant or a younger sibling's reading time is theirs to manage all week.",
+      "de": "Woche 2. Echte Verantwortung: Ein Haustier, eine Pflanze oder die Vorlesezeit für ein jüngeres Kind liegt die ganze Woche bei Ihrem Kind.",
+      "fr": "Semaine 2. Une vraie responsabilité : un animal, une plante ou la lecture du soir d'un plus jeune, gérés par votre enfant.",
+      "ru": "Неделя 2. Настоящая ответственность: питомец, растение или чтение младшим всю неделю в ведении ребёнка."
+     },
+     {
+      "en": "Week 3. My boundaries: each day your child states one preference or one clear no.",
+      "de": "Woche 3. Meine Grenzen: Jeden Tag äußert Ihr Kind einen eigenen Wunsch oder ein klares Nein.",
+      "fr": "Semaine 3. Mes limites : chaque jour, votre enfant exprime une préférence ou un non clair.",
+      "ru": "Неделя 3. Мои границы: каждый день ребёнок называет одно своё желание или чёткое «нет»."
+     },
+     {
+      "en": "Week 4. A helping project: plan and carry out one thing for a neighbor.",
+      "de": "Woche 4. Ein Hilfsprojekt: etwas für Nachbarn oder Verwandte planen und umsetzen.",
+      "fr": "Semaine 4. Un projet d'entraide : préparer et réaliser une action pour un voisin.",
+      "ru": "Неделя 4. Проект помощи: придумать и сделать одно дело для соседей."
+     }
+    ]
+   }
   },
   "mover": {
    "about": {
@@ -841,10 +1513,10 @@
      "fr": "Semaine 2. Un seul geste : choisir une figure (corde à sauter, équilibre, jeu de ballon) et s'entraîner toute la semaine."
     },
     {
-     "ru": "Неделя 3. Проба: одно пробное занятие в новой секции.",
-     "en": "Week 3. A tryout: one trial session at a new club.",
-     "de": "Woche 3. Schnuppern: ein Probetraining in einem neuen Verein.",
-     "fr": "Semaine 3. Un essai : une séance découverte dans un nouveau club."
+     "en": "Week 3. A tryout: one new sport tried at home or outside.",
+     "de": "Woche 3. Schnuppern: eine neue Sportart zu Hause oder draußen testen.",
+     "fr": "Semaine 3. Un essai : tester un nouveau sport à la maison ou dehors.",
+     "ru": "Неделя 3. Проба: новый вид спорта дома или во дворе."
     },
     {
      "ru": "Неделя 4. Показ: ребёнок показывает семье навык и выбирает следующий.",
@@ -852,7 +1524,103 @@
      "de": "Woche 4. Vorführung: Ihr Kind zeigt der Familie das Gelernte und wählt die nächste Fertigkeit.",
      "fr": "Semaine 4. Démonstration : votre enfant montre son geste à la famille et choisit le suivant."
     }
-   ]
+   ],
+   "say_age": {
+    "3-5": [
+     {
+      "en": "\"Show me your jump\"",
+      "de": "„Zeig mir, wie du hüpfst“",
+      "fr": "« Montre-moi comment tu sautes »",
+      "ru": "«Покажи, как ты прыгаешь»"
+     },
+     {
+      "en": "\"You tried again and again. Look at you go!\"",
+      "de": "„Du probierst es immer wieder. Und jetzt klappt es!“",
+      "fr": "« Tu essaies encore et encore. Et voilà, ça marche ! »",
+      "ru": "«Ты пробуешь снова и снова. Вот и получилось!»"
+     },
+     {
+      "en": "\"Let's hop like frogs, then story time\"",
+      "de": "„Erst hüpfen wie Frösche, dann vorlesen“",
+      "fr": "« Saute comme une grenouille, puis l'histoire »",
+      "ru": "«Попрыгаем лягушками, потом книжка»"
+     }
+    ],
+    "9-12": [
+     {
+      "en": "\"Teach me how you do that\"",
+      "de": "„Bring mir bei, wie das geht“",
+      "fr": "« Apprends-moi comment tu fais »",
+      "ru": "«Научи меня, как это делается»"
+     },
+     {
+      "en": "\"I can see the practice behind that move\"",
+      "de": "„Man sieht, wie viel Training in dieser Bewegung steckt“",
+      "fr": "« On voit tout l'entraînement derrière ce geste »",
+      "ru": "«Видно, сколько тренировок стоит за этим движением»"
+     },
+     {
+      "en": "\"Take a movement break, then get back to it\"",
+      "de": "„Beweg dich kurz, danach geht es weiter“",
+      "fr": "« Bouge un peu, tu reprendras après »",
+      "ru": "«Разомнись, потом продолжишь»"
+     }
+    ]
+   },
+   "plan_age": {
+    "3-5": [
+     {
+      "en": "Week 1. 5 minutes of animal walks a day. Start with today's activity.",
+      "de": "Woche 1. Jeden Tag 5 Minuten Tiergänge. Starten Sie mit der heutigen Spielidee.",
+      "fr": "Semaine 1. 5 minutes par jour à marcher comme les animaux. Commencez par l'activité du jour.",
+      "ru": "Неделя 1. 5 минут в день ходим как звери. Начните с сегодняшнего задания."
+     },
+     {
+      "en": "Week 2. One skill: walk along a scarf laid on the floor, a little every day.",
+      "de": "Woche 2. Eine Fertigkeit: über einen Schal balancieren, der auf dem Boden liegt, jeden Tag ein bisschen.",
+      "fr": "Semaine 2. Un seul geste : marcher en équilibre sur une écharpe posée au sol, un petit peu chaque jour.",
+      "ru": "Неделя 2. Один навык: пройти по шарфу, лежащему на полу, каждый день понемногу."
+     },
+     {
+      "en": "Week 3. Something new: a pillow obstacle course at home.",
+      "de": "Woche 3. Etwas Neues: ein Parcours aus Kissen im Wohnzimmer.",
+      "fr": "Semaine 3. Une nouveauté : un parcours de coussins à la maison.",
+      "ru": "Неделя 3. Новое: полоса препятствий из подушек дома."
+     },
+     {
+      "en": "Week 4. Show time: your child shows the family a favorite move and takes a bow.",
+      "de": "Woche 4. Vorführung: Ihr Kind zeigt der Familie die Lieblingsbewegung und verbeugt sich.",
+      "fr": "Semaine 4. Démonstration : votre enfant montre son geste préféré à la famille et salue.",
+      "ru": "Неделя 4. Показ: ребёнок показывает семье любимое движение и кланяется."
+     }
+    ],
+    "9-12": [
+     {
+      "en": "Week 1. A 10-minute daily workout they design. Start with today's activity.",
+      "de": "Woche 1. 10 Minuten Training am Tag, selbst geplant. Starten Sie mit der heutigen Spielidee.",
+      "fr": "Semaine 1. 10 minutes d'entraînement par jour, créé par votre enfant. Commencez par l'activité du jour.",
+      "ru": "Неделя 1. 10 минут тренировки в день по своему плану. Начните с сегодняшнего задания."
+     },
+     {
+      "en": "Week 2. One skill: your child sets a measurable goal (juggling, handstand, sprint) and logs it.",
+      "de": "Woche 2. Eine Fertigkeit: Ihr Kind setzt sich ein messbares Ziel (Jonglieren, Handstand, Sprint) und notiert die Fortschritte.",
+      "fr": "Semaine 2. Un seul geste : votre enfant se fixe un objectif mesurable (jonglage, poirier, sprint) et note ses progrès.",
+      "ru": "Неделя 2. Один навык: ребёнок ставит измеримую цель (жонглирование, стойка, спринт) и ведёт записи."
+     },
+     {
+      "en": "Week 3. A tryout: learn a new sport from a video at home.",
+      "de": "Woche 3. Schnuppern: eine neue Sportart per Video zu Hause testen.",
+      "fr": "Semaine 3. Un essai : découvrir un nouveau sport en vidéo à la maison.",
+      "ru": "Неделя 3. Проба: новый вид спорта по видеоуроку дома."
+     },
+     {
+      "en": "Week 4. Coaching: your child teaches the family the skill and sets the next goal.",
+      "de": "Woche 4. Coaching: Ihr Kind bringt der Familie das Gelernte bei und setzt sich das nächste Ziel.",
+      "fr": "Semaine 4. Coaching : votre enfant enseigne son geste à la famille et fixe l'objectif suivant.",
+      "ru": "Неделя 4. В роли тренера: ребёнок учит семью навыку и ставит следующую цель."
+     }
+    ]
+   }
   }
  }
 }
