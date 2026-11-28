@@ -219,7 +219,7 @@ Deno.serve(async (req) => {
       } else if (MODE === "live") {
         if (!order || order.status !== "paid") return json({ error: "order not paid" }, 402);
       } else if (!b.test) return json({ error: "test mode only" }, 400);
-      const { data: existing } = await db.from("sport_test_subscriptions").select("*").eq("order_ref", orderRef).maybeSingle();
+      let { data: existing } = await db.from("sport_test_subscriptions").select("*").eq("order_ref", orderRef).maybeSingle();
       // Заказ уже активирован: токен получает только тот же email (иначе по номеру заказа можно было бы управлять чужой подпиской)
       if (existing && String(existing.email || "").toLowerCase() !== email) return json({ error: "forbidden" }, 403);
       let sub = existing;
@@ -232,8 +232,18 @@ Deno.serve(async (req) => {
           quiz: clip(b.quiz), results: clip(b.results), lang: ["en", "de", "uk", "fr"].includes(String(b.lang)) ? String(b.lang) : "en",
           site: safeSite(String(b.returnTo || "")),
         }).select("*").single();
-        if (error) return json({ error: error.message }, 500);
-        sub = data;
+        if (error) {
+          // Строку уже создал вебхук оплаты (или параллельный запрос): берём её, если email тот же
+          const { data: again } = await db.from("sport_test_subscriptions").select("*").eq("order_ref", orderRef).maybeSingle();
+          if (!again) return json({ error: error.message }, 500);
+          if (String(again.email || "").toLowerCase() !== email) return json({ error: "forbidden" }, 403);
+          sub = again; existing = again;
+        } else sub = data;
+      }
+      // Подписку создал сервер по оплате, без ответов анкеты: браузер дописывает их при первом заходе
+      if (existing && !(existing.quiz && existing.quiz.answers) && !existing.results && b.quiz && b.results) {
+        const { data: upd } = await db.from("sport_test_subscriptions").update({ quiz: clip(b.quiz), results: clip(b.results) }).eq("id", existing.id).select("*").single();
+        if (upd) sub = upd;
       }
       const token = await issueToken(sub.id);
       const site = safeSite(String(b.returnTo || ""));

@@ -121,7 +121,7 @@ const paddleProvider = {
   name: 'paddle',
   get isTest() { return !CONFIG.paddleCheckout || CONFIG.paddleCheckout.env !== 'production'; },
   async mode() { return this.isTest ? 'test' : 'live'; },
-  async startCheckout({ orderId, currency = 'USD', lang, email, discount, returnUrl }) {
+  async startCheckout({ orderId, currency = 'USD', lang, email, discount, returnUrl, product, amount, regular }) {
     const C = CONFIG.paddleCheckout, pr = C && C.prices[currency];
     if (!pr || !pr.price) throw new Error('no paddle price for ' + currency);
     const done = new URL(returnUrl); done.searchParams.set('pay', 'check'); done.searchParams.set('order', orderId);
@@ -152,7 +152,9 @@ const paddleProvider = {
       ...disc,
       ...(email ? { customer: { email, ...(country() ? { address: { countryCode: country() } } : {}) } } : {}),
       // order_ref — связь с заказом; остальное — для покупки в Meta с сервера (Conversions API), email только в виде хеша
-      customData: { order_ref: orderId, ...adContext(), ...(em ? { em } : {}), ...(country() ? { country: country() } : {}) },
+      // st_* — чтобы сервер сам создал подписку и отправил письмо, если покупатель закрыл вкладку до возврата на сайт (email Paddle и так получает)
+      customData: { order_ref: orderId, ...adContext(), ...(em ? { em } : {}), ...(country() ? { country: country() } : {}),
+        ...(product && email ? { st_product: product, st_email: email, st_lang: lang || 'en', st_site: returnUrl, st_first: amount, st_regular: regular } : {}) },
       settings: { displayMode: 'overlay', variant: 'one-page', theme: 'light', locale: lang || 'en', allowLogout: false, successUrl: done.toString() },
     });
     P.Checkout.open(opts(code ? { discountCode: code } : intro));

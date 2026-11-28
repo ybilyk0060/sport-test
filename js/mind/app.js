@@ -223,7 +223,7 @@ function result_(note = '') {
       set({ email, orderId, orderAt: Date.now(), payAmount: amount, waiver: needWithdrawal() }); // сумма фиксируется в момент нажатия: таймер может истечь, пока открыто окно оплаты
       track('pay_click', { provider: payment.name, amount, discount: amount < PRICE.regular, plan: 'sub', currency: CUR });
       const ret = new URL(location.href); ret.search = ''; ret.hash = '';
-      Promise.resolve(payment.startCheckout({ orderId, amount, currency: CUR, lang: LANG, email, discount: amount < PRICE.regular, description: T.title, returnUrl: ret.toString() }))
+      Promise.resolve(payment.startCheckout({ orderId, amount, currency: CUR, lang: LANG, email, discount: amount < PRICE.regular, description: T.title, returnUrl: ret.toString(), product: 'mind', regular: PRICE.regular }))
         .catch(() => { track('pay_error', { provider: payment.name }); toast(P.payError); });
     },
     share: () => share(r),
@@ -336,9 +336,9 @@ function report() {
     ${sec(R.hooks, `<p>${esc(x.hooks)}</p>`)}
     ${sec(R.strengths, `<ul class="points">${x.strengths.map((s) => `<li>${esc(s)}</li>`).join('')}</ul>`)}
     ${sec(R.grow, `<p>${esc(x.grow)}</p>`)}
-    ${sec(R.say, `<div class="says">${x.say.map((s) => `<p>${esc(s)}</p>`).join('')}</div>`)}
+    ${sec(R.say, `<div class="says">${((x.sayAge || {})[age] || x.say).map((s) => `<p>${esc(s)}</p>`).join('')}</div>`)}
     ${sec(R.acts(age), `<p>${esc(x.ages[age].charAt(0).toUpperCase() + x.ages[age].slice(1))}</p>`)}
-    <details class="fold"><summary>${esc(R.plan)}</summary><ol class="plan">${x.plan.map((s) => `<li>${esc(s)}</li>`).join('')}</ol></details>
+    <details class="fold"><summary>${esc(R.plan)}</summary><ol class="plan">${((x.planAge || {})[age] || x.plan).map((s) => `<li>${esc(s)}</li>`).join('')}</ol></details>
     ${x2 ? fold(`${ICON[r.secondary]} ${typeName(r.secondary)}`, `<p>${esc(fill(x2.about))}</p><ul class="points">${x2.strengths.map((s) => `<li>${esc(s)}</li>`).join('')}</ul><p><b>${esc(R.acts(age))}:</b> ${esc(x2.ages[age])}</p>`) : ''}</div>
     <div class="box duo-cta"><b>${esc(R.duo)}</b><span class="small muted">${esc(R.duoLead)}</span><a class="btn line" href="duo.html">${esc(R.duoCta)}</a></div>
     ${CONFIG.appAccess === 'soon' ? `<p class="box small">${esc(R.appsSoon)}</p>` : ''}

@@ -136,6 +136,18 @@ Deno.serve(async (req) => {
             await db.from("sport_test_orders").update({ provider_payload: { id: d.id, status: d.status, origin: d.origin, capi, src: { utm_source: str(d.custom_data?.utm_source, 100), utm_campaign: str(d.custom_data?.utm_campaign, 200), utm_content: str(d.custom_data?.utm_content, 200), utm_term: str(d.custom_data?.utm_term, 200), country: str(d.custom_data?.country, 2), consent: str(d.custom_data?.consent, 12), keys: Object.keys(d.custom_data || {}).join(","), fbc: !!d.custom_data?.fbc, em: !!d.custom_data?.em } } }).eq("order_ref", orderRef);
           }
         }
+        // Покупатель мог закрыть вкладку до возврата на сайт: подписку и письмо с условиями создаём сами (пока только тест мышления).
+        // Повтор безопасен: вторая активация того же заказа возвращает уже созданную строку и письмо не шлёт.
+        const cd = d.custom_data || {};
+        if (type === "transaction.completed" && d.origin !== "subscription_recurring" && cd.st_product === "mind" && str(cd.st_email, 200)) {
+          const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 8000);
+          try {
+            if (subId) await db.from("sport_test_orders").update({ provider_sub: subId }).eq("order_ref", orderRef);
+            const r = await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/sport-test-sub`, { method: "POST", headers: { "content-type": "application/json" }, signal: ctl.signal,
+              body: JSON.stringify({ action: "activate", email: str(cd.st_email, 200), orderRef, currency: cur || "USD", first: Number(cd.st_first) || 0, regular: Number(cd.st_regular) || 0, lang: str(cd.st_lang, 2), returnTo: str(cd.st_site, 300), quiz: { product: "mind" } }) });
+            if (!r.ok) console.error("auto-activate", r.status, (await r.text()).slice(0, 200));
+          } catch (e) { console.error("auto-activate", String(e)); } finally { clearTimeout(t); }
+        }
         // id подписки может прийти позже первого «paid» (transaction.paid → transaction.completed): дописываем всегда
         if (subId) { await db.from("sport_test_orders").update({ provider_sub: subId }).eq("order_ref", orderRef); await db.from("sport_test_subscriptions").update({ provider_sub: subId }).eq("order_ref", orderRef); }
       }

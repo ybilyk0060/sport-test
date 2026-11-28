@@ -25,7 +25,10 @@ for (const L of LANGS) {
     disclaimer: t(spec.disclaimer),
     report: Object.fromEntries(Object.entries(report.types).map(([k, v]) => [k, {
       about: t(v.about), hooks: t(v.hooks), strengths: v.strengths.map(t), grow: t(v.grow), say: v.say.map(t),
-      ages: Object.fromEntries(Object.entries(v.ages).map(([a, x]) => [a, t(x)])), plan: v.plan.map(t), ...(v.extra ? { extra: t(v.extra) } : {}),
+      ages: Object.fromEntries(Object.entries(v.ages).map(([a, x]) => [a, t(x)])), plan: v.plan.map(t),
+      // Фразы и план по возрасту (3-5, 9-12); для 6-8 остаются базовые say и plan
+      ...(v.say_age ? { sayAge: Object.fromEntries(Object.entries(v.say_age).map(([a, xs]) => [a, xs.map(t)])) } : {}),
+      ...(v.plan_age ? { planAge: Object.fromEntries(Object.entries(v.plan_age).map(([a, xs]) => [a, xs.map(t)])) } : {}), ...(v.extra ? { extra: t(v.extra) } : {}),
     }])),
     // Подробная карточка (что понадобится, шаги, что развивает, подсказка) есть не на всех языках: где её нет, показывается короткий текст task
     cards: cards.cards.map((c) => {
