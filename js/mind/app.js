@@ -83,7 +83,7 @@ const cleanUrl = () => { try { history.replaceState(null, '', location.pathname)
 
 // --- Имя и тип ---
 const girl = () => st.intro.gender === 1;
-const childName = () => st.name || T.child;
+const childName = () => T.child; // имя не спрашиваем: в тексте «Ваш ребёнок»
 const typeName = (k) => (girl() ? D.types[k].nameF : D.types[k].name);
 const shadeTag = (r) => (r.shade ? `<span class="tag">${esc(girl() ? D.shade[r.shade].f : D.shade[r.shade].m)}</span>` : '');
 const ICON = { builder: '🧱', inventor: '💡', storyteller: '📖', artist: '🎨', explorer: '🧭', leader: '🚩', helper: '🤝', mover: '⚡' };
@@ -105,8 +105,8 @@ function landing() {
   });
 }
 
-// --- Анкета: возраст, пол, имя, 16 вопросов, 6 утверждений, цель = 26 шагов ---
-const steps = () => ['age', 'gender', 'name', ...D.questions.map((q) => q.id), ...D.sliders.items.map((s) => 's:' + s.id), 'goal'];
+// --- Анкета: возраст, пол, 16 вопросов, 6 утверждений, цель = 25 шагов. Имя ребёнка не спрашиваем. ---
+const steps = () => ['age', 'gender', ...D.questions.map((q) => q.id), ...D.sliders.items.map((s) => 's:' + s.id), 'goal'];
 function quiz() {
   const all = steps(), i = Math.min(st.i || 0, all.length - 1), id = all[i];
   const head = `<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.common.back)}">←</button><div class="progress"><i style="width:${Math.round(((i + 1) / all.length) * 100)}%"></i></div><span class="small muted">${esc(T.quiz.count(i + 1, all.length))}</span></div>`;
@@ -176,7 +176,7 @@ const bar = (k, p, locked = false) => `<div class="mbar${locked ? ' locked' : ''
 // Две верхние шкалы разделяет не больше одного ответа: показываем их как равные, а не «главную» и «вторую»
 const blend = (r) => !!(r.points && r.points[r.primary] - r.points[r.secondary] <= 2);
 function typeCard(r) {
-  return `<div class="strong mind-type ph-no-capture"><span class="ic" aria-hidden="true">${ICON[r.primary]}</span><small>${esc(T.result.kicker(st.name))}</small><b>${esc(typeName(r.primary))}</b><span>${esc(D.types[r.primary].tagline)}</span>${shadeTag(r)}</div>
+  return `<div class="strong mind-type ph-no-capture"><span class="ic" aria-hidden="true">${ICON[r.primary]}</span><small>${esc(T.result.kicker(''))}</small><b>${esc(typeName(r.primary))}</b><span>${esc(D.types[r.primary].tagline)}</span>${shadeTag(r)}</div>
     <p class="second ph-no-capture"><span class="muted">${esc(blend(r) ? T.result.blend : T.result.second)}${LANG === 'fr' ? '\u00a0' : ''}:</span> <b>${esc(typeName(r.secondary))}</b></p>`;
 }
 
@@ -200,7 +200,7 @@ function result_(note = '') {
       <div class="pc-price">${on ? `<s>${esc(money(PRICE.regular))}</s>` : ''}<b>${esc(money(first))}</b></div></div>
       <p class="renew">${esc(P.renew(money(PRICE.regular), SUB.periodDays, fmtDate(renewAt)))}</p>
       <label class="email-field"><span class="small">${esc(P.emailLabel)}</span><input class="field" type="email" inputmode="email" autocomplete="email" data-el="email" value="${esc(st.email || '')}" maxlength="120" placeholder="${esc(P.emailPh)}"></label>
-      ${needWithdrawal() ? `<label class="check small"><input type="checkbox" data-el="withdrawal"${wdOk ? ' checked' : ''}><span>${esc(P.withdrawal)} <a href="${LEGAL.refund}" target="_blank" rel="noopener">${esc(P.withdrawalLink)}</a></span></label>` : ''}
+      ${needWithdrawal() ? `<label class="check small"><input type="checkbox" data-el="withdrawal"${wdOk ? ' checked' : ''}><span>${esc(P.withdrawal)}</span></label>` : ''}
       <p class="fine consent-line">${esc(P.fine(money(first), money(PRICE.regular), SUB.periodDays))}</p>
       <button class="btn" data-act="pay">${esc(P.cta(money(first)))}</button>
       <p class="trust small center">🔒 ${esc(P.trust)}</p></div>
@@ -366,7 +366,12 @@ function daily(showDay = 0) {
   for (let n = today; n >= Math.max(1, today - 6); n--) if (n !== day) earlier.push(n);
   screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.daily.back)}">←</button><b>${esc(T.report.daily)}</b></div>
     <div class="dcard"><div class="row"><span class="tag">${esc(T.daily.title(day))}</span><span class="tag-ok">${esc(T.daily.forAge(age))}</span></div>
-      <h1 class="qtitle">${esc(card.title)}</h1><p class="task">${esc(card.task[age])}</p><p class="small muted">${esc(D.safety)}</p></div>
+      <h1 class="qtitle">${esc(card.title)}</h1>
+      ${card.steps && card.steps[age] ? `${card.need && card.need[age] ? `<p class="need"><b>${esc(T.daily.need)}</b> ${esc(card.need[age])}</p>` : ''}
+        <ol class="dsteps">${card.steps[age].map((s) => `<li>${esc(s)}</li>`).join('')}</ol>
+        ${card.why ? `<p class="dnote"><b>${esc(T.daily.why)}</b> ${esc(card.why)}</p>` : ''}${card.tip ? `<p class="dnote tip"><b>${esc(T.daily.tip)}</b> ${esc(card.tip)}</p>` : ''}`
+      : `<p class="task">${esc(card.task[age])}</p>`}
+      <p class="small muted">${esc(D.safety)}</p></div>
     ${isDone ? `<p class="box center"><b>✓ ${esc(T.daily.doneMsg)}</b></p>` : `<button class="btn" data-act="done">${esc(T.daily.done)}</button>`}
     <div class="row stats"><span>🔥 ${esc(T.daily.streak(streak(doneDays, today)))}</span><span>${esc(T.daily.total(doneDays.length))}</span></div>
     ${today > plan.length ? `<p class="small muted">${esc(T.daily.finished)}</p>` : ''}

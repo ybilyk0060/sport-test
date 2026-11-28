@@ -28,6 +28,13 @@
 .daily-cta { background: var(--accent-soft); box-shadow: none; }
 .dcard { background: var(--card); border-radius: var(--r); padding: 18px; box-shadow: inset 0 0 0 1.5px var(--line); display: grid; gap: 12px; }
 .dcard .task { font-size: 19px; line-height: 1.45; }
+/* Подробная карточка дня: что понадобится, шаги с номерами, что развивает, подсказка родителю */
+.dcard .need { font-size: 15px; line-height: 1.45; background: var(--accent-soft, #efeaff); border-radius: 12px; padding: 10px 12px; margin: 0; }
+.dsteps { list-style: none; counter-reset: st; margin: 0; padding: 0; display: grid; gap: 10px; }
+.dsteps li { counter-increment: st; display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; font-size: 17px; line-height: 1.45; }
+.dsteps li::before { content: counter(st); width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #fff; font-weight: 800; font-size: 14px; }
+.dcard .dnote { font-size: 15px; line-height: 1.45; margin: 0; padding-left: 12px; border-left: 3px solid var(--line); }
+.dcard .dnote.tip { border-left-color: var(--accent); }
 .mind .row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .mind .row.stats { justify-content: space-between; font-weight: 600; font-size: 15px; }
 .days { display: grid; gap: 8px; }

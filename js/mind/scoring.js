@@ -1,11 +1,13 @@
 // Подсчёт теста «Как думает ваш ребёнок». Чистые функции без браузера (проверяются в tests/mind.test.mjs).
-// 16 вопросов: выбранный вариант даёт 2 балла своей шкале (каждая шкала встречается 8 раз, максимум 16).
-// 6 ползунков (1–5): (значение − 3) × 0.5 к связанным шкалам. Процент = балл / 16, от 0 до 100.
+// 16 вопросов: выбранный вариант даёт 2 балла своей шкале. В двух первых вопросах 8 вариантов (все шкалы), в остальных по 4:
+// каждая шкала встречается 9 раз, максимум 18.
+// 6 ползунков (1–5): (значение − 3) × 0.5 к связанным шкалам. Процент = балл / максимум, от 0 до 100.
 // Главный тип — шкала с наибольшим баллом, второй — следующая. При равенстве: выше связанный ползунок, затем шкала, выбранная раньше.
 // Оттенок: среднее «энергии» и «темпа» ≥ 3.5 — быстрый, ≤ 2.5 — вдумчивый, иначе без оттенка.
 import KEY from './key.js';
 
 export const SCALES = KEY.scales;
+const MAX = 2 * KEY.questions.filter((q) => q.scales.includes(SCALES[0])).length;
 
 export function score(answers, sliders) {
   const pts = Object.fromEntries(SCALES.map((s) => [s, 0]));
@@ -23,7 +25,7 @@ export function score(answers, sliders) {
     for (const s of scales) { pts[s] += (v - 3) * 0.5; linked[s] = Math.max(linked[s], v); }
   }
   const order = [...SCALES].sort((a, b) => pts[b] - pts[a] || linked[b] - linked[a] || (firstPick[a] ?? 99) - (firstPick[b] ?? 99) || SCALES.indexOf(a) - SCALES.indexOf(b));
-  const percent = Object.fromEntries(SCALES.map((s) => [s, Math.min(100, Math.round((100 * Math.max(pts[s], 0)) / 16))]));
+  const percent = Object.fromEntries(SCALES.map((s) => [s, Math.min(100, Math.round((100 * Math.max(pts[s], 0)) / MAX))]));
   const e = Number(sliders.energy), p = Number(sliders.pace);
   const avg = e >= 1 && p >= 1 ? (e + p) / 2 : 3;
   return { points: pts, percent, order, primary: order[0], secondary: order[1], shade: avg >= 3.5 ? 'swift' : avg <= 2.5 ? 'calm' : null };

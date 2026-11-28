@@ -106,6 +106,42 @@
       "de": "Malt, knetet, schneidet aus",
       "fr": "Dessine, fait de la pâte à modeler, découpe"
      }
+    },
+    {
+     "scale": "inventor",
+     "text": {
+      "ru": "Разбирает вещи или ставит опыты: что будет, если…",
+      "en": "Takes things apart or tests \"what happens if…\"",
+      "de": "Nimmt Dinge auseinander oder probiert aus, was dann passiert",
+      "fr": "Démonte des objets ou fait des essais pour voir ce qui se passe"
+     }
+    },
+    {
+     "scale": "explorer",
+     "text": {
+      "ru": "Рассматривает, наблюдает, что-то ищет и находит",
+      "en": "Looks closely, watches, searches and finds things",
+      "de": "Schaut genau hin, beobachtet, sucht und findet etwas",
+      "fr": "Observe, regarde de près, cherche et trouve des choses"
+     }
+    },
+    {
+     "scale": "leader",
+     "text": {
+      "ru": "Зовёт других и придумывает общую игру",
+      "en": "Gathers others and starts a game for everyone",
+      "de": "Holt andere dazu und denkt sich ein gemeinsames Spiel aus",
+      "fr": "Appelle les autres et lance un jeu pour tout le monde"
+     }
+    },
+    {
+     "scale": "helper",
+     "text": {
+      "ru": "Идёт помогать вам или заботится о ком-то",
+      "en": "Comes to help you or looks after someone",
+      "de": "Kommt helfen oder kümmert sich um jemanden",
+      "fr": "Vient vous aider ou s'occupe de quelqu'un"
+     }
     }
    ]
   },
@@ -154,6 +190,42 @@
       "en": "Finds from outside: stones, bugs, sticks",
       "de": "Fundstücke von draußen: Steine, Käfer, Stöcke",
       "fr": "Trésors ramassés dehors : cailloux, insectes, bâtons"
+     }
+    },
+    {
+     "scale": "builder",
+     "text": {
+      "ru": "Конструкторы и кубики",
+      "en": "Building sets and blocks",
+      "de": "Baukästen und Bausteine",
+      "fr": "Jeux de construction et cubes"
+     }
+    },
+    {
+     "scale": "storyteller",
+     "text": {
+      "ru": "Книги, фигурки и игрушки для историй",
+      "en": "Books, figures and toys for stories",
+      "de": "Bücher, Figuren und Spielzeug zum Geschichtenspielen",
+      "fr": "Livres, figurines et jouets pour raconter des histoires"
+     }
+    },
+    {
+     "scale": "artist",
+     "text": {
+      "ru": "Краски, пластилин, наборы для творчества",
+      "en": "Paints, modeling clay, craft kits",
+      "de": "Farben, Knete, Bastelsets",
+      "fr": "Peinture, pâte à modeler, coffrets créatifs"
+     }
+    },
+    {
+     "scale": "mover",
+     "text": {
+      "ru": "Мяч, самокат, скакалка: всё для движения",
+      "en": "A ball, a scooter, a jump rope: anything for moving",
+      "de": "Ball, Roller, Springseil: alles für Bewegung",
+      "fr": "Ballon, trottinette, corde à sauter : tout ce qui fait bouger"
      }
     }
    ]

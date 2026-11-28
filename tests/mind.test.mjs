@@ -7,11 +7,11 @@ import { UI } from '../js/mind/texts.js';
 let n = 0;
 const ok = (name, fn) => { fn(); n++; };
 
-ok('ключ: 16 вопросов по 4 варианта, каждая шкала 8 раз', () => {
+ok('ключ: 16 вопросов по 4 или 8 вариантов, каждая шкала 9 раз', () => {
   assert.equal(KEY.questions.length, 16);
   const cnt = {};
-  for (const q of KEY.questions) { assert.equal(q.scales.length, 4); assert.equal(new Set(q.scales).size, 4); for (const s of q.scales) cnt[s] = (cnt[s] || 0) + 1; }
-  for (const s of SCALES) assert.equal(cnt[s], 8, s);
+  for (const q of KEY.questions) { assert.ok([4, 8].includes(q.scales.length)); assert.equal(new Set(q.scales).size, q.scales.length); for (const s of q.scales) cnt[s] = (cnt[s] || 0) + 1; }
+  for (const s of SCALES) assert.equal(cnt[s], 9, s);
 });
 
 const allOf = (scale) => Object.fromEntries(KEY.questions.map((q) => [q.id, q.scales.indexOf(scale)]).filter(([, i]) => i >= 0));
@@ -27,7 +27,7 @@ ok('все ответы одной шкалы: она главная, 100%', () 
 });
 ok('ползунки двигают шкалы и ограничены 0–100', () => {
   const hi = score(allOf('mover'), { ...mid, energy: 5 });
-  assert.equal(hi.points.mover, 17); assert.equal(hi.percent.mover, 100);
+  assert.equal(hi.points.mover, 19); assert.equal(hi.percent.mover, 100);
   const lo = score({}, { ...mid, energy: 1 });
   assert.equal(lo.points.mover, -1); assert.equal(lo.percent.mover, 0);
 });

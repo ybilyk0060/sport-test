@@ -7,11 +7,11 @@ const N = ' ';
 export const UI = {
   en: {
     lang: 'en',
-    title: 'How does your child think? A 3-minute test for parents',
+    title: 'What kind of thinker is your child? A 3-minute test for parents',
     land: {
       kicker: 'For parents of children aged 3 to 12',
-      h1: 'How does your child think?',
-      sub: 'Answer a few questions about everyday life and see your child’s thinking style, strengths and the activities that fit.',
+      h1: 'What kind of thinker is your child?',
+      sub: 'Answer a few questions about everyday life and see your child’s thinking style, the strengths they can build on as they grow, and the activities that fit.',
       points: ['Takes 3 minutes. You answer. Your child doesn’t need to be there', 'No camera, no sign-up', 'The result shows one of 8 thinking styles'],
       cta: 'Start the test',
       note: 'This is not a medical or psychological assessment. It describes interests and strengths as you see them.',
@@ -91,6 +91,7 @@ export const UI = {
       needTest: 'Your subscription is active. Take the 3-minute test to open the report.',
     },
     daily: {
+      need: 'You need:', why: 'What it builds:', tip: 'Tip for you:',
       title: (n) => `Day ${n}`,
       forAge: (age) => `Ages ${age}`,
       done: 'We did it',
@@ -117,11 +118,11 @@ export const UI = {
 
   de: {
     lang: 'de',
-    title: 'Wie denkt Ihr Kind? Ein 3-Minuten-Test für Eltern',
+    title: 'Welcher Denktyp ist Ihr Kind? Ein 3-Minuten-Test für Eltern',
     land: {
       kicker: 'Für Eltern von Kindern von 3 bis 12 Jahren',
-      h1: 'Wie denkt Ihr Kind?',
-      sub: 'Beantworten Sie ein paar Fragen aus dem Alltag und sehen Sie den Denkstil Ihres Kindes, seine Stärken und passende Aktivitäten.',
+      h1: 'Welcher Denktyp ist Ihr Kind?',
+      sub: 'Beantworten Sie ein paar Fragen aus dem Alltag und sehen Sie den Denkstil Ihres Kindes, die Stärken, auf die es später bauen kann, und passende Aktivitäten.',
       points: ['Dauert 3 Minuten. Sie antworten, Ihr Kind muss nicht dabei sein', 'Ohne Kamera, ohne Anmeldung', 'Das Ergebnis zeigt einen von 8 Denkstilen'],
       cta: 'Test starten',
       note: 'Dies ist keine medizinische oder psychologische Beurteilung. Der Test beschreibt Interessen und Stärken so, wie Sie sie beobachten.',
@@ -201,6 +202,7 @@ export const UI = {
       needTest: 'Ihr Abo ist aktiv. Machen Sie den 3-Minuten-Test, um den Bericht zu öffnen.',
     },
     daily: {
+      need: 'Sie brauchen:', why: 'Das fördert es:', tip: 'Tipp für Sie:',
       title: (n) => `Tag ${n}`,
       forAge: (age) => `${age} Jahre`,
       done: 'Geschafft',
@@ -226,11 +228,11 @@ export const UI = {
 
   fr: {
     lang: 'fr',
-    title: `Comment pense votre enfant${N}? Un test de 3 minutes pour les parents`,
+    title: `Quel est le style de pensée de votre enfant${N}? Un test de 3 minutes pour les parents`,
     land: {
       kicker: 'Pour les parents d’enfants de 3 à 12 ans',
-      h1: `Comment pense votre enfant${N}?`,
-      sub: 'Répondez à quelques questions sur la vie de tous les jours et découvrez le style de pensée de votre enfant, ses points forts et les activités qui lui conviennent.',
+      h1: `Quel est le style de pensée de votre enfant${N}?`,
+      sub: 'Répondez à quelques questions sur la vie de tous les jours et découvrez le style de pensée de votre enfant, les points forts qui l’aideront à grandir et les activités adaptées.',
       points: ['3 minutes. Vous répondez, la présence de votre enfant n’est pas nécessaire', 'Sans caméra, sans inscription', 'Le résultat indique l’un des 8 styles de pensée'],
       cta: 'Commencer le test',
       note: 'Ce test n’est pas une évaluation médicale ou psychologique. Il décrit les centres d’intérêt et les points forts tels que vous les observez.',
@@ -310,6 +312,7 @@ export const UI = {
       needTest: 'Votre abonnement est actif. Faites le test de 3 minutes pour ouvrir le rapport.',
     },
     daily: {
+      need: `Il vous faut${N}:`, why: `Ce que cela développe${N}:`, tip: `Conseil pour vous${N}:`,
       title: (n) => `Jour ${n}`,
       forAge: (age) => `${age} ans`,
       done: 'C’est fait',
@@ -335,11 +338,11 @@ export const UI = {
 
   ru: {
     lang: 'ru',
-    title: 'Как думает ваш ребёнок? Тест на 3 минуты для родителей',
+    title: 'Какой тип мышления у вашего ребёнка? Тест на 3 минуты для родителей',
     land: {
       kicker: 'Для родителей детей от 3 до 12 лет',
-      h1: 'Как думает ваш ребёнок?',
-      sub: 'Ответьте на несколько вопросов о повседневной жизни и узнайте склад ума ребёнка, его сильные стороны и подходящие занятия.',
+      h1: 'Какой тип мышления у вашего ребёнка?',
+      sub: 'Ответьте на несколько вопросов о повседневной жизни и узнайте тип мышления ребёнка, сильные стороны, на которые он сможет опереться в будущем, и подходящие занятия.',
       points: ['3 минуты. Отвечаете вы, ребёнок рядом не нужен', 'Без камеры и без регистрации', 'В результате один из 8 типов мышления'],
       cta: 'Начать тест',
       note: 'Это не медицинская и не психологическая оценка. Тест описывает интересы и сильные стороны так, как их видите вы.',
@@ -419,6 +422,7 @@ export const UI = {
       needTest: 'Подписка активна. Пройдите тест на 3 минуты, чтобы открыть отчёт.',
     },
     daily: {
+      need: 'Понадобится:', why: 'Что развивает:', tip: 'Подсказка родителю:',
       title: (n) => `День ${n}`,
       forAge: (age) => `${age} лет`,
       done: 'Сделали',

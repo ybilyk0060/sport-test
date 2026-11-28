@@ -27,7 +27,15 @@ for (const L of LANGS) {
       about: t(v.about), hooks: t(v.hooks), strengths: v.strengths.map(t), grow: t(v.grow), say: v.say.map(t),
       ages: Object.fromEntries(Object.entries(v.ages).map(([a, x]) => [a, t(x)])), plan: v.plan.map(t), ...(v.extra ? { extra: t(v.extra) } : {}),
     }])),
-    cards: cards.cards.map((c) => ({ id: c.id, scale: c.scale, title: t(c.title), task: Object.fromEntries(Object.entries(c.task).map(([a, x]) => [a, t(x)])) })),
+    // Подробная карточка (что понадобится, шаги, что развивает, подсказка) есть не на всех языках: где её нет, показывается короткий текст task
+    cards: cards.cards.map((c) => {
+      const opt = (o) => (o && typeof o[L] === 'string' && o[L].trim() ? fix(o[L], L) : undefined);
+      const byAge = (m, f) => (m ? Object.fromEntries(Object.entries(m).map(([a, x]) => [a, f(x)]).filter(([, v]) => v)) : {});
+      const need = byAge(c.need, opt), steps = byAge(c.steps, (x) => (Array.isArray(x[L]) && x[L].length ? x[L].map((s) => fix(s, L)) : undefined));
+      return { id: c.id, scale: c.scale, title: t(c.title), task: Object.fromEntries(Object.entries(c.task).map(([a, x]) => [a, t(x)])),
+        ...(opt(c.why) ? { why: opt(c.why) } : {}), ...(opt(c.tip) ? { tip: opt(c.tip) } : {}),
+        ...(Object.keys(need).length ? { need } : {}), ...(Object.keys(steps).length ? { steps } : {}) };
+    }),
     safety: t(cards.safety_note),
   };
   writeFileSync(`${root}js/mind/data-${L}.js`, `// Собрано tools/build-mind-data.mjs из mind-src/*.json. Руками не править.\nexport default ${JSON.stringify(data)};\n`);

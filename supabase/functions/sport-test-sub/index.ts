@@ -89,7 +89,7 @@ async function changeSub(sub: Record<string, any>, action: "cancel" | "resume"):
   const { data } = await db.from("sport_test_subscriptions").update(patch).eq("id", sub.id).select("*").single();
   return { ok: true, data };
 }
-const senderFor = (s: Record<string, any>) => (isMind(s) ? ({ de: "Wie denkt Ihr Kind?", fr: "Comment pense votre enfant ?" } as Record<string, string>)[String(s.lang)] || "How does your child think?" : undefined);
+const senderFor = (s: Record<string, any>) => (isMind(s) ? ({ de: "Welcher Denktyp ist Ihr Kind?", fr: "Quel est le style de pensée de votre enfant ?" } as Record<string, string>)[String(s.lang)] || "What kind of thinker is your child?" : undefined);
 function cancelMail(lang: string, s: Record<string, any>, link: string) {
   const L = ["de", "fr", "uk"].includes(lang) ? lang : "en";
   const until = fmtDate(s.paid_until, L);
@@ -137,21 +137,21 @@ function mindMail(kind: "terms" | "d3" | "d7" | "retest", lang: string, s: Recor
   const until = fmtDate(s.paid_until, L);
   const M = {
     en: {
-      terms: { subject: "You’re subscribed: “How does your child think?”", text: `Thank you! Your subscription is active.\n\nFirst payment: ${first} for ${PERIOD_DAYS} days.\nThen ${regular} every ${PERIOD_DAYS} days, starting ${until}, until you cancel.\n\nOpen the full report, today’s activity and your subscription settings (cancel in two taps) on any device:\n${link}${appsLine("en")}` },
+      terms: { subject: "You’re subscribed: “What kind of thinker is your child?”", text: `Thank you! Your subscription is active.\n\nFirst payment: ${first} for ${PERIOD_DAYS} days.\nThen ${regular} every ${PERIOD_DAYS} days, starting ${until}, until you cancel.\n\nOpen the full report, today’s activity and your subscription settings (cancel in two taps) on any device:\n${link}${appsLine("en")}` },
       d3: { subject: "Today’s 10 minutes together", text: `Three days in. Each day there is one short activity picked for your child’s thinking style: 5 to 10 minutes together, no screen, with things you already have at home.\n\nOpen today’s activity:\n${link}` },
       d7: { subject: "One week in: what did you notice?", text: `A week of short activities is enough to see what pulls your child in and what doesn’t. The report has phrases that build confidence: try one today.\n\nOpen the report and today’s activity:\n${link}${appsLine("en")}` },
       retest: { subject: "A month has passed: take the test again", text: `Children change fast. Answer the questions again (3 minutes) and see what has shifted in your child’s interests and strengths.\n\nOpen:\n${link}` },
       q: "Questions",
     },
     de: {
-      terms: { subject: "Abo abgeschlossen: „Wie denkt Ihr Kind?“", text: `Danke! Ihr Abo ist aktiv.\n\nErste Zahlung: ${first} für ${PERIOD_DAYS} Tage.\nDanach ${regular} alle ${PERIOD_DAYS} Tage, erstmals am ${until}, bis Sie kündigen.\n\nBericht, Spielidee des Tages und „Mein Abo“ (Kündigung mit zwei Klicks) auf jedem Gerät öffnen:\n${link}${appsLine("de")}` },
+      terms: { subject: "Abo abgeschlossen: „Welcher Denktyp ist Ihr Kind?“", text: `Danke! Ihr Abo ist aktiv.\n\nErste Zahlung: ${first} für ${PERIOD_DAYS} Tage.\nDanach ${regular} alle ${PERIOD_DAYS} Tage, erstmals am ${until}, bis Sie kündigen.\n\nBericht, Spielidee des Tages und „Mein Abo“ (Kündigung mit zwei Klicks) auf jedem Gerät öffnen:\n${link}${appsLine("de")}` },
       d3: { subject: "Ihre 10 Minuten für heute", text: `Drei Tage sind vorbei. Jeden Tag gibt es eine kurze Spielidee passend zum Denkstil Ihres Kindes: 5 bis 10 Minuten gemeinsam, ohne Bildschirm, mit Dingen, die Sie zu Hause haben.\n\nIdee für heute öffnen:\n${link}` },
       d7: { subject: "Eine Woche ist geschafft: Was ist Ihnen aufgefallen?", text: `Eine Woche mit kurzen Spielideen reicht, um zu sehen, was Ihr Kind fesselt und was nicht. Im Bericht stehen Sätze, die Selbstvertrauen stärken: Probieren Sie heute einen aus.\n\nBericht und Idee für heute öffnen:\n${link}${appsLine("de")}` },
       retest: { subject: "Ein Monat ist vorbei: Machen Sie den Test noch einmal", text: `Kinder verändern sich schnell. Beantworten Sie die Fragen noch einmal (3 Minuten) und sehen Sie, was sich bei Interessen und Stärken Ihres Kindes verschoben hat.\n\nÖffnen:\n${link}` },
       q: "Fragen",
     },
     fr: {
-      terms: { subject: "Abonnement confirmé : « Comment pense votre enfant ? »", text: `Merci ! Votre abonnement est actif.\n\nPremier paiement : ${first} pour ${PERIOD_DAYS} jours.\nEnsuite ${regular} tous les ${PERIOD_DAYS} jours, à partir du ${until}, jusqu’à la résiliation.\n\nOuvrez le rapport complet, l’activité du jour et la gestion de l’abonnement (résiliation en deux clics) sur n’importe quel appareil :\n${link}${appsLine("fr")}` },
+      terms: { subject: "Abonnement confirmé : « Quel est le style de pensée de votre enfant ? »", text: `Merci ! Votre abonnement est actif.\n\nPremier paiement : ${first} pour ${PERIOD_DAYS} jours.\nEnsuite ${regular} tous les ${PERIOD_DAYS} jours, à partir du ${until}, jusqu’à la résiliation.\n\nOuvrez le rapport complet, l’activité du jour et la gestion de l’abonnement (résiliation en deux clics) sur n’importe quel appareil :\n${link}${appsLine("fr")}` },
       d3: { subject: "Les 10 minutes d’aujourd’hui", text: `Trois jours déjà. Chaque jour, une courte activité est choisie selon le style de pensée de votre enfant : 5 à 10 minutes ensemble, sans écran, avec ce que vous avez à la maison.\n\nOuvrir l’activité du jour :\n${link}` },
       d7: { subject: "Une semaine déjà : qu’avez-vous remarqué ?", text: `Une semaine de courtes activités suffit pour voir ce qui passionne votre enfant et ce qui l’ennuie. Le rapport propose des phrases qui donnent confiance : essayez-en une aujourd’hui.\n\nOuvrir le rapport et l’activité du jour :\n${link}` },
       retest: { subject: "Un mois a passé : refaites le test", text: `Les enfants changent vite. Répondez de nouveau aux questions (3 minutes) et voyez ce qui a évolué dans les centres d’intérêt et les points forts de votre enfant.\n\nOuvrir :\n${link}` },
