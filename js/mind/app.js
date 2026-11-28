@@ -7,7 +7,7 @@
 import { CONFIG } from '../config.js?v=7a4e716-mx078zpq';
 import { payment, newOrderId, loadPaddle } from '../payment.js?v=7a4e716-mx078zpq';
 import { track as trackRaw, state as visitor } from '../store.js?v=7a4e716-mx078zpq';
-import { initConsent, sendLead } from '../analytics.js?v=7a4e716-mx078zpq';
+import { initConsent, sendLead, screenView } from '../analytics.js?v=7a4e716-mx078zpq';
 import * as subapi from '../subapi.js?v=7a4e716-mx078zpq';
 import { UI } from './texts.js?v=7a4e716-mx078zpq';
 import { score, dailyPlan, dayNumber, streak } from './scoring.js?v=7a4e716-mx078zpq';
@@ -54,7 +54,7 @@ const KEY = 'mindtest.v1.state';
 const fresh = () => ({ step: 'landing', i: 0, intro: {}, name: '', answers: {}, sliders: {}, goal: null, result: null, email: '', orderId: null, payAmount: null, pending: null, pendingAt: 0, sub: null, subToken: null, done: {}, doneFor: 0, startedAt: Date.now() });
 let st = fresh();
 try { const v = JSON.parse(localStorage.getItem(KEY) || 'null'); if (v && typeof v === 'object') st = { ...fresh(), ...v }; } catch { /* нет доступа */ }
-const set = (patch) => { Object.assign(st, patch); try { localStorage.setItem(KEY, JSON.stringify(st)); } catch { /* нет доступа */ } return st; };
+const set = (patch) => { Object.assign(st, patch); try { localStorage.setItem(KEY, JSON.stringify(st)); } catch { /* нет доступа */ } if (patch.step) screenView('mind', patch.step, LANG); return st; };
 const track = (name, props = {}) => trackRaw(`mind_${name}`, { app: 'mind', lang: LANG, ...props });
 
 // --- Экран ---
@@ -62,6 +62,8 @@ let timer = 0;
 // Кнопка «назад» браузера (во встроенном браузере Facebook она главная): внутри анкеты ведёт на предыдущий вопрос, а не с сайта
 let onBack = null;
 window.addEventListener('popstate', () => { if (onBack) onBack(); });
+// Картинка задания не загрузилась: остаётся плашка с эмодзи
+document.addEventListener('error', (e) => { const el = e.target; if (el && el.matches && el.matches('.dart img')) { el.parentNode.classList.remove('pic'); el.remove(); } }, true);
 function screen(html, handlers = {}) {
   clearInterval(timer);
   onBack = null;
@@ -229,6 +231,12 @@ function result_(note = '') {
   // Введённый email не пропадает, когда таймер перерисовывает экран
   const emailEl = app.querySelector('[data-el=email]');
   if (emailEl) emailEl.addEventListener('input', () => set({ email: emailEl.value.trim().slice(0, 120) }));
+  // Цена ниже первого экрана: отдельно считаем тех, кто до неё долистал
+  const pc = app.querySelector('.price-card');
+  if (pc && !st.priceSeen && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { io.disconnect(); if (!st.priceSeen) { set({ priceSeen: true }); track('price_seen', { amount: first, currency: CUR }); } } }, { threshold: 0.5 });
+    io.observe(pc);
+  }
   if (on) timer = setInterval(() => {
     const left = d - Date.now();
     const el = app.querySelector('[data-el=offer-timer]');
@@ -360,7 +368,7 @@ function daily(showDay = 0) {
   for (let n = today; n >= Math.max(1, today - 6); n--) if (n !== day) earlier.push(n);
   screen(`<div class="qhead"><button class="back" data-act="back" aria-label="${esc(T.daily.back)}">←</button><b>${esc(T.report.daily)}</b></div>
     <div class="dcard"><div class="row"><span class="tag">${esc(T.daily.title(day))}</span><span class="tag-ok">${esc(T.daily.forAge(age))}</span></div>
-      ${card.art ? `<div class="dart s-${card.scale}" aria-hidden="true">${[...new Intl.Segmenter().segment(card.art)].map((x) => `<span>${x.segment}</span>`).join('')}</div>` : ''}
+      ${card.art ? `<div class="dart pic s-${card.scale}" aria-hidden="true"><img src="img/mind/cards/${esc(card.id)}.webp" alt="" width="800" height="447" decoding="async">${[...new Intl.Segmenter().segment(card.art)].map((x) => `<span>${x.segment}</span>`).join('')}</div>` : ''}
       <h1 class="qtitle">${esc(card.title)}</h1>
       ${card.steps && card.steps[age] ? `${card.need && card.need[age] ? `<p class="need"><b>${esc(T.daily.need)}</b> ${esc(card.need[age])}</p>` : ''}
         <ol class="dsteps">${card.steps[age].map((s) => `<li>${esc(s)}</li>`).join('')}</ol>

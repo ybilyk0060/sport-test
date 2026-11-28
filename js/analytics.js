@@ -28,7 +28,7 @@ let ttOn = false;
 
 // Шаги воронки, которые уходят наружу (остальные события — только на устройстве)
 const FUNNEL = new Set(['open', 'camera_blocked_shown', 'open_in_chrome_click', 'open_in_safari_click', 'fallback_start', 'quiz_start', 'quiz_answer', 'prep_shown', 'link_form_open', 'link_requested', 'camera_granted', 'camera_denied', 'test_start', 'exercise_done', 'test_done',
-  'result_shown', 'paywall_shown', 'offer_timer_end', 'pay_click', 'checkout_open', 'checkout_closed', 'checkout_failed', 'paid', 'pay_cancelled', 'report_shown', 'workout_start', 'workout_done', 'sub_cancelled', 'gift_code', 'app_link']);
+  'quiz_done', 'price_seen', 'daily_open', 'daily_done', 'result_shown', 'paywall_shown', 'offer_timer_end', 'pay_click', 'checkout_open', 'checkout_closed', 'checkout_failed', 'paid', 'pay_cancelled', 'report_shown', 'workout_start', 'workout_done', 'sub_cancelled', 'gift_code', 'app_link']);
 // Только безопасные поля
 const SAFE = ['order', 'fps', 'ms', 'q', 'step', 'reason', 'confirm', 'via', 'n', 'key', 'skipped', 'amount', 'currency', 'discount', 'mode', 'summary', 'plan', 'test', 'app', 'id', 'lang', 'kind', 'via', 'ok', 'browser', 'platform', 'inApp', 'provider', 'utm', 'ref', 'choice', 'done', 'target', 'error', 'regular', 'light', 'how'];
 const clean = (p) => Object.fromEntries(Object.entries(p || {}).filter(([k, v]) => SAFE.includes(k) && v !== undefined && v !== null));
@@ -134,7 +134,7 @@ export function send(name, props = {}) {
     if (ttOn && window.ttq && FUNNEL.has(std)) {
       const money = p.amount ? { value: p.amount, currency: p.currency } : {};
       if (std === 'quiz_start') window.ttq.track('ViewContent', { content_name: 'quiz' });
-      if (std === 'test_done') window.ttq.track('CompleteRegistration', { content_name: 'test_done' });
+      if (std === 'test_done' || name === 'mind_quiz_done') window.ttq.track('CompleteRegistration', { content_name: std });
       if (std === 'paywall_shown') window.ttq.track('InitiateCheckout', money);
       if (std === 'pay_click') window.ttq.track('AddPaymentInfo', money);
       let promoT = false; try { promoT = !!sessionStorage.getItem('sporttest.code'); } catch { /* нет */ }
@@ -142,7 +142,7 @@ export function send(name, props = {}) {
     }
     if (window.fbq && FUNNEL.has(std)) {
       if (std === 'quiz_start') window.fbq('track', 'ViewContent', { content_name: 'quiz' });
-      if (std === 'test_done') window.fbq('track', 'CompleteRegistration', { content_name: 'test_done' });
+      if (std === 'test_done' || name === 'mind_quiz_done') window.fbq('track', 'CompleteRegistration', { content_name: std }); // у теста без камеры «тест пройден» = анкета завершена
       // Схема событий для рекламы (тред Meta 25.11): ViewContent — старт, CompleteRegistration — камера пройдена,
       // InitiateCheckout — пейвол, AddPaymentInfo — нажал «Оплатить», Purchase (+Subscribe) — оплата.
       if (std === 'paywall_shown') window.fbq('track', 'InitiateCheckout', { value: p.amount, currency: p.currency });
@@ -209,3 +209,16 @@ export function sendLead(sid) {
   } catch { /* нет */ }
 }
 
+
+// Экран одностраничного теста → отдельный «просмотр страницы» в PostHog: тепловые карты и записи делятся по экранам
+// (адрес получает метку #экран; сам сайт её не читает). В рекламные кабинеты не уходит.
+let lastScreen = '';
+export function screenView(app, name, lang) {
+  try {
+    const h = '#' + name;
+    if (location.hash !== h) history.replaceState(history.state, '', location.pathname + location.search + h);
+    if (name === lastScreen) return;
+    lastScreen = name;
+    if (window.posthog) { window.posthog.register({ app, lang }); window.posthog.capture('$pageview', { screen: name }); }
+  } catch { /* аналитика не должна ломать страницу */ }
+}

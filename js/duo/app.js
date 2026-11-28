@@ -2,7 +2,7 @@
 // из теста «Как думает ваш ребёнок» (читается с устройства: mindtest.v1.state). Полный результат открыт подписчикам;
 // без подписки видны стиль родителя и общий вывод, остальное ведёт к тесту ребёнка. Своей оплаты здесь нет.
 import { track as trackRaw } from '../store.js?v=7a4e716-mx078zpq';
-import { initConsent } from '../analytics.js?v=7a4e716-mx078zpq';
+import { initConsent, screenView } from '../analytics.js?v=7a4e716-mx078zpq';
 import { LANGS, pick, QUESTIONS, STYLE, GIVE, WATCH, NEEDS, TOGETHER, UI } from './data.js?v=7a4e716-mx078zpq';
 
 const app = document.getElementById('app');
@@ -28,7 +28,7 @@ const readMind = () => { try { return JSON.parse(localStorage.getItem('mindtest.
 const KEY = 'duotest.v1.state';
 let st = { step: 'landing', i: 0, answers: [], child: null, parent: null };
 try { const v = JSON.parse(localStorage.getItem(KEY) || 'null'); if (v && typeof v === 'object') st = { ...st, ...v }; } catch { /* нет доступа */ }
-const set = (patch) => { Object.assign(st, patch); try { localStorage.setItem(KEY, JSON.stringify(st)); } catch { /* нет доступа */ } };
+const set = (patch) => { Object.assign(st, patch); try { localStorage.setItem(KEY, JSON.stringify(st)); } catch { /* нет доступа */ } if (patch.step) screenView('duo', patch.step, LANG); };
 const track = (name, props = {}) => trackRaw(`duo_${name}`, { app: 'duo', lang: LANG, ...props });
 
 function screen(html, handlers = {}) {
