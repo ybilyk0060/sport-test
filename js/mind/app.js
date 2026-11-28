@@ -192,19 +192,19 @@ function result_(note = '') {
   const renewAt = Date.now() + SUB.periodDays * DAY;
   screen(`${typeCard(r)}
     <h2 class="sec-title">${esc(T.result.top)}</h2>
-    <div class="mbars ph-no-capture">${r.order.slice(0, 3).map((k) => bar(k, r.percent[k])).join('')}${r.order.slice(3).map((k) => bar(k, 0, true)).join('')}</div>
+    <div class="mbars ph-no-capture">${r.order.slice(0, 3).map((k) => bar(k, r.percent[k])).join('')}</div>
+    <div class="type-chips locked-chips ph-no-capture">${r.order.slice(3).map((k) => `<span>🔒 ${esc(typeName(k))}</span>`).join('')}</div>
     <p class="lead ph-no-capture">${esc(fill(D.report[r.primary].about))}</p>
     <div class="paywall" id="paywall"><h2>${esc(P.title)}</h2>${note ? `<p class="err">${esc(note)}</p>` : ''}
-    <h3>${esc(T.result.lockedTitle)}</h3><ul class="points checks-list">${T.result.locked.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+    <ul class="points checks-list">${T.result.locked.filter((_, i) => [0, 1, 4, 5].includes(i)).map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
     <div class="price-card${on ? '' : ' no-disc'}">${on ? `<span class="disc">${esc(P.discount(pct()))}</span><div class="timer" data-el="offer-timer">${esc(P.timer(mmss(d - Date.now())))}</div>` : `<div class="timer over">${esc(P.timerOver)}</div>`}
-      <div class="pc-row"><div><b>${esc(P.firstLabel(SUB.periodDays))}</b><small>${esc(P.perDay(money(Math.round((first / SUB.periodDays) * 100) / 100), on ? money(Math.round((PRICE.regular / SUB.periodDays) * 100) / 100) : ''))}</small></div>
+      <div class="pc-row"><div><b>${esc(P.firstLabel(SUB.periodDays))}</b></div>
       <div class="pc-price">${on ? `<s>${esc(money(PRICE.regular))}</s>` : ''}<b>${esc(money(first))}</b></div></div>
       <p class="renew">${esc(P.renew(money(PRICE.regular), SUB.periodDays, fmtDate(renewAt)))}</p>
       <label class="email-field"><span class="small">${esc(P.emailLabel)}</span><input class="field" type="email" inputmode="email" autocomplete="email" data-el="email" value="${esc(st.email || '')}" maxlength="120" placeholder="${esc(P.emailPh)}"></label>
       <p class="fine consent-line">${esc(P.fine(money(first), money(PRICE.regular), SUB.periodDays))}${needWithdrawal() ? ' ' + esc(P.instant) : ''}</p>
       <button class="btn" data-act="pay">${esc(P.cta(money(first)))}</button>
       <p class="trust small center">🔒 ${esc(P.trust)}</p></div>
-    <h3>${esc(P.inside)}</h3><ul class="points checks-list">${P.items.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
     <p class="fine">${esc(D.disclaimer)}</p>
     ${legalLinks()}</div>
     <button class="btn line" data-act="share">${esc(T.result.share)}</button>
@@ -324,7 +324,7 @@ function report() {
   const R = T.report, x = D.report[r.primary], age = st.intro.age || '6-8';
   const sec = (title, body) => `<h2 class="sec-title">${esc(title)}</h2>${body}`;
   const x2 = D.report[r.secondary];
-  screen(`<span class="badge">${esc(R.badge)}</span><div class="ph-no-capture">${typeCard(r)}
+  screen(`<span class="badge">${esc(R.badge)}</span><div class="ph-no-capture rep-body">${typeCard(r)}
     <p class="lead">${esc(fill(x.about))}</p>
     <div class="box daily-cta"><b>${esc(R.daily)}</b><span class="small muted">${esc(R.dailyLead)}</span><button class="btn" data-act="daily">${esc(R.dailyCta)}</button></div>
     ${sec(R.scales, `<div class="mbars">${r.order.map((k) => bar(k, r.percent[k])).join('')}</div>`)}

@@ -85,3 +85,7 @@ html:has(body.t-mind) { background: #f5f2ff; }
 .dart.s-leader { background: linear-gradient(135deg, #fff3c9, #ffe1d6); }
 .dart.s-helper { background: linear-gradient(135deg, #ffe3e3, #fff1d6); }
 .dart.s-mover { background: linear-gradient(135deg, #dcf7ef, #e6f3d2); }
+
+/* Упрощённый экран результата (Юрий 28.11): закрытые шкалы одной строкой, отчёт с равными отступами */
+.locked-chips span { font-size: 13px; padding: 5px 10px; opacity: .8; }
+.mind > .rep-body { display: grid; gap: 16px; }
